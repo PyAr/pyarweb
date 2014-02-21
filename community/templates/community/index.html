@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% load devtags %}
+
+{% block content %}
+<main role="main">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-7">
+				<section>
+					<div class="row">
+						<article class="col-md-6">
+							<h3 class="text-center">Aprendiendo Python</h3>
+							<p class="text-center">Recopilación de links y material que los miembros de PyAr consideramos útil para aquellos que se inician en este lenguaje.</p>
+						</article>
+						<article class="col-md-6">
+							<h3 class="text-center">Proyectos de la comunidad</h3>
+							<p class="text-center">Información sobre los proyectos que encaramos como grupo, o en los que participan nuestros miembros.</p>
+						</article>
+					</div>
+					<div class="row">
+						<article class="col-md-6">
+							<h3 class="text-center">Lista de correo</h3>
+							<p class="text-center">Instrucciones para suscribirte a nuestra lista, hoy por hoy, nuestro principal canal de comunicación. (feed rss disponible).</p>
+						</article>
+						<article class="col-md-6">
+							<h3 class="text-center">Quienes usan Python</h3>
+							<p class="text-center">Información sobre organizaciones que utilizan Python en Argentina.</p>
+						</article>
+					</div>
+				</section>
+
+				<!-- Últimas noticias -->
+
+				<section class="list-group">
+					<header class="list-group-item">
+						<h3 class="list-group-item-heading">Últimas noticias</h3>
+					</header>
+					{% for i in 3|get_range %} 
+						<article class="list-group-item">
+							<h4 class="list-group-item-heading">Call for charlas - PyCon 2012</h4>
+							<p class="list-group-item-text">Python Argentina se enorgullece de anunciar que está abierto el periodo de recepción de propuestas para PyCon Argentina 2012, con fecha límite 30 de junio de 2012. Más información e intrucciones para el envío, aqui.</p>
+						</article>
+					{% endfor %}
+				</section>
+
+				<!-- Estadísticas de la lista de correo -->
+
+				<section class="list-group">
+					<header class="list-group-item">
+						<h3 class="list-group-item-heading">Estadísticas de la lista de correo</h3>
+					</header>
+					{% for i in 3|get_range %} 
+						<article class="list-group-item">
+							<p class="list-group-item-text">Mensajes de esta semana: 212</p>
+						</article>
+					{% endfor %}
+				</section>
+			</div>
+			<div class="col-md-5">
+
+				<!-- Próximos eventos -->
+
+				<section class="list-group">
+					<header class="list-group-item">
+						<h3 class="list-group-item-heading">Próximos eventos</h3>
+					</header>
+					{% for i in 4|get_range %} 
+						<article class="list-group-item">
+							<h4 class="list-group-item-heading">PyCon Argentina</h4>
+							<p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
+						</article>
+					{% endfor %}
+				</section>
+
+				<!-- Planeta PyAr -->
+
+				<section class="list-group">
+					<header class="list-group-item">
+						<h3 class="list-group-item-heading">Planeta PyAr</h3>
+					</header>
+					{% for i in 4|get_range %} 
+						<article class="list-group-item">
+							<h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
+							<p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
+						</article>
+					{% endfor %}
+				</section>
+			</div>
+		</div>
+	</div>
+</main>
+{% endblock %}
