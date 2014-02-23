@@ -131,6 +131,23 @@ div.ribbon:after {
 	bottom:-25px;
 }
 
+div.ribbon div.container h1 {
+	color: #fff;
+	text-shadow: -2px 2px 5px rgba(0,0,0,0.2);
+}
+
+div.ribbon div.container h1 small {
+	color: #fff;
+	font-size: 90%;
+}
+
+div.ribbon div.container div.col-md-7 p {
+	margin-top: 18px;
+	color: #fff;
+	font-size: 18px;
+	text-shadow: -2px 2px 5px rgba(0,0,0,0.2);
+}
+
 
 
 div.shadows {
