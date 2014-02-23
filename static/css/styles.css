@@ -50,18 +50,22 @@ body {
 
 div.container {
 	background: #fff;
-	border-radius: 8px;
 }
 
 main div.container {
 	padding-top:20px;
+	border-radius: 8px;
 }
 
-section.input-group.search {
+main > div.container > div.row {
+	padding-top: 159px;
+}
+
+form.input-group.search {
 	margin-bottom:20px;
 }
 
-section.input-group.search input {
+form.input-group.search input {
 	background:#eee;
 	box-shadow:none;
 	-webkit-box-shadow:none;
@@ -72,7 +76,7 @@ section.input-group.search input {
 	border-color:#eee;
 }
 
-section.input-group.search span.input-group-btn button.btn {
+form.input-group.search span.input-group-btn button.btn {
 	background:#cccccf;
 	color:#fff;
 }
@@ -100,4 +104,23 @@ h4.list-group-item-heading {
 .list-group-item {
 	border:1px solid #fff;
 	background:#eee;
+}
+
+div#ribbon {
+	height:139px;
+	background:#39ade6;
+	padding-left:17px;
+	position:absolute;
+	width:100%;
+	left:-17px;
+}
+
+div#ribbon:after {
+	background: url(/static/img/ribbon.png);
+	height: 25px;
+	width: 41px;
+	content: "";
+	position: absolute;
+	right: 0;
+	bottom: -25px;
 }
