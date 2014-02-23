@@ -58,3 +58,53 @@ h3.list-group-item-heading {
 h4.list-group-item-heading {
     color: #2ca8e4;
 }
+
+/*
+ * NavBar
+ */
+ 
+.nav-bar {
+	background:transparent;
+}
+
+.navbar-header .navbar-brand {
+	position: relative;
+	left: 50%;
+}
+
+.navbar-nav>li {
+	background-color:#fff;
+	width:105px;
+	height:96px;
+	border-left:1px solid #f4f4f4;
+	border-right:1px solid #f4f4f4;
+	border-bottom:1px solid #fbfbfb;
+	text-align:center;
+	padding:42px 10px;
+	padding-bottom:0;
+}
+
+.navbar-nav>li.active {
+	background-color:#39ade6;
+	border-left-color:#76c6ee;
+	border-right-color:#76c6ee;
+	border-bottom:6px solid #fdca01;
+}
+
+.navbar-nav>li>a {
+	font-weight:bold;
+	color:#fb8b00;
+	/*padding:10px 0;*/
+	padding:0;
+	word-break: break-word;
+	font-size: 15px;
+}
+
+.navbar-nav>li.active>a {
+	color:#fff;
+}
+
+.navbar-nav>li>a:hover {
+	background:none;
+}
+
