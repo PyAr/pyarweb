@@ -12,29 +12,15 @@ body {
 
 #main {
     background: #fff;
-    border-radius: 8px;
+    border-radius: 8px 8px 0 0;
     padding: 20px 20px 10px;
-}
-
-/*
- * Footer
- */
-
-#footer {
-	padding-top: 30px;
-	padding-bottom: 20px;
-}
-
-@media (min-width: 768px) {
-	#footer ul.list-inline.right {
-		float-left;
-	}
 }
 
 /*
  * Ribbon
  */
 
+/*
 #ribbon {
 	top: 140px;
 	left: -48px;
@@ -54,6 +40,7 @@ body {
 	position: absolute;
 	background: url(/static/img/ribbon.png);
 }
+*/
 
 /*
  * Search form
@@ -226,4 +213,55 @@ h4.list-group-item-heading {
 h3 {
 	color:#35679a;
 	font-weight: bold;
+}
+
+/*
+ * Footer
+ */
+
+#footer {
+	padding-top: 30px;
+	padding-bottom: 20px;
+	background-color: #f4f4f4;
+}
+
+#footer a {
+	color: #808080;
+	font-size: 11px;
+}
+
+@media (min-width: 768px) {
+	#footer ul.right {
+		float: right;
+	}
+}
+
+#footer li {
+	line-height: 12px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#footer li.pyar {
+	padding-left: 100px;
+	background-position: 0 center;
+	background-repeat: no-repeat;
+	background-image: url(/static/img/pyar-footer.png);
+}
+
+#footer li.usla {
+	text-align: right;
+	padding-right: 80px;
+	background-repeat: no-repeat;
+	background-position: right center;
+	background-image: url(/static/img/usla-footer.png);
+}
+
+#footer li.python {
+	text-align: right;
+	margin-left: 25px;
+	padding-right: 52px;
+	background-repeat: no-repeat;
+	background-position: right center;
+	background-image: url(/static/img/python-footer.png);
 }
