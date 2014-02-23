@@ -1,3 +1,47 @@
+div.container {
+	background: #fff;
+	border-radius: 8px;
+}
+
+section.input-group.search {
+	margin-bottom: 20px;
+}
+
+section.input-group.search input {
+	background: #eee;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-o-box-shadow: none;
+	color: #cccccf;
+	font-weight: bold;
+	border-color:#eee;
+}
+
+section.input-group.search span.input-group-btn button.btn {
+	background: #cccccf;
+	color: #fff;
+}
+
+h3.list-group-item-heading {
+	color: #f0a513;
+}
+
+h4.list-group-item-heading {
+	color: #2ca8e4;
+}
+
 .list-group {
 	margin-top: 20px;
 }
+
+.list-group-item-heading {
+	font-weight:bold;
+}
+
+.list-group-item {
+	border: 1px solid #fff;
+	background: #eee;
+}
+
+
