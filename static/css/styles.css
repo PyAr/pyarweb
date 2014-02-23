@@ -49,17 +49,22 @@ body {
 
 
 div.container {
-	background: #fff;
+	
 }
 
-main div.container {
-	padding-top:20px;
-	border-radius: 8px;
+main > div.container {
+	background: #fff;
+	padding-top: 28px;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	box-shadow: 0 8px 15px 0 #ccc;
 }
 
 main > div.container > div.row {
-	padding-top: 159px;
+	padding-top: 158px;
+	padding-bottom: 20px;
 }
+
 
 form.input-group.search {
 	margin-bottom:20px;
@@ -106,21 +111,74 @@ h4.list-group-item-heading {
 	background:#eee;
 }
 
-div#ribbon {
+div.ribbon {
 	height:139px;
 	background:#39ade6;
 	padding-left:17px;
 	position:absolute;
 	width:100%;
 	left:-17px;
+	z-index:1;
 }
 
-div#ribbon:after {
+div.ribbon:after {
 	background: url(/static/img/ribbon.png);
 	height: 25px;
 	width: 41px;
 	content: "";
-	position: absolute;
+	position:absolute;
 	right:0;
 	bottom:-25px;
+}
+
+
+
+div.shadows {
+	margin: 0 -30px;
+}
+
+div.shadows div.shadow1 {
+	box-shadow: 0 -7px 15px 0 #ddd; 
+	height: 15px; 
+	position: relative;
+	width: 100%;
+}
+
+footer {
+	background: #f4f4f4
+}
+
+footer div.container {
+	background: #f4f4f4;
+	margin-top: -15px;
+	padding: 25px 15px;
+}
+
+footer div.container div.row div.col-md-6 a {
+	color:#888;
+	font-size:13px;
+}
+
+footer div.container div.row div.col-md-6.pyar {
+	padding-left: 120px;
+	background-image: url(/static/img/pyar-footer.png);
+	background-repeat: no-repeat;
+	background-position: 15px 0;
+}
+
+footer div.container div.row div.col-md-6 ul li.usla {
+	padding-right: 75px;
+	background-image: url(/static/img/usla-footer.png);
+	background-repeat: no-repeat;
+	background-position: right center;
+	text-align: right;
+}
+
+footer div.container div.row div.col-md-6 ul li.python {
+	padding-right: 47px;
+	background-image: url(/static/img/python-footer.png);
+	background-repeat: no-repeat;
+	background-position: right center;
+	text-align: right;
+	margin-left: 24px;
 }
