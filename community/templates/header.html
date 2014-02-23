@@ -1,20 +1,30 @@
-<header class="navbar navbar-static-top" role="banner">
+{% load staticfiles %}
+
+<header id="header" class="navbar navbar-static-top" role="banner">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12 col-md-3 col-lg-3">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">PyAr</a>
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#header-navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/" class="navbar-brand">PyAr</a>
                 </div>
-                <nav class="navbar-collapse" role="navigation">
-                    <ul class="nav navbar-nav pull-right">
-                        <li><a href="#">Página principal</a></li>
-                        <li><a href="#">Quienes somos</a></li>
-                        <li><a href="#">Últimas noticias</a></li>
-                        <li><a href="#">Preguntas frecuentes</a></li>
-                        <li><a href="#">Char IRC</a></li>
-                        <li><a href="#">Próximos eventos</a></li>
-                        <li><a href="#">Planeta PyAr</a></li>
-                        <li><a href="#">Búsquedas laborales</a></li>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-9">
+                <nav id="header-navbar-collapse" class="collapse navbar-collapse" role="navigation">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"><a href="#">Página<br class="hidden-xs"> principal</a></li>
+                        <li><a href="#">Quienes<br class="hidden-xs"> somos</a></li>
+                        <li><a href="#">Últimas<br class="hidden-xs"> noticias</a></li>
+                        <li><a href="#">Preguntas<br class="hidden-xs"> frecuentes</a></li>
+                        <li><a href="#">Chat<br class="hidden-xs"> IRC</a></li>
+                        <li><a href="#">Próximos<br class="hidden-xs"> eventos</a></li>
+                        <li><a href="#">Planeta<br class="hidden-xs"> PyAr</a></li>
+                        <li><a href="#">Búsquedas<br class="hidden-xs"> laborales</a></li>
                     </ul>
                 </nav>
             </div>
