@@ -112,7 +112,7 @@ h4.list-group-item-heading {
 }
 
 div.ribbon {
-	height:139px;
+	min-height:139px;
 	background:#39ade6;
 	padding-left:17px;
 	position:absolute;
