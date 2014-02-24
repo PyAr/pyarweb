@@ -3,11 +3,11 @@
 from django.conf.urls import patterns, url
 from .views import (
     add,
-    latest
+    list_all,
 )
 
 
 urlpatterns = patterns('',
-    url(r'^/latest$', latest),
+    url(r'^$', list_all, name='news_list_all'),
     url(r'^/add$', add),
 )

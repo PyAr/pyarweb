@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from .models import NewsArticle
 
 
-class NewsArticleForm(forms.Form):
+class NewsArticleForm(forms.ModelForm):
     """A PyAr news article form."""
-
-    title =  forms.CharField(max_length=255)
-    body = forms.Textarea()
-
+    class Meta:
+        model = NewsArticle
+        fields = ('title', 'body')
