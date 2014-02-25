@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="row">
+              <h1> Proceso completo! Un email ha sido envíado para confirmar su registro. </h1>
+            </div>
+        </div>
+        <div class="col-md-5">
+        
+            <!-- SeachBox -->
+
+            <form id="search-form" class="input-group" role="form">
+                <input type="text" class="form-control input-lg" placeholder="Buscar...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-lg" type="button">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </form>
+
+            <!-- Próximos eventos -->
+
+            <section class="list-group">
+                <header class="list-group-item">
+                    <h3 class="list-group-item-heading">Próximos eventos</h3>
+                </header>
+                {% for i in 4|get_range %} 
+                    <article class="list-group-item">
+                        <h4 class="list-group-item-heading">PyCon Argentina</h4>
+                        <p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
+                    </article>
+                {% endfor %}
+            </section>
+
+            <!-- Planeta PyAr -->
+
+            <section class="list-group">
+                <header class="list-group-item">
+                    <h3 class="list-group-item-heading">Planeta PyAr</h3>
+                </header>
+                {% for i in 4|get_range %} 
+                    <article class="list-group-item">
+                        <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
+                        <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
+                    </article>
+                {% endfor %}
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}

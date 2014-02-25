@@ -22,9 +22,23 @@ SECRET_KEY = 'c2*wzebi9p3vola_tamd7zu4=4(2^9m$v0vdj(5_ybhhw6t629'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+TEMPLATE_DIRS = os.path.join(BASE_DIR, 'templates')
 TEMPLATE_DEBUG = True
 
+# Instead of sending out real emails the console backend just writes
+# the emails that would be sent to the standard output.
+# By default, the console backend writes to stdout
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 ALLOWED_HOSTS = []
+
+# Django registration
+# https://django-registration.readthedocs.org/en/latest/quickstart.html
+ACCOUNT_ACTIVATION_DAYS = 7
+DEFAULT_FROM_EMAIL = 'webmaster@python.org.ar'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/pyarenses/login/'
 
 
 # Application definition
@@ -36,7 +50,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'registration',
     'community',
+    'south',
+    'news',
 )
 
 MIDDLEWARE_CLASSES = (

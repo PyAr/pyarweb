@@ -1,0 +1,3 @@
+Gracias por registrarse en PyAr!
+Para activar su cuenta haga click en el siguiente link:
+<a href="{{ site.domain }}/pyarenses/activate/{{ activation_key }}">Activar</a>
