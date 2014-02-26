@@ -10,7 +10,11 @@
 
             <section class="list-group">
                 <header class="list-group-item">
-                    <h3 class="list-group-item-heading">Últimas noticias</h3>
+                    <h3 class="list-group-item-heading">Últimas noticias
+                      {% if user.is_authenticated %}
+                        | <a href="/news/add"><small>Agregar</small></a>
+                      {% endif %}
+                    </h3>
                 </header>
                 {% for newArticle in news %} 
                     <article class="list-group-item">

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Company(models.Model):
     """A PyAr Company that use Python."""
 
-    photo = models.ImageField(upload_to='companies')
+    photo = models.ImageField(upload_to='static/pycompanies/logos')
     link = models.URLField()
     owner = models.ForeignKey(User)
     name = models.CharField(max_length=255)
