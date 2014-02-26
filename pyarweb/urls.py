@@ -10,6 +10,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', include('community.urls')),
     url(r'^news', include('news.urls')),
+    url(r'^companies', include('pycompanies.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^pyarenses/', include('registration.backends.default.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

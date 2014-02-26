@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'community',
     'south',
     'news',
+    'pycompanies',
 )
 
 MIDDLEWARE_CLASSES = (
