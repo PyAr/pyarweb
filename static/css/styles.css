@@ -109,6 +109,23 @@ h4.list-group-item-heading {
 /*
  * Navbar
  */
+ 
+.navbar-header div.loginreg {
+	text-align: center;
+	margin-top: 38px;
+}
+ 
+@media (min-width: 768px) {
+	.navbar-header div.loginreg {
+		float: left;
+	}
+}
+
+@media (min-width: 992px) {
+	.navbar-header div.loginreg {
+		margin-top:0;
+	}
+}
 
 #header .navbar-brand {
 	width: 195px;
