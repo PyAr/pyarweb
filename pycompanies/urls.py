@@ -12,5 +12,5 @@ urlpatterns = patterns('',
     url(r'^$', list_all, name='companies_list_all'),
     url(r'^/add$', add),
     url(r'^/edit/$', edit),
-    url(r'^/edit/(?P<company_id>\d+)/$', edit),
+    url(r'^/(?P<company_id>\d+)/edit$', edit),
 )
