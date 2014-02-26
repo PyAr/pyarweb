@@ -294,6 +294,7 @@ form.form-signin {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
 	display: block;
 	width: 100%;
@@ -313,6 +314,7 @@ input[type="password"] {
 }
 
 input[type="text"]:focus,
+input[type="email"]:focus,
 input[type="password"]:focus {
 	border-color: #66afe9;
 	outline: 0;
