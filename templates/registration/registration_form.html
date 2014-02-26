@@ -7,13 +7,13 @@
     <div class="row">
         <div class="col-md-7">
             <div class="row">
-              <!-- register form -->
-              <h1> Register form </h1>
-              <form action="/pyarenses/register/" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Enviar" />
-              </form>
+                <!-- register form -->
+		<form class="form-signup" role="form" action="/pyarenses/register/" method="POST">
+            		{% csrf_token %}
+			<h2 class="form-signin-heading">¿Listo para registrarte?</h2>
+			{{ form.as_p }}
+			<button class="btn btn-lg btn-primary btn-block" type="submit">¡Registrarme!</button>
+		</form>
             </div>
         </div>
         <div class="col-md-5">
