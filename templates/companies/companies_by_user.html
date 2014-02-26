@@ -21,11 +21,11 @@
                   {% for company in companies %} 
                     <article class="list-group-item">
                       <h4 class="list-group-item-heading">{{ company.link }}</h4>
-                      <a href='/companies/edit/{{company.id}}'>{{company.link}}</a>
+                      <a href='/companies/{{company.id}}/edit'>{{company.link}}</a>
                       </article>
                       {% endfor %}
                     {% endif %}
-                                 </section>
+            </section>
         </div>
         <div class="col-md-5">
         
