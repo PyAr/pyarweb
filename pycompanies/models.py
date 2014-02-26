@@ -8,9 +8,10 @@ class Company(models.Model):
     photo = models.ImageField(upload_to='companies')
     link = models.URLField()
     owner = models.ForeignKey(User)
-    description = models.TextField(max_length=255)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u'%s' % self.link
+        return u'%s' % self.name
