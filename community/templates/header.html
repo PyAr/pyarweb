@@ -13,7 +13,11 @@
                     </button>
                     <a href="/" class="navbar-brand">PyAr</a>
                     <div class="loginreg">
+                      {% if user.is_authenticated %}
+                      Bienvenido | <a href="/pyarenses/logout/">Cerrar sesión</a> 
+                      {% else %}
                          <a href="/pyarenses/login/">¡Ingresar!</a> o <a href="/pyarenses/register/">¡Registrarse!</a>
+                      {% endif %}
                     </div>
                 </div>
             </div>
