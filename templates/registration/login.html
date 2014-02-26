@@ -7,12 +7,12 @@
     <div class="row">
         <div class="col-md-7">
             <div class="row">
-              <h1> Identifiquese por favor: </h1>
-              <form action="/pyarenses/login/" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Enviar" />
-              </form>
+            	<form class="form-signin" role="form" action="/pyarenses/login/" method="POST">
+            		{% csrf_token %}
+			<h2 class="form-signin-heading">Identifiquese por favor:</h2>
+			{{ form.as_p }}
+			<button class="btn btn-lg btn-primary btn-block" type="submit">¡Login!</button>
+		</form>
             </div>
         </div>
         <div class="col-md-5">
