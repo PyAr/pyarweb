@@ -5,10 +5,15 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 
+from .views import (
+    irc,
+)
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', include('community.urls')),
+    url(r'^irc/', irc, name='irc'),
     url(r'^news', include('news.urls')),
     url(r'^companies', include('pycompanies.urls')),
     url(r'^admin/', include(admin.site.urls)),
