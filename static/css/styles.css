@@ -286,7 +286,8 @@ h3 {
 /*
  * Inputs and forms
  */
-
+ 
+form.form-signin,
 form.form-signup {
 	width: 60%;
 	margin-left: 20%;
