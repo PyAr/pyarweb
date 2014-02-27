@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="row">
+        <div class="col-md-7">
+            <h2>¿Quiénes Somos?</h2>
+            <p>Un <a href="/MiembrosDePyAr">grupo de entusiastas de Python</a>, que decidió aunar esfuerzos para crear una comunidad local como marco de referencia para la aplicación, difusión y mejora de este lenguaje.</p>
+            <h2>¿Qué hacemos?</h2>
+            <p>Organizamos <a href="/eventos">eventos</a> de distinto tipo para difundir el lenguaje y <a href="/eventos">reuniones</a> donde debatimos ideas, mantenemos una <a href="/ListaDeCorreo">ListaDeCorreo</a> a través de la cual nos comunicamos, creamos y mantenemos este portal, el cual pretendemos que tenga contenido útil tanto para los miembros de <a href="/">PyAr</a> como para toda aquella persona que se interese por Python. Hoy estamos abocados a lograr evolucionar como grupo, contribuyendo con diversos proyectos.</p>
+            <h2>¿Cómo surgió?</h2>
+            <p>Merced a búsquedas en Internet, algunas personas se fueron registrando en el grupo de <a class="http" href="http://python.meetup.com/cities/ar/buenos_aires/">Python de Buenos Aires de Meetup.</a></p>
+            <p>A mediados del 2004, el sitio era gratuito y "ranqueaba" alto en los resultados de los buscadores. El origen de aquel grupo es incierto, algunos creen que algún ocasional interesado lo creó, otros suponen que Meetup creaba estos grupos artificialmente como técnica de posicionamiento en buscadores (<a class="http" href="http://es.wikipedia.org/wiki/Posicionamiento_en_buscadores">SEO</a>). Lo único cierto es que un cambio en su funcionamiento (la aparición del rol de "Manager") ayudó a fomentar la organización y posterior concreción de la primera reunión del grupo en Buenos Aires, en septiembre de 2004.</p>
+            <h2>¿Cómo participar?</h2>
+            <p>Suscribiéndote a la <a href="/ListaDeCorreo">ListaDeCorreo</a>, registrándote en el portal, asistiendo a cualquiera de nuetros <a href="/Eventos">Eventos</a>, aportando ideas. También tenemos un canal de <b>IRC</b>. El servidor es <b>irc.freenode.net</b>, y el nombre del canal es <b>#pyar</b>. Podés ingresar vía Web <a href="/irc">aquí</a>. Si querés colaborar aportando contenido al Wiki, o ayudando en su mantenimiento, también es posible. Por favor, leé <a href="/ContribuyendoAlWiki">ContribuyendoAlWiki</a>.</p>
+        </div>
+        <div class="col-md-5">
+        
+            <!-- SeachBox -->
+
+            <form id="search-form" class="input-group" role="form">
+                <input type="text" class="form-control input-lg" placeholder="Buscar...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-lg" type="button">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </form>
+
+            <!-- Próximos eventos -->
+
+            <section class="list-group">
+                <header class="list-group-item">
+                    <h3 class="list-group-item-heading">Próximos eventos</h3>
+                </header>
+                {% for i in 4|get_range %} 
+                    <article class="list-group-item">
+                        <h4 class="list-group-item-heading">PyCon Argentina</h4>
+                        <p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
+                    </article>
+                {% endfor %}
+            </section>
+
+            <!-- Planeta PyAr -->
+
+            <section class="list-group">
+                <header class="list-group-item">
+                    <h3 class="list-group-item-heading">Planeta PyAr</h3>
+                </header>
+                {% for i in 4|get_range %} 
+                    <article class="list-group-item">
+                        <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
+                        <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
+                    </article>
+                {% endfor %}
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
