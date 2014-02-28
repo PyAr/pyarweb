@@ -6,6 +6,11 @@ body {
     background-color: #f4f4f4;
 }
 
+a.http:before {
+        content: url(/static/img/moin-www.png);
+        margin: 0 0.2em;
+}
+
 /*
  * Main
  */
