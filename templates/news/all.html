@@ -18,8 +18,13 @@
                 </header>
                 {% for newArticle in news %} 
                     <article class="list-group-item">
-                      <h4 class="list-group-item-heading">{{ newArticle.title }}</h4>
-                        <p class="list-group-item-text">{{ newArticle.body }}</p>
+                      <h4 class="list-group-item-heading">
+                        <small>{{ newArticle.modified }}</small> | {{ newArticle.title }}
+                      </h4>
+                      <p class="list-group-item-text">{{ newArticle.body }}</p>
+                      <blockquote>
+                        <footer>por {{ newArticle.owner }} </footer>
+                      </blockquote>
                     </article>
                 {% endfor %}
             </section>
