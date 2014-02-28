@@ -21,6 +21,26 @@ a.http:before {
     padding: 20px 20px 10px;
 }
 
+#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img {
+        background-image: url(/static/img/icons/icons.png);
+        height: 62px;
+        width: 62px;
+        margin: 0 auto;
+}
+
+
+#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img.aprendiendo_python {
+        background-position: 195px 0;
+}
+
+#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img.proyectos_comunidad {
+        background-position: 62px 0;
+}
+
+#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img.lista_correo {
+        background-position: 128px 0;
+}
+
 /*
  * Ribbon
  */
@@ -178,9 +198,64 @@ h4.list-group-item-heading {
 	border-bottom: 4px solid #fff;
 }
 
+#header ul.navbar-nav > li > span {
+        display:block;
+        height:25px;
+        margin:0 auto;
+}
+
+#header ul.navbar-nav > li:not(.active) > span {
+        background-image: url(/static/img/icons/icons.png);
+}
+
+#header ul.navbar-nav > li.active > span,
+#header ul.navbar-nav > li:hover > span {
+        background-image: url(/static/img/icons/icons_active.png);
+}
+
+#header ul.navbar-nav > li > span.inicio {
+        width: 25px;
+        background-position: -31px 25px;
+}
+
+#header ul.navbar-nav > li > span.quienes_somos {
+        width: 25px;
+        background-position: 0 25px;
+}
+
+#header ul.navbar-nav > li > span.news {
+        width: 26px;
+        background-position: -206px 25px;
+}
+
+#header ul.navbar-nav > li > span.faqs {
+        width: 18px;
+        background-position: -98px 25px;
+}
+
+#header ul.navbar-nav > li > span.irc {
+        width: 31px;
+        background-position: -61px 25px;
+}
+
+#header ul.navbar-nav > li > span.eventos {
+        width: 19px;
+        background-position: -151px 25px;
+}
+
+#header ul.navbar-nav > li > span.pyar {
+        width: 26px;
+        background-position: -175px 25px;
+}
+
+#header ul.navbar-nav > li > span.jobs {
+        width: 24px;
+        background-position: -121px 25px;
+}
+
 @media (min-width: 768px) {
 	#header ul.navbar-nav > li {
-		padding-top: 40px;
+		padding-top: 15px;
 		padding-bottom: 10px;
 		background-color: #fff;
 		border-left: 1px solid #f4f4f4;
