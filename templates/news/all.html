@@ -12,18 +12,24 @@
                 <header class="list-group-item">
                     <h3 class="list-group-item-heading">Últimas noticias
                       {% if user.is_authenticated %}
-                        | <a href="/news/add"><small>Agregar</small></a>
+                        | <a href="{% url 'news_add' %}"><small>Agregar</small></a>
                       {% endif %}
                     </h3>
                 </header>
                 {% for newArticle in news %} 
                     <article class="list-group-item">
                       <h4 class="list-group-item-heading">
-                        <small>{{ newArticle.modified }}</small> | {{ newArticle.title }}
+                        {{ newArticle.title }}
                       </h4>
                       <p class="list-group-item-text">{{ newArticle.body }}</p>
                       <blockquote>
-                        <footer>por {{ newArticle.owner }} </footer>
+                        <footer>
+                          {{ newArticle.modified }} por {{ newArticle.owner}} 
+                          {% if newArticle.owner == user %}
+                            <a href="{% url 'news_delete' newArticle.id %}">Borrar</a> | 
+                            <a href="{% url 'news_update' newArticle.id %}">Modificar</a>
+                          {% endif %}
+                        </footer>
                       </blockquote>
                     </article>
                 {% endfor %}
