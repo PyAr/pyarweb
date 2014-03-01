@@ -2,6 +2,7 @@
 
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -77,6 +78,21 @@ def update(request, new_id):
 
 def list_all(request):
     """Return all news articles ordered by date desc."""
-    news = NewsArticle.objects.order_by('-created')
+
+    news_list = NewsArticle.objects.order_by('-created')
+    paginator = Paginator(news_list, 2) # Show 20 news per page
+    page = request.GET.get('page')
+
+    try:
+        news = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        news = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        news = paginator.page(paginator.num_pages)
+
     context = dict(news=news)
     return render(request, 'news/all.html', context)
+
+
