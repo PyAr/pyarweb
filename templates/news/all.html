@@ -34,7 +34,24 @@
                     </article>
                 {% endfor %}
             </section>
+            <!-- pagination -->
+            <div class="pagination">
+                <span class="step-links">
+                    {% if news.has_previous %}
+                        <a href="?page={{ news.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ news.number }} of {{ news.paginator.num_pages }}.
+                    </span>
+
+                    {% if news.has_next %}
+                        <a href="?page={{ news.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
         </div>
+
         <div class="col-md-5">
         
             <!-- SeachBox -->
