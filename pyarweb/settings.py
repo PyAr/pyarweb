@@ -63,8 +63,11 @@ INSTALLED_APPS = (
     'registration',
     'community',
     'disqus',
+    'taggit',
+    'taggit_autosuggest',
     'news',
     'pycompanies',
+    'jobs',
 )
 
 MIDDLEWARE_CLASSES = (
