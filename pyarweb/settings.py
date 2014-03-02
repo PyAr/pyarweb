@@ -22,6 +22,9 @@ SECRET_KEY = 'c2*wzebi9p3vola_tamd7zu4=4(2^9m$v0vdj(5_ybhhw6t629'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Sites framework
+SITE_ID = 1
+
 TEMPLATE_DIRS = os.path.join(BASE_DIR, 'templates')
 TEMPLATE_DEBUG = True
 
@@ -41,10 +44,16 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/pyarenses/login/'
 
 
+# Disqus
+DISQUS_API_KEY = '3t6eKCbxRGuIG3SmdHb8malOf1h2WxSYEfXbBjWyNBaFLMyD1GOIfWYFciqJqo69'
+DISQUS_WEBSITE_SHORTNAME = 'PyAr'
+
+
 # Application definition
 
 INSTALLED_APPS = (
     'django.contrib.admin',
+    'django.contrib.sites',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -53,7 +62,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'registration',
     'community',
-    'south',
+    'disqus',
     'news',
     'pycompanies',
 )

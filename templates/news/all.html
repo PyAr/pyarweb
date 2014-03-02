@@ -19,9 +19,11 @@
                 {% for newArticle in news %} 
                     <article class="list-group-item">
                       <h4 class="list-group-item-heading">
-                        {{ newArticle.title }}
+                        <a href="{% url 'news_view' newArticle.id %}">
+                          {{ newArticle.title }}
+                        </a>
                       </h4>
-                      <p class="list-group-item-text">{{ newArticle.body }}</p>
+                      <p class="list-group-item-text">{{ newArticle.body|slice:":200" }} ...</p>
                       <blockquote>
                         <footer>
                           {{ newArticle.modified }} por {{ newArticle.owner}} 
