@@ -5,7 +5,7 @@ def irc(request):
 
 
 def QuienesSomos(request):
-    return render(request, 'quienes_somos.html')
+    return render(request, 'QuienesSomos.html')
 
 
 def MiembrosDePyAr(request):
