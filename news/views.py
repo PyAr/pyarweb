@@ -28,6 +28,18 @@ def add(request):
     return render(request, 'news/add.html', context)
 
 
+def view(request, new_id):
+    """Show a NewsArticle."""
+
+    newArticle = get_object_or_404(
+        NewsArticle,
+        id=new_id
+    )
+
+    context = dict(newArticle=newArticle)
+    return render(request, 'news/view.html', context)
+
+
 @login_required
 def delete(request, new_id):
     """Delete a NewsArticle."""
@@ -80,7 +92,7 @@ def list_all(request):
     """Return all news articles ordered by date desc."""
 
     news_list = NewsArticle.objects.order_by('-created')
-    paginator = Paginator(news_list, 2) # Show 20 news per page
+    paginator = Paginator(news_list, 20) # Show 20 news per page
     page = request.GET.get('page')
 
     try:
