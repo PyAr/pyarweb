@@ -30,11 +30,11 @@
                         </li>
                         <li>
                                 <span class="quienes_somos"></span>
-                                <a href="/quienes_somos">Quienes<br class="hidden-xs"> somos</a>
+                                <a href="{% url 'about_pyar' %}">Quienes<br class="hidden-xs"> somos</a>
                         </li>
                         <li>
                                 <span class="news"></span>
-                                <a href="/news">Últimas<br class="hidden-xs"> noticias</a>
+                                <a href="{% url 'news_list_all' %}">Últimas<br class="hidden-xs"> noticias</a>
                         </li>
                         <li>
                                 <span class="faqs"></span>
@@ -42,7 +42,7 @@
                         </li>
                         <li>
                                 <span class="irc"></span>
-                                <a href="/irc">Chat<br class="hidden-xs"> IRC</a>
+                                <a href="{% url 'irc' %}">Chat<br class="hidden-xs"> IRC</a>
                         </li>
                         <li>
                                 <span class="eventos"></span>
