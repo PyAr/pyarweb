@@ -68,6 +68,7 @@ INSTALLED_APPS = (
     'news',
     'pycompanies',
     'jobs',
+    'events',
 )
 
 MIDDLEWARE_CLASSES = (
