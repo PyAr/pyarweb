@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load devtags %}
+
+{% block content %}
+	<main id="main" class="container" role="main">
+	    <div class="row">
+	        <div class="col-md-12">
+				<a href="{% url 'events:events_list_all' %}">{% trans "Volver a eventos" %}</a>
+
+		        <form method="POST">
+		            {% csrf_token %}
+		            {{ form.as_p }}
+		            <input type="submit" value="Guardar"/>
+		        </form>
+	        </div>
+	    </div>
+	</main>
+{% endblock %}

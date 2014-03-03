@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'disqus',
     'news',
     'pycompanies',
+    'events',
 )
 
 MIDDLEWARE_CLASSES = (
