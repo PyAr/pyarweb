@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load devtags %}
+
+{% block content %}
+
+	<main id="main" class="container" role="main">
+	    <div class="row">
+	        <div class="col-md-12">
+		        <form method="post">{% csrf_token %}
+				    {% trans "Are you sure you want to delete" %} "{{ object.name }}" ?
+				    <input type="submit" value="Yes" class="btn btn-danger">
+				    <a href="{% url 'events:events_list_all' %}" class="btn btn-default">No</a>
+				</form>
+	        </div>
+	    </div>
+	</main>
+
+{% endblock %}
