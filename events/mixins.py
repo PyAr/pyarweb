@@ -16,8 +16,10 @@ class LoginRequiredMixin(object):
 
 class EventMixin(object):
     """Mixin for common attrs."""
+
     model = Event
-    success_url = reverse_lazy('events:events_list_all')
+    def get_success_url(self):
+        return reverse_lazy('events:events_list_all')
 
 class EventPermission(EventMixin, object):
     """Ensures that only the owner can edit or delete his events."""

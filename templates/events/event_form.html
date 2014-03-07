@@ -4,6 +4,41 @@
 
 {% load devtags %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="/static/css/jquery.datetimepicker.css">
+  <link rel="stylesheet" href="/static/css/event_map.css">
+{% endblock %}
+
+{% block javascripts %}
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+  <script src="/static/js/jquery.datetimepicker.js"></script>
+  <script src="/static/js/event_form.js"></script>
+  <script>
+    $(function() {
+      
+      $('#id_start_at').datetimepicker({
+        format: 'd/m/Y H:i',
+        minDate: 0,
+        onShow: function( ct ){
+          this.setOptions({
+            maxDate: $('id_end_at').val()?$('#id_end_at').val():false
+          })
+        }, 
+      });
+
+      $('#id_end_at').datetimepicker({
+        format:'d/m/Y H:i',
+        onShow: function( ct ){
+          this.setOptions({
+            minDate: $('#id_start_at').val()?$('#id_start_at').val():false
+          })
+        }
+      });
+
+    });
+  </script>
+{% endblock %}
+
 {% block content %}
 	<main id="main" class="container" role="main">
 	    <div class="row">
@@ -12,8 +47,13 @@
 
 		        <form method="POST">
 		            {% csrf_token %}
-		            {{ form.as_p }}
-		            <input type="submit" value="Guardar"/>
+                {{ form.as_p }}
+
+                <div id="map-canvas"></div>
+
+                <div>
+                  <input type="submit" value="{% trans 'Guardar' %}"/>
+                </div>
 		        </form>
 	        </div>
 	    </div>

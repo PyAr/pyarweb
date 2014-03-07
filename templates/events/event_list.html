@@ -1,108 +1,59 @@
-{% extends "base.html" %}
+{% extends "base_site.html" %}
 
 {% load i18n %}
 
 {% load devtags %}
 
-{% block content %}
+{% block left-column %}
 
-	<main id="main" class="container" role="main">
-	    <div class="row">
-	        <div class="col-md-7">
-	            <!-- Proximos eventos -->
+  <!-- Proximos eventos -->
 
-	            <section class="list-group">
-	                <header class="list-group-item">
-	                    <h3 class="list-group-item-heading">{% trans "Proximos Eventos" %}
-	                      {% if user.is_authenticated %}
-	                        | <a href="{% url 'events:add' %}"><small>{% trans "Agregar" %}</small></a>
-	                      {% endif %}
-	                    </h3>
-	                </header>
-	                {% for event in object_list %} 
-	                    <article class="list-group-item">
-		                    <h4 class="list-group-item-heading">{{ event.name }}
-								<a href="{% url 'events:detail' event.id %}"><small>{% trans "Ver" %}</small></a>
-								{% if user == event.owner %}
-			                        | <a href="{% url 'events:edit' event.id %}"><small>{% trans "Editar" %}</small></a>
-			                        | <a href="{% url 'events:delete' event.id %}"><small>{% trans "Eliminar" %}</small></a>
-			                    {% endif %}
-		                    </h4>
-	                        <p class="list-group-item-text">
-	                        	<span>
-	                        		{{ event.start_at|date }}
-	                        	</span> | 
-	                        	<span>
-	                        		{{ event.start_at|time }}
-	                        	</span> | 
-	                        	<span>
-	                        		{{ event.address}}
-	                        	</span>
-	                        </p>
-	                    </article>
-	                {% endfor %}
+  <section class="list-group">
+      <header class="list-group-item">
+          <h3 class="list-group-item-heading">{% trans "Proximos Eventos" %}
+            {% if user.is_authenticated %}
+              | <a href="{% url 'events:add' %}"><small>{% trans "Agregar" %}</small></a>
+            {% endif %}
+          </h3>
+      </header>
 
+      {% for event in object_list %} 
+          
+          <article class="list-group-item">
+              <h4 class="list-group-item-heading">
+                <a href="{% url 'events:detail' event.id %}">
+                  {{ event.name }}
+                </a>
+              </h4>
+              <p class="list-group-item-text">{{ event.description|slice:":200" }} ...</p>
+              <blockquote>
+                <footer>
+                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
+                  {% if event.owner == user %}
+                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> | 
+                  <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
+                  {% endif %}
+                </footer>
+              </blockquote>
+            </article>
 
-					<div class="pagination">
-	                    <span class="step-links">
-	                        {% if page_obj.has_previous %}
-	                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-	                        {% endif %}
+      {% endfor %}
 
-	                        <span class="current">
-	                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-	                        </span>
+      <div class="pagination">
+          <span class="step-links">
+              {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}">{% trans 'anterior' %}</a>
+              {% endif %}
 
-	                        {% if page_obj.has_next %}
-	                            <a href="?page={{ page_obj.next_page_number }}">next</a>
-	                        {% endif %}
-	                    </span>
-	                </div>
+              <span class="current">
+                Page {{ page_obj.number }} {% trans 'de' %} {{ page_obj.paginator.num_pages }}.
+              </span>
 
-	            </section>
-	        </div>
-	        <div class="col-md-5">
-	        
-	            <!-- SeachBox -->
+              {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">{% trans 'siguiente' %}</a>
+              {% endif %}
+          </span>
+      </div>
 
-	            <form id="search-form" class="input-group" role="form">
-	                <input type="text" class="form-control input-lg" placeholder="Buscar...">
-	                <span class="input-group-btn">
-	                    <button class="btn btn-default btn-lg" type="button">
-	                        <span class="glyphicon glyphicon-search"></span>
-	                    </button>
-	                </span>
-	            </form>
-
-	            <!-- Últimas noticias -->
-
-	            <section class="list-group">
-	                <header class="list-group-item">
-	                    <h3 class="list-group-item-heading">Últimas noticias</h3>
-	                </header>
-	                {% for i in 3|get_range %} 
-	                    <article class="list-group-item">
-	                        <h4 class="list-group-item-heading">Call for charlas - PyCon 2012</h4>
-	                        <p class="list-group-item-text">Python Argentina se enorgullece de anunciar que está abierto el periodo de recepción de propuestas para PyCon Argentina 2012, con fecha límite 30 de junio de 2012. Más información e intrucciones para el envío, aqui.</p>
-	                    </article>
-	                {% endfor %}
-	            </section>
-
-	            <!-- Planeta PyAr -->
-
-	            <section class="list-group">
-	                <header class="list-group-item">
-	                    <h3 class="list-group-item-heading">Planeta PyAr</h3>
-	                </header>
-	                {% for i in 4|get_range %} 
-	                    <article class="list-group-item">
-	                        <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
-	                        <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
-	                    </article>
-	                {% endfor %}
-	            </section>
-	        </div>
-	    </div>
-	</main>
-
+  </section>
 {% endblock %}
