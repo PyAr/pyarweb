@@ -1,10 +1,30 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+
+from bootstrap3_datetime.widgets import DateTimePicker
+
 from .models import Event
 
 
 class EventForm(forms.ModelForm):
+    start_at = forms.DateTimeField(
+        widget=DateTimePicker(
+            options={
+                "format": "DD/MM/YYYY HH:mm",
+                "pickTime": True,
+            }
+        )
+    )
+
+    end_at = forms.DateTimeField(
+        widget=DateTimePicker(
+            options={
+                "format": "DD/MM/YYYY HH:mm",
+                "pickTime": True
+            }
+        )
+    )
 
     lat = forms.CharField(
         max_length=20,

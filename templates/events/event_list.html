@@ -23,9 +23,10 @@
               <h4 class="list-group-item-heading">
                 <a href="{% url 'events:detail' event.id %}">
                   {{ event.name }}
-                </a>
+                </a> |
+                <small>{{ event.start_at }}</small>
               </h4>
-              <p class="list-group-item-text">{{ event.description|slice:":200" }} ...</p>
+              <p class="list-group-item-text">{{ event.description|truncatewords:"20" }}</p>
               <blockquote>
                 <footer>
                 {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
