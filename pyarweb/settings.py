@@ -59,16 +59,22 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
-    'registration',
+
+    # pyarweb apps
     'community',
-    'disqus',
-    'taggit',
-    'taggit_autosuggest',
     'news',
     'pycompanies',
     'jobs',
     'events',
+
+    # 3rd party apps
+    'django_extensions',
+    'registration',
+    'disqus',
+    'taggit',
+    'taggit_autosuggest',
+    'bootstrap3_datetime',
+
 )
 
 MIDDLEWARE_CLASSES = (

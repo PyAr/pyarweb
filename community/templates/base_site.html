@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load devtags %}
+{% load event_tags %}
+
 
 {% block content %}
 
@@ -47,12 +49,9 @@
               <header class="list-group-item">
                   <h3 class="list-group-item-heading">Próximos eventos</h3>
               </header>
-              {% for i in 4|get_range %} 
-                  <article class="list-group-item">
-                      <h4 class="list-group-item-heading">PyCon Argentina</h4>
-                      <p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
-                  </article>
-              {% endfor %}
+              
+              {% next_events %}
+
           </section>
 
           <!-- Planeta PyAr -->

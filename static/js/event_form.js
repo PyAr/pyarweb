@@ -27,7 +27,6 @@ function initialize() {
     document.getElementById("id_lng").value = lng
                                                             
   });
-
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
