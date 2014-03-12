@@ -68,15 +68,22 @@ a.http:before {
 */
 
 /*
- * Search form
+ * Search
  */
+ 
+iframe#google {
+	border:0;
+	margin:0;
+	padding:0;
+	width: 100%;
+}
 
 #search-form {
     margin-bottom: 20px;
 }
 
 #search-form input {
-    color: #ccc;
+    color: #999;
     font-weight: bold;
     background: #eee;
     border-color: #eee;
@@ -90,6 +97,11 @@ a.http:before {
     background: #ccc;
     color: #fff;
 }
+
+#searchResult div.modal-body {
+	padding-top:0;
+}
+
 
 /*
  * Panels
