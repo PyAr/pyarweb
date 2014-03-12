@@ -33,7 +33,7 @@ $(document).ready(function() {
 	});
 	
 	$("span.input-group-btn button.btn.btn-default.btn-lg").bind("click",function(a) {
-		buscar(start);
+		buscar();
 		$searchModal.modal("show");
 	});
 	
