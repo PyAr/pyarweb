@@ -9,7 +9,7 @@ $(document).ready(function() {
 	var $searchModal=$("div#searchResult");
 	var $iframeGoogle=$searchModal.find("div.modal-dialog div.modal-content div.modal-body iframe#google");
 
-	function buscar(start) {
+	function buscar() {
 		var text=$("input.search").val();
 		if(text===undefined || text=="") {
 			text=$("form#search-form input.form-control.input-lg").val();
