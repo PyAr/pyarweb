@@ -3,6 +3,19 @@
 
 {% block content %}
 
+<div class="modal fade" id="searchResult">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<input type="text" class="form-control search"/>
+			</div>
+			<div class="modal-body">
+				<iframe id="google"></iframe>
+			</div>
+		</div>
+	</div>
+</div>
+
 <main id="main" class="container" role="main">
 
     <div class="row">
@@ -15,23 +28,8 @@
 
         {% block right-column %}
           <!-- SeachBox -->
-          <div>
-          <script>
-            (function() {
-              var cx = '002761434793955331615:r73unbvij0u';
-              var gcse = document.createElement('script');
-              gcse.type = 'text/javascript';
-              gcse.async = true;
-              gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-                  '//www.google.com/cse/cse.js?cx=' + cx;
-              var s = document.getElementsByTagName('script')[0];
-              s.parentNode.insertBefore(gcse, s);
-            })();
-          </script>
-          <gcse:search></gcse:search>
-          </div>
 
-          <!--
+          
           <form id="search-form" class="input-group" role="form">
               <input type="text" class="form-control input-lg" placeholder="Buscar...">
               <span class="input-group-btn">
@@ -40,7 +38,7 @@
                   </button>
               </span>
           </form>
-          -->
+          
 
           <!-- Próximos eventos -->
           <section class="list-group">
