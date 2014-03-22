@@ -1,30 +1,49 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 
+{% block beforemain %}
+<div class="banner-wrapper">
+    <div class="banner">
+    </div>
+    <div class="ribbon">
+    </div>
+</div>
+{% endblock %}
+
 {% block left-column %}
     <section>
-        <div class="row">
-            <article class="col-sm-6">
+        <div class="row index-content">
+            <article class="col-sm-4">
                 <div class="img aprendiendo_python"></div>
                 <h3 class="text-center">Aprendiendo Python</h3>
                 <p class="text-center">Recopilación de links y material que los miembros de PyAr consideramos útil para aquellos que se inician en este lenguaje.</p>
             </article>
-            <article class="col-sm-6">
+            <article class="col-sm-4">
                 <div class="img proyectos_comunidad"></div>
                 <h3 class="text-center">Proyectos de la comunidad</h3>
                 <p class="text-center">Información sobre los proyectos que encaramos como grupo, o en los que participan nuestros miembros.</p>
             </article>
-        </div>
-        <div class="row">
-            <article class="col-sm-6">
+            <article class="col-sm-4">
                 <div class="img lista_correo"></div>
                 <h3 class="text-center"><a href="{% url 'mailling_list' %}">Lista de correo</a></h3>
                 <p class="text-center">Instrucciones para suscribirte a nuestra lista, hoy por hoy, nuestro principal canal de comunicación. (feed rss disponible).</p>
             </article>
-            <article class="col-sm-6">
+            </div>
+            <div class="row">
+            <article class="col-sm-4">
                 <div class="img quienes_usan_python"></div>
-                <h3 class="text-center"><a href="/companies">Quienes usan Python</a></h3>
+                <h3 class="text-center"><a href="/companies">Quiénes usan Python</a></h3>
                 <p class="text-center">Información sobre organizaciones que utilizan Python en Argentina.</p>
+            </article>
+            <article class="col-sm-4">
+                <div class="img wiki"></div>
+                <h3 class="text-center"><a href="/companies">Nuestra wiki</a></h3>
+                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
+            </article>
+            <article class="col-sm-4">
+                <div class="img adopta_un_newbie"></div>
+                <h3 class="text-center"><a href="/companies">Adopta un newbie</a></h3>
+                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
             </article>
         </div>
     </section>
@@ -53,4 +72,10 @@
             </article>
         {% endfor %}
     </section>
+{% endblock %}
+
+{% block right-column %}
+    <div class="index-right">
+        {{ block.super }}
+    </div>
 {% endblock %}
