@@ -151,41 +151,76 @@ h4.list-group-item-heading {
 	text-align: center;
 	margin-top: 38px;
 }
- 
+.banner {
+    padding: 0px 20px;
+    background: 0 0 repeat #35679A url(../img/banner.png);
+}
+.banner p {
+    font-size: 15px;
+    text-shadow: 0px 0px 4px #444;
+    vertical-align: bottom;
+}
+.banner h1 {
+    text-shadow: 0px 0px 4px #777;
+    font-size: 30px;
+    font-weight: bold;
+    padding-top: 7px;
+    padding-left: 95px;
+    background: url(../img/python-banner.png) 0 0 no-repeat transparent;
+    height: 96px;
+}
+.banner .bigger {
+    font-size: 38px;
+    display: block;
+}
+.banner-wrapper {
+    color: white;
+}
 @media (min-width: 768px) {
 	.navbar-header div.loginreg {
 		float: left;
 	}
+    .banner h1, .banner p {
+        display: inline-block;
+    }
 }
-
 @media (min-width: 992px) {
 	.navbar-header div.loginreg {
 		margin-top:0;
 	}
     .banner-wrapper {
-       width: calc(100% - (100% - 1170px)/2 + 41px);
+       color: white;
+       width: 100%;
        position: absolute;
-       z-index: 4;
        top: 150px;
     }
     .banner {
         height:137px;
         width: 100%;
-        background: 0 0 repeat #35679A url(../img/banner.png);
-        right: left;
         left: 0;
-        z-index: 3;
     }
     .index-content, .index-right {
        margin-top: 170px;
+    }
+    .banner h1 {
+        margin-right: 20px;
+        font-size: 35px;
+    }
+    .banner .bigger {
+        font-size: 42px;
+    }
+    .banner p {
+        width: 400px;
     }
 }
 @media (min-width: 1290px) {
     .banner-wrapper {
        width: calc(100% - (100% - 1170px)/2 + 41px);
-       position: absolute;
-       z-index: 4;
        height: 162px;
+    }
+    .banner .container {
+        position: absolute;
+        right: 41px;
     }
     .ribbon {
         width: 41px;
