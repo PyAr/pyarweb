@@ -18,15 +18,18 @@
 	</div>
 </div>
 
+<div class="content-wrapper">
+{% block beforemain %}{% endblock %}
+
 <main id="main" class="container" role="main">
 
     <div class="row">
 
-      <div class="col-md-7">
+      <div class="col-md-8">
         {% block left-column %}{% endblock %}
       </div>
 
-      <div class="col-md-5">
+      <div class="col-md-4">
 
         {% block right-column %}
           <!-- SeachBox -->
@@ -45,7 +48,7 @@
           <!-- Próximos eventos -->
           <section class="list-group">
               <header class="list-group-item">
-                  <h3 class="list-group-item-heading">Próximos eventos</h3>
+                  <h3 class="list-group-item-heading">Eventos</h3>
               </header>
               
               {% next_events %}
@@ -69,3 +72,4 @@
     </div>
 </main>
 {% endblock %}
+</div>
