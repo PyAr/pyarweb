@@ -12,11 +12,6 @@ class PadawanForm(forms.ModelForm):
 
     interests = TagField(label='Interests')
 
-    def clean(self):
-        user = self.cleaned_data['user']
-        if Padawan.objects.filter(user=user).exists():
-            raise forms.ValidationError(_('You already are register as a Padawan'))
-
 
 class JediForm(forms.ModelForm):
     """A PyAr Jedi form."""
@@ -25,4 +20,3 @@ class JediForm(forms.ModelForm):
         fields = ('description', 'available', 'skills')
 
     skills = TagField(label='What i can teach...')
-    user = forms.CharField(widget=forms.widgets.HiddenInput())

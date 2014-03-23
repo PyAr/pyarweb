@@ -1,13 +1,22 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 <main id="main" class="container" role="main">
     <div class="row">
         <div class="col-md-12">
           <h1>Jedis disponibles</h1>
-          {% for jedi in jedi_list %}
-            {{ jedi.user.username }}
-          {% endfor %}
+          <table class="table">
+            {% for jedi in jedi_list %}
+            <tr>
+              <td>{{ jedi.id }}</td>
+              <td>{{ jedi.user.username }}</td>
+              <td>
+                <a href="{% url 'jedi.request' jedi.id %}" role="button" class="btn btn-primary btn-sm">{% trans 'Send request' %}</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
         </div>
     </div>
 </main>

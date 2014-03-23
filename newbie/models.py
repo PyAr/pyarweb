@@ -38,6 +38,17 @@ class Jedi(models.Model):
         return self.user.username
 
 
+    def accept_project(self):
+        """ A jedi can accept a Project which connect
+            the Padawan with de Jedi
+        """
+        pass
+
+    def decline_project(self):
+        """ A Jedi can reject a Project """
+        pass
+
+
 class Padawan(models.Model):
     """ A Padawan can be adopted by a Jedi """
 
@@ -61,3 +72,11 @@ class Padawan(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def send_project_request(self, jedi):
+        """ Start the process for connect with a Jedi with by email """
+        pass
+
+    def folder_project(self):
+        """ A Padawan can get out of a Porject """
+        pass
