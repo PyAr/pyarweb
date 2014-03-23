@@ -31,7 +31,7 @@ def list_all(request):
     return render(request, 'jobs/all.html', context)
 
 @login_required
-def edit(request, job_id=None):
+def update(request, job_id=None):
     """Edit Jobs that use Python."""
     if job_id:
         job = get_object_or_404(Job, id=job_id)
@@ -51,3 +51,29 @@ def edit(request, job_id=None):
         context = dict(jobs=jobs)
         return render(request, 'jobs/jobs_by_user.html', context)
 
+
+@login_required
+def delete(request, job_id):
+    """Delete a Job."""
+
+    job = get_object_or_404(
+        Job,
+        id=job_id,
+        owner=request.user,
+    )
+    job.delete()
+    url = reverse('jobs_list_all')
+
+    return HttpResponseRedirect(url)
+
+
+def view(request, job_id):
+    """Show a Job."""
+
+    job = get_object_or_404(
+        Job,
+        id=job_id
+    )
+
+    context = dict(job=job)
+    return render(request, 'jobs/view.html', context)

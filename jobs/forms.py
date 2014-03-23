@@ -6,4 +6,4 @@ class JobForm(forms.ModelForm):
     """A PyAr Jobs form."""
     class Meta:
         model = Job
-        fields = ('title', 'description', 'link', 'tags')
+        fields = ('title', 'description', 'remote', 'location', 'email', 'tags')
