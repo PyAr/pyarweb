@@ -91,10 +91,29 @@ def update(request, new_id):
 def list_all(request):
     """Return all news articles ordered by date desc."""
 
-    news_list = NewsArticle.objects.order_by('-created')
-    paginator = Paginator(news_list, 20) # Show 20 news per page
-    page = request.GET.get('page')
+    news = NewsArticle.objects.order_by('-created')
+    news_tags = []
 
+    if request.method == 'GET':
+        included_tags = []
+        excluded_tags = []
+        for k, v in request.GET.items():
+            if k.startswith('tag_'):
+                if v == '1':
+                    included_tags.append(k[4:])
+                elif v == '2':
+                    excluded_tags.append(k[4:])
+
+
+        if included_tags:
+            news = news.filter(tags__name__in=included_tags).distinct()
+        if excluded_tags:
+            news = news.exclude(tags__name__in=excluded_tags).distinct()
+
+        news_tags = NewsArticle.tags.all()
+
+    paginator = Paginator(news, 20) # Show 20 news per page
+    page = request.GET.get('page')
     try:
         news = paginator.page(page)
     except PageNotAnInteger:
@@ -104,7 +123,7 @@ def list_all(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         news = paginator.page(paginator.num_pages)
 
-    context = dict(news=news)
+    context = dict(news=news, tags=news_tags)
     return render(request, 'news/all.html', context)
 
 

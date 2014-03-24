@@ -48,3 +48,47 @@
         </span>
     </div>
 {% endblock %}
+{% block right-column %}
+<section class="list-group">
+    <header class="list-group-item">
+        <h3 class="list-group-item-heading">Filtrar por</h3>
+    </header>
+    <form method="get">
+        {% csrf_token %}
+        {% for tag in tags %}
+        <select name="tag_{{ tag.name }}" id="tag_{{ tag.name }}" class="hidden">
+            <option value="0"></option>
+            <option value="1" {% if tag.name in included %}selected{% endif %}></option>
+            <option value="2" {% if tag.name in excluded %}selected{% endif %}></option>
+        </select>
+        <label for="tag_{{ tag.name }}" class="job_tag {% if tag.name in included %}included{% elif tag.name in excluded%}excluded{% endif %}">
+            {{ tag.name }}
+        </label>
+        {% endfor %}
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <button type="button" class="btn btn-default">Borrar</button>
+        </div>
+    </form>
+    <script type="text/javascript">
+    $('.job_tag').click(function() {
+        var $select = $('#' + $(this).attr('for')),
+        newValue;
+        if (!$select.val() || $select.val() > 1) {
+            newValue = 0;
+            $(this).removeClass('excluded').removeClass('included');
+        }
+        else {
+            newValue = parseInt($select.val()) + 1;
+            if (newValue === 1) {
+                $(this).removeClass('excluded').addClass('included');
+            }
+            else {
+                $(this).removeClass('included').addClass('excluded');
+            }
+        }
+        $select.val(newValue);
+    });
+    </script>
+</section>
+{% endblock %}
