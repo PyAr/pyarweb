@@ -26,6 +26,8 @@ urlpatterns = patterns('',
     url(r'^jobs/', include('jobs.urls')),
     url(r'^newbie/', include('newbie.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^projects/', include('projects.urls')),
     url(r'^pyarenses/', include('registration.backends.default.urls')),
     url(r'^events/', include('events.urls', namespace='events')),
+    url(r'^faq/', include('faq.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

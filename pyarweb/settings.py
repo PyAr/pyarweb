@@ -67,6 +67,8 @@ INSTALLED_APPS = (
     'jobs',
     'events',
     'newbie',
+    'projects',
+    'faq',
 
     # 3rd party apps
     'django_extensions',
@@ -75,7 +77,6 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_autosuggest',
     'bootstrap3_datetime',
-
 )
 
 MIDDLEWARE_CLASSES = (

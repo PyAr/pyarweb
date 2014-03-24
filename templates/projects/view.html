@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load disqus_tags %}
+{% load devtags %}
+{% disqus_dev %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="row">
+        <div class="col-md-12">
+            <section class="list-group">
+                <header class="list-group-item">
+                  <h3 class="list-group-item-heading">
+                    {{ project.name }} | <small><a href="{% url 'projects_list_all' %}">Volver</a></small><br />
+                    <small>Autor: {{project.owner}}</small>
+                  </h3>
+                </header>
+                <article class="list-group-item">
+                  <p class="list-group-item-text lead">{{ project.description }}</p>
+                  <p class="list-group-item-text"><a href="{{ project.repository }}" target="__blank">Repositorio</a> | Licencia: {{ project.license }}</p>
+                  <p class="list-group-item-text"><em>Tags:
+                  {{project.tags}}
+                  {% comment %}
+                    {% for tag in project.tags.all %}
+                      {{ tag }}, 
+                    {% endfor %} 
+                  {% endcomment %}
+                  </em></p>
+                  <blockquote>
+                    <footer>
+                      {% if project.owner == user %}
+                        <a href="{% url 'projects_delete' project.id %}">Borrar</a> | 
+                        <a href="{% url 'projects_update' project.id %}">Modificar</a>
+                      {% endif %}
+                    </footer>
+                  </blockquote>
+                </article>
+            </section>
+            {% disqus_show_comments %}
+        </div>
+    </div>
+</main>
+{% endblock %}
