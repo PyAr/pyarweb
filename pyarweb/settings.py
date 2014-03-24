@@ -68,6 +68,7 @@ INSTALLED_APPS = (
     'events',
     'projects',
     'faq',
+    'django_summernote',
 
     # 3rd party apps
     'django_extensions',

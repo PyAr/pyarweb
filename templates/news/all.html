@@ -18,7 +18,7 @@
                   {{ newArticle.title }}
                 </a>
               </h4>
-              <p class="list-group-item-text">{{ newArticle.body|slice:":200" }} ...</p>
+              <p class="list-group-item-text">{{ newArticle.body|slice:":200"|striptags}} ...</p>
               <blockquote>
                 <footer>
                   {{ newArticle.modified }} por {{ newArticle.owner}} 

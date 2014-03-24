@@ -8,5 +8,6 @@ django-registration==1.0
 django-taggit==0.11.2
 ipdb==0.8
 ipython==1.2.0
+django-summernote
 -e git://github.com/PyAr/django-disqus.git#egg=django-disqus
 -e git://github.com/PyAr/django-taggit-autosuggest.git#egg=django-taggit-autosuggest

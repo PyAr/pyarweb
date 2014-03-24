@@ -14,7 +14,7 @@
                   </h3>
                 </header>
                 <article class="list-group-item">
-                  <p class="list-group-item-text">{{ newArticle.body }}</p>
+                  <p class="list-group-item-text">{{ newArticle.body | safe }}</p>
                   <blockquote>
                     <footer>
                       {{ newArticle.modified }} por {{ newArticle.owner}} 
