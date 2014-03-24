@@ -30,6 +30,7 @@ def list_all(request):
     context = dict(jobs=jobs)
     return render(request, 'jobs/all.html', context)
 
+
 @login_required
 def update(request, job_id=None):
     """Edit Jobs that use Python."""

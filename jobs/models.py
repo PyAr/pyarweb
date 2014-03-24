@@ -4,7 +4,10 @@ from taggit_autosuggest.managers import TaggableManager
 from pycompanies.models import Company
 
 # Create your models here.
+
+
 class Job(models.Model):
+
     """A PyAr Job."""
 
     title = models.CharField(max_length=255)
