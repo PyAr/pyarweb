@@ -6,7 +6,7 @@ django-bootstrap3-datetimepicker==2.2.3
 django-extensions==1.3.3
 django-registration==1.0
 django-taggit==0.11.2
-django-taggit-autosuggest==0.2.1
 ipdb==0.8
 ipython==1.2.0
 -e git://github.com/PyAr/django-disqus.git#egg=django-disqus
+-e git://github.com/PyAr/django-taggit-autosuggest.git#egg=django-taggit-autosuggest
