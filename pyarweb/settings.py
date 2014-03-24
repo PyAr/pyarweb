@@ -66,6 +66,7 @@ INSTALLED_APPS = (
     'pycompanies',
     'jobs',
     'events',
+    'projects',
     'faq',
 
     # 3rd party apps
@@ -75,7 +76,6 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_autosuggest',
     'bootstrap3_datetime',
-
 )
 
 MIDDLEWARE_CLASSES = (
