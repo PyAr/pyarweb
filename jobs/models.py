@@ -11,7 +11,7 @@ class Job(models.Model):
     """A PyAr Job."""
 
     title = models.CharField(max_length=255)
-    company = models.ForeignKey(Company, null=True)
+    company = models.ForeignKey(Company, null=True, blank=True)
     description = models.TextField()
     location = models.CharField(max_length=100)
     email = models.EmailField()

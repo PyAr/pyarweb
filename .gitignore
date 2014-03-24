@@ -3,3 +3,4 @@
 *.swo
 .venv
 db.sqlite3
+static
