@@ -12,10 +12,10 @@
                   </h3>
                 </header>
                 <article class="list-group-item">
-                  <p class="list-group-item-text">{{ job.description }}</p>
+                  <p class="list-group-item-text">{{ job.description|linebreaks }}</p>
                   <blockquote>
                     <footer>
-                      Creado el {{ job.created }} por {{ job.owner }} 
+                      Creado el {{ job.created|date:"d/m/y" }} por {{ job.owner }} 
                       {% if job.owner == user %}
                         <a href="{% url 'jobs_delete' job.id %}">Borrar</a> | 
                         <a href="{% url 'jobs_update' job.id %}">Modificar</a>
