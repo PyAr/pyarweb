@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     url(r'^jobs/', include('jobs.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^projects/', include('projects.urls')),
     url(r'^pyarenses/', include('registration.backends.default.urls')),
     url(r'^events/', include('events.urls', namespace='events')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

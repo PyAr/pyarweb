@@ -66,6 +66,7 @@ INSTALLED_APPS = (
     'pycompanies',
     'jobs',
     'events',
+    'projects',
 
     # 3rd party apps
     'django_extensions',

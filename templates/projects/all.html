@@ -1,0 +1,52 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+
+{% block left-column %}
+    <!-- Últimas noticias -->
+    <section class="list-group">
+        <header class="list-group-item">
+            <h3 class="list-group-item-heading">Proyectos de la Comunidad
+              {% if user.is_authenticated %}
+                | <a href="{% url 'projects_add' %}"><small>Agregar</small></a>
+              {% endif %}
+            </h3>
+        </header>
+        {% for project in projects %} 
+            <article class="list-group-item">
+              <h4 class="list-group-item-heading">
+                <a href="{% url 'projects_view' project.id %}">
+                  {{ project.name }}
+                </a>
+                <small>
+                  ( Autor: {{ project.owner }} )
+                </small>
+              </h4>
+              <p class="list-group-item-text">{{ project.description|slice:":200" }} ...</p>
+              <blockquote>
+                <footer>
+                  {% if project.owner == user %}
+                    <a href="{% url 'projects_delete' project.id %}">Borrar</a> | 
+                    <a href="{% url 'projects_update' project.id %}">Modificar</a>
+                  {% endif %}
+                </footer>
+              </blockquote>
+            </article>
+        {% endfor %}
+    </section>
+    <!-- pagination -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if projects.has_previous %}
+                <a href="?page={{ projects.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ projects.number }} of {{ projects.paginator.num_pages }}.
+            </span>
+
+            {% if projects.has_next %}
+                <a href="?page={{ projects.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
