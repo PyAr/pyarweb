@@ -21,7 +21,7 @@ a.http:before {
     padding: 20px 20px 10px;
 }
 
-#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img {
+#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img {
         background-image: url(/static/img/icons/icons.png);
         height: 62px;
         width: 62px;
@@ -29,15 +29,15 @@ a.http:before {
 }
 
 
-#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img.aprendiendo_python {
+#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.aprendiendo_python {
         background-position: 195px 0;
 }
 
-#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img.proyectos_comunidad {
+#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.proyectos_comunidad {
         background-position: 62px 0;
 }
 
-#main > div.row > div.col-md-7 div.row > article.col-sm-6 > div.img.lista_correo {
+#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.lista_correo {
         background-position: 128px 0;
 }
 
@@ -151,17 +151,85 @@ h4.list-group-item-heading {
 	text-align: center;
 	margin-top: 38px;
 }
- 
+.banner {
+    padding: 0px 20px;
+    background: 0 0 repeat #35679A url(../img/banner.png);
+}
+.banner p {
+    font-size: 15px;
+    text-shadow: 0px 0px 4px #444;
+    vertical-align: bottom;
+}
+.banner h1 {
+    text-shadow: 0px 0px 4px #777;
+    font-size: 30px;
+    font-weight: bold;
+    padding-top: 7px;
+    padding-left: 95px;
+    background: url(../img/python-banner.png) 0 0 no-repeat transparent;
+    height: 96px;
+}
+.banner .bigger {
+    font-size: 38px;
+    display: block;
+}
+.banner-wrapper {
+    color: white;
+}
 @media (min-width: 768px) {
 	.navbar-header div.loginreg {
 		float: left;
 	}
+    .banner h1, .banner p {
+        display: inline-block;
+    }
 }
-
 @media (min-width: 992px) {
 	.navbar-header div.loginreg {
 		margin-top:0;
 	}
+    .banner-wrapper {
+       color: white;
+       width: 100%;
+       position: absolute;
+       top: 150px;
+    }
+    .banner {
+        height:137px;
+        width: 100%;
+        left: 0;
+    }
+    .index-content, .index-right {
+       margin-top: 170px;
+    }
+    .banner h1 {
+        margin-right: 20px;
+        font-size: 35px;
+    }
+    .banner .bigger {
+        font-size: 42px;
+    }
+    .banner p {
+        width: 400px;
+    }
+}
+@media (min-width: 1290px) {
+    .banner-wrapper {
+       width: calc(100% - (100% - 1170px)/2 + 41px);
+       height: 162px;
+    }
+    .banner .container {
+        position: absolute;
+        right: 41px;
+    }
+    .ribbon {
+        width: 41px;
+        height: 25px;
+        background-image: url(../img/ribbon.png);
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+    }
 }
 
 #header .navbar-brand {
@@ -234,7 +302,10 @@ h4.list-group-item-heading {
         width: 25px;
         background-position: 0 25px;
 }
-
+#header ul.navbar-nav > li > span.wiki {
+        width: 25px;
+        background-position: 0 25px;
+}
 #header ul.navbar-nav > li > span.news {
         width: 26px;
         background-position: -206px 25px;
@@ -281,14 +352,14 @@ h4.list-group-item-heading {
 
 @media (min-width: 768px) {
 	#header ul.navbar-nav > li {
-		width: 12.5%;
+		width: 11.11%;
 	}
 }
 
 #header ul.navbar-nav > li > a {
 	padding: 0;
 	color: #fb8b00;
-	font-size: 15px;
+	font-size: 14px;
 	font-weight: bold;
 	text-align: center;
 }

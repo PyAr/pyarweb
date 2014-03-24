@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="row">
+        <div class="col-md-12">
+            <section class="list-group">
+                <header class="list-group-item">
+                  <h3 class="list-group-item-heading">
+                    {{ job.title }} | <small><a href="{% url 'jobs_list_all' %}">Volver</a></small>
+                  </h3>
+                </header>
+                <article class="list-group-item">
+                  <p class="list-group-item-text">{{ job.description }}</p>
+                  <blockquote>
+                    <footer>
+                      Creado el {{ job.created }} por {{ job.owner }} 
+                      {% if job.owner == user %}
+                        <a href="{% url 'jobs_delete' job.id %}">Borrar</a> | 
+                        <a href="{% url 'jobs_update' job.id %}">Modificar</a>
+                      {% endif %}
+                    </footer>
+                  </blockquote>
+                </article>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
