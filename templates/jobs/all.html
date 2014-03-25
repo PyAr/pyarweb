@@ -31,7 +31,7 @@
     <header class="list-group-item">
         <h3 class="list-group-item-heading">Filtrar por</h3>
     </header>
-    <form method="get">
+    <form method="POST">
         {% csrf_token %}
         {% for tag in tags %}
         <select name="tag_{{ tag.name }}" id="tag_{{ tag.name }}" class="hidden">
