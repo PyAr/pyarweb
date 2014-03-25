@@ -92,25 +92,23 @@ def list_all(request):
     """Return all news articles ordered by date desc."""
 
     news = NewsArticle.objects.order_by('-created')
-    news_tags = []
+    news_tags = NewsArticle.tags.all()
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         included_tags = []
         excluded_tags = []
-        for k, v in request.GET.items():
+        for k, v in request.POST.items():
             if k.startswith('tag_'):
                 if v == '1':
                     included_tags.append(k[4:])
                 elif v == '2':
                     excluded_tags.append(k[4:])
 
-
         if included_tags:
             news = news.filter(tags__name__in=included_tags).distinct()
         if excluded_tags:
             news = news.exclude(tags__name__in=excluded_tags).distinct()
 
-        news_tags = NewsArticle.tags.all()
 
     paginator = Paginator(news, 20) # Show 20 news per page
     page = request.GET.get('page')

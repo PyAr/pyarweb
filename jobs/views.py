@@ -26,24 +26,22 @@ def add(request):
 
 def list_all(request):
     """Return all news Jobs ordered by date desc."""
-    if request.method == 'GET':
-        included_tags = []
-        excluded_tags = []
-        for k, v in request.GET.items():
+    jobs_tags = Job.tags.all()
+    jobs = Job.objects.order_by('-created')
+    included_tags = []
+    excluded_tags = []
+
+    if request.method == 'POST':
+        for k, v in request.POST.items():
             if k.startswith('tag_'):
                 if v == '1':
                     included_tags.append(k[4:])
                 elif v == '2':
                     excluded_tags.append(k[4:])
-
-        jobs = Job.objects.order_by('-created')
-
         if included_tags:
             jobs = jobs.filter(tags__name__in=included_tags).distinct()
         if excluded_tags:
             jobs = jobs.exclude(tags__name__in=excluded_tags).distinct()
-
-        jobs_tags = Job.tags.all()
 
     context = dict(jobs=jobs, tags=jobs_tags,
                    included=included_tags, excluded=excluded_tags)
