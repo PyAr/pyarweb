@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from .models import Project
 from .forms import ProjectForm
+from .apis import github
 
 
 @login_required
@@ -35,6 +36,7 @@ def view(request, project_id):
         Project,
         id=project_id
     )
+
 
     context = dict(project=project)
     return render(request, 'projects/view.html', context)
@@ -89,6 +91,14 @@ def list_all(request):
     paginator = Paginator(projects_list, 20) # Show 20 projects per page
     page = request.GET.get('page')
 
+    pyar_projects = github.get('/orgs/pyar/repos').json()
+    pyar_projects_info = [
+        dict(
+            url=d['url'],
+            name=d['name'],
+            description=d['description']
+        ) for d in pyar_projects]
+
     try:
         projects = paginator.page(page)
     except PageNotAnInteger:
@@ -98,7 +108,7 @@ def list_all(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         projects = paginator.page(paginator.num_pages)
 
-    context = dict(projects=projects)
+    context = dict(projects=projects, pyar_projects=pyar_projects_info)
     return render(request, 'projects/all.html', context)
 
 

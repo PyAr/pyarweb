@@ -11,6 +11,23 @@
               {% endif %}
             </h3>
         </header>
+        {% for project in pyar_projects %} 
+            <article class="list-group-item">
+              <h4 class="list-group-item-heading">
+                <a href="{{ project.url }}">
+                  {{ project.name }}
+                </a>
+                <small>
+                  ( Autor: <toimplement>)
+                </small>
+              </h4>
+              <p class="list-group-item-text">{{ project.description|slice:":200" }} ...</p>
+              <blockquote>
+                <footer>
+                </footer>
+              </blockquote>
+            </article>
+        {% endfor %}
         {% for project in projects %} 
             <article class="list-group-item">
               <h4 class="list-group-item-heading">
