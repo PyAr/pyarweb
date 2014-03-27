@@ -1,0 +1,21 @@
+{% extends "planet/base.html" %}
+{% load pagination_tags tagging_tags planet_tags %}
+{% load url from future %}
+
+{% block left-column %}
+    <h1>Tag: {{ tag }}</h1>
+    {% autopaginate posts 20 %}
+    {% for post in posts %}
+        <div class="post short {% cycle 'even' 'odd' %} clearfix">
+          {% post_details post "planet/posts/short.html" %}
+        </div>
+    {% endfor %}
+    {% paginate %}
+{% endblock %}
+
+{% block right-column %}
+    {% include 'planet/feeds/blocks/syndication_block.html' %}
+    <div>
+        {% related_tags_for tag %}
+    </div>
+{% endblock %}

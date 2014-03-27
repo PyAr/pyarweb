@@ -77,6 +77,9 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_autosuggest',
     'bootstrap3_datetime',
+    'planet',
+    'pagination',
+    'tagging',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -86,6 +89,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'pyarweb.urls'
@@ -125,3 +130,16 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.media",
+    'django.core.context_processors.static',
+    "django.core.context_processors.request",
+    "django.core.context_processors.i18n",
+    "django.contrib.messages.context_processors.messages",
+    "planet.context_processors.context"
+)
+
+PLANET = {"USER_AGENT": "pyarweb/0.1"}

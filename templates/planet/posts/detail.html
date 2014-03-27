@@ -1,0 +1,16 @@
+{% extends "planet/base.html" %}
+{% load planet_tags tagging_tags %}
+
+{% block left-column %}
+    <div class="post clearfix">
+        {% post_full_details post %}
+        <div class="content">
+              {{ post.content|safe }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block right-column %}
+    {% cloud_for_blog post.feed.blog %}
+    {% include 'planet/feeds/blocks/syndication_block.html' %}
+{% endblock %}

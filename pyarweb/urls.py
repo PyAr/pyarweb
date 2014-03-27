@@ -30,4 +30,5 @@ urlpatterns = patterns('',
     url(r'^pyarenses/', include('registration.backends.default.urls')),
     url(r'^events/', include('events.urls', namespace='events')),
     url(r'^faq/', include('faq.urls')),
+    url(r'^planet/', include('planet.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

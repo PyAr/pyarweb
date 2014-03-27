@@ -1,0 +1,48 @@
+{% extends "planet/base.html" %}
+{% load pagination_tags tagging_tags planet_tags %}
+{% load url from future %}
+
+{% block left-column %}
+    <h1>{{ author.name }}</h1>
+    <table class="author details table table-hover table-bordered">
+        {% for blog in author|get_blogs %}
+        <tr>
+          <th>Acerca de este blog</th>
+          <td><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></td>
+        </tr>
+        {% endfor %}
+        {% for blog in author|get_blogs %}
+        <tr>
+          <th>Website</th>
+          <td><a href="{{ blog.url }}">link</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if tag %}
+        <div>
+            <p>Posts bajo el tag: <strong>{{ tag }}</strong></p>
+            <a href="{{ author.get_absolute_url }}" title="Ver todos los posts escritos por {{ author.name }}">
+                Ver todos los posts escritos por este autor
+            </a>
+        </div>
+    {% endif %}
+
+    {% autopaginate posts 20 %}
+    {% for post in posts %}
+        <div class="post short {% cycle 'even' 'odd' %} clearfix">
+          {% post_details post "planet/posts/short.html" %}
+        </div>
+    {% endfor %}
+    {% paginate %}
+{% endblock %}
+
+{% block right-column %}
+    {% if tag %}
+        <div>
+            {% authors_about tag %}
+        </div>
+    {% endif %}
+
+    {% cloud_for_author author %}
+{% endblock %}
