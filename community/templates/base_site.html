@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load devtags %}
 {% load event_tags %}
+{% load planet_tags %}
 
 
 {% block content %}
@@ -60,10 +61,15 @@
               <header class="list-group-item">
                   <h3 class="list-group-item-heading">Planeta PyAr</h3>
               </header>
-              {% for i in 4|get_range %} 
+              {% latest_posts 5 as post_list %}
+              {% for post in post_list %}
                   <article class="list-group-item">
-                      <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
-                      <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
+                      <h4 class="list-group-item-heading">{{ post.title|safe }}</h4>
+                      <p class="list-group-item-text">
+                        <span class="text-muted">via: </span>&nbsp;
+                        <span>{{ post.feed.blog }}</span>&nbsp;
+                        <span class="text-muted">{{ post.date_modified|date:"d/M/Y H:i" }}.</span>
+                      </p>
                   </article>
               {% endfor %}
           </section>
