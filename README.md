@@ -9,11 +9,25 @@ Como arranco / instalo el proyecto en mi máquina?
 
 Respuesta: 
 ----------
-Debes tener instalado virtualenvwrapper y:
 
-1. Crear un nuevo environment, ej: mkvirtualenv pyarweb
+Debes tener python3, NO codeamos el sitio con compatibilidad con python.
 
-2. instalar las dependencias, ej: pip install -r ./requirements.txt
+1- Debes crear un nuevo virtualenv, Ej: pyvenv3-3 pyarweb 
+
+Activas tu virtualenv, ej: source pyarweb/bin/activate
+
+Si no pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
+e instalalo con el python3 de tu virtualenv. Luego de instalar setuptools hacer:
+
+easy_install-3.3 pip
+
+2. Instalar django-disqus a mano: 
+
+git clone https://github.com/PyAr/django-disqus.git
+
+cd django-disqus; python ./setup.py develop
+
+2. instalar las dependencias, ej: pip3 install -r ./requirements.txt
 
 3. python manage.py syncdb
 
