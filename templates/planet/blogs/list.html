@@ -1,0 +1,37 @@
+{% extends "planet/base.html" %}
+{% load pagination_tags  %}
+{% load url from future %}
+
+{% block left-column %}
+    <h1>Blogs en Planeta Pyar</h1>
+    {% autopaginate blogs_list 50 %}
+      {% for blog in blogs_list %}
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+                <a href="{{ blog.get_absolute_url }}" class="feed" title="Ver todos los posts de este blog">{{ blog.title }}</a>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <table class="blog details table table-hover table-bordered">
+                <tr>
+                    <th>Website</th><td><a href="{{ blog.url }}" title="Visitar el blog">{{ blog.url }}</td>
+                </tr>
+                <tr>
+                    <th>Posts publicados</th><td><a href="{{ blog.get_absolute_url }}" class="feed" title="Ver todos los posts de este blog">ver</td>
+                </tr>
+                {% for feed in blog.feed_set.all %}
+                <tr>
+                    <th>Feed</th>
+                    <td>
+                      <a href="{{ feed.url }}" title="Suscribirse a {{ feed.title }}">
+                        <span class="rss">link</span>
+                      </a></td>
+                </tr>
+                {% endfor %}
+            </table>
+          </div>
+        </div>
+    {% endfor %}
+    {% paginate %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "planet/base.html" %}
+{% load pagination_tags planet_tags %}
+
+{% block left-column %}
+    <h1>Planeta Pyar</h1>
+    {% autopaginate posts 15 %}
+    {% for post in posts %}
+        <div class="post">
+            {% post_details post %}
+        </div>
+    {% endfor %}
+
+    {% paginate %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base_site.html" %}
+{% load staticfiles planet_tags tagging_tags %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static "planet/planet.css" %}">
+{% endblock %}
+
+{% block right-column %}
+  {% include 'planet/feeds/blocks/syndication_block.html' %}
+  {% tag_cloud_for_model planet.Post as tags_cloud with steps=7 min_count=5 distribution=log %}
+  {% include 'planet/tags/blocks/cloud.html' %}
+{% endblock %}

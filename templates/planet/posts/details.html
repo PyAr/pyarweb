@@ -1,0 +1,22 @@
+{% load url from future %}
+<h2>
+  <a href="{{ post.url }}" title="Leer {{ post.title|safe }}">
+    {{ post.title|striptags|safe }}
+  </a>
+</h2>
+<p class="content">
+    <span class="date">{{ post.date_modified|date:"M d Y" }}</span> &square;
+    <a href="{{ post.get_absolute_url }}" title="Leer la versi&oacute;n archivada de '{{ post.title|safe }}'">
+      [Versi&oacute;n Archivada]
+    </a> &square;
+    Publicado en <a href="{{ post.feed.blog.get_absolute_url }}" title="Ver todos los posts del blog">{{ post.feed.blog.title }}</a>
+    {% if post.tags.count %} Tags:&nbsp;
+      {% for tag in post.tags.all|slice:":5" %}
+          <a href="{% url 'planet_tag_detail' tag.name %}" title="Tag">{{ tag.name|safe }}</a>&nbsp;
+      {% endfor %}
+    {% endif %}
+    <div>
+      {{ post.content|safe }}
+    </div>
+</p>
+<br/>

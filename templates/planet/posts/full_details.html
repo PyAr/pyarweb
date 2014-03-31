@@ -1,0 +1,21 @@
+{% load url from future %}
+<div class="date">{{ post.date_modified|date:"M d Y" }}</div>
+<h1>{{ post.title|striptags|safe }}</h1>
+<table class="blog details table table-hover table-bordered">
+    {% for author in post.authors.all %}
+    <tr>
+        <th>Escrito por</th><td>
+        <a href="{{ author.get_absolute_url }}" title="Ver todos posts escritos por { author.name }}">
+            {{ author.name }}
+        </a></td>
+    </tr>
+    {% endfor %}
+    <tr>
+    <th>En el blog</th><td><a href="{{ post.feed.blog.get_absolute_url }}" title="Ver todos los posts de este blog">
+        {{ post.feed.blog.title }}
+    </a></td>
+    </tr>
+    <tr>
+        <th>Post original</th><td><a href="{{ post.url }}">{{ post.title|safe }}</a>
+    </tr>
+</table>

@@ -12,3 +12,4 @@ django-summernote
 requests
 -e git://github.com/PyAr/django-disqus.git#egg=django-disqus
 -e git://github.com/PyAr/django-taggit-autosuggest.git#egg=django-taggit-autosuggest
+django-planet>=0.6.2

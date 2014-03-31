@@ -1,0 +1,29 @@
+{% extends "planet/base.html" %}
+{% load pagination_tags planet_tags %}
+{% load url from future %}
+
+{% block left-column %}
+<h1>Bloggers en Planeta Pyar</h1>
+<div class="author list">
+    {% autopaginate authors_list 20 %}
+    {% for author in authors_list %}
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a class="nombre" href="{{ author.get_absolute_url }}" title="Blogger: {{ author.name }}">
+                {{ author.name }}
+            </a>
+          </h3>
+        </div>
+        <div class="panel-body">
+          escribe en:
+            {% for blog in author|get_blogs %}
+              <a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a>
+              {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+    {% paginate %}
+</div>
+{% endblock %}
