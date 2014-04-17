@@ -18,4 +18,4 @@ ipdb==0.8
 ipython==1.2.0
 requests==2.2.1
 six==1.6.1
-tagging==0.2.1
+#tagging==0.2.1
