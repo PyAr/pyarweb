@@ -7,6 +7,7 @@ from django.views.generic.edit import (
     UpdateView,
     DeleteView,
 )
+from django.utils import timezone
 
 from .forms import EventForm
 from .models import Event
@@ -18,8 +19,17 @@ from .mixins import (
 
 
 class EventList(ListView):
-    queryset = Event.objects.order_by('-updated_at')
+    queryset = Event.objects.filter(
+        end_at__lt=timezone.now()).order_by('-updated_at')
     paginate_by = 5
+    context_object_name = "eventos_pasados"
+
+    def get_context_data(self, **kwargs):
+        context = super(EventList, self).get_context_data(**kwargs)
+        context['eventos_proximos'] = Event.objects.filter(
+            end_at__gte=timezone.now()).order_by('-updated_at')
+
+        return context
 
 
 class EventDetail(EventMixin, DetailView):

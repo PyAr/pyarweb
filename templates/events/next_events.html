@@ -12,4 +12,9 @@
         <span>{{ event.place }}</span>
       </p>
     </article>
+
+{% empty %}
+  <article class="list-group-item">
+    <p class="list-group-item-text">No hay eventos a futuro</p>
+  </article>
 {% endfor %}
