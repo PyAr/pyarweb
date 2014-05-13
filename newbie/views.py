@@ -9,6 +9,10 @@ from .forms import PadawanForm, JediForm
 from .models import Jedi, Padawan
 
 
+def register(request):
+    return render(request, 'newbie/register.html', {})
+
+
 @login_required
 def padawan_add(request):
     """ Add a new Padawan """
@@ -72,4 +76,10 @@ def jedi_request(request, jedi_id):
     jedi = get_object_or_404(Jedi, id=jedi_id)
     padawan = get_object_or_404(Padawan, user=request.user)
     padawan.send_project_request(jedi)
+    return render(request, 'newbie/jedi-request-successfully.html', {})
+
+
+def jedi_answer(request, jedi_id, padawan_id, answer):
+    jedi = get_object_or_404(Jedi, id=jedi_id)
+    jedi.accept_padawan(padawan_id)
     return render(request, 'newbie/jedi-request-successfully.html', {})
