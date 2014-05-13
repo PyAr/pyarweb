@@ -66,6 +66,7 @@ INSTALLED_APPS = (
     'pycompanies',
     'jobs',
     'events',
+    'newbie',
     'projects',
     'faq',
     'django_summernote',
