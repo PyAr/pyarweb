@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from taggit_autosuggest.managers import TaggableManager
 
+
 class Project(models.Model):
     """PyAr projects."""
 
@@ -9,6 +10,10 @@ class Project(models.Model):
         ('G','Github'),
         ('B','Bitbucket'),
         ('O','Other')
+    )
+    REPOSITORY_STATUS = (
+        ('0','Inactivo'),
+        ('1','Activo'),
     )
     LICENSES = (
         ("GPL2", "GPLv2"),
@@ -23,7 +28,8 @@ class Project(models.Model):
         ("LGP3", "LGPL v3"),
         ("MPL2", "Mozilla License"),
         ("NOLC", "No License"),
-        ("PBDM", "Public Domain")
+        ("PBDM", "Public Domain"),
+        ("OTHER", "Other")
     )  # ToDo: Armar un listado de licencias exhaustivo
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(User)
@@ -31,7 +37,7 @@ class Project(models.Model):
     repository = models.URLField()
     repositoryType = models.CharField(max_length=1, choices=REPOSITORY_TYPES)
     license = models.CharField(max_length=4, choices=LICENSES)
-    state = models.BooleanField()
+    state = models.CharField(max_length=1, default="1", choices=REPOSITORY_STATUS)
     tags = models.CharField(max_length=255)
     #tags = TaggableManager()
     mail = models.EmailField()

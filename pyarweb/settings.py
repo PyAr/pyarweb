@@ -81,6 +81,7 @@ INSTALLED_APPS = (
     'planet',
     'pagination',
     'tagging',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -116,9 +117,9 @@ LANGUAGE_CODE = 'es-AR'
 
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
-# Activa todo el sitio con el horario de Argentina  
-from django.utils import timezone
-timezone.activate(TIME_ZONE)
+# Activa todo el sitio con el horario de Argentina
+# from django.utils import timezone
+# timezone.activate(TIME_ZONE)
 
 USE_I18N = True
 
