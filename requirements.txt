@@ -6,6 +6,7 @@ beautifulsoup4==4.3.2
 django-bootstrap3-datetimepicker==2.2.3
 -e git+https://github.com/PyAr/django-disqus.git@adcb83c617be475b2918067ba5318366098e33bf#egg=django_disqus
 django-extensions==1.3.3
+django-model-utils==2.0.3
 django-pagination-py3==1.1.1
 django-planet==0.6.2
 django-registration==1.0
@@ -14,8 +15,8 @@ django-tagging==0.3.2
 django-taggit==0.11.2
 -e git+https://github.com/PyAr/django-taggit-autosuggest.git@48460dc0703800c16a8b7a780b8f2235e09f3b91#egg=django_taggit_autosuggest
 feedparser==5.1.3
-ipdb==0.8
-ipython==1.2.0
+ipdb
+ipython
 requests==2.2.1
 six==1.6.1
 #tagging==0.2.1
