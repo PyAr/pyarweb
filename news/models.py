@@ -1,6 +1,8 @@
+from django.db import models
 from django.contrib.auth.models import User
 from taggit_autosuggest.managers import TaggableManager
 from model_utils.models import TimeStampedModel
+
 
 class NewsArticle(TimeStampedModel):
     """A PyAr news article."""
