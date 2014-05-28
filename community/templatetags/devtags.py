@@ -1,9 +1,11 @@
 from django.template import Library
+from lxml import etree
 
 register = Library()
 
+
 @register.filter
-def get_range( value ):
+def get_range(value):
     """
         Filter - returns a list containing range made from given value
         Usage (in template):
@@ -21,4 +23,12 @@ def get_range( value ):
 
         Instead of 3 one may use the variable set in the views
     """
-    return range( value )
+    return range(value)
+
+
+@register.filter
+def html2text(html):
+    return etree.tostring(
+        etree.HTML(html),
+        encoding='utf8', method='text'
+    )

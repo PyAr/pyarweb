@@ -57,10 +57,11 @@
         <header class="list-group-item">
             <h3 class="list-group-item-heading">Últimas noticias</h3>
         </header>
-        {% for i in 3|get_range %} 
+        {% for article in news %}
             <article class="list-group-item">
-                <h4 class="list-group-item-heading">Call for charlas - PyCon 2012</h4>
-                <p class="list-group-item-text">Python Argentina se enorgullece de anunciar que está abierto el periodo de recepción de propuestas para PyCon Argentina 2012, con fecha límite 30 de junio de 2012. Más información e intrucciones para el envío, aqui.</p>
+                <time class="published" datetime="{{ article.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ article.created|date:"d/m/Y" }}</time>
+                <h4 class="list-group-item-heading"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h4>
+                <p class="list-group-item-text">{{ article.introduction|default:article.body|html2text|truncatewords:25 }}</p>
             </article>
         {% endfor %}
     </section>
@@ -70,7 +71,7 @@
         <header class="list-group-item">
             <h3 class="list-group-item-heading">Estadísticas de la lista de correo</h3>
         </header>
-        {% for i in 3|get_range %} 
+        {% for i in 3|get_range %}
             <article class="list-group-item">
                 <p class="list-group-item-text">Mensajes de esta semana: 212</p>
             </article>

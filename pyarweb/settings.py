@@ -60,6 +60,17 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
+    # pyarweb apps
+    'community',
+    'news',
+    'pycompanies',
+    'jobs',
+    'events',
+    'newbie',
+    'projects',
+    'faq',
+
     # 3rd party apps
     'django_extensions',
     'registration',
@@ -74,15 +85,6 @@ INSTALLED_APPS = (
     'django_summernote',
     'south',
 
-    # pyarweb apps
-    'community',
-    'news',
-    'pycompanies',
-    'jobs',
-    'events',
-    'newbie',
-    'projects',
-    'faq',
 
 )
 

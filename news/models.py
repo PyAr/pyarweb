@@ -13,5 +13,9 @@ class NewsArticle(TimeStampedModel):
     owner = models.ForeignKey(User)
     tags = TaggableManager()
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('news_view', (self.id,), {})
+
     def __unicode__(self):
         return u'%s' % self.title

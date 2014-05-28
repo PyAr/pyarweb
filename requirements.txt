@@ -2,6 +2,7 @@ Django==1.6.2
 Pillow==2.3.0
 South==0.8.4
 argparse==1.1
+lxml==3.3.5
 beautifulsoup4==4.3.2
 django-bootstrap3-datetimepicker==2.2.3
 -e git+https://github.com/PyAr/django-disqus.git@adcb83c617be475b2918067ba5318366098e33bf#egg=django_disqus
