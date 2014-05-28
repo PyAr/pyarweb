@@ -1,5 +1,5 @@
-{% spaceless %}
-<!DOCTYPE html>{% load staticfiles %}
+{% load staticfiles %}
+<!DOCTYPE html>
 <html lang="es">
     <head>
         <meta charset="utf-8">
@@ -26,8 +26,7 @@
         {% block content %}{% endblock %}
         {% include "footer.html" %}
 
-        {% block javascripts %} {% endblock %}  
+        {% block javascripts %} {% endblock %}
 
     </body>
 </html>
-{% endspaceless %}
