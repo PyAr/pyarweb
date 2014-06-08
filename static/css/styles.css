@@ -70,7 +70,7 @@ a.http:before {
 /*
  * Search
  */
- 
+
 iframe#google {
 	border:0;
 	margin:0;
@@ -146,7 +146,7 @@ h4.list-group-item-heading {
 /*
  * Navbar
  */
- 
+
 .navbar-header div.loginreg {
 	text-align: center;
 	margin-top: 38px;
@@ -449,7 +449,7 @@ h3 {
 /*
  * Inputs and forms
  */
- 
+
 form.form-signin,
 form.form-signup {
 	width: 60%;
@@ -512,4 +512,10 @@ textarea:not(.form-control) {
 }
 .job_tag.included {
     background-color: green;
+}
+
+
+time.published {
+    font-size: 0.8em;
+    color: #666;
 }
