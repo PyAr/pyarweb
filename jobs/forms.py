@@ -11,8 +11,8 @@ class JobForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(JobForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('job_submit', _('Submit')))
-        self.helper.add_input(Reset('job_reset', _('Reset'), css_class='btn-default'))
+        self.helper.add_input(Submit('job_submit', _('Guardar')))
+        self.helper.add_input(Reset('job_reset', _('Limpiar'), css_class='btn-default'))
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
@@ -26,11 +26,11 @@ class JobForm(forms.ModelForm):
             Div(
                 'email',
                 'tags',
-                css_class='column col-md-6'
+                css_class='col-md-6'
             ),
             Div(
             	'description',
-            	css_class='column col-md-12'
+            	css_class='col-md-12'
             ),
         )
 
