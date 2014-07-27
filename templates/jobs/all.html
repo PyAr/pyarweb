@@ -6,8 +6,8 @@
 <!-- Últimas noticias -->
 <section class="list-group">
     <header class="list-group-item">
-        <h3 class="list-group-item-heading">{% trans 'Jobs in Python' %}
-        | <a href="{% url 'jobs_add' %}"><small>{% trans 'Add' %}</small></a>
+        <h3 class="list-group-item-heading">{% trans 'Trabajos con Python' %}
+        | <a href="{% url 'jobs_add' %}"><small>{% trans 'Agregar' %}</small></a>
         </h3>
     </header>
     {% if jobs %}
@@ -22,11 +22,13 @@
             {{ job.description }}
             {% endif %}
             </p>
-            <p><a href="{{ job.get_absolute_url }}">{% trans 'Read more...' %}</a></p>
+            <p><a href="{{ job.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
         </article>
         {% endfor %}
     {% else %}
-        <p>{% trans 'No jobs matched your search.' %}</p>
+        <div class="col-md-12">
+            <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
+        </div>
     {% endif %}
 </section>
 {% endblock %}
@@ -50,9 +52,9 @@
             {% endfor %}
         </div>
         <div class="row">
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary">{% trans 'Filter' %}</button>
-                <button type="reset" class="btn btn-default">{% trans 'Reset' %}</button>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{% trans 'Filtrar' %}</button>
+                <button type="reset" class="btn btn-default">{% trans 'Limpiar' %}</button>
             </div>
         </div>
     </form>

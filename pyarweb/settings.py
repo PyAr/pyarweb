@@ -84,8 +84,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'django_summernote',
     'south',
-
-
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -154,3 +153,5 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 PLANET = {"USER_AGENT": "pyarweb/0.1"}
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

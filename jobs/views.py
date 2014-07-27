@@ -53,15 +53,16 @@ def update(request, job_id=None):
     """Edit Jobs that use Python."""
     if job_id:
         job = get_object_or_404(Job, id=job_id)
-        if request.POST and job.owner == request.user:
+        if request.method == 'POST' and job.owner == request.user:
             form = JobForm(request.POST, instance=job)
             if form.is_valid():
                 form.save()
-                form.save_m2m()
-                return HttpResponseRedirect('/jobs')
-        if job.owner != request.user:
+                url = reverse('jobs_list_all')
+                return HttpResponseRedirect(url)
+        elif job.owner != request.user:
             return HttpResponseForbidden()
-        form = JobForm(instance=job)
+        elif request.method == 'GET':
+            form = JobForm(instance=job)
         context = dict(form=form)
         return render(request, 'jobs/edit.html', context)
     else:
@@ -73,15 +74,15 @@ def update(request, job_id=None):
 @login_required
 def delete(request, job_id):
     """Delete a Job."""
+    if request.method == 'POST':
+        job = get_object_or_404(
+            Job,
+            id=job_id,
+            owner=request.user,
+        )
+        job.delete()
 
-    job = get_object_or_404(
-        Job,
-        id=job_id,
-        owner=request.user,
-    )
-    job.delete()
     url = reverse('jobs_list_all')
-
     return HttpResponseRedirect(url)
 
 
