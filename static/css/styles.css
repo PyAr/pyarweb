@@ -498,24 +498,12 @@ textarea:not(.form-control) {
     margin-left: 10px;
     color: #999;
 }
-.job_tag {
-    background-color: #999;
-    padding: 2px 15px;
-    font-weight: normal;
-    margin-right: 10px;
-    color: white;
-    cursor: pointer;
-    border-radius: 3px;
-}
-.job_tag.excluded {
-    background-color: red;
-}
-.job_tag.included {
-    background-color: green;
-}
-
 
 time.published {
     font-size: 0.8em;
     color: #666;
+}
+.tags-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
