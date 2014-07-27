@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
-
+from django.contrib.auth.decorators import login_required
+from django.views.generic.detail import DetailView
 from django.conf.urls import patterns, url
-from .views import (
-    add,
-    list_all,
-    delete,
-    update,
-    view
-)
+from .models import Job
+from .views import JobCreate, JobList, JobDelete, JobUpdate
 
 
 urlpatterns = patterns('',
-                       url(r'^$', list_all, name='jobs_list_all'),
-                       url(r'^add$', add, name='jobs_add'),
-                       url(r'^edit/$', update),
-                       url(r'^(?P<job_id>\d+)/$', view, name='jobs_view'),
-                       url(r'^(?P<job_id>\d+)/delete$',
-                           delete, name='jobs_delete'),
-                       url(r'^(?P<job_id>\d+)/update$',
-                           update, name='jobs_update'),
+                       url(r'^$', JobList.as_view(), name='jobs_list_all'),
+                       url(r'^add$', login_required(
+                           JobCreate.as_view()), name='jobs_add'),
+                       url(r'^(?P<pk>[0-9]+)/$',
+                           DetailView.as_view(model=Job),
+                           name='jobs_view'),
+                       url(r'^(?P<pk>[0-9]+)/delete$',
+                           login_required(JobDelete.as_view()),
+                           name='jobs_delete'),
+                       url(r'^(?P<pk>[0-9]+)/update$',
+                           login_required(JobUpdate.as_view()),
+                           name='jobs_update'),
                        )

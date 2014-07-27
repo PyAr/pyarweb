@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from taggit_autosuggest.managers import TaggableManager
 from pycompanies.models import Company
@@ -8,7 +9,6 @@ from pycompanies.models import Company
 
 
 class Job(models.Model):
-
     """A PyAr Job."""
 
     title = models.CharField(max_length=255, verbose_name=_('Título'))
@@ -26,4 +26,4 @@ class Job(models.Model):
         return u'%s' % self.title
 
     def get_absolute_url(self):
-        return "/jobs/%i/" % self.id
+        return reverse('jobs_view', kwargs={'pk': self.pk})
