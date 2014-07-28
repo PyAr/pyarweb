@@ -1,0 +1,82 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+{% load i18n %}
+{% load staticfiles %}
+{% block left-column %}
+<!-- Últimas noticias -->
+<section class="list-group">
+    <header class="list-group-item">
+        <h3 class="list-group-item-heading">{% trans 'Trabajos con Python' %}
+        | <a href="{% url 'jobs_add' %}"><small>{% trans 'Agregar' %}</small></a>
+        </h3>
+    </header>
+    {% if job_list %}
+        {% for job in job_list %}
+        <article class="list-group-item">
+            <h4 class="list-group-item-heading">
+            <a href="{{ job.get_absolute_url }}">{{ job.title }}</a>  <span class="job-date">({{ job.modified|date:"d/m/y" }}, {{ job.location }})</span>
+            </h4>
+            <p>{% if job.description|length > 200 %}
+            {{ job.description|slice:":200" }} ...
+            {% else %}
+            {{ job.description }}
+            {% endif %}
+            </p>
+            <p><a href="{{ job.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+        </article>
+        {% endfor %}
+        {% if is_paginated %}
+            <ul class="pagination pagination-centered">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page=1">&#171;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="?page=1">&#171;</a></li>
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    <li {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <div class="col-md-12">
+            <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+{% block right-column %}
+<section class="list-group">
+    <header class="list-group-item">
+        <h3 class="list-group-item-heading">{% trans 'Filtrar por etiqueta' %}</h3>
+    </header>
+    <form method="GET" class="col-md-12">
+        <div class="row tags-group">
+            {% csrf_token %}
+            {% for tag in tags %}
+            <select name="tag_{{ tag.name }}" id="tag_{{ tag.name }}" class="hidden">
+                <option value="0"></option>
+                <option value="1" {% if tag.name in included %}selected{% endif %}></option>
+                <option value="2" {% if tag.name in excluded %}selected{% endif %}></option>
+            </select>
+            <label for="tag_{{ tag.name }}" class="filter_tag btn btn-sm {% if tag.name in included %}included btn-success{% elif tag.name in excluded%}excluded btn-danger{% else %}btn-default{% endif %}">
+                {{ tag.name }}
+            </label>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{% trans 'Filtrar' %}</button>
+                <button type="reset" class="btn btn-default">{% trans 'Limpiar' %}</button>
+            </div>
+        </div>
+    </form>
+    <script src="{% static 'js/tag_filtering.js' %}"></script>
+</section>
+{% endblock %}

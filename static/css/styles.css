@@ -10,15 +10,21 @@ a.http:before {
         content: url(/static/img/moin-www.png);
         margin: 0 0.2em;
 }
+p {
+    margin-top: 10px;
+}
 
 /*
  * Main
  */
-
+.page-header {
+    color: #FB8B00;
+    margin-top: 30px;
+}
 #main {
     background: #fff;
-    border-radius: 8px 8px 0 0;
-    padding: 20px 20px 10px;
+    border-radius: 8px;
+    padding: 0px 20px 30px;
 }
 
 #main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img {
@@ -176,62 +182,6 @@ h4.list-group-item-heading {
 .banner-wrapper {
     color: white;
 }
-@media (min-width: 768px) {
-	.navbar-header div.loginreg {
-		float: left;
-	}
-    .banner h1, .banner p {
-        display: inline-block;
-    }
-}
-@media (min-width: 992px) {
-	.navbar-header div.loginreg {
-		margin-top:0;
-	}
-    .banner-wrapper {
-       color: white;
-       width: 100%;
-       position: absolute;
-       top: 150px;
-    }
-    .banner {
-        height:137px;
-        width: 100%;
-        left: 0;
-    }
-    .index-content, .index-right {
-       margin-top: 170px;
-    }
-    .banner h1 {
-        margin-right: 20px;
-        font-size: 35px;
-    }
-    .banner .bigger {
-        font-size: 42px;
-    }
-    .banner p {
-        width: 400px;
-    }
-}
-@media (min-width: 1290px) {
-    .banner-wrapper {
-       width: calc(100% - (100% - 1170px)/2 + 41px);
-       height: 162px;
-    }
-    .banner .container {
-        position: absolute;
-        right: 41px;
-    }
-    .ribbon {
-        width: 41px;
-        height: 25px;
-        background-image: url(../img/ribbon.png);
-        position: absolute;
-        right: 0px;
-        bottom: 0px;
-    }
-}
-
 #header .navbar-brand {
 	width: 195px;
 	height: 96px;
@@ -449,73 +399,92 @@ h3 {
 /*
  * Inputs and forms
  */
-
-form.form-signin,
-form.form-signup {
-	width: 60%;
-	margin-left: 20%;
-	margin-bottom: 35px;
+.form-horizontal .form-actions {
+    clear: both;
+    margin-left: 15px;
+}
+.textarea.form-control {
+    height: 140px;
 }
 
-input[type="text"]:not(.form-control),
-input[type="password"]:not(.form-control),
-input[type="email"]:not(.form-control),
-input[type="url"]:not(.form-control),
-textarea:not(.form-control) {
-	display: block;
-	width: 100%;
-	height: 34px;
-	padding: 6px 12px;
-	font-size: 14px;
-	line-height: 1.42857143;
-	color: #555;
-	background-color: #fff;
-	background-image: none;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	-webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-}
-
-input[type="text"]:not(.form-control):focus,
-input[type="password"]:not(.form-control):focus,
-input[type="email"]:not(.form-control):focus,
-input[type="url"]:not(.form-control):focus,
-textarea:not(.form-control):focus {
-	border-color: #66afe9;
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-}
-
-textarea:not(.form-control) {
-        height:auto;
-}
 .job-date {
     font-size: 14px;
     margin-left: 10px;
     color: #999;
 }
-.job_tag {
-    background-color: #999;
-    padding: 2px 15px;
-    font-weight: normal;
-    margin-right: 10px;
-    color: white;
-    cursor: pointer;
-    border-radius: 3px;
-}
-.job_tag.excluded {
-    background-color: red;
-}
-.job_tag.included {
-    background-color: green;
-}
-
 
 time.published {
     font-size: 0.8em;
     color: #666;
+}
+.tags-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+	.navbar-header div.loginreg {
+		float: left;
+	}
+    .banner h1, .banner p {
+        display: inline-block;
+    }
+}
+@media (min-width: 992px) {
+	.navbar-header div.loginreg {
+		margin-top:0;
+	}
+    .banner-wrapper {
+       color: white;
+       width: 100%;
+       position: absolute;
+       top: 150px;
+    }
+    .banner {
+        height:137px;
+        width: 100%;
+        left: 0;
+    }
+    .index-content, .index-right {
+       margin-top: 170px;
+    }
+    .banner h1 {
+        margin-right: 20px;
+        font-size: 35px;
+    }
+    .banner .bigger {
+        font-size: 42px;
+    }
+    .banner p {
+        width: 400px;
+    }
+    #div_id_description > label {
+        width: 8.33333%;
+    }
+    #div_id_description > div {
+        width: 60%;
+    }
+}
+@media (min-width: 1200px) {
+    .form-horizontal .form-actions {
+        margin-left: 106px;
+    }
+}
+@media (min-width: 1290px) {
+    .banner-wrapper {
+       width: calc(100% - (100% - 1170px)/2 + 41px);
+       height: 162px;
+    }
+    .banner .container {
+        position: absolute;
+        right: 41px;
+    }
+    .ribbon {
+        width: 41px;
+        height: 25px;
+        background-image: url(../img/ribbon.png);
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+    }
 }

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="col-lg-12">
+	    <div class="page-header">
+	    	<h2>{{ page_title }}</h2>
+	    </div>
+	    {% crispy form %}
+	</div>
+</main>
+{% endblock %}
