@@ -1,19 +1,26 @@
-# -*- coding: utf-8 -*-
-
+from django.contrib.auth.decorators import login_required
+from django.views.generic.detail import DetailView
 from django.conf.urls import patterns, url
+from .models import NewsArticle
 from .views import (
-    add,
-    view,
-    delete,
-    update,
-    list_all,
-)
-
+    NewsArticleCreate,
+    NewsArticleDelete,
+    NewsArticleList,
+    NewsArticleUpdate, )
 
 urlpatterns = patterns('',
-    url(r'^$', list_all, name='news_list_all'),
-    url(r'^add$', add, name='news_add'),
-    url(r'^(?P<new_id>\d+)$', view, name='news_view'),
-    url(r'^(?P<new_id>\d+)/delete$', delete, name='news_delete'),
-    url(r'^(?P<new_id>\d+)/update$', update, name='news_update'),
-)
+                       url(r'^$', NewsArticleList.as_view(),
+                           name='news_list_all'),
+                       url(r'^add$',
+                           login_required(NewsArticleCreate.as_view()),
+                           name='news_add'),
+                       url(r'^(?P<pk>[0-9]+)/$',
+                           DetailView.as_view(model=NewsArticle),
+                           name='news_view'),
+                       url(r'^(?P<pk>[0-9]+)/delete$',
+                           login_required(NewsArticleDelete.as_view()),
+                           name='news_delete'),
+                       url(r'^(?P<pk>[0-9]+)/update$',
+                           login_required(NewsArticleUpdate.as_view()),
+                           name='news_update'),
+                       )

@@ -7,12 +7,12 @@
 <main id="main" class="container" role="main">
     <div class="col-lg-12">
 	    <div class="page-header">
-	    	<h2>{% trans 'Borrar trabajo' %}</h2>
+	    	<h2>{% trans 'Borrar noticia' %}</h2>
 	    </div>
 	    <form action="" method="POST">{% csrf_token %}
-		    <p>{% blocktrans %}¿Está seguro de que desear eliminar "{{ object }}"?{% endblocktrans %}</p>
+		    <p>{% blocktrans %}¿Está seguro de que desear eliminar "{{ job }}"?{% endblocktrans %}</p>
 		    <input class="btn btn-primary" type="submit" value="{% trans 'Confirmar' %}" />
-		    <a href="{% url 'jobs_view' object.id %}" class="btn btn-default">{% trans 'Cancelar' %}</a> 
+		    <a href="{% url 'news_view' object.id %}" class="btn btn-default">{% trans 'Cancelar' %}</a> 
 		</form>
 	</div>
 </main>
