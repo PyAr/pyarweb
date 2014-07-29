@@ -23,7 +23,7 @@ class Job(models.Model):
     tags = TaggableManager(verbose_name=_('Etiquetas'))
 
     def __str__(self):
-        return u'%s' % self.title
+        return u'{0}'.format('self.title')
 
     def get_absolute_url(self):
         return reverse('jobs_view', kwargs={'pk': self.pk})

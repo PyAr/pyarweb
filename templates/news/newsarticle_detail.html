@@ -11,33 +11,19 @@
         <h2>{{ object.title }}
           <span class="pull-right">
             {% if object.owner == user %}
-            <a href="{% url 'jobs_update' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
-            <a href="{% url 'jobs_delete' object.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
+            <a href="{% url 'news_update' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
+            <a href="{% url 'news_delete' object.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
             {% endif %}
           </span>
         </h2>
       </div>
       <article>
-        <p>{{ object.description|linebreaks }}</p>
+        <p>{% autoescape off %}{{ object.body|linebreaks|safe }}{% endautoescape %}</p>
         <table class="table table-no-border table-user-information">
           <tbody>
             <tr>
               <td class="text-right"><label>{% trans 'Fecha' %}</label></td>
               <td>{{ object.created|date:"d/m/y" }}</td>
-            </tr>
-            <tr>
-              <td class="text-right"><label>{% trans 'Lugar' %}</label></td>
-              <td>{{ object.location }}</td>
-            </tr>
-            {% if object.company %}
-            <tr>
-              <td class="text-right"><label>{% trans 'Empresa' %}</label></td>
-              <td>{{ object.company }}</td>
-            </tr>
-            {% endif %}
-            <tr>
-              <td class="text-right"><label>Email</label></td>
-              <td>{{ object.email|obfuscate_mailto }}</td>
             </tr>
             <tr>
               <td class="text-right"><label>{% trans 'Etiquetas' %}</label></td>

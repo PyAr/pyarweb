@@ -6,7 +6,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>PyAr - Python Argentina</title>
-        <link rel="stylesheet" href="{% static "bootstrap/3.1.1/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="{% static "css/styles.css" %}">
 
         {% block stylesheets %} {% endblock %}
@@ -17,7 +18,6 @@
         <![endif]-->
 
         <script src="{% static "jquery/1.11.0/jquery.min.js" %}"></script>
-        <script src="{% static "jquery-autosuggest/js/jquery.autoSuggest.minified.js" %}"></script>
         <script src="{% static "bootstrap/3.1.1/js/bootstrap.min.js" %}"></script>
         <script src="{% static "js/web.js" %}"></script>
     </head>
@@ -27,6 +27,5 @@
         {% include "footer.html" %}
 
         {% block javascripts %} {% endblock %}
-
     </body>
 </html>
