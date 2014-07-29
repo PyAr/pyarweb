@@ -12,7 +12,7 @@
 	    <form action="" method="POST">{% csrf_token %}
 		    <p>{% blocktrans %}¿Está seguro de que desear eliminar "{{ job }}"?{% endblocktrans %}</p>
 		    <input class="btn btn-primary" type="submit" value="{% trans 'Confirm' %}" />
-		    <a href="{% url 'jobs_list_all' %}" class="btn btn-default">{% trans 'Cancel' %}</a> 
+		    <a href="{% url 'jobs_view' job.id %}" class="btn btn-default">{% trans 'Cancel' %}</a> 
 		</form>
 	</div>
 </main>

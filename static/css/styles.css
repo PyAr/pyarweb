@@ -124,6 +124,12 @@ iframe#google {
     border-top-left-radius: 8px;
 	background:#f4f4f4;
 }
+.list-group-item:last-child {
+    padding-top: 15px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+	background:#f4f4f4;
+}
 
 .list-group {
 	margin-top:20px;
@@ -203,6 +209,9 @@ h4.list-group-item-heading {
 
 #header-navbar-collapse {
 	margin-right: -15px;
+}
+.board-list-item .label-default {
+    margin-left: 6px;
 }
 
 @media (min-width: 768px) {
@@ -421,7 +430,17 @@ time.published {
     margin-top: 15px;
     margin-bottom: 15px;
 }
-
+.board-list-item {
+    margin-bottom: 25px;
+    border-left: 3px solid #FDCA01;
+    padding-left: 10px;
+}
+.board-list-item h4 {
+    font-weight: bold;
+}
+.table.table-no-border tbody > tr > td {
+    border-top: 0px none;
+}
 @media (min-width: 768px) {
 	.navbar-header div.loginreg {
 		float: left;

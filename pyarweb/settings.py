@@ -85,6 +85,7 @@ INSTALLED_APPS = (
     'django_summernote',
     'south',
     'crispy_forms',
+    'email_obfuscator',
 )
 
 MIDDLEWARE_CLASSES = (
