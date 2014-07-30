@@ -444,6 +444,16 @@ time.published {
 .table.table-no-border tbody > tr > th {
     border-top: 0px none;
 }
+.board-list-simple-item {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.board-list-simple-item > h3 {
+    margin-top: 0px;
+}
+.board-list-simple-item:nth-child(odd) {
+    background-color: #F4F4F4;
+}
 @media (min-width: 768px) {
 	.navbar-header div.loginreg {
 		float: left;

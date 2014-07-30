@@ -45,6 +45,12 @@ class BlogDelete(DeleteView, OwnedObject):
     success_url = reverse_lazy('planet_blog_list_by_user')
 
 
+class FeedDelete(DeleteView, OwnedObject):
+    template_name = 'planet/feeds/confirm_delete.html'
+    model = Feed
+    success_url = reverse_lazy('planet_blog_list_by_user')
+
+
 def index(request):
     posts = Post.site_objects.all().order_by("-date_modified")
 

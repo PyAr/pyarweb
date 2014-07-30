@@ -7,15 +7,15 @@ from .views import JobCreate, JobList, JobDelete, JobUpdate
 
 urlpatterns = patterns('',
                        url(r'^$', JobList.as_view(), name='jobs_list_all'),
-                       url(r'^add$', login_required(
+                       url(r'^add/$', login_required(
                            JobCreate.as_view()), name='jobs_add'),
-                       url(r'^(?P<pk>[0-9]+)/$',
+                       url(r'^(?P<pk>\d+)/$',
                            DetailView.as_view(model=Job),
                            name='jobs_view'),
-                       url(r'^(?P<pk>[0-9]+)/delete$',
+                       url(r'^(?P<pk>\d+)/delete$',
                            login_required(JobDelete.as_view()),
                            name='jobs_delete'),
-                       url(r'^(?P<pk>[0-9]+)/update$',
+                       url(r'^(?P<pk>\d+)/update$',
                            login_required(JobUpdate.as_view()),
                            name='jobs_update'),
                        )

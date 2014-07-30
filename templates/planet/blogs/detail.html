@@ -10,7 +10,7 @@
             <h2>{% trans "Blog" %}: {{ blog.title }}
                 {% if blog.owner = user %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'feed_add' %}" class="btn btn-info">{% trans 'Agregar feeds' %}</a>
+                    <a href="{% url 'planet_blog_delete' blog.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
                 </span>
                 {% endif %}
             </h2>
@@ -40,7 +40,7 @@
         
         {% autopaginate posts 20 %}
         {% for post in posts %}
-            <div class="post short {% cycle 'even' 'odd' %} clearfix">
+            <div class="board-list-simple-item">
                 {% post_details post "planet/posts/short.html" %}
             </div>
         {% endfor %}
