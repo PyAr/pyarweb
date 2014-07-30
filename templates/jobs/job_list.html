@@ -57,34 +57,5 @@
 </section>
 {% endblock %}
 {% block right-column %}
-<section class="list-group">
-    <header class="list-group-item">
-        <h3 class="list-group-item-heading">{% trans 'Filtrar por etiqueta' %}</h3>
-    </header>
-    <article class="list-group-item">
-        <form method="GET" class="col-md-12" id="tags-form">
-            <div class="row tags-group">
-                {% csrf_token %}
-                {% for tag in tags %}
-                <select name="tag_{{ tag.name }}" id="tag_{{ tag.name }}" class="hidden">
-                    <option value="0"></option>
-                    <option value="1" {% if tag.name in included %}selected{% endif %}></option>
-                    <option value="2" {% if tag.name in excluded %}selected{% endif %}></option>
-                </select>
-                <label for="tag_{{ tag.name }}" class="filter_tag btn btn-sm {% if tag.name in included %}included btn-success{% elif tag.name in excluded%}excluded btn-danger{% else %}btn-default{% endif %}">
-                    {{ tag.name }}
-                </label>
-                {% endfor %}
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">{% trans 'Filtrar' %}</button>
-                    <button type="button" class="btn btn-default" id="reset-btn">{% trans 'Limpiar' %}</button>
-                </div>
-            </div>
-        </form>
-        <div class="clearfix"></div>
-    </article>
-</section>
-<script src="{% static 'js/tag_filtering.js' %}"></script>
+{% include "_tags_filtering_form.html" %}
 {% endblock %}
