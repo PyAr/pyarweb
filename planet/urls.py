@@ -8,8 +8,9 @@ except ImportError:
 
 from django.contrib.sitemaps import views as sitemaps_views
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.decorators import login_required
 
-from planet.views import FeedFormView
+from planet.views import FeedFormView, BlogByUserList, BlogDelete
 from planet.feeds import PostFeed, AuthorFeed, AuthorTagFeed, TagFeed
 from planet.sitemaps import planet_sitemaps_dict
 
@@ -17,9 +18,11 @@ from planet.sitemaps import planet_sitemaps_dict
 urlpatterns = patterns('planet.views',
     url(r'^blogs/(?P<blog_id>\d+)/(?P<slug>[a-zA-Z0-9_\-]+)/$', "blog_detail", name="planet_blog_detail"),
     url(r'^blogs/(?P<blog_id>\d+)/$', "blog_detail"),
+    url(r'^blogs/(?P<pk>\d+)/delete$', login_required(BlogDelete.as_view()), name="planet_blog_delete"),
     url(r'^blogs/$', "blogs_list", name="planet_blog_list"),
+    url(r'^blogs/my_blogs/$', login_required(BlogByUserList.as_view()), name="planet_blog_list_by_user"),
 
-    url(r'^feeds/add/$', FeedFormView.as_view(), name="feed_add"),
+    url(r'^feeds/add/$', login_required(FeedFormView.as_view()), name="feed_add"),
     url(r'^feeds/(?P<feed_id>\d+)/(?P<slug>[a-zA-Z0-9_\-]+)/tags/(?P<tag>.*)/$', "feed_detail", name="planet_by_tag_feed_detail"),
     url(r'^feeds/(?P<feed_id>\d+)/(?P<slug>[a-zA-Z0-9_\-]+)/$', "feed_detail", name="planet_feed_detail"),
     url(r'^feeds/(?P<feed_id>\d+)/$', "feed_detail"),

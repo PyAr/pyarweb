@@ -1,59 +1,54 @@
 {% extends "base_site.html" %}
-{% load i18n devtags pagination_tags planet_tags staticfiles %}
-{% load url from future %}
-
+{% load devtags %}
+{% load i18n %}
+{% load staticfiles %}
 {% block left-column %}
 <!-- Últimas noticias -->
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{% trans "Blog" %}: {{ blog.title }}
-                {% if blog.owner = user %}
+            <h2>{% trans 'Mis blogs' %}
                 <span class="section-button-group pull-right">
                     <a href="{% url 'feed_add' %}" class="btn btn-info">{% trans 'Agregar feeds' %}</a>
                 </span>
-                {% endif %}
             </h2>
         </div>
-        
-        <table class="blog details table table-hover table-no-border">
-            <tr>
-              <th>{% trans 'web' %}</th>
-              <td><a href="{{ blog.url }}" title="{% trans 'Go to the original blog' %}">link</a></td>
-            </tr>
-            <tr>
-              <th>{% trans 'Author' %}</th>
-              <td>
-                {% for author in blog|get_authors %}
-                  <a href="{{ author.get_absolute_url }}" title="{% trans 'See author profile and his/her blog posts' %}">{{ author.name }}</a>
-                {% endfor %}
-              </td>
-            </tr>
-            <tr>
-              <th>{% trans 'Stats' %}</th>
-              <td>Has published {{ blog|post_count }} posts about or related to Django</td>
-            </tr>
-        </table>
-        {% if tag %}
-            <h2>{% trans 'Posts under tag' %}: <strong>{{ tag|safe }}</strong></h2>
-        {% endif %}
-        
-        {% autopaginate posts 20 %}
-        {% for post in posts %}
-            <div class="post short {% cycle 'even' 'odd' %} clearfix">
-                {% post_details post "planet/posts/short.html" %}
+        {% if object_list %}
+            {% for object in object_list %}
+            <article class="simple-list-item">
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+                    <span class="section-button-group">
+                        <a href="{% url 'planet_blog_delete' object.id %}" class="btn btn-xs btn-danger">{% trans 'Borrar' %}</a>
+                    </span>
+                </h4>
+                <p><a href="{{ object.get_absolute_url }}">{% trans 'Ver feeds...' %}</a></p>
+            </article>
+            {% endfor %}
+            {% if is_paginated %}
+                <ul class="pagination pagination-centered">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page=1">&#171;</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="?page=1">&#171;</a></li>
+                    {% endif %}
+
+                    {% for i in paginator.page_range %}
+                        <li {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        {% else %}
+            <div class="col-md-12">
+                <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
             </div>
-        {% endfor %}
-
-        {% if tag %}
-            <p>
-                <a href="{% url 'planet_tag_feed_list' tag.name %}" title="{% trans 'See the list of blogs talking about this tag' %}">
-                    {% trans 'Other blogs talking about ' %} {{ tag|safe }}
-                </a>
-            </p>
         {% endif %}
-
-        {% paginate %}
     </div>
 </section>
 {% endblock %}

@@ -21,4 +21,4 @@ class NewsArticle(TimeStampedModel):
         return ('news_view', (self.id,), {})
 
     def __unicode__(self):
-        return u'{0}'.format('self.title')
+        return u'{0}'.format(self.title)

@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from crispy_forms.layout import Submit, Reset
 from crispy_forms.helper import FormHelper
@@ -32,5 +33,5 @@ class FeedForm(forms.Form):
     def clean_url(self):
         url = self.cleaned_data['url']
         if Feed.objects.filter(url=url).count() > 0:
-            raise ValidationError('A feed with this URL already exists.')
+            raise ValidationError(_('Ya existe un feed con esa URL.'))
         return url

@@ -1,15 +1,21 @@
-{% load i18n staticfiles %}
+{% load i18n %}
 {% load url from future %}
-<h4>Suscribirse</h4>
+<br/>
 <ul class="nav nav-list">
+    <li class="nav-header">Feeds</li>
     <li>
-        <a href="{% url 'planet_rss_feed' %}" title="Suscribirse al feed">
-          <span class="rss">RSS</span> Suscribirse
+        <a href="{% url 'planet_rss_feed' %}" title="{% trans 'Suscribe to RSS feed' %}">
+            RSS 2.0 Feed
         </a>
     </li>
     <li>
         <a href="{% url 'planet_opml' %}" title="OPML">
             OPML
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'planet_foaf' %}"  title="FOAF">
+            FOAF
         </a>
     </li>
 </ul>

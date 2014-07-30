@@ -430,15 +430,18 @@ time.published {
     margin-top: 15px;
     margin-bottom: 15px;
 }
-.board-list-item {
+.board-list-item, .simple-list-item {
     margin-bottom: 25px;
+}
+.board-list-item {
     border-left: 3px solid #FDCA01;
     padding-left: 10px;
 }
-.board-list-item h4 {
+.board-list-item h4, .simple-list-item h4 {
     font-weight: bold;
 }
-.table.table-no-border tbody > tr > td {
+.table.table-no-border tbody > tr > td,
+.table.table-no-border tbody > tr > th {
     border-top: 0px none;
 }
 @media (min-width: 768px) {
