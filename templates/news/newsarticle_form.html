@@ -8,7 +8,12 @@
 <main id="main" class="container" role="main">
     <div class="col-lg-12">
 	    <div class="page-header">
-	    	<h2>{{ page_title }}</h2>
+	    	<h2>{% if form.instance.id %}
+	    			{% trans 'Editar noticia' %}
+	    		{% else %}
+	    			{% trans 'Agregar noticia' %}
+	    		{% endif %}
+	    	</h2>
 	    </div>
 	    {{ form.media }}
 	    {% crispy form %}

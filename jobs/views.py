@@ -19,11 +19,6 @@ class JobCreate(CreateView):
         form.instance.owner = self.request.user
         return super(JobCreate, self).form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super(JobCreate, self).get_context_data(**kwargs)
-        context['page_title'] = _('Agregar trabajo')
-        return context
-
 
 class JobList(ListView, FilterableList):
     model = Job
