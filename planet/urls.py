@@ -11,7 +11,7 @@ from django.views.decorators.cache import cache_page
 from django.contrib.auth.decorators import login_required
 
 from planet.views import (FeedFormView, BlogByUserList, BlogDelete,
-                          FeedDelete)
+                          FeedDelete, PostDelete)
 from planet.feeds import PostFeed, AuthorFeed, AuthorTagFeed, TagFeed
 from planet.sitemaps import planet_sitemaps_dict
 
@@ -58,6 +58,8 @@ urlpatterns = patterns('planet.views',
 
                        url(r'^posts/(?P<post_id>\d+)/(?P<slug>[a-zA-Z0-9_\-]+)/$',
                            "post_detail", name="planet_post_detail"),
+                       url(r'^posts/(?P<pk>\d+)/$', login_required(PostDelete.as_view()),
+                           name="planet_post_delete"),
                        url(r'^posts/(?P<post_id>\d+)/$', "post_detail"),
                        url(r'^posts/$', "posts_list", name="planet_post_list"),
 

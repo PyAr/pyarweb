@@ -51,6 +51,18 @@ class FeedDelete(DeleteView, OwnedObject):
     success_url = reverse_lazy('planet_blog_list_by_user')
 
 
+class PostDelete(DeleteView):
+    template_name = 'planet/posts/confirm_delete.html'
+    model = Post
+    success_url = reverse_lazy('planet_blog_list_by_user')
+
+    def get_object(self, *args, **kwargs):
+        obj = super(PostDelete, self).get_object(*args, **kwargs)
+        if not obj.feed.blog.owner == self.request.user:
+            raise HttpResponseForbidden
+        return obj
+
+
 def index(request):
     posts = Post.site_objects.all().order_by("-date_modified")
 

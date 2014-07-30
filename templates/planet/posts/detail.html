@@ -7,10 +7,10 @@
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{% trans "Blog" %}: {{ blog.title }}
-                {% if blog.owner = user %}
+            <h2>{{ post.title|striptags|safe }}
+                {% if post.feed.blog.owner = user %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'planet_blog_delete' blog.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
+                    <a href="{% url 'planet_post_delete' post.id %}" class="btn btn-danger">{% trans 'Borrar versión archivada' %}</a>
                 </span>
                 {% endif %}
             </h2>
