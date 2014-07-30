@@ -22,7 +22,7 @@ class JobCreate(CreateView):
 
 class JobList(ListView, FilterableList):
     model = Job
-    paginate_by = 1
+    paginate_by = 20
 
 
 class JobUpdate(UpdateView, OwnedObject):

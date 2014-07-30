@@ -28,7 +28,7 @@ class FeedFormView(FormView):
             create = True
         owner = self.request.user
         process_feed(form.cleaned_data['url'], owner=owner, create=create)
-        return super(FeedForm, self).form_valid(form)
+        return super(FeedFormView, self).form_valid(form)
 
 
 class BlogByUserList(ListView):
