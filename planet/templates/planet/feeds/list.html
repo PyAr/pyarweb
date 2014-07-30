@@ -1,0 +1,39 @@
+{% extends "planet/base.html" %}
+{% load i18n pagination_tags  %}
+
+{% block head_title %}{% trans "Feeds list" %}{% endblock %}
+
+{% block extra_head %}
+    <meta name="title" content="{% trans 'Feeds list' %} " />
+    <meta name="description" content="{% trans 'Feeds list' %} " />
+    <meta name="robots" content="noindex, follow" />
+{% endblock %}
+
+{% block breadcrumb_section %}<li class="active">Feeds</li>{% endblock %}
+
+{% block content %}
+<h1>{% trans "Feeds" %}</h1>
+<div class="feeds list">
+    {% autopaginate feeds_list 50 %}
+    <ul>
+    {% for feed in feeds_list %}
+        <li>
+            <h2>
+                <a href="{{ feed.get_absolute_url }}" class="feed" title="{% trans 'See the full list of post from this feed' %}">{{ feed.title }}</a>
+            </h2>
+            <table class="blog details table table-hover table-bordered">
+                <tr>
+                    <th>{% trans 'Feed' %}</th><td><a href="{{ feed.url }}" class="feed" title="{% trans 'Subscribe to this feed' %}">{{ feed.url }}</a></td>
+                </tr>
+                <tr>
+                    <th>{% trans 'web' %}</th><td><a href="{{ feed.blog.url }}" title="{% trans 'Go to the original blog' %}">{{ feed.blog.url }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans 'browse' %}</th><td><a href="{{ feed.get_absolute_url }}" class="feed" title="{% trans 'See the full list of posts from this feed' %}">{% trans 'latest posts' %}</a></td>
+                </tr>
+            </table>
+        </li>
+    {% endfor %}
+    {% paginate %}
+</div>
+{% endblock %}
