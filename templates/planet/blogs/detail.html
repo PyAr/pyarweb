@@ -1,37 +1,91 @@
-{% extends "planet/base.html" %}
-{% load pagination_tags planet_tags %}
+{% extends "base_site.html" %}
+{% load i18n devtags pagination_tags planet_tags staticfiles %}
 {% load url from future %}
 
 {% block left-column %}
-    <h1>Blog: {{ blog.title }}</h1>
-    <table class="blog details table table-hover table-bordered">
-        <tr>
-          <th>Website</th>
-          <td><a href="{{ blog.url }}" title="Visitar el blog">link</a></td>
-        </tr>
-        <tr>
-          <th>Bloggers</th>
-          <td>
-            {% for author in blog|get_authors %}
-              <a href="{{ author.get_absolute_url }}" title="Ver todos los posts escritos por {{ author.name }}">{{ author.name }}</a>
-            {% endfor %}
-          </td>
-        </tr>
-    </table>
-    {% if tag %}
-        <h2>Posts bajo el tag: <strong>{{ tag }}</strong></h2>
-    {% endif %}
-
-    {% autopaginate posts 20 %}
-    {% for post in posts %}
-        <div class="post short {% cycle 'even' 'odd' %} clearfix">
-            {% post_details post "planet/posts/short.html" %}
+<!-- Últimas noticias -->
+<section>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>{% trans "Blog" %}: {{ blog.title }}
+                {% if blog.owner = user %}
+                <span class="section-button-group pull-right">
+                    <a href="{% url 'planet_blog_delete' blog.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
+                </span>
+                {% endif %}
+            </h2>
         </div>
-    {% endfor %}
-    {% paginate %}
-{% endblock %}
+        
+        <table class="blog details table table-hover table-no-border">
+            <tr>
+              <th>{% trans 'web' %}</th>
+              <td><a href="{{ blog.url }}" title="{% trans 'Go to the original blog' %}">link</a></td>
+            </tr>
+            <tr>
+              <th>{% trans 'Author' %}</th>
+              <td>
+                {% for author in blog|get_authors %}
+                  <a href="{{ author.get_absolute_url }}" title="{% trans 'See author profile and his/her blog posts' %}">{{ author.name }}</a>
+                {% endfor %}
+              </td>
+            </tr>
+            <tr>
+              <th>{% trans 'Stats' %}</th>
+              <td>Has published {{ blog|post_count }} posts about or related to Django</td>
+            </tr>
+        </table>
+        {% if tag %}
+            <h2>{% trans 'Posts under tag' %}: <strong>{{ tag|safe }}</strong></h2>
+        {% endif %}
+        
+        {% autopaginate posts 20 %}
+        {% for post in posts %}
+            <div class="board-list-simple-item">
+                {% post_details post "planet/posts/short.html" %}
+            </div>
+        {% endfor %}
 
+        {% if tag %}
+            <p>
+                <a href="{% url 'planet_tag_feed_list' tag.name %}" title="{% trans 'See the list of blogs talking about this tag' %}">
+                    {% trans 'Other blogs talking about ' %} {{ tag|safe }}
+                </a>
+            </p>
+        {% endif %}
+
+        {% paginate %}
+    </div>
+</section>
+{% endblock %}
 {% block right-column %}
-    {% include 'planet/feeds/blocks/syndication_block.html' %}
-    {% cloud_for_blog blog %}
+<section class="list-group">
+    <header class="list-group-item">
+        <h3 class="list-group-item-heading">{% trans 'Filtrar por etiqueta' %}</h3>
+    </header>
+    <article class="list-group-item">
+        <form method="GET" class="col-md-12" id="tags-form">
+            <div class="row tags-group">
+                {% csrf_token %}
+                {% for tag in tags %}
+                <select name="tag_{{ tag.name }}" id="tag_{{ tag.name }}" class="hidden">
+                    <option value="0"></option>
+                    <option value="1" {% if tag.name in included %}selected{% endif %}></option>
+                    <option value="2" {% if tag.name in excluded %}selected{% endif %}></option>
+                </select>
+                <label for="tag_{{ tag.name }}" class="filter_tag btn btn-sm {% if tag.name in included %}included btn-success{% elif tag.name in excluded%}excluded btn-danger{% else %}btn-default{% endif %}">
+                    {{ tag.name }}
+                </label>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{% trans 'Filtrar' %}</button>
+                    <button type="button" class="btn btn-default" id="reset-btn">{% trans 'Limpiar' %}</button>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </article>
+</section>
+<script src="{% static 'js/tag_filtering.js' %}"></script>
 {% endblock %}

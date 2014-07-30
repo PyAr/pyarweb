@@ -1,0 +1,13 @@
+{% load i18n %}
+{% if authors %}
+    <h2>{% trans "Authors" %}</h2>
+    <ul class="suscribers">
+        {% for author in authors %}
+            <li>
+                <a class="nombre" href="{{ author.get_absolute_url }}" title="{% trans 'Author of' %} {{ author.feed.title }}">
+                    {{ author.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

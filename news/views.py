@@ -19,12 +19,7 @@ class NewsArticleCreate(CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(NewsArticleCreate, self).form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super(NewsArticleCreate, self).get_context_data(**kwargs)
-        context['page_title'] = _('Agregar noticia')
-        return context
-
+        
 
 class NewsArticleDelete(DeleteView, OwnedObject):
 

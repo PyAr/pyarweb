@@ -1,19 +1,6 @@
-{% extends "base.html" %}
+{% extends "confirm_delete.html" %}
 {% load i18n %}
 
-{% load devtags %}
+{% block page_title %}{% trans 'Borrar noticia' %}{% endblock %}
 
-{% block content %}
-<main id="main" class="container" role="main">
-    <div class="col-lg-12">
-	    <div class="page-header">
-	    	<h2>{% trans 'Borrar noticia' %}</h2>
-	    </div>
-	    <form action="" method="POST">{% csrf_token %}
-		    <p>{% blocktrans %}¿Está seguro de que desear eliminar "{{ object }}"?{% endblocktrans %}</p>
-		    <input class="btn btn-primary" type="submit" value="{% trans 'Confirmar' %}" />
-		    <a href="{% url 'news_view' object.id %}" class="btn btn-default">{% trans 'Cancelar' %}</a> 
-		</form>
-	</div>
-</main>
-{% endblock %}
+{% block return_url %}{% url 'news_view' object.id %}{% endblock %}

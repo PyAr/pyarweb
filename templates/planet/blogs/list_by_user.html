@@ -1,0 +1,86 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+{% load i18n %}
+{% load staticfiles %}
+{% block left-column %}
+<!-- Últimas noticias -->
+<section>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>{% trans 'Mis blogs' %}
+                <span class="section-button-group pull-right">
+                    <a href="{% url 'feed_add' %}" class="btn btn-info">{% trans 'Agregar feeds' %}</a>
+                </span>
+            </h2>
+        </div>
+        {% if object_list %}
+            {% for object in object_list %}
+            <article class="simple-list-item">
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+                    <span class="section-button-group">
+                        <a href="{% url 'planet_blog_delete' object.id %}" class="btn btn-xs btn-danger">{% trans 'Borrar' %}</a>
+                    </span>
+                </h4>
+                <p><a href="{{ object.get_absolute_url }}">{% trans 'Ver feeds...' %}</a></p>
+            </article>
+            {% endfor %}
+            {% if is_paginated %}
+                <ul class="pagination pagination-centered">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page=1">&#171;</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="?page=1">&#171;</a></li>
+                    {% endif %}
+
+                    {% for i in paginator.page_range %}
+                        <li {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        {% else %}
+            <div class="col-md-12">
+                <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+{% block right-column %}
+<section class="list-group">
+    <header class="list-group-item">
+        <h3 class="list-group-item-heading">{% trans 'Filtrar por etiqueta' %}</h3>
+    </header>
+    <article class="list-group-item">
+        <form method="GET" class="col-md-12" id="tags-form">
+            <div class="row tags-group">
+                {% csrf_token %}
+                {% for tag in tags %}
+                <select name="tag_{{ tag.name }}" id="tag_{{ tag.name }}" class="hidden">
+                    <option value="0"></option>
+                    <option value="1" {% if tag.name in included %}selected{% endif %}></option>
+                    <option value="2" {% if tag.name in excluded %}selected{% endif %}></option>
+                </select>
+                <label for="tag_{{ tag.name }}" class="filter_tag btn btn-sm {% if tag.name in included %}included btn-success{% elif tag.name in excluded%}excluded btn-danger{% else %}btn-default{% endif %}">
+                    {{ tag.name }}
+                </label>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{% trans 'Filtrar' %}</button>
+                    <button type="button" class="btn btn-default" id="reset-btn">{% trans 'Limpiar' %}</button>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </article>
+</section>
+<script src="{% static 'js/tag_filtering.js' %}"></script>
+{% endblock %}

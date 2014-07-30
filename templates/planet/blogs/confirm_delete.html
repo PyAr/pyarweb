@@ -1,0 +1,6 @@
+{% extends "confirm_delete.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans 'Borrar blog' %}{% endblock %}
+
+{% block return_url %}{% url 'planet_blog_list_by_user' %}{% endblock %}

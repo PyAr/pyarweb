@@ -1,7 +1,6 @@
 {% extends "base_site.html" %}
 {% load devtags %}
-{% load i18n %}
-{% load staticfiles %}
+{% load i18n staticfiles pagination_tags %}
 {% block left-column %}
 <!-- Últimas noticias -->
 <section>
@@ -29,25 +28,8 @@
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             </article>
             {% endfor %}
-            {% if is_paginated %}
-                <ul class="pagination pagination-centered">
-                    {% if page_obj.has_previous %}
-                        <li><a href="?page=1">&#171;</a></li>
-                    {% else %}
-                        <li class="disabled"><a href="?page=1">&#171;</a></li>
-                    {% endif %}
-
-                    {% for i in paginator.page_range %}
-                        <li {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
-                    {% else %}
-                        <li class="disabled"><a href="?page={{ page_obj.paginator.num_pages }}">&#187;</a></li>
-                    {% endif %}
-                </ul>
-            {% endif %}
+            
+            {% paginate %}
         {% else %}
             <div class="col-md-12">
                 <p>{% trans 'La búsqueda no produjo resultados.' %}</p>

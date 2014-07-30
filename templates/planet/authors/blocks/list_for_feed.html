@@ -1,0 +1,11 @@
+{% load i18n %}
+<h3>{% trans "Authors for this feed" %}</h3>
+<ul class="authors list">
+    {% for author in authors %}
+        <li>
+            <a class="nombre" href="{{ author.get_absolute_url }}" title="{{ author.name }}">
+                {{ author.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

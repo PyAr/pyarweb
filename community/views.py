@@ -17,8 +17,11 @@ class OwnedObject(SingleObjectMixin):
 
     def get_object(self, *args, **kwargs):
         obj = super(OwnedObject, self).get_object(*args, **kwargs)
-        if not obj.owner == self.request.user:
-            raise HttpResponseForbidden
+        try:
+            if not obj.owner == self.request.user:
+                raise HttpResponseForbidden
+        except (AttributeError):
+            pass
         return obj
 
 

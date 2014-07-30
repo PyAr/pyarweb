@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="col-lg-12">
+	    <div class="page-header">
+	    	<h2>{% if form.instance.id %}
+	    			{% trans 'Editar feed' %}
+	    		{% else %}
+	    			{% trans 'Agregar feed' %}
+	    		{% endif %}
+	    	</h2>
+	    </div>
+		<div class="col-lg-12">
+			<div class="alert alert-dismissable alert-warning">
+				<button type="button" class="close" data-dismiss="alert">×</button>
+				<h4>Warning!</h4>
+				<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+			</div>
+		</div>
+	    {% crispy form %}
+	</div>
+</main>
+{% endblock %}
