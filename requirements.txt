@@ -1,8 +1,12 @@
 Django==1.6.5
 Pillow==2.3.0
 South==0.8.4
+amqp==1.4.5
+anyjson==0.3.3
 argparse==1.1
 beautifulsoup4==4.3.2
+billiard==3.3.0.18
+celery==3.1.13
 django-bootstrap3==4.8.2
 django-bootstrap3-datetimepicker==2.2.3
 django-crispy-forms==1.4.0
@@ -15,10 +19,13 @@ django-registration==1.0
 django-summernote==0.5.13
 django-tagging==0.3.2
 django-taggit==0.11.2
--e git+https://github.com/PyAr/django-taggit-autosuggest.git@48460dc0703800c16a8b7a780b8f2235e09f3b91#egg=django_taggit_autosuggest-origin/HEAD
+-e git+https://github.com/PyAr/django-taggit-autosuggest.git@48460dc0703800c16a8b7a780b8f2235e09f3b91#egg=django_taggit_autosuggest-origin/master
 feedparser==5.1.3
 ipdb==0.8
 ipython==2.1.0
+kombu==3.0.21
 lxml==3.3.5
+pytz==2014.4
+redis==2.10.1
 requests==2.2.1
 six==1.6.1
