@@ -6,6 +6,12 @@
 <section>
     <div class="col-md-12">
         <div class="page-header">
+            {% if feed_created %}
+            <div class="alert alert-dismissable alert-success">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                {% trans 'La URL ha sido procesada exitosamente. Su feed puede tardar algunos minutos en aparecer.' %}
+            </div>
+            {% endif %}
             <h2>{% trans 'Planeta PyAr' %}
                 <span class="section-button-group pull-right">
                     <a href="{% url 'feed_add' %}" class="btn btn-info">{% trans 'Agregar feeds' %}</a>

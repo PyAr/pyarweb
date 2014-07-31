@@ -3,7 +3,7 @@
 
 from django.core.management.base import BaseCommand
 
-from planet.management.commands import process_feed
+from planet.tasks import process_feed
 
 
 class Command(BaseCommand):

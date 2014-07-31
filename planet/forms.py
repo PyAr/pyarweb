@@ -1,6 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
+from django.conf import settings
+
+import feedparser
+
 from crispy_forms.layout import Submit, Reset
 from crispy_forms.helper import FormHelper
 
@@ -34,4 +38,7 @@ class FeedForm(forms.Form):
         url = self.cleaned_data['url']
         if Feed.objects.filter(url=url).count() > 0:
             raise ValidationError(_('Ya existe un feed con esa URL.'))
+        document = feedparser.parse(url, agent=settings.PLANET["USER_AGENT"])
+        if not document.feed.get('link'):
+            raise ValidationError(_('La URL ingresada no pertenece a un feed.'))
         return url

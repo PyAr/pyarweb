@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -10,7 +9,7 @@ from community.views import OwnedObject
 
 from planet.models import Blog, Feed, Author, Post
 from planet.forms import SearchForm, FeedForm
-from planet.management.commands import process_feed
+from planet.tasks import process_feed
 
 from tagging.models import Tag, TaggedItem
 
@@ -18,7 +17,7 @@ from tagging.models import Tag, TaggedItem
 class FeedFormView(FormView):
     template_name = 'planet/feeds/form.html'
     form_class = FeedForm
-    success_url = '/'
+    success_url = reverse_lazy('planet_post_list')
 
     def form_valid(self, form):
         try:
@@ -26,8 +25,10 @@ class FeedFormView(FormView):
             create = False
         except:
             create = True
-        owner = self.request.user
-        process_feed(form.cleaned_data['url'], owner=owner, create=create)
+        owner_id = self.request.user.id
+        process_feed.delay(form.cleaned_data['url'],
+                            owner_id=owner_id, create=create)
+        self.request.session['feed_created'] = True
         return super(FeedFormView, self).form_valid(form)
 
 
@@ -151,8 +152,14 @@ def author_detail(request, author_id, tag=None, slug=None):
 def posts_list(request):
     posts = Post.site_objects.all().select_related("feed", "blog", "authors")\
         .order_by("-date_modified")
-
-    return render_to_response("planet/posts/list.html", {"posts": posts},
+    context = { "posts": posts }
+    try:
+        redirected = request.session['feed_created']
+        context['feed_created'] = redirected
+        del request.session['feed_created']
+    except (KeyError):
+        pass
+    return render_to_response("planet/posts/list.html", context,
                               context_instance=RequestContext(request))
 
 
@@ -246,7 +253,7 @@ def search(request):
                     **params_dict).distinct().order_by("-date_modified")
 
                 return render_to_response("planet/posts/list.html",
-                        {"posts": posts}, context_instance=RequestContext(request))
+                                          {"posts": posts}, context_instance=RequestContext(request))
 
             elif search_form.cleaned_data["w"] == "tags":
                 params_dict = {"name__icontains": query}
