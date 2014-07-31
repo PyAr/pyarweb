@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand
-from planet.management.commands import process_feed
+from planet.tasks import process_feed
 from optparse import make_option
 
 class Command(BaseCommand):

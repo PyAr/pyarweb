@@ -3,7 +3,7 @@
 from datetime import datetime
 from django.core.management.base import NoArgsCommand
 
-from planet.management.commands import process_feed
+from planet.tasks import process_feed
 from planet.models import Feed
 from planet.signals import feeds_updated
 
