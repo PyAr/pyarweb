@@ -1,9 +1,16 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
+
 /*
  * General
  */
+*, body, td, tr, div, p, form, input, 
+select, textarea, font {
+    font-family: 'Roboto';
+}
 
 body {
     background-color: #f4f4f4;
+    color: #444;
 }
 
 a.http:before {
@@ -36,15 +43,19 @@ p {
 
 
 #main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.aprendiendo_python {
-        background-position: 195px 0;
-}
-
-#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.proyectos_comunidad {
         background-position: 62px 0;
 }
-
+#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.proyectos_comunidad {
+        background-position: -201px 0;
+}
 #main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.lista_correo {
-        background-position: 128px 0;
+        background-position: -134px 0;
+}
+#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.wiki {
+        background-position: -67px 0;
+}
+#main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img.adopta_un_newbie {
+        background-position: -268px 0;
 }
 
 /*
@@ -316,7 +327,7 @@ h4.list-group-item-heading {
 #header ul.navbar-nav > li > a {
 	padding: 0;
 	color: #fb8b00;
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: bold;
 	text-align: center;
 }
