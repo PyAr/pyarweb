@@ -242,70 +242,67 @@ h4.list-group-item-heading {
 }
 
 #header ul.navbar-nav > li {
-	padding-top: 10px;
-	padding-bottom: 5px;
 	background-color: #fff;
-	border-bottom: 4px solid #fff;
 }
 
-#header ul.navbar-nav > li > span {
+#header ul.navbar-nav > li > a > span {
         display:block;
         height:25px;
         margin:0 auto;
 }
 
-#header ul.navbar-nav > li:not(.active) > span {
+#header ul.navbar-nav > li:not(.active) > a > span {
         background-image: url(/static/img/icons/icons.png);
 }
 
-#header ul.navbar-nav > li.active > span,
-#header ul.navbar-nav > li:hover > span {
+#header ul.navbar-nav > li.active > a > span,
+#header ul.navbar-nav > li:hover > a > span {
         background-image: url(/static/img/icons/icons_active.png);
 }
 
-#header ul.navbar-nav > li > span.inicio {
+#header ul.navbar-nav > li > a > span.inicio {
         width: 25px;
         background-position: -80px 25px;
 }
 
-#header ul.navbar-nav > li > span.quienes_somos {
+#header ul.navbar-nav > li > a > span.quienes_somos {
         width: 25px;
         background-position: -44px 25px;
 }
-#header ul.navbar-nav > li > span.navbar_lista_de_correo {
+#header ul.navbar-nav > li > a > span.navbar_lista_de_correo {
     width: 30px;
     background-position: -323px 25px;
 }
-#header ul.navbar-nav > li > span.wiki {
+#header ul.navbar-nav > li > a > span.wiki {
         width: 20px;
         background-position: -292px 25px;
 }
-#header ul.navbar-nav > li > span.news {
+#header ul.navbar-nav > li > a > span.news {
         width: 26px;
         background-position: -255px 25px;
 }
-#header ul.navbar-nav > li > span.irc {
+#header ul.navbar-nav > li > a > span.irc {
         width: 31px;
         background-position: -115px 25px;
 }
 
-#header ul.navbar-nav > li > span.eventos {
+#header ul.navbar-nav > li > a > span.eventos {
         width: 19px;
         background-position: -191px 25px;
 }
 
-#header ul.navbar-nav > li > span.pyar {
+#header ul.navbar-nav > li > a > span.pyar {
         width: 26px;
         background-position: -220px 25px;
 }
 
-#header ul.navbar-nav > li > span.jobs {
+#header ul.navbar-nav > li > a > span.jobs {
         width: 24px;
         background-position: -156px 25px;
 }
 
 @media (min-width: 768px) {
-	#header ul.navbar-nav > li {
+	#header ul.navbar-nav > li > a {
 		padding-top: 15px;
 		padding-bottom: 10px;
 		background-color: #fff;
@@ -330,28 +327,25 @@ h4.list-group-item-heading {
 	font-size: 15px;
 	font-weight: bold;
 	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 5px;
 }
 
-#header ul.navbar-nav > li > a:hover {
-	background-color: transparent;
+#header ul.navbar-nav > li > a {
+	border-bottom: 4px solid white;
 }
-
-#header ul.navbar-nav > li.active,
-#header ul.navbar-nav > li:hover {
+#header ul.navbar-nav > li.active > a,
+#header ul.navbar-nav > li:hover > a {
 	background-color: #39ade6;
 	border-bottom: 4px solid #fdca01;
+    color: white;
 }
 
 @media (min-width: 768px) {
-	#header ul.navbar-nav > li.active,
-	#header ul.navbar-nav > li:hover {
+	#header ul.navbar-nav > li.active > a,
+	#header ul.navbar-nav > li > a:hover {
 		border-bottom: 6px solid #fdca01;
 	}
-}
-
-#header ul.navbar-nav > li.active > a,
-#header ul.navbar-nav > li:hover > a {
-	color: #fff;
 }
 
 /*
