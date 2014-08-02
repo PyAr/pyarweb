@@ -21,20 +21,24 @@ Activas tu virtualenv
     Ej 1: source pyarweb/bin/activate
     Ej 2 usando virtualenvwrapper: workon pyarweb 
 
-Si no pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
+Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
 e instalalo con el python3 de tu virtualenv. Luego de instalar setuptools hacer:
 
 easy_install-3.3 pip
 
 2. sudo apt-get install python3-dev (PIL se mal copa si no lo tenes instalado)
 
-3. instalar las dependencias, ej: pip3 install -r ./requirements.txt
+3. Instalar las dependencias, ej: pip3 install -r ./requirements.txt
 
-4. python manage.py syncdb
+4. (Para poder usar el Planeta PyAr):
+    a. Instalar Redis, ej: sudo apt-get install redis-server
+    b. Correr Celery (usando el comando dentro de tu virtualenv), ej: /bin/celery -A pyarweb worker -B --loglevel=INFO
 
-5. python manage.py runserver
+5. python manage.py syncdb
 
-6. Visitar con tu browser http://localhost:8000  y listo!
+6. python manage.py runserver
+
+7. Visitar con tu browser http://localhost:8000  y listo!
 
 Para más información, si queres contribuír con el proyecto, no dejes de visitar:
 
