@@ -12,28 +12,29 @@ Respuesta:
 
 Debes tener python3, NO codeamos el sitio con compatibilidad con python.
 
-1- Debes crear un nuevo virtualenv, Ej: pyvenv3-3 pyarweb 
+1- Debes crear un nuevo virtualenv
+    Ej 1 usando pyvenv: pyvenv3-3 pyarweb 
+    Ej 2 usando virtualenvwrapper: export VIRTUALENV_PYTHON=/usr/bin/python3
+                                   mkvirtualenv pyarweb
 
-Activas tu virtualenv, ej: source pyarweb/bin/activate
+Activas tu virtualenv
+    Ej 1: source pyarweb/bin/activate
+    Ej 2 usando virtualenvwrapper: workon pyarweb 
 
 Si no pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
 e instalalo con el python3 de tu virtualenv. Luego de instalar setuptools hacer:
 
 easy_install-3.3 pip
 
-2. Instalar django-disqus a mano: 
+2. sudo apt-get install python3-dev (PIL se mal copa si no lo tenes instalado)
 
-git clone https://github.com/PyAr/django-disqus.git
+3. instalar las dependencias, ej: pip3 install -r ./requirements.txt
 
-cd django-disqus; python ./setup.py develop
+4. python manage.py syncdb
 
-2. instalar las dependencias, ej: pip3 install -r ./requirements.txt
+5. python manage.py runserver
 
-3. python manage.py syncdb
-
-4. python manage.py runserver
-
-5. Visitar con tu browser http://localhost:8000  y listo!
+6. Visitar con tu browser http://localhost:8000  y listo!
 
 Para más información, si queres contribuír con el proyecto, no dejes de visitar:
 
