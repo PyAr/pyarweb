@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
     DeleteView,
 )
-from django.utils import timezone
 
 from .forms import EventForm
 from .models import Event

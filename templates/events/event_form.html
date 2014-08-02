@@ -1,36 +1,37 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-
 {% load devtags %}
+{% load crispy_forms_tags %}
 
 {% block stylesheets %}
-
   <link rel="stylesheet" href="/static/css/event_map.css">
-  {{ form.media.css }}  
-  
+  {{ form.media.css }}
 {% endblock %}
 
 {% block content %}
 
   <main id="main" class="container" role="main">
-	    <div class="row">
-	        <div class="col-md-12">
-				    <a href="{% url 'events:events_list_all' %}">{% trans "Volver a eventos" %}</a>
+    <div class="col-lg-12">
+      <div class="page-header">
+        <h2>
+          {% if form.instance.id %}
+            {% trans 'Editar Evento' %}
+          {% else %}
+            {% trans 'Agregar Evento' %}
+          {% endif %}
 
-		        <form method="POST">
-		            {% csrf_token %}
-                {{ form.as_p }}
+          <span class="section-button-group pull-right">
+                <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
+                  {% trans "Volver a eventos" %}
+                </a>
+            </span>
+        </h2>
+      </div>
 
-                <div id="map-canvas"></div>
+      {% crispy form %}
 
-                <div>
-                  <input type="submit" value="{% trans 'Guardar' %}"/>
-                </div>
-            </form>
-
-	        </div>
-	    </div>
+    </div>
   </main>
 
 {% endblock %}

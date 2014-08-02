@@ -8,14 +8,19 @@
 
   <!-- Proximos eventos -->
 
-  <section class="list-group">
-      <header class="list-group-item">
-          <h3 class="list-group-item-heading">{% trans "Proximos Eventos" %}
-            {% if user.is_authenticated %}
-              | <a href="{% url 'events:add' %}"><small>{% trans "Agregar" %}</small></a>
-            {% endif %}
-          </h3>
-      </header>
+  <section>
+    <div class="page-header">
+      <h2>
+        {% trans "Proximos Eventos" %}
+
+        {% if user.is_authenticated %}
+          <span class="section-button-group pull-right">
+            <a href="{% url 'events:add' %}" class="btn btn-info">{% trans "Agregar" %}</a>
+          </span>
+        {% endif %}
+
+      </h2>
+    </div>
 
       {% for event in eventos_proximos %} 
           
@@ -45,10 +50,10 @@
 
       <br>
 
-      <header class="list-group-item">
-          <h3 class="list-group-item-heading">
+      <header class="page-header">
+          <h2>
             {% trans "Eventos pasados" %}
-          </h3>
+          </h2>
       </header>
 
       {% for event in eventos_pasados %} 
