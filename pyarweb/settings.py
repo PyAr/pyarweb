@@ -87,6 +87,9 @@ INSTALLED_APPS = (
     'south',
     'crispy_forms',
     'email_obfuscator',
+    'waliki',
+    'waliki.git',
+    'waliki.pdf'
 )
 
 MIDDLEWARE_CLASSES = (

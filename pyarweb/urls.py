@@ -32,4 +32,5 @@ urlpatterns = patterns('',
     url(r'^events/', include('events.urls', namespace='events')),
     url(r'^faq/', include('faq.urls')),
     url(r'^planet/', include('planet.urls')),
+    url(r'^wiki/', include('waliki.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
