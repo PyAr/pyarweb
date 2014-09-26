@@ -56,6 +56,20 @@
 
           </section>
 
+          <!-- Últimas noticias -->
+          <section class="list-group">
+              <header class="list-group-item">
+                  <h3 class="list-group-item-heading">Últimas noticias</h3>
+              </header>
+              {% for article in news %}
+                  <article class="list-group-item">
+                      <time class="published" datetime="{{ article.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ article.created|date:"d/m/Y" }}</time>
+                      <h4 class="list-group-item-heading"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h4>
+                      <p class="list-group-item-text">{{ article.introduction|default:article.body|html2text|truncatewords:25 }}</p>
+                  </article>
+              {% endfor %}
+          </section>
+
           <!-- Planeta PyAr -->
           <section class="list-group">
               <header class="list-group-item">
