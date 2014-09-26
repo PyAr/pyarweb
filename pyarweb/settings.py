@@ -61,7 +61,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-
     # pyarweb apps
     'community',
     'news',
@@ -73,6 +72,14 @@ INSTALLED_APPS = (
     'faq',
 
     # 3rd party apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # ... include the providers you want to enable:
+    # Ver esto mas adelante
+    #'allauth.socialaccount.providers.github',
+    #'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.twitter',
     'django_extensions',
     'registration',
     'disqus',
@@ -144,6 +151,12 @@ STATICFILES_DIRS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    # Required by allauth template tags
+    "django.core.context_processors.request",
+    # allauth specific context processors
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
     "django.core.context_processors.media",
@@ -152,6 +165,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.contrib.messages.context_processors.messages",
     "planet.context_processors.context"
+)
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 PLANET = {"USER_AGENT": "pyarweb/0.1"}
