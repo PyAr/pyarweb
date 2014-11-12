@@ -23,6 +23,8 @@
 {% block beforemain %}{% endblock %}
 
 <main id="main" class="container" role="main">
+  
+  {% block container %}
 
     <div class="row">
 
@@ -76,6 +78,7 @@
         {% endblock %} <!--/right-column-->
       </div>
     </div>
+    {% endblock %} <!--/container-->
 </main>
 {% endblock %}
 </div>

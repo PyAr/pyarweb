@@ -14,7 +14,8 @@ from .views import (
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', include('community.urls')),
     url(r'^irc/', irc, name='irc'),
     url(r'^aboutpyar/', QuienesSomos, name='about_pyar'),
@@ -27,8 +28,8 @@ urlpatterns = patterns('',
     url(r'^jobs/', include('jobs.urls')),
     url(r'^newbie/', include('newbie.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^projects/', include('projects.urls')),
-    url(r'^pyarenses/', include('registration.backends.default.urls')),
     url(r'^events/', include('events.urls', namespace='events')),
     url(r'^faq/', include('faq.urls')),
     url(r'^planet/', include('planet.urls')),

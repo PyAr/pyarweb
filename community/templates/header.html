@@ -14,9 +14,9 @@
                     <a href="/" class="navbar-brand">PyAr</a>
                     <div class="loginreg">
                       {% if user.is_authenticated %}
-                      Bienvenido | <a href="/pyarenses/logout/">Cerrar sesión</a>
+                      Bienvenido | <a href="{% url 'account_logout' %}">Cerrar sesión</a>
                       {% else %}
-                         <a href="/pyarenses/login/">¡Ingresar!</a> o <a href="/pyarenses/register/">¡Registrarse!</a>
+                      <a href="{% url 'account_login' %}">Ingresar</a> o <a href="{% url 'account_signup' %}">Registrarse</a>
                       {% endif %}
                     </div>
                 </div>
