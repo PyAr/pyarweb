@@ -26,7 +26,7 @@ DEBUG = True
 # Sites framework
 SITE_ID = 1
 
-TEMPLATE_DIRS = os.path.join(BASE_DIR, 'templates')
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 TEMPLATE_DEBUG = True
 
 # Instead of sending out real emails the console backend just writes
@@ -81,7 +81,6 @@ INSTALLED_APPS = (
     #'allauth.socialaccount.providers.google',
     #'allauth.socialaccount.providers.twitter',
     'django_extensions',
-    'registration',
     'disqus',
     'taggit',
     'taggit_autosuggest',
@@ -91,7 +90,7 @@ INSTALLED_APPS = (
     'tagging',
     'bootstrap3',
     'django_summernote',
-    'south',
+    # 'south',
     'crispy_forms',
     'email_obfuscator',
 )
