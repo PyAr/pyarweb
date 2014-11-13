@@ -5,3 +5,5 @@
 db.sqlite3
 static
 waliki_data
+circus.ini
+local_settings.py
