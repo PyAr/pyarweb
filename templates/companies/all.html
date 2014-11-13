@@ -11,7 +11,7 @@
             <h2>{% trans 'Companias' %}
               {% if user.is_authenticated %}
                   <span class="section-button-group pull-right">
-                      <a href="{% url 'companies-add' %}" class="btn btn-info">{% trans 'Agregar Compania' %}</a>
+                      <a href="{% url 'company_create' %}" class="btn btn-info">{% trans 'Agregar Compania' %}</a>
                   </span>
               {% endif %}
             </h2>
@@ -20,7 +20,7 @@
         {% for company in companies %}
             <article class="board-list-item">
                 <h4>
-                    <a href="{{ company.link}}">{{ company.name }}</a>  <span class="job-date">({{ company.modified|date:"d/m/y" }})</span>
+                    <a href="{{ company.link}}">{{ company.name }}</a>  <span class="company-date">({{ company.modified|date:"d/m/y" }})</span>
                 </h4>
             </article>
             {% paginate %}

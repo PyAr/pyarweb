@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from .models import Company
-from .forms import CompanyForm
+from pycompanies.models import Company
+from pycompanies.forms import CompanyForm
+from community.views import OwnedObject, FilterableList
 
 
 @login_required
@@ -50,3 +52,24 @@ def edit(request, company_id=None):
         context = dict(companies=companies)
         return render(request, 'companies/companies_by_user.html', context)
 
+
+class CompanyCreate(CreateView):
+    model = Company
+    form_class = CompanyForm
+    template_name = 'companies/company_form.html'
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super(CompanyCreate, self).form_valid(form)
+
+
+class CompanyUpdate(UpdateView, OwnedObject):
+
+    """Updates a NewsArticle."""
+    model = Company
+    form_class = CompanyForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyUpdate, self).get_context_data(**kwargs)
+        context['page_title'] = _('Editar compania')
+        return context
