@@ -197,3 +197,11 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(hours=12)
     },
 }
+
+
+
+
+try:
+    from .local_settings import *    # noqa
+except:
+    pass
