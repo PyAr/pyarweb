@@ -43,3 +43,15 @@ class NewsArticleUpdate(UpdateView, OwnedObject):
 class NewsArticleList(ListView, FilterableList):
     model = NewsArticle
     paginate_by = 10
+
+
+class NewsArticleListTag(ListView, FilterableList):
+    model = NewsArticle
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag = self.kwargs['tag']
+        filter_news = NewsArticle.objects.filter(
+            tags__name__in=[tag]).distinct()
+
+        return filter_news

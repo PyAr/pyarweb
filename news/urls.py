@@ -6,7 +6,8 @@ from .views import (
     NewsArticleCreate,
     NewsArticleDelete,
     NewsArticleList,
-    NewsArticleUpdate, )
+    NewsArticleUpdate,
+    NewsArticleListTag )
 
 
 urlpatterns = patterns('',
@@ -24,4 +25,7 @@ urlpatterns = patterns('',
                        url(r'^(?P<pk>\d+)/update/$',
                            login_required(NewsArticleUpdate.as_view()),
                            name='news_update'),
+                       url(r'^tag/(?P<tag>[\w-]+)/$',
+                           login_required(NewsArticleListTag.as_view()),
+                           name='news_tags_list'),
                        )
