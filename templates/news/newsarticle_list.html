@@ -24,6 +24,7 @@
                 </p>
                 <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %}<span class="label label-default">{{ t.name }}</span>{% endfor %}</p>
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+		</div>
             </article>
             {% endfor %}
             {% paginate %}

@@ -3,17 +3,17 @@
 
 {% block left-column %}
     <!-- Últimas noticias -->
-    <section class="list-group">
-        <header class="list-group-item">
-            <h3 class="list-group-item-heading">Proyectos de la Comunidad
+    <section>
+        <div class="page-header">
+            <h2>Proyectos de la Comunidad
               {% if user.is_authenticated %}
                 | <a href="{% url 'projects_add' %}"><small>Agregar</small></a>
               {% endif %}
-            </h3>
-        </header>
+            </h2>
+        </div>
         {% for project in pyar_projects %} 
-            <article class="list-group-item">
-              <h4 class="list-group-item-heading">
+            <article class="board-list-item">
+              <h4>
                 <a href="{{ project.url }}">
                   {{ project.name }}
                 </a>
@@ -21,16 +21,13 @@
                   ( Autor: <toimplement>)
                 </small>
               </h4>
-              <p class="list-group-item-text">{{ project.description|slice:":200" }} ...</p>
-              <blockquote>
-                <footer>
-                </footer>
-              </blockquote>
+              <p>{{ project.description|slice:":200" }} ...</p>
+              <div class="text-muted"><p></p></div>
             </article>
         {% endfor %}
         {% for project in projects %} 
-            <article class="list-group-item">
-              <h4 class="list-group-item-heading">
+            <article class="board-list-item">
+              <h4>
                 <a href="{% url 'projects_view' project.id %}">
                   {{ project.name }}
                 </a>
@@ -38,15 +35,15 @@
                   ( Autor: {{ project.owner }} )
                 </small>
               </h4>
-              <p class="list-group-item-text">{{ project.description|slice:":200" }} ...</p>
-              <blockquote>
-                <footer>
-                  {% if project.owner == user %}
+              <p>{{ project.description|slice:":200" }} ...</p>
+	      <div class="text-muted">
+		<p>
+		  {% if project.owner == user %}
                     <a href="{% url 'projects_delete' project.id %}">Borrar</a> | 
                     <a href="{% url 'projects_update' project.id %}">Modificar</a>
                   {% endif %}
-                </footer>
-              </blockquote>
+		</p>
+	      </div>
             </article>
         {% endfor %}
     </section>
