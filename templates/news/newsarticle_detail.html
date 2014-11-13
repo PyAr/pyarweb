@@ -27,7 +27,7 @@
             </tr>
             <tr>
               <td class="text-right"><label>{% trans 'Etiquetas' %}</label></td>
-              <td>{% for t in object.tags.all %}<span class="label label-default">{{ t.name }}</span> {% endfor %}</td>
+              <td>{% for t in object.tags.all %}<a href="{% url 'news_tags_list' tag=t.name %}" class="label label-default">{{ t.name }}</a> {% endfor %}</td>
             </tr>
             <tr>
               <td class="text-right"><label>{% trans 'Creado por' %}</label></td>
