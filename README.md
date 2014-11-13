@@ -3,6 +3,9 @@ pyarweb
 Es la implementación del sitio para PyAr / Python Argentina hecha con Django
 por su comunidad, wooohooo!.
 
+Mas de 20 personas sprinteando en PyconAr!!!
+
+
 Inquietud:
 ----------
 Como arranco / instalo el proyecto en mi máquina?
