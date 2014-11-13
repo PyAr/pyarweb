@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load waliki_tags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="col-lg-12">
+      <div class="page-header">
+        <h2>{{ page.title }} </h2>
+
+<div class="pull-right">
+    {% block actions %}
+        <div class="btn-group">
+            <a href="{% url "waliki_edit" slug %}" class="btn">Edit</a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+            <!-- dropdown menu links -->
+            {% if page %}
+                <li><a id="confirmDelete" class="text-error">Delete</a></li>
+                {% extra_page_actions page %}
+            {% endif %}
+            </ul>
+        </div>
+    {% endblock actions %}
+    </div>
+
+
+      </div>
+      <article>
+        {% if page %}
+            {{ page.body|safe }}
+        {% else %}
+            <p>Esta página todavía no existe </p>
+            <p><a href="{% url "waliki_edit" slug %}" class="btn btn-success">Creala</a></p>
+    {% endif %}
+      </article>
+  </div>
+</main>
+{% endblock %}

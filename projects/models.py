@@ -41,7 +41,7 @@ class Project(models.Model):
     tags = models.CharField(max_length=255)
     #tags = TaggableManager()
     mail = models.EmailField()
-    contribution = models.BooleanField()
+    contribution = models.BooleanField(default=True)
     logo = models.ImageField(upload_to='static/projects/logos', null=True, blank=True)
 
     def __str__(self):

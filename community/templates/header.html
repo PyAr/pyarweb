@@ -14,9 +14,9 @@
                     <a href="/" class="navbar-brand">PyAr</a>
                     <div class="loginreg">
                       {% if user.is_authenticated %}
-                      Bienvenido | <a href="/pyarenses/logout/">Cerrar sesión</a> 
+                      Bienvenido | <a href="{% url 'account_logout' %}">Cerrar sesión</a>
                       {% else %}
-                         <a href="/pyarenses/login/">¡Ingresar!</a> o <a href="/pyarenses/register/">¡Registrarse!</a>
+                      <a href="{% url 'account_login' %}">Ingresar</a> o <a href="{% url 'account_signup' %}">Registrarse</a>
                       {% endif %}
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                             <a href="{% url 'mailling_list' %}"><span class="navbar_lista_de_correo"></span>Lista de correo</a>
                         </li>
                         <li>
-                            <a href="#"><span class="wiki"></span>Nuestra<br class="hidden-xs"> wiki</a>
+                            <a href="{% url 'waliki_home' %}"><span class="wiki"></span>Nuestra<br class="hidden-xs">Wiki</a>
                         </li>
                         <li>
                             <a href="{% url 'news_list_all' %}"><span class="news"></span>Últimas<br class="hidden-xs"> noticias</a>

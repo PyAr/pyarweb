@@ -13,10 +13,12 @@
             </div>
             {% endif %}
             <h2>{% trans 'Planeta PyAr' %}
+              {% if user.is_authenticated %}
                 <span class="section-button-group pull-right">
                     <a href="{% url 'feed_add' %}" class="btn btn-info">{% trans 'Agregar feeds' %}</a>
                     <a href="{% url 'planet_blog_list_by_user' %}" class="btn btn-info">{% trans 'Mis blogs' %}</a>
                 </span>
+              {% endif %}
             </h2>
         </div>
             {% autopaginate posts 15 %}
@@ -31,6 +33,7 @@
 </section>
 {% endblock %}
 {% block right-column %}
+{{ block.super }}
 <section class="list-group">
     <header class="list-group-item">
         <h3 class="list-group-item-heading">{% trans 'Filtrar por etiqueta' %}</h3>

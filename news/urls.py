@@ -8,6 +8,7 @@ from .views import (
     NewsArticleList,
     NewsArticleUpdate, )
 
+
 urlpatterns = patterns('',
                        url(r'^$', NewsArticleList.as_view(),
                            name='news_list_all'),

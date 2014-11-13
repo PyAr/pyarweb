@@ -41,13 +41,13 @@
             </article>
             <article class="col-sm-4">
                 <div class="img wiki"></div>
-                <h3 class="text-center"><a href="/companies">Nuestra wiki</a></h3>
-                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
+                <h3 class="text-center"><a href="{% url 'waliki_home' %}">Nuestra wiki</a></h3>
+                <p class="text-center">El espacio de edición colaborativa de nuestra web</p>
             </article>
             <article class="col-sm-4">
                 <div class="img adopta_un_newbie"></div>
                 <h3 class="text-center"><a href="{% url 'jedi.list' %}">Adopta un newbie</a></h3>
-                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
+                <p class="text-center">Donde expertos y principiantes se encuentran</p>
             </article>
         </div>
     </section>
@@ -67,6 +67,8 @@
     </section>
 
     <!-- Estadísticas de la lista de correo -->
+    {# IMPLEMENTAR #} 
+    <!--
     <section class="list-group">
         <header class="list-group-item">
             <h3 class="list-group-item-heading">Estadísticas de la lista de correo</h3>
@@ -77,6 +79,7 @@
             </article>
         {% endfor %}
     </section>
+    -->
 {% endblock %}
 
 {% block right-column %}
