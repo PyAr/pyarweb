@@ -1,71 +1,32 @@
-{% extends "base.html" %}
+{% extends "base_site.html" %}
 
-{% load devtags %}
+{% load devtags i18n pagination_tags %}
 
-{% block content %}
-<main id="main" class="container" role="main">
+{% block left-column %}
     <div class="row">
-        <div class="col-md-7">
-            <!-- Últimas noticias -->
 
-            <section class="list-group">
-                <header class="list-group-item">
-                  <h3 class="list-group-item-heading">Companias que usan Python 
-                    {% if user.is_authenticated %}
-                    | <a href="/companies/add"><small>Agregar</small></a>
-                    {% endif %}
-                    </h3>
-                </header>
-                {% for company in companies %} 
-                    <article class="list-group-item">
-                      <h4 class="list-group-item-heading">
-                        <a href="{{ company.link }}">Web</a> | {{ company.name }}
-                      </h4>
-                    </article>
-                {% endfor %}
-            </section>
-        </div>
-        <div class="col-md-5">
+      <div class="col-md-12">
         
-            <!-- SeachBox -->
-
-            <form id="search-form" class="input-group" role="form">
-                <input type="text" class="form-control input-lg" placeholder="Buscar...">
-                <span class="input-group-btn">
-                    <button class="btn btn-default btn-lg" type="button">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
-            </form>
-
-            <!-- Próximos eventos -->
-
-            <section class="list-group">
-                <header class="list-group-item">
-                    <h3 class="list-group-item-heading">Próximos eventos</h3>
-                </header>
-                {% for i in 4|get_range %} 
-                    <article class="list-group-item">
-                        <h4 class="list-group-item-heading">PyCon Argentina</h4>
-                        <p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
-                    </article>
-                {% endfor %}
-            </section>
-
-            <!-- Planeta PyAr -->
-
-            <section class="list-group">
-                <header class="list-group-item">
-                    <h3 class="list-group-item-heading">Planeta PyAr</h3>
-                </header>
-                {% for i in 4|get_range %} 
-                    <article class="list-group-item">
-                        <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
-                        <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
-                    </article>
-                {% endfor %}
-            </section>
+        <div class="page-header">
+            <h2>{% trans 'Companias' %}
+              {% if user.is_authenticated %}
+                  <span class="section-button-group pull-right">
+                      <a href="{% url 'companies-add' %}" class="btn btn-info">{% trans 'Agregar Compania' %}</a>
+                  </span>
+              {% endif %}
+            </h2>
         </div>
+
+        {% for company in companies %}
+            <article class="board-list-item">
+                <h4>
+                    <a href="{{ company.link}}">{{ company.name }}</a>  <span class="job-date">({{ company.modified|date:"d/m/y" }})</span>
+                </h4>
+            </article>
+            {% paginate %}
+        {% endfor %}
+
+      </div>
+
     </div>
-</main>
 {% endblock %}
