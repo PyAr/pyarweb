@@ -4,19 +4,23 @@
 
 {% load devtags %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="/static/css/event_map.css">
+{% endblock %}
+
 {% block content %}
-<main id="main" class="container" role="main">
-    <div class="col-lg-12">
-	    <div class="page-header">
-	    	<h2>{% if form.instance.id %}
-	    			{% trans 'Editar Compania' %}
-	    		{% else %}
-	    			{% trans 'Agregar Compania' %}
-	    		{% endif %}
-	    	</h2>
-	    </div>
-	    {{ form.media }}
-	    {% crispy form %}
-	</div>
-</main>
+	<main id="main" class="container" role="main">
+	    <div class="col-lg-12">
+		    <div class="page-header">
+		    	<h2>{% if form.instance.id %}
+		    			{% trans 'Editar Compania' %}
+		    		{% else %}
+		    			{% trans 'Agregar Compania' %}
+		    		{% endif %}
+		    	</h2>
+		    </div>
+		    {{ form.media }}
+		    {% crispy form %}
+		</div>
+	</main>
 {% endblock %}

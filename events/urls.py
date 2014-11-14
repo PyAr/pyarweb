@@ -6,7 +6,7 @@ from .views import (
 	EventList,
 	EventCreate,
 	EventUpdate,
-	EventDelete    
+	EventDelete
 )
 
 

@@ -1,27 +1,16 @@
-# -*- coding: utf-8 -*-
-
-from django.contrib.auth.decorators import login_required
 from django.conf.urls import patterns, url
-from django.views.generic.detail import DetailView
-from pycompanies.models import Company
+
 from .views import (
-    add,
-    list_all,
-    edit,
+    CompanyDetail,
+    CompanyList,
     CompanyCreate,
     CompanyUpdate,
-)
-
+    CompanyDelete)
 
 urlpatterns = patterns('',
-    url(r'^$', list_all, name='companies_list_all'),
-    url(r'^(?P<pk>\d+)/$',
-        DetailView.as_view(model=Company),
-        name='company_view'),
-    url(r'^(?P<pk>\d+)/update/$',
-        login_required(CompanyUpdate.as_view()),
-        name='company_update'),
-    url(r'^add/$',
-        login_required(CompanyCreate.as_view()),
-        name='company_create'),
+    url(r'^$', CompanyList.as_view(), name='company_list_all'),
+    url(r'^(?P<pk>\d+)/$', CompanyDetail.as_view(), name='detail'),
+    url(r'^add/$', CompanyCreate.as_view(), name='add'),
+    url(r'^(?P<pk>\d+)/edit/$', CompanyUpdate.as_view(), name='edit'),
+    url(r'^(?P<pk>\d+)/delete/$', CompanyDelete.as_view(), name='delete'),
 )

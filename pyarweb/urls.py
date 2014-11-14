@@ -22,7 +22,7 @@ urlpatterns = patterns(
     url(r'^members/', MiembrosDePyAr, name='pyar_members'),
     url(r'^maillinglist/', ListaDeCorreo, name='mailling_list'),
     url(r'^news/', include('news.urls')),
-    url(r'^companies/', include('pycompanies.urls')),
+    url(r'^companies/', include('pycompanies.urls', namespace='companies')),
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     url(r'^summernote/', include('django_summernote.urls')),
     url(r'^jobs/', include('jobs.urls')),
@@ -34,4 +34,5 @@ urlpatterns = patterns(
     url(r'^faq/', include('faq.urls')),
     url(r'^planet/', include('planet.urls')),
     url(r'^wiki/', include('waliki.urls')),
-) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
