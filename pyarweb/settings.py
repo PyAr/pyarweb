@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'email_obfuscator',
     'waliki',
     'waliki.git',
+    'waliki.attachments',
     'waliki.pdf'
 )
 
@@ -197,3 +198,7 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(hours=12)
     },
 }
+
+
+WALIKI_INDEX_SLUG = 'Inicio'
+SENDFILE_BACKEND = 'sendfile.backends.simple'
