@@ -19,17 +19,15 @@ class NewsArticleCreate(CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(NewsArticleCreate, self).form_valid(form)
-        
+
 
 class NewsArticleDelete(DeleteView, OwnedObject):
-
-    """Delete a Job."""
+    """Delete a News."""
     model = NewsArticle
     success_url = reverse_lazy('news_list_all')
 
 
 class NewsArticleUpdate(UpdateView, OwnedObject):
-
     """Updates a NewsArticle."""
     model = NewsArticle
     form_class = NewsArticleForm
