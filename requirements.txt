@@ -29,3 +29,4 @@ six==1.6.1
 ipython
 ipdb
 -e git+https://github.com/mgaitan/waliki.git#egg=waliki
+rst2pdf==0.93
