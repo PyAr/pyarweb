@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% load devtags %}
 
 {% block content %}
@@ -10,25 +12,36 @@
 
             <section class="list-group">
                 <header class="list-group-item">
-                    <h3 class="list-group-item-heading">Companias que usan Python</h3>
-                    </header>
-                  {% if companies|length < 1 %}
-                      <article class="list-group-item">
-                        <h4 class="list-group-item-heading">You dont have company to edit</h4>
-                        <a href='/companies/add'>Add your company</a>
-                      </article>
-                  {% else %}
-                  {% for company in companies %} 
-                    <article class="list-group-item">
-                      <h4 class="list-group-item-heading">{{ company.link }}</h4>
-                      <a href='/companies/{{company.id}}/edit'>{{company.link}}</a>
-                      </article>
-                      {% endfor %}
+                    <h3 class="list-group-item-heading">
+                        {% trans "Companias que usan Python" %}
+                    </h3>
+                    {% if own_companies_count < 1 %}
+                        <a href='/companies/add'>
+                            {% trans "Agregar Compañia" %}
+                        </a>
                     {% endif %}
+                    </header>
+                    {% for company in companies %}
+                        <article class="list-group-item">
+                          <h4 class="list-group-item-heading">{{ company.link }}</h4>
+                          <a href='/companies/{{company.id}}/edit'>{{company.link}}</a>
+
+                            <blockquote>
+                                <footer>
+                                {{ company.updated_at }} {% trans 'por' %} {{ company.owner}}
+                                  {% if company.owner == user %}
+                                  <a href="{% url 'companies:delete' company.id %}">{% trans 'Borrar' %}</a> |
+                                  <a href="{% url 'companies:edit' company.id %}">{% trans 'Modificar' %}</a>
+                                  {% endif %}
+                                </footer>
+                            </blockquote>
+
+                        </article>
+                    {% endfor %}
             </section>
         </div>
         <div class="col-md-5">
-        
+
             <!-- SeachBox -->
 
             <form id="search-form" class="input-group" role="form">
@@ -46,7 +59,7 @@
                 <header class="list-group-item">
                     <h3 class="list-group-item-heading">Próximos eventos</h3>
                 </header>
-                {% for i in 4|get_range %} 
+                {% for i in 4|get_range %}
                     <article class="list-group-item">
                         <h4 class="list-group-item-heading">PyCon Argentina</h4>
                         <p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
@@ -60,7 +73,7 @@
                 <header class="list-group-item">
                     <h3 class="list-group-item-heading">Planeta PyAr</h3>
                 </header>
-                {% for i in 4|get_range %} 
+                {% for i in 4|get_range %}
                     <article class="list-group-item">
                         <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
                         <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>

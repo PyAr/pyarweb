@@ -19,17 +19,15 @@ class NewsArticleCreate(CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(NewsArticleCreate, self).form_valid(form)
-        
+
 
 class NewsArticleDelete(DeleteView, OwnedObject):
-
-    """Delete a Job."""
+    """Delete a News."""
     model = NewsArticle
     success_url = reverse_lazy('news_list_all')
 
 
 class NewsArticleUpdate(UpdateView, OwnedObject):
-
     """Updates a NewsArticle."""
     model = NewsArticle
     form_class = NewsArticleForm
@@ -43,3 +41,15 @@ class NewsArticleUpdate(UpdateView, OwnedObject):
 class NewsArticleList(ListView, FilterableList):
     model = NewsArticle
     paginate_by = 10
+
+
+class NewsArticleListTag(ListView, FilterableList):
+    model = NewsArticle
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag = self.kwargs['tag']
+        filter_news = NewsArticle.objects.filter(
+            tags__name__in=[tag]).distinct()
+
+        return filter_news

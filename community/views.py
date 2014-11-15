@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
-from django.http import HttpResponseForbidden
+from django.http import Http404
 from news.models import NewsArticle
 
 
@@ -19,7 +19,7 @@ class OwnedObject(SingleObjectMixin):
         obj = super(OwnedObject, self).get_object(*args, **kwargs)
         try:
             if not obj.owner == self.request.user:
-                raise HttpResponseForbidden
+                raise Http404()
         except (AttributeError):
             pass
         return obj

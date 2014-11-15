@@ -200,5 +200,8 @@ CELERYBEAT_SCHEDULE = {
 }
 
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 WALIKI_INDEX_SLUG = 'Inicio'
 SENDFILE_BACKEND = 'sendfile.backends.simple'

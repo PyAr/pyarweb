@@ -8,7 +8,8 @@
 <main id="main" class="container" role="main">
     <div class="col-lg-12">
       <div class="page-header">
-        <h2>{{ object.title }}
+        <h2>
+          {{ object.title }}
           <span class="pull-right">
             {% if object.owner == user %}
             <a href="{% url 'news_update' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
@@ -16,25 +17,13 @@
             {% endif %}
           </span>
         </h2>
+        <div class="tags">
+          <small>{{ object.created|date:"d/m/y" }} - <strong>{{ object.owner }}</strong></small>
+          <p> {% for t in object.tags.all %}<a href="{% url 'news_tags_list' tag=t.name %}" class="label label-default">{{ t.name }}</a> {% endfor %}</p>
+        </div>
       </div>
       <article>
         <p>{% autoescape off %}{{ object.body|linebreaks|safe }}{% endautoescape %}</p>
-        <table class="table table-no-border table-user-information">
-          <tbody>
-            <tr>
-              <td class="text-right"><label>{% trans 'Fecha' %}</label></td>
-              <td>{{ object.created|date:"d/m/y" }}</td>
-            </tr>
-            <tr>
-              <td class="text-right"><label>{% trans 'Etiquetas' %}</label></td>
-              <td>{% for t in object.tags.all %}<span class="label label-default">{{ t.name }}</span> {% endfor %}</td>
-            </tr>
-            <tr>
-              <td class="text-right"><label>{% trans 'Creado por' %}</label></td>
-              <td>{{ object.owner }}</td>
-            </tr>
-          </tbody>
-        </table>
       </article>
       <div class="row">
       {% disqus_show_comments %}

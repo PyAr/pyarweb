@@ -1,22 +1,32 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+
 from model_utils.models import TimeStampedModel
 
-# Create your models here.
-class Company(models.Model):
+
+class Company(TimeStampedModel):
     """A PyAr Company that use Python."""
 
-    photo = models.ImageField(upload_to='static/pycompanies/logos')
-    link = models.URLField()
-    owner = models.ForeignKey(User)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey(User, related_name='companies')
+    name = models.CharField('Nombre', max_length=255, unique=True)
+    description = models.TextField('Descripción')
+    photo = models.ImageField('Logo', upload_to='pycompanies/logos')
+    link = models.URLField('URL')
 
     @models.permalink
     def get_absolute_url(self):
         return ('company_view', (self.id,), {})
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
+
+
+###### SIGNALS ######
+
+@receiver(post_delete, sender=Company)
+def post_delete_user(sender, instance, *args, **kwargs):
+    "Delete logo image after delete company"
+
+    instance.photo.delete(save=False)

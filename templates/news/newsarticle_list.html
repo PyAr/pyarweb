@@ -1,5 +1,6 @@
 {% extends "base_site.html" %}
 {% load devtags i18n staticfiles pagination_tags %}
+
 {% block left-column %}
 <!-- Últimas noticias -->
 <section>
@@ -22,7 +23,7 @@
                 <p>
                     {{ object.introduction }}
                 </p>
-                <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %}<span class="label label-default">{{ t.name }}</span>{% endfor %}</p>
+                <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %}<a href="{% url 'news_tags_list' tag=t.name %}" class="label label-default">{{ t.name }}</a>{% endfor %}</div>
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             </article>
             {% endfor %}
@@ -35,7 +36,8 @@
     </div>
 </section>
 {% endblock %}
+
 {% block right-column %}
-{{ block.super }} 
-{% include "_tags_filtering_form.html" %}
+  {{ block.super }} 
+  {% include "_tags_filtering_form.html" %}
 {% endblock %}

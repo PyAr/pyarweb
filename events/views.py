@@ -7,13 +7,13 @@ from django.views.generic.edit import (
     DeleteView,
 )
 
+from braces.views import LoginRequiredMixin
+
+from community.views import OwnedObject
+
 from .forms import EventForm
 from .models import Event
-from .mixins import (
-    LoginRequiredMixin,
-    EventMixin,
-    EventPermission
-)
+from .mixins import EventMixin
 
 
 class EventList(ListView):
@@ -45,7 +45,7 @@ class EventCreate(LoginRequiredMixin, EventMixin, CreateView):
         return {'lat': '-35.245619', 'lng': '-65.492249'}
 
 
-class EventUpdate(LoginRequiredMixin, EventPermission, UpdateView):
+class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
     form_class = EventForm
 
     def get_initial(self):
@@ -54,5 +54,6 @@ class EventUpdate(LoginRequiredMixin, EventPermission, UpdateView):
         return {'lat': event.lat, 'lng': event.lng}
 
 
-class EventDelete(LoginRequiredMixin, EventPermission, DeleteView):
-    pass
+class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
+    model = Event
+    success_url = '/events/'
