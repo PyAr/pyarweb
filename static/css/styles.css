@@ -3,7 +3,7 @@
 /*
  * General
  */
-*, body, td, tr, div, p, form, input, 
+*, body, td, tr, div, p, form, input,
 select, textarea, font {
     font-family: 'Roboto';
 }
@@ -473,7 +473,7 @@ time.published {
        color: white;
        width: 100%;
        position: absolute;
-       top: 150px;
+       /* top: 150px; */
     }
     .banner {
         height:137px;

@@ -22,7 +22,21 @@
         <script src="{% static "js/web.js" %}"></script>
     </head>
     <body>
+
+
         {% include "header.html" %}
+
+
+
+        {% block messages %}
+            <div class="row">
+                <div class="col-lg-offset-2 col-sm-8 col-md-8">
+                    {% include "_messages.html" %}
+
+                </div>
+            </div>
+        {% endblock messages %}
+
         {% block content %}{% endblock %}
         {% include "footer.html" %}
 

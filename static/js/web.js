@@ -17,13 +17,13 @@ $(document).ready(function() {
 		}
 		$iframeGoogle.attr("src","/static/search.html?q="+text);
 	}
-	
+
 	$("form#search-form").bind("submit",function(a) {
 		buscar();
 		$searchModal.modal("show");
 		return false;
 	});
-	
+
 	$("form#search-form.form-control.input-lg,div#searchResult input.search").bind("keydown",function(a) {
 		if (a.keyCode == 13) {
 			buscar();
@@ -31,15 +31,17 @@ $(document).ready(function() {
 			return false;
 		}
 	});
-	
+
 	$("span.input-group-btn button.btn.btn-default.btn-lg").bind("click",function(a) {
 		buscar();
 		$searchModal.modal("show");
 	});
-	
+
 	$searchModal.on("hide.bs.modal",function() {
 		$("div#searchResult input.search").val("");
 	});
+
+	$('.alert').delay(4000).fadeOut(1000);
 });
 
 function iframeHeight(val) {
