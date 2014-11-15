@@ -2,13 +2,17 @@
 {% load i18n %}
 {% load waliki_tags %}
 
-{% block content %}
+{% block container %}
 <main id="main" class="container" role="main">
     <div class="col-lg-12">
-      <div class="page-header">
-        <h2>{{ page.title }} </h2>
 
-<div class="pull-right">
+
+{% block content %}
+
+
+      <div class="page-header">
+
+        <div class="pull-right">
     {% block actions %}
       <div class="btn-group">
 
@@ -37,9 +41,10 @@
     {% endblock actions %}
     </div>
 
-
+        <h2>{{ page.title }} </h2>
       </div>
-      <article>
+
+<article>
 
     {% if page %}
         {{ page.body|safe }}
@@ -49,6 +54,7 @@
     {% endif %}
 
       </article>
+{% endblock %}
   </div>
 </main>
 {% endblock %}

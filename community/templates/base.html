@@ -20,13 +20,14 @@
         <script src="{% static "jquery/1.11.0/jquery.min.js" %}"></script>
         <script src="{% static "bootstrap/3.1.1/js/bootstrap.min.js" %}"></script>
         <script src="{% static "js/web.js" %}"></script>
+
+        {% block extra_head %}{% endblock %}
+
+
     </head>
     <body>
 
-
         {% include "header.html" %}
-
-
 
         {% block messages %}
             <div class="row">
@@ -37,9 +38,28 @@
             </div>
         {% endblock messages %}
 
-        {% block content %}{% endblock %}
+        {% block container %}
+            {% block content %}{% endblock %}
+        {% endblock container %}
+
         {% include "footer.html" %}
 
-        {% block javascripts %} {% endblock %}
+        {% block javascripts %}{% endblock %}
+
+        {% block extra_script %}{% endblock %}
+
+        <script type="text/javascript">
+            function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

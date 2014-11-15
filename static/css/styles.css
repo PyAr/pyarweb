@@ -3,7 +3,7 @@
 /*
  * General
  */
-*, body, td, tr, div, p, form, input,
+body, td, tr, div, p, form, input,
 select, textarea, font {
     font-family: 'Roboto';
 }
@@ -522,4 +522,9 @@ time.published {
         right: 0px;
         bottom: 0px;
     }
+}
+
+pre {
+    font-family: Menlo,Monaco,Consolas,"Courier" !important;
+    font-size: 13px !important;
 }
