@@ -205,3 +205,8 @@ MEDIA_URL = '/media/'
 
 WALIKI_INDEX_SLUG = 'Inicio'
 SENDFILE_BACKEND = 'sendfile.backends.simple'
+
+try:
+    from local_settings import *
+except:
+    pass
