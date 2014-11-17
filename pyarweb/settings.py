@@ -42,7 +42,6 @@ ALLOWED_HOSTS = []
 ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'webmaster@python.org.ar'
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/pyarenses/login/'
 
 
 # Disqus
