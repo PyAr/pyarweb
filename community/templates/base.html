@@ -8,6 +8,7 @@
         <title>PyAr - Python Argentina</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static "css/animate.css" %}">
         <link rel="stylesheet" href="{% static "css/styles.css" %}">
 
         {% block stylesheets %} {% endblock %}
@@ -19,7 +20,9 @@
 
         <script src="{% static "jquery/1.11.0/jquery.min.js" %}"></script>
         <script src="{% static "bootstrap/3.1.1/js/bootstrap.min.js" %}"></script>
+        <script src="{% static "bootstrap/3.1.1/js/bootstrap-growl.min.js" %}"></script>
         <script src="{% static "js/web.js" %}"></script>
+
 
         {% block extra_head %}{% endblock %}
 
@@ -28,15 +31,6 @@
     <body>
 
         {% include "header.html" %}
-
-        {% block messages %}
-            <div class="row">
-                <div class="col-lg-offset-2 col-sm-8 col-md-8">
-                    {% include "_messages.html" %}
-
-                </div>
-            </div>
-        {% endblock messages %}
 
         {% block container_wrapper %}
             {% block content %}{% endblock %}
@@ -60,6 +54,21 @@
                     }
                 }
             });
+
+        {% for message in messages %}
+        $.growl('{{ message|escapejs }}', {
+            type: '{{ message.tags }}',
+            offset: {
+               x: 50,
+               y: 35
+            },
+            animate: {
+                enter: 'animated bounceIn',
+                exit: 'animated bounceOut'
+            }
+        });
+        {% endfor %}
+
         </script>
     </body>
 </html>

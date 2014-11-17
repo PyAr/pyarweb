@@ -41,7 +41,7 @@ $(document).ready(function() {
 		$("div#searchResult input.search").val("");
 	});
 
-	$('.alert').delay(4000).fadeOut(1000);
+
 });
 
 function iframeHeight(val) {

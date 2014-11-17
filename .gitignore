@@ -3,6 +3,5 @@
 *.swo
 .venv
 db.sqlite3
-static
 waliki_data
 media
