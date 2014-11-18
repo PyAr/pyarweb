@@ -19,35 +19,35 @@
         <div class="row index-content">
             <article class="col-sm-4">
                 <div class="img aprendiendo_python"></div>
-                <h3 class="text-center">Aprendiendo Python</h3>
-                <p class="text-center">Recopilación de links y material que los miembros de PyAr consideramos útil para aquellos que se inician en este lenguaje.</p>
-            </article>
-            <article class="col-sm-4">
-                <div class="img proyectos_comunidad"></div>
-                <h3 class="text-center"><a href="{% url 'projects_list_all' %}">Proyectos de la comunidad</a></h3>
-                <p class="text-center">Información sobre los proyectos que encaramos como grupo, o en los que participan nuestros miembros.</p>
+                <h3 class="text-center"><a href="{% url 'aprendiendo' %}">Aprendiendo Python</a></h3>
+                <p class="text-center">Recopilación de recursos que los miembros de PyAr consideramos útil para quienes que se inician en este lenguaje.</p>
             </article>
             <article class="col-sm-4">
                 <div class="img lista_correo"></div>
-                <h3 class="text-center"><a href="{% url 'mailling_list' %}">Lista de correo</a></h3>
-                <p class="text-center">Instrucciones para suscribirte a nuestra lista, hoy por hoy, nuestro principal canal de comunicación. (feed rss disponible).</p>
-            </article>
-            </div>
-            <div class="row">
-            <article class="col-sm-4">
-                <div class="img quienes_usan_python"></div>
-                <h3 class="text-center"><a href="/companies">Quiénes usan Python</a></h3>
-                <p class="text-center">Información sobre organizaciones que utilizan Python en Argentina.</p>
+                <h3 class="text-center"><a href="{% url 'mailing_list' %}">Lista de correo</a></h3>
+                <p class="text-center">Instrucciones para suscribirte a nuestra lista, nuestro principal canal de comunicación.</p>
             </article>
             <article class="col-sm-4">
                 <div class="img wiki"></div>
                 <h3 class="text-center"><a href="{% url 'waliki_home' %}">Nuestra wiki</a></h3>
                 <p class="text-center">El espacio de edición colaborativa de nuestra web</p>
             </article>
+            </div>
+            <div class="row">
+            <article class="col-sm-4">
+                <div class="img quienes_usan_python"></div>
+                <h3 class="text-center"><a href="{% url "companies:company_list_all" %}">Quiénes usan Python</a></h3>
+                <p class="text-center">Información sobre organizaciones que utilizan Python en Argentina.</p>
+            </article>
             <article class="col-sm-4">
                 <div class="img adopta_un_newbie"></div>
                 <h3 class="text-center"><a href="{% url 'jedi.list' %}">Adopta un newbie</a></h3>
                 <p class="text-center">Donde expertos y principiantes se encuentran</p>
+            </article>
+            <article class="col-sm-4">
+                <div class="img proyectos_comunidad"></div>
+                <h3 class="text-center"><a href="{% url 'projects_list_all' %}">Proyectos de la comunidad</a></h3>
+                <p class="text-center">Los proyectos que desarrollamos como grupo o en los que participan nuestros miembros.</p>
             </article>
         </div>
     </section>
@@ -67,7 +67,7 @@
     </section>
 
     <!-- Estadísticas de la lista de correo -->
-    {# IMPLEMENTAR #} 
+    {# IMPLEMENTAR #}
     <!--
     <section class="list-group">
         <header class="list-group-item">

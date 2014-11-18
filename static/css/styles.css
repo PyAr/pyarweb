@@ -528,3 +528,8 @@ pre {
     font-family: Menlo,Monaco,Consolas,"Courier" !important;
     font-size: 13px !important;
 }
+
+.editable button {
+    float: right;
+    margin: 0 0 1em 1em;
+}

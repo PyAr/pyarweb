@@ -3,6 +3,8 @@ from django.shortcuts import render
 def irc(request):
     return render(request, 'irc/irc.html')
 
+def special_page(request, **kwargs):
+    return render(request, 'generic_content.html', kwargs)
 
 def QuienesSomos(request):
     return render(request, 'QuienesSomos.html')

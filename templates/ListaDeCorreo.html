@@ -1,61 +1,6 @@
 {% extends "base_site.html" %}
-
-{% load devtags %}
+{% load waliki_tags %}
 
 {% block left-column %}
-  <h1>Lista de Correo</h1>
-  <p>La lista de correo de <a href="/">PyAr</a> está abierta a todos los interesados en Python, y está dedicada en especial a los residentes de Argentina. <b>En esta lista discutimos todos los temas que tengan que ver con la promoción, difusión y temas técnicos del lenguaje de programación Python</b> (para otro tipo de discusiones ver la lista <b>pyar-bar</b> más abajo) y planeamos eventos especiales y la creación de contenido local.</p>
-  <p>Si querés suscribirte a la lista, te pedimos por favor que primero te tomes un par de minutos para leer la <a href="/EtiquetaPyAr">EtiquetaPyAr</a>.</p>
-  <h2>Instrucciones para suscribirte</h2>
-  <p>
-      <ol>
-              <li>Mandá un mensaje a <tt>&lt;pyar-subscribe&nbsp;AT&nbsp;python&nbsp;DOT&nbsp;org&nbsp;DOT&nbsp;ar&gt;</tt></li>
-              <li>Mandá tu "Hola mundo" a <tt>&lt;pyar&nbsp;AT&nbsp;python&nbsp;DOT&nbsp;org&nbsp;DOT&nbsp;ar&gt;</tt> para que todos los suscriptos a la lista aprecien tu nivel de nerdismo. :P</li>
-      </ol>
-      <p><i>(El paso 2. es opcional, pero muy bienvenido. Ha generado algunas de las conversaciones más interesantes de la lista...)</i></p>
-  </p>
-  <h2>PyAr Bar</h2>
-  <p>Si queres hablar sobre otro tipo de temas con la comunidad que <b>no están relacionados con la promoción, difusión y temas técnicos del lenguaje de programación Python</b>, podes hacerlo suscribiendote a: <a class="http" href="http://listas.python.org.ar/mailman/listinfo/pyar-bar">http://listas.python.org.ar/mailman/listinfo/pyar-bar</a></p>
-  <h2>Instrucciones para salirte de la lista</h2>
-  <p>Mandá un mensaje a <tt>&lt;pyar-unsubscribe&nbsp;AT&nbsp;python&nbsp;DOT&nbsp;org&nbsp;DOT&nbsp;ar&gt;</tt></p>
-  <h2>Ayuda</h2>
-  <p>
-      <ul>
-              <li><b>Tengo una duda sobre Python!</b> No hay problema! primero puedes buscar lo que precises en el archivo de la lista, más abajo en la sección Buscar en los archivos de la lista te explicamos como :). En caso de que tu duda no sea resuelta por los archivos, no dudes en enviar un mail a la lista de <a href="/">PyAr</a> (al momento de enviar un email a la lista de <a href="/">PyAr</a>, asegurate de haber leído o saber las "costumbres" de la lista por aca: <a href="http://python.org.ar/pyar/EtiquetaPyAr">http://python.org.ar/pyar/EtiquetaPyAr</a>)</li>
-              <li>Para comunicarte con los administradores de <a href="/">PyAr</a>, mandá un mensaje a <tt>&lt;admin&nbsp;AT&nbsp;python&nbsp;DOT&nbsp;org&nbsp;DOT&nbsp;ar&gt;</tt>. Esa sería la dirección de contacto para reportar problemas con la lista o con el sitio web.</li>
-              <li>Para obtener ayuda y los comandos disponibles en la lista, mandá un mensaje a con el Asunto 'help' (sin las comillas) a <tt>&lt;pyar-request&nbsp;AT&nbsp;python&nbsp;DOT&nbsp;org&nbsp;DOT&nbsp;ar&gt;</tt></li>
-      </ul>
-  </p>
-  <h2>RSS y NNTP</h2>
-  <p>La lista también es accesible vía RSS y NNTP. Entrá a <a class="http" href="http://dir.gmane.org/gmane.org.user-groups.python.argentina">http://dir.gmane.org/gmane.org.user-groups.python.argentina</a>.</p>
-  <p>La suscripción esta desde el 17 de octubre de 2006.</p>
-  <h2>Archivo</h2>
-  <p>El archivo oficial de la lista está en: <a class="http" href="http://listas.python.org.ar/pipermail/pyar/">http://listas.python.org.ar/pipermail/pyar/</a>, aunque solamente contiene los mensajes desde Enero 2010, fecha en que se migró la lista al nuevo servicio de hosting de <a class="http" href="http://drupal.usla.org.ar/">USLA</a>.</p>
-  <p>Si querés ver el histórico de la lista de correo de <a href="/">PyAr</a>, te podés fijar en el <a class="http" href="http://mx.grulic.org.ar/lurker/list/pyar.es.html">archivo</a>. El archivo está subscripto recién desde el 19 de enero de 2005, y la lista tiene unos 3 o 4 meses más de antigüedad. Pero desde esa fecha en adelante tiene todo el historial.</p>
-  <p>A partir del 17/10/2006, GMANE también está archivando nuestra lista. Este archive es accesible desde <a class="http" href="http://dir.gmane.org/gmane.org.user-groups.python.argentina">acá</a>.</p>
-  <p>También hay una réplica de la lista en un grupo de Google: <a class="http" href="http://groups.google.com/group/pythonargentina">http://groups.google.com/group/pythonargentina</a></p>
-  <h2>Buscar en los archivos de la lista</h2>
-  <p>Hemos hablado de muchas cosas en la lista de <a href="/">PyAr</a>, si tienes un problema o una duda, antes de preguntar en la lista de <a href="/">PyAr</a> te recomendamos que busques en el archivo de la lista, puedes hacerlo al menos de estas formas:</p>
-  <p>
-      <ul>
-              <li><a class="http" href="http://blog.gmane.org/gmane.org.user-groups.python.argentina">http://blog.gmane.org/gmane.org.user-groups.python.argentina</a> (vas a ver una parte que dice <b>Search Archive</b>)</li>
-              <li>
-                      Utilizando <a class="http" href="http://www.google.com/">Google</a> con el comando <b>site:</b>, por ejemplo, si busco servicios de <i>hosting</i> para python puedo hacer una busqueda del tipo: 
-                      <br><br>
-                      <i>hosting</i>&nbsp;<b>site</b>:listas.python.org.ar/pipermail/pyar/
-                      <br><br>
-                      Donde le decimos a google que busque la palabra 'hosting' solamente en el sitio del archivo de las listas: <a class="http" href="http://listas.python.org.ar/pipermail/pyar/">http://listas.python.org.ar/pipermail/pyar/</a> .
-              </li>
-      </ul>
-  </p>
-  <p>
-          <div class="alert alert-info">
-              <ul>
-                      <li>El servicio de hosting, tanto del portal como de la lista de correo es de <a class="http" href="http://www.decode.com.ar/"><s>Decode</s></a> <a class="http" href="http://drupal.usla.org.ar/">USLA</a>.</li>
-                      <li>El servicio de archivo es cortesía de <a class="http" href="http://www.grulic.org.ar/">GrULiC</a>, que gentilmente nos ha prestado espacio.</li>
-                      <li>El proyecto <a class="http" href="http://www.gmane.org/">GMANE</a> nos da archive, feeds RSS y acceso vía NNTP.</li>
-              </ul>
-              A estas organizaciones, <big>¡muchas gracias!</big>
-          </div>
-  </p>
+  {% waliki_box slug %}
 {% endblock %}

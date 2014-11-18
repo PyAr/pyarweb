@@ -33,7 +33,7 @@ class CompanyList(LoginRequiredMixin, ListView):
 class CompanyCreate(LoginRequiredMixin, CreateView):
     form_class = CompanyForm
     model = Company
-    success_url = '/companies/'
+    success_url = '/empresas/'
     template_name = 'companies/company_form.html'
 
     def form_valid(self, form):
@@ -54,5 +54,5 @@ class CompanyUpdate(LoginRequiredMixin, OwnedObject, UpdateView):
 
 class CompanyDelete(LoginRequiredMixin, OwnedObject, DeleteView):
     model = Company
-    success_url = '/companies/'
+    success_url = '/empresas/'
     template_name = 'companies/company_confirm_delete.html'

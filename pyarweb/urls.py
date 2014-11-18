@@ -6,10 +6,7 @@ from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 
 from .views import (
-    irc,
-    QuienesSomos,
-    MiembrosDePyAr,
-    ListaDeCorreo
+    irc, special_page,
 )
 
 admin.autodiscover()
@@ -17,11 +14,16 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^$', include('community.urls')),
-    url(r'^irc/', irc, name='irc'),
-    url(r'^aboutpyar/', QuienesSomos, name='about_pyar'),
-    url(r'^members/', MiembrosDePyAr, name='pyar_members'),
-    url(r'^maillinglist/', ListaDeCorreo, name='mailling_list'),
-    url(r'^news/', include('news.urls')),
+    url(r'^irc/$', irc, name='irc'),
+    url(r'^aprendiendo-python/$', special_page, {'slug': 'AprendiendoPython',
+                                         'title': 'Aprendiendo Python'}, name='aprendiendo'),
+    url(r'^sobre-pyar/$', special_page, {'slug': 'QuienesSomos',
+                                  'title': 'Acerca de PyAr'}, name='about_pyar'),
+    url(r'^miembros/$', special_page, {'slug': 'MiembrosDePyAr',
+                                          'title': '¿Donde viven los miembros de PyAr?' }, name='pyar_members'),
+    url(r'^lista/$', special_page, {'slug': 'ListaDeCorreob',
+                        'title': 'Lista de correo'}, name='mailing_list'),
+    url(r'^noticias/', include('news.urls')),
     url(r'^companies/', include('pycompanies.urls', namespace='companies')),
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     url(r'^summernote/', include('django_summernote.urls')),
@@ -34,5 +36,4 @@ urlpatterns = patterns(
     url(r'^faq/', include('faq.urls')),
     url(r'^planet/', include('planet.urls')),
     url(r'^wiki/', include('waliki.urls')),
-) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
-  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)
