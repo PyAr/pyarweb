@@ -10,19 +10,19 @@ Inquietud:
 ----------
 Como arranco / instalo el proyecto en mi máquina?
 
-Respuesta: 
+Respuesta:
 ----------
 
-Debes tener python3, NO codeamos el sitio con compatibilidad con python.
+Debes tener python 3.3 o 3.4, no hay compatibilidad con python 2.
 
 1- Debes crear un nuevo virtualenv
-    Ej 1 usando pyvenv: pyvenv3-3 pyarweb 
+    Ej 1 usando pyvenv: pyvenv3-3 pyarweb
     Ej 2 usando virtualenvwrapper: export VIRTUALENV_PYTHON=/usr/bin/python3
                                    mkvirtualenv pyarweb
 
 Activas tu virtualenv
     Ej 1: source pyarweb/bin/activate
-    Ej 2 usando virtualenvwrapper: workon pyarweb 
+    Ej 2 usando virtualenvwrapper: workon pyarweb
 
 Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
 e instalalo con el python3 de tu virtualenv. Luego de instalar setuptools hacer:
@@ -46,3 +46,17 @@ easy_install-3.3 pip
 Para más información, si queres contribuír con el proyecto, no dejes de visitar:
 
 https://github.com/samuelbustamante/pyarweb/wiki/Manual-b%C3%A1sico-de-supervivencia-para-colaborar-con-el-sitio-de-PyAr
+
+## Como obtener los datos de la Wiki
+
+Ademas de la wiki en si, algunas paginas especiales son gestionadas con waliki, por lo que podrias querer los datos.
+
+Para eso podes clonar el repo https://github.com/PyAr/wiki.git en el directorio
+`waliki_data` del root de tu proyecto (o el que indique la constante `WALIKI_DATA_DIR` de tu `local_settings.py`)
+
+Luego de clonar el repo, tenes que sincronizar la base de datos ejecuntando
+
+```
+python manage sync_waliki
+```
+
