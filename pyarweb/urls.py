@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-
-from django.conf import settings
 from django.contrib import admin
-from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 
 from .views import (
-    irc, special_page,
+    irc, special_page, buscador
 )
 
 admin.autodiscover()
@@ -15,12 +12,15 @@ urlpatterns = patterns(
     '',
     url(r'^$', include('community.urls')),
     url(r'^irc/$', irc, name='irc'),
+    url(r'^buscador/$', buscador, name='buscador'),
+
     url(r'^aprendiendo-python/$', special_page, {'slug': 'AprendiendoPython',
                                          'title': 'Aprendiendo Python'}, name='aprendiendo'),
     url(r'^sobre-pyar/$', special_page, {'slug': 'QuienesSomos',
                                   'title': 'Acerca de PyAr'}, name='about_pyar'),
     url(r'^miembros/$', special_page, {'slug': 'MiembrosDePyAr',
-                                          'title': '¿Donde viven los miembros de PyAr?' }, name='pyar_members'),
+                                          'title': '¿Donde viven los miembros de PyAr?' },
+                                          name='pyar_members'),
     url(r'^lista/$', special_page, {'slug': 'ListaDeCorreob',
                         'title': 'Lista de correo'}, name='mailing_list'),
     url(r'^noticias/', include('news.urls')),

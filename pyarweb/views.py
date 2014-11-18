@@ -6,13 +6,5 @@ def irc(request):
 def special_page(request, **kwargs):
     return render(request, 'special_page.html', kwargs)
 
-def QuienesSomos(request):
-    return render(request, 'QuienesSomos.html')
-
-
-def MiembrosDePyAr(request):
-    return render(request, 'MiembrosDePyAr.html')
-
-
-def ListaDeCorreo(request):
-    return render(request, 'ListaDeCorreo.html')
+def buscador(request):
+    return render(request, 'buscador.html', {'buscar': request.GET.get('buscar', '')})
