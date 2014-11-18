@@ -6,12 +6,8 @@ por su comunidad, wooohooo!.
 Mas de 20 personas sprinteando en PyconAr!!!
 
 
-Inquietud:
-----------
 Como arranco / instalo el proyecto en mi máquina?
-
-Respuesta:
-----------
+--------------------------------------------------
 
 Debes tener python 3.3 o 3.4, no hay compatibilidad con python 2.
 
