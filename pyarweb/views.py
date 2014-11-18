@@ -4,7 +4,7 @@ def irc(request):
     return render(request, 'irc/irc.html')
 
 def special_page(request, **kwargs):
-    return render(request, 'generic_content.html', kwargs)
+    return render(request, 'special_page.html', kwargs)
 
 def QuienesSomos(request):
     return render(request, 'QuienesSomos.html')
