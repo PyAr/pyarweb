@@ -89,7 +89,7 @@ INSTALLED_APPS = (
     'tagging',
     'bootstrap3',
     'django_summernote',
-    # 'south',
+    'sendfile',
     'crispy_forms',
     'email_obfuscator',
     'waliki',

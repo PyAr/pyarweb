@@ -31,3 +31,4 @@ ipdb
 -e git+https://github.com/mgaitan/waliki.git#egg=waliki[all]
 rst2pdf==0.93
 django-braces==1.4.0
+django-sendfile==0.3.6
