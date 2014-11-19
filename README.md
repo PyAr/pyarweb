@@ -15,7 +15,7 @@ Debes tener python 3.3 o 3.4, no hay compatibilidad con python 2.
 
     Ej 1 usando pyvenv: pyvenv3-3 pyarweb
 
-    Ej 2 usando virtualenvwrapper: 
+    Ej 2 usando virtualenvwrapper:
 
         export VIRTUALENV_PYTHON=/usr/bin/python3
 
@@ -62,4 +62,18 @@ Luego de clonar el repo, tenes que sincronizar la base de datos ejecuntando
 ```
 python manage sync_waliki
 ```
+
+## Cargar feeds del planeta.
+
+El archivo /fixtures/planeta_pyar.json contiene los feeds del planeta actual, asociados al usuario con id 1.
+
+Para cargarlos
+
+```
+$ python manage.py loaddata fixtures/planeta_pyar.json
+```
+
+Mas adelante habrá que asociar cada blog al usuario correspondiente
+
+
 
