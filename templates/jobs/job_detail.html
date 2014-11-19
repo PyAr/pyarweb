@@ -23,7 +23,7 @@
           <tbody>
             <tr>
               <td class="text-right"><label>{% trans 'Fecha' %}</label></td>
-              <td>{{ object.created|date:"d/m/y" }}</td>
+              <td>{{ object.created|date:"SHORT_DATE_FORMAT" }}</td>
             </tr>
             <tr>
               <td class="text-right"><label>{% trans 'Lugar' %}</label></td>
