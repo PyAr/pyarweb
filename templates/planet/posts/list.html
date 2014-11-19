@@ -9,11 +9,22 @@
     <div class="col-md-12">
         <div class="page-header">
             {% if feed_created %}
-            <div class="alert alert-dismissable alert-success">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                {% trans 'La URL ha sido procesada exitosamente. Su feed puede tardar algunos minutos en aparecer.' %}
-            </div>
-            {% endif %}
+                <script type="text/javascript">
+                $(function(){
+                    $.growl('La URL ha sido procesada exitosamente. Su feed puede tardar algunos minutos en aparecer.', {
+                        type: 'success',
+                        offset: {
+                           x: 50,
+                           y: 35
+                        },
+                        animate: {
+                            enter: 'animated bounceIn',
+                            exit: 'animated bounceOut'
+                        }
+                    });
+                });
+                </script>
+        {% endif %}
             <h2>{% trans 'Planeta PyAr' %}
               {% if user.is_authenticated %}
                 <span class="section-button-group pull-right">
