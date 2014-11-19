@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
+from waliki.settings import WALIKI_SLUG_PATTERN
 
 from .views import (
-    irc, special_page, buscador
+    irc, special_page, buscador, old_url_redirect
 )
 
 admin.autodiscover()
@@ -36,4 +37,6 @@ urlpatterns = patterns(
     url(r'^faq/', include('faq.urls')),
     url(r'^planet/', include('planet.urls')),
     url(r'^wiki/', include('waliki.urls')),
+    url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?', old_url_redirect, name='old_url_redirect'),
+
 )
