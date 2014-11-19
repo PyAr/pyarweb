@@ -1,11 +1,9 @@
 {% extends "base_site.html" %}
 
 
-{% block left-column %} 
+{% block left-column %}
 
-{% block title %}
-  Preguntas frecuentes de 
-{% endblock %}
+{% block title %}Preguntas frecuentes {% endblock %}
 
 
 {% regroup faqs by topic as topic_list %}

@@ -3,6 +3,9 @@
 {% load i18n %}
 {% load email_obfuscator %}
 {% load devtags %}
+{% block title %}
+  {{ object.title }}
+{% endblock title %}
 
 {% block content %}
 <main id="main" class="container" role="main">

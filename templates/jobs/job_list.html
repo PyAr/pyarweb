@@ -1,9 +1,7 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 {% load i18n staticfiles pagination_tags %}
-{% block title %}
-  Trabajos de Python publicados en 
-{% endblock %}
+{% block title %}Trabajos de Python {% endblock %}
 {% block left-column %}
 <!-- Últimas noticias -->
 <section>
@@ -33,7 +31,7 @@
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             </article>
             {% endfor %}
-            
+
             {% paginate %}
         {% else %}
             <div class="col-md-12">

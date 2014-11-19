@@ -4,9 +4,7 @@
 
 {% load devtags %}
 
-{% block title %}
-Eventos de 
-{% endblock %}
+{% block title %}Eventos {% endblock %}
 
 {% block left-column %}
 
@@ -26,8 +24,8 @@ Eventos de
       </h2>
     </div>
 
-      {% for event in eventos_proximos %} 
-          
+      {% for event in eventos_proximos %}
+
           <article class="list-group-item">
               <h4 class="list-group-item-heading">
                 <a href="{% url 'events:detail' event.id %}">
@@ -38,9 +36,9 @@ Eventos de
               <p class="list-group-item-text">{{ event.description|truncatewords:"20" }}</p>
               <blockquote>
                 <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
+                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
                   {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> | 
+                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> |
                   <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
                   {% endif %}
                 </footer>
@@ -60,8 +58,8 @@ Eventos de
           </h2>
       </header>
 
-      {% for event in eventos_pasados %} 
-          
+      {% for event in eventos_pasados %}
+
           <article class="list-group-item">
               <h4 class="list-group-item-heading">
                 <a href="{% url 'events:detail' event.id %}">
@@ -72,9 +70,9 @@ Eventos de
               <p class="list-group-item-text">{{ event.description|truncatewords:"20" }}</p>
               <blockquote>
                 <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
+                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
                   {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> | 
+                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> |
                   <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
                   {% endif %}
                 </footer>

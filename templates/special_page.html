@@ -1,5 +1,9 @@
 {% extends "base_site.html" %}
 {% load waliki_tags %}
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
 
 {% block left-column %}
   {% if title %}

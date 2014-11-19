@@ -2,6 +2,10 @@
 {% load i18n %}
 {% load waliki_tags %}
 
+{% block title %}
+    {% if page.title %}{{ page.title} - {% endif %} Wiki
+{% endblock title %}
+
 {% block container_wrapper %}
 <main id="main" class="container" role="main">
     <div class="col-lg-12">

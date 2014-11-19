@@ -4,6 +4,11 @@
 
 {% load devtags %}
 
+{% block title %}
+    {{ event.name }}
+{% endblock title %}
+
+
 {% block stylesheets %}
   <link rel="stylesheet" href="/static/css/event_map.css">
 {% endblock %}
@@ -38,9 +43,9 @@
 
             <blockquote>
               <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
+                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
                 {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> | 
+                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> |
                   <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
                 {% endif %}
               </footer>
