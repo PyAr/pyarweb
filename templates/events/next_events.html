@@ -7,8 +7,8 @@
       </h4>
       
       <p class="list-group-item-text">
-        <span>{{ event.start_at|date }}</span> | 
-        <span>{{ event.start_at|time }}</span> | 
+        <span>{{ event.start_at|date:"DATE_FORMAT" }}</span> | 
+        <span>{{ event.start_at|time:"TIME_FORMAT" }}</span> | 
         <span>{{ event.place }}</span>
       </p>
     </article>

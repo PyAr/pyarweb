@@ -12,12 +12,19 @@ Como arranco / instalo el proyecto en mi máquina?
 Debes tener python 3.3 o 3.4, no hay compatibilidad con python 2.
 
 1- Debes crear un nuevo virtualenv
+
     Ej 1 usando pyvenv: pyvenv3-3 pyarweb
-    Ej 2 usando virtualenvwrapper: export VIRTUALENV_PYTHON=/usr/bin/python3
-                                   mkvirtualenv pyarweb
+
+    Ej 2 usando virtualenvwrapper:
+
+        export VIRTUALENV_PYTHON=/usr/bin/python3
+
+        mkvirtualenv pyarweb
 
 Activas tu virtualenv
+
     Ej 1: source pyarweb/bin/activate
+
     Ej 2 usando virtualenvwrapper: workon pyarweb
 
 Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
@@ -25,7 +32,7 @@ e instalalo con el python3 de tu virtualenv. Luego de instalar setuptools hacer:
 
 easy_install-3.3 pip
 
-2. sudo apt-get install python3-dev (PIL se mal copa si no lo tenes instalado)
+2. sudo apt-get install python3-dev libxml2-dev libxlst1-dev
 
 3. Instalar las dependencias, ej: pip3 install -r ./requirements.txt
 
@@ -55,4 +62,18 @@ Luego de clonar el repo, tenes que sincronizar la base de datos ejecuntando
 ```
 python manage sync_waliki
 ```
+
+## Cargar feeds del planeta.
+
+El archivo /fixtures/planeta_pyar.json contiene los feeds del planeta actual, asociados al usuario con id 1.
+
+Para cargarlos
+
+```
+$ python manage.py loaddata fixtures/planeta_pyar.json
+```
+
+Mas adelante habrá que asociar cada blog al usuario correspondiente
+
+
 

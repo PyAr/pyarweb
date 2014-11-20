@@ -4,6 +4,11 @@
 
 {% load devtags %}
 
+{% block title %}
+    {{ event.name }}
+{% endblock title %}
+
+
 {% block stylesheets %}
   <link rel="stylesheet" href="/static/css/event_map.css">
 {% endblock %}

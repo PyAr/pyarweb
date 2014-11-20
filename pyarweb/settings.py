@@ -89,7 +89,7 @@ INSTALLED_APPS = (
     'tagging',
     'bootstrap3',
     'django_summernote',
-    # 'south',
+    'sendfile',
     'crispy_forms',
     'email_obfuscator',
     'waliki',
@@ -141,6 +141,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+FORMAT_MODULE_PATH = 'pyarweb.formats'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/

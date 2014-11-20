@@ -1,6 +1,8 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 
+{% block title %}Proyectos {% endblock %}
+
 {% block left-column %}
     <!-- Últimas noticias -->
     <section>
@@ -11,7 +13,7 @@
               {% endif %}
             </h2>
         </div>
-        {% for project in pyar_projects %} 
+        {% for project in pyar_projects %}
             <article class="board-list-item">
               <h4>
                 <a href="{{ project.url }}">
@@ -25,7 +27,7 @@
               <div class="text-muted"><p></p></div>
             </article>
         {% endfor %}
-        {% for project in projects %} 
+        {% for project in projects %}
             <article class="board-list-item">
               <h4>
                 <a href="{% url 'projects_view' project.id %}">
@@ -39,7 +41,7 @@
 	      <div class="text-muted">
 		<p>
 		  {% if project.owner == user %}
-                    <a href="{% url 'projects_delete' project.id %}">Borrar</a> | 
+                    <a href="{% url 'projects_delete' project.id %}">Borrar</a> |
                     <a href="{% url 'projects_update' project.id %}">Modificar</a>
                   {% endif %}
 		</p>

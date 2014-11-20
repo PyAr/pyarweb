@@ -1,6 +1,8 @@
 {% extends "base_site.html" %}
 {% load devtags i18n staticfiles pagination_tags %}
 
+{% block title %}Noticias {% endblock %}
+
 {% block left-column %}
 <!-- Últimas noticias -->
 <section>
@@ -38,6 +40,6 @@
 {% endblock %}
 
 {% block right-column %}
-  {{ block.super }} 
+  {{ block.super }}
   {% include "_tags_filtering_form.html" %}
 {% endblock %}

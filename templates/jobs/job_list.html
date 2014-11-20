@@ -1,6 +1,7 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 {% load i18n staticfiles pagination_tags %}
+{% block title %}Trabajos de Python {% endblock %}
 {% block left-column %}
 <!-- Últimas noticias -->
 <section>
@@ -18,7 +19,7 @@
             {% for object in object_list %}
             <article class="board-list-item">
                 <h4>
-                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>  <span class="job-date">({{ object.modified|date:"d/m/y" }}, {{ object.location }})</span>
+                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>  <span class="job-date">({{ object.modified|date:"SHORT_DATE_FORMAT" }}, {{ object.location }})</span>
                 </h4>
                 <p>{% if object.description|length > 250 %}
                 {{ object.description|slice:":250" }} ...
@@ -30,7 +31,7 @@
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             </article>
             {% endfor %}
-            
+
             {% paginate %}
         {% else %}
             <div class="col-md-12">
