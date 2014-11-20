@@ -40,6 +40,8 @@
 {% endblock %}
 
 {% block right-column %}
+  {% with True as hide_sidebar_news %}
   {{ block.super }}
+  {% endwith %}
   {% include "_tags_filtering_form.html" %}
 {% endblock %}
