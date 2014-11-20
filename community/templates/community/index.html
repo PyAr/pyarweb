@@ -88,6 +88,8 @@
 
 {% block right-column %}
     <div class="index-right">
-        {{ block.super }}
+      {% with True as hide_sidebar_news %}
+      {{ block.super }}
+      {% endwith %}
     </div>
 {% endblock %}
