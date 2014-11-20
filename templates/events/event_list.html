@@ -22,8 +22,8 @@
       </h2>
     </div>
 
-      {% for event in eventos_proximos %} 
-          
+      {% for event in eventos_proximos %}
+
           <article class="list-group-item">
               <h4 class="list-group-item-heading">
                 <a href="{% url 'events:detail' event.id %}">
@@ -34,9 +34,9 @@
               <p class="list-group-item-text">{{ event.description|truncatewords:"20" }}</p>
               <blockquote>
                 <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
+                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
                   {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> | 
+                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> |
                   <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
                   {% endif %}
                 </footer>
@@ -44,7 +44,7 @@
             </article>
       {% empty %}
         <article class="list-group-item">
-          <p class="list-group-item-text">No hay eventos a futuro</p>
+          <p class="list-group-item-text">{% trans "No hay eventos a futuro" %}</p>
         </article>
       {% endfor %}
 
@@ -56,8 +56,8 @@
           </h2>
       </header>
 
-      {% for event in eventos_pasados %} 
-          
+      {% for event in eventos_pasados %}
+
           <article class="list-group-item">
               <h4 class="list-group-item-heading">
                 <a href="{% url 'events:detail' event.id %}">
@@ -68,9 +68,9 @@
               <p class="list-group-item-text">{{ event.description|truncatewords:"20" }}</p>
               <blockquote>
                 <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
+                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
                   {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> | 
+                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> |
                   <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
                   {% endif %}
                 </footer>
@@ -79,7 +79,7 @@
 
       {% empty %}
         <article class="list-group-item">
-          <p class="list-group-item-text">No hay eventos pasados</p>
+          <p class="list-group-item-text">{% trans "No hay eventos pasados" %}</p>
         </article>
       {% endfor %}
 
@@ -90,7 +90,7 @@
               {% endif %}
 
               <span class="current">
-                Page {{ page_obj.number }} {% trans 'de' %} {{ page_obj.paginator.num_pages }}.
+                {% trans "Pagina" %} {{ page_obj.number }} {% trans 'de' %} {{ page_obj.paginator.num_pages }}.
               </span>
 
               {% if page_obj.has_next %}

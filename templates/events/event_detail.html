@@ -18,37 +18,68 @@
 
 	<main id="main" class="container" role="main">
 	    <div class="row">
-	        <div class="col-md-12">
-            <a href="{% url 'events:events_list_all' %}">{% trans "A eventos" %}</a>
+       <div class="col-md-12">
 
-            <h1>
-              {{ event.name }}
-            </h1>
+        <div class="page-header">
+          <h1>
+            {{ event.name }}
 
-            <p>{% trans "Creado por" %}: {{ event.owner }}</p>
-            <p>{% trans "¿ Donde ?" %}: {{ event.place }} | {{ event.address }}</p>
+            {% if event.owner == user %}
+              <span class="section-button-group pull-right">
+                <a class="btn btn-default" href="{% url 'events:edit' event.id %}">
+                  {% trans 'Modificar' %}
+                </a>
+                <a class="btn btn-danger" href="{% url 'events:delete' event.id %}">
+                  {% trans 'Borrar' %}
+                </a>
+              </span>
+            {% endif %}
+          </h1>
+
+          <small>
+            {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
+          </small>
+        </div>
+
+       </div>
+      </div>
+
+      <div class="row">
+	        <div class="col-md-6">
+
+            <h3>{% trans "¿De que se trata?" %}</h3>
+            <p>{{ event.description }}</p>
+
+            <h3>{% trans "¿ Cuando ?" %}</h3>
+            {% if event.start_at %}
+              <p>*{% trans "Comienza" %}: {{ event.start_at }}</p>
+            {% endif %}
+
+            {% if event.end_at %}
+              <p>*{% trans "Termina" %}: {{ event.end_at }}</p>
+            {% endif %}
+
+            {% if event.url %}
+              <h3>{% trans "Mas Información" %}</h3>
+              <p>
+                <a href="{{ event.url }}">{{ event.url }}</a>
+              </p>
+            {% endif %}
+
+          </div>
+
+          <div class="col-md-6">
+
+            <h3>{% trans "¿ Donde ?" %}</h3>
+            <p>{{ event.place }} | {{ event.address }}</p>
 
             <div id="map-canvas"></div>
 
-            <p>{% trans "¿ Cuando ?" %}: {{ event.start_at }}</p>
-            <p>{% trans "¿ a que hora termina ?" %}: {{ event.end_at|time }}</p>
-            <p>{% trans "url" %}: <a href="{{ event.url }}">{{ event.url }}</a></p>
-
-            <p>{{ event.description }}</p>
-
-            <blockquote>
-              <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}} 
-                {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> | 
-                  <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
-                {% endif %}
-              </footer>
-            </blockquote>
-
+          </div>
 
             <input type="hidden" id="id_lat" value="{{ event.lat }}">
             <input type="hidden" id="id_lng" value="{{ event.lng }}">
+            <input type="hidden" id="id_zoom" value="{{ event.zoom }}">
 	        </div>
 	    </div>
 	</main>
