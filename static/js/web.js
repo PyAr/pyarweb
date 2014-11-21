@@ -5,4 +5,4 @@ $(document).ready(function() {
 		$("header nav li.active").removeClass("active");
 		$("header nav li a[href='/"+window.location.pathname.split("/")[1]+"/']").parent().addClass("active");
 	}
-}
+});

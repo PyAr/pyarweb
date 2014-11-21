@@ -4,14 +4,14 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block head_title %}{% trans "Registrate" %}{% endblock %}
 
 {% block container %}
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <h1>{% trans "Sign Up" %}</h1>
+    <h1>{% trans "Registrate" %}</h1>
 
-    <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+    <p>{% blocktrans %}¿Ya tenes cuenta? por favor <a href="{{ login_url }}">inicia sesión</a>.{% endblocktrans %}</p>
 
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
       {% csrf_token %}

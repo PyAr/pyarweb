@@ -11,6 +11,7 @@ from .models import Event
 class EventForm(forms.ModelForm):
 
     start_at = forms.DateTimeField(
+        required=False,
         widget=DateTimePicker(
             options={
                 "format": "DD/MM/YYYY HH:mm",
@@ -20,6 +21,7 @@ class EventForm(forms.ModelForm):
     )
 
     end_at = forms.DateTimeField(
+        required=False,
         widget=DateTimePicker(
             options={
                 "format": "DD/MM/YYYY HH:mm",
@@ -36,6 +38,10 @@ class EventForm(forms.ModelForm):
     lng = forms.CharField(
         max_length=20,
         required=True,
+        widget=forms.HiddenInput()
+    )
+
+    zoom = forms.IntegerField(
         widget=forms.HiddenInput()
     )
 
@@ -68,6 +74,7 @@ class EventForm(forms.ModelForm):
                 'end_at',
                 'lat',
                 'lng',
+                'zoom'
             ),
             Div(
                 css_id="map-canvas",
@@ -78,4 +85,5 @@ class EventForm(forms.ModelForm):
         super(EventForm, self).save(*args, **kwargs)
         self.instance.lat = self.cleaned_data.get('lat')
         self.instance.lng = self.cleaned_data.get('lng')
+        self.instance.zoom = self.cleaned_data.get('zoom')
         self.instance.save()

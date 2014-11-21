@@ -51,7 +51,7 @@ class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
     def get_initial(self):
         event = self.get_object()
 
-        return {'lat': event.lat, 'lng': event.lng}
+        return {'lat': event.lat, 'lng': event.lng, 'zoom': event.zoom}
 
 
 class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
