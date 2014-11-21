@@ -12,10 +12,13 @@ class Event(models.Model):
     place = models.CharField(max_length=100, verbose_name=_('Lugar'))
     lat = models.CharField(max_length=20)
     lng = models.CharField(max_length=20)
+    zoom = models.IntegerField(default=4)
     address = models.CharField(max_length=100, verbose_name=_('Direccion'))
-    url = models.URLField()
-    start_at = models.DateTimeField(verbose_name=_('Comienza a las'))
-    end_at = models.DateTimeField(verbose_name=_('Termina a las'))
+    url = models.URLField(blank=True, null=True)
+    start_at = models.DateTimeField(verbose_name=_('Comienza a las'),
+                                    blank=True, null=True)
+    end_at = models.DateTimeField(verbose_name=_('Termina a las'),
+                                  blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
