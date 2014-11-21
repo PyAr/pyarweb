@@ -95,7 +95,7 @@ INSTALLED_APPS = (
     'waliki',
     'waliki.git',
     'waliki.attachments',
-    'waliki.pdf'
+    #'waliki.pdf'
 )
 
 MIDDLEWARE_CLASSES = (
