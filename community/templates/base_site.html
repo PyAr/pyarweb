@@ -46,6 +46,7 @@
           </section>
 
           <!-- Últimas noticias -->
+          {% if not hide_sidebar_news %}
           <section class="list-group">
               <header class="list-group-item">
                   <h3 class="list-group-item-heading">Últimas noticias</h3>
@@ -58,6 +59,7 @@
                   </article>
               {% endfor %}
           </section>
+          {% endif %}
 
           <!-- Planeta PyAr -->
           <section class="list-group">

@@ -29,6 +29,6 @@ six==1.6.1
 ipython
 ipdb
 -e git+https://github.com/mgaitan/waliki.git#egg=waliki[all]
-rst2pdf==0.93
+rst2pdf==0.93.dev
 django-braces==1.4.0
 django-sendfile==0.3.6

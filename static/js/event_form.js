@@ -1,13 +1,14 @@
 function initialize() {
   var lat = document.getElementById('id_lat').value || -35.245619;
   var lng = document.getElementById('id_lng').value || -65.492249;
+  var zoom = parseInt(document.getElementById('id_zoom').value) || 4;
 
   var myLatlng = new google.maps.LatLng(lat, lng);
   var mapOptions = {
-    zoom: 4,
+    zoom: zoom,
     center: myLatlng
   }
-  
+
   var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
   var marker = new google.maps.Marker({
@@ -19,13 +20,14 @@ function initialize() {
   google.maps.event.addListener(map, 'click', function(event) {
     var lat = event.latLng.lat();
     var lng = event.latLng.lng();
-                  
+
     var latLng = new google.maps.LatLng(lat, lng);
     marker.setPosition(latLng);
-                                        
+
     document.getElementById("id_lat").value = lat;
-    document.getElementById("id_lng").value = lng
-                                                            
+    document.getElementById("id_lng").value = lng;
+    document.getElementById("id_zoom").value = map.getZoom();
+
   });
 }
 

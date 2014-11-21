@@ -46,7 +46,7 @@
             </article>
       {% empty %}
         <article class="list-group-item">
-          <p class="list-group-item-text">No hay eventos a futuro</p>
+          <p class="list-group-item-text">{% trans "No hay eventos a futuro" %}</p>
         </article>
       {% endfor %}
 
@@ -81,7 +81,7 @@
 
       {% empty %}
         <article class="list-group-item">
-          <p class="list-group-item-text">No hay eventos pasados</p>
+          <p class="list-group-item-text">{% trans "No hay eventos pasados" %}</p>
         </article>
       {% endfor %}
 
@@ -92,7 +92,7 @@
               {% endif %}
 
               <span class="current">
-                Page {{ page_obj.number }} {% trans 'de' %} {{ page_obj.paginator.num_pages }}.
+                {% trans "Pagina" %} {{ page_obj.number }} {% trans 'de' %} {{ page_obj.paginator.num_pages }}.
               </span>
 
               {% if page_obj.has_next %}
