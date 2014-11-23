@@ -22,7 +22,7 @@ urlpatterns = patterns(
     url(r'^miembros/$', special_page, {'slug': 'MiembrosDePyAr',
                                           'title': '¿Donde viven los miembros de PyAr?' },
                                           name='pyar_members'),
-    url(r'^lista/$', special_page, {'slug': 'ListaDeCorreob',
+    url(r'^lista/$', special_page, {'slug': 'ListaDeCorreo',
                         'title': 'Lista de correo'}, name='mailing_list'),
     url(r'^noticias/', include('news.urls')),
     url(r'^companies/', include('pycompanies.urls', namespace='companies')),
