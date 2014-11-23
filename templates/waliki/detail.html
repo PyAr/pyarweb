@@ -1,10 +1,17 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
 {% load waliki_tags %}
 
 {% block title %}
-    {% if page.title %}{{ page.title} - {% endif %} Wiki
+    {% if page.title %}{{ page.title }} - {% endif %} Wiki
 {% endblock title %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pygments.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/waliki.css'%}">
+
+{% endblock %}
 
 {% block container_wrapper %}
 <main id="main" class="container" role="main">
