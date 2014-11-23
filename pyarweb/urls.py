@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
 
@@ -24,7 +25,7 @@ urlpatterns = patterns(
     url(r'^lista/$', special_page, {'slug': 'ListaDeCorreob',
                         'title': 'Lista de correo'}, name='mailing_list'),
     url(r'^noticias/', include('news.urls')),
-    url(r'^companies/', include('pycompanies.urls', namespace='companies')),
+    url(r'^empresas/', include('pycompanies.urls', namespace='companies')),
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     url(r'^summernote/', include('django_summernote.urls')),
     url(r'^jobs/', include('jobs.urls')),

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load i18n %}
+{% load static %}
 
 {% load devtags %}
 
@@ -16,14 +17,17 @@
                         Empresas y organizaciones que usan Python
                     </h3>
                     {% if own_companies_count < 1 %}
-                        <a href='/companies/add'>
-                            {% trans "Agregar Compañia" %}
-                        </a>
+                      <a href="{% url 'companies:add' %}">
+                            {% trans "Agregar Empresa" %}
+                      </a>
                     {% endif %}
                     </header>
                     {% for company in companies %}
                         <article class="list-group-item">
                           <h4 class="list-group-item-heading">{{ company.link }}</h4>
+                          {% if company.photo %} 
+                          <img src="{% static company.photo.url %}"></img>
+                          {% endif %}
                           <a href='/companies/{{company.id}}/edit'>{{company.link}}</a>
 
                             <blockquote>
