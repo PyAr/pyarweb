@@ -6,74 +6,103 @@ por su comunidad, wooohooo!.
 Mas de 20 personas sprinteando en PyconAr!!!
 
 
-Como arranco / instalo el proyecto en mi máquina?
+¿Cómo arranco / instalo el proyecto en mi máquina?
 --------------------------------------------------
 
-Debes tener python 3.3 o 3.4, no hay compatibilidad con python 2.
+Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
 
-1- Debes crear un nuevo virtualenv
+1. Debes crear un nuevo virtualenv.
 
-    Ej 1 usando pyvenv: pyvenv3-3 pyarweb
+    * Usando *pyvenv*
+      ```
+      pyvenv3-3 pyarweb
+      ```
 
-    Ej 2 usando virtualenvwrapper:
+    * Usando *virtualenvwrapper*
+      ```
+      export VIRTUALENV_PYTHON=/usr/bin/python3
+      mkvirtualenv pyarweb
+      ```
 
-        export VIRTUALENV_PYTHON=/usr/bin/python3
+2. Activas tu virtualenv.
 
-        mkvirtualenv pyarweb
+  * Mediante *source* 
+      ```
+      source pyarweb/bin/activate
+      ```
 
-Activas tu virtualenv
+  * Mediante *virtualenvwrapper*
+      ```
+      workon pyarweb
+      ```
 
-    Ej 1: source pyarweb/bin/activate
+3. Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
+e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hacer:
 
-    Ej 2 usando virtualenvwrapper: workon pyarweb
+    ```
+    easy_install-3.3 pip
+    ```
 
-Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
-e instalalo con el python3 de tu virtualenv. Luego de instalar setuptools hacer:
+4. Instalar librerías de desarrollo.
+  ```
+  sudo apt-get install python3-dev libxml2-dev libxlst1-dev
+  ```
 
-easy_install-3.3 pip
+5. Instalar las dependencias.
+  ```
+  pip3 install -r ./requirements.txt
+  ```
 
-2. sudo apt-get install python3-dev libxml2-dev libxlst1-dev
+6. Para poder usar el Planeta PyAr
 
-3. Instalar las dependencias, ej: pip3 install -r ./requirements.txt
+  1. Instalar Redis
+    ```
+    sudo apt-get install redis-server
+    ```
 
-4. (Para poder usar el Planeta PyAr):
-    a. Instalar Redis, ej: sudo apt-get install redis-server
-    b. Correr Celery (usando el comando dentro de tu virtualenv), ej: /bin/celery -A pyarweb worker -B --loglevel=INFO
+  2. Correr Celery (usando el comando dentro de tu virtualenv)
+    ```
+    /bin/celery -A pyarweb worker -B --loglevel=INFO
+    ```
 
-5. python manage.py syncdb
+7. Sincronizar BD con los modelos.
+  ```
+  python manage.py syncdb
+  ```
 
-6. python manage.py runserver
+8. Ejecutar el servidor de desarrollo.
+  ```
+  python manage.py runserver
+  ```
 
-7. Visitar con tu browser http://localhost:8000  y listo!
+9. Visita con tu browser la dirección [`http://localhost:8000`](http://localhost:8000) para ver el sitio.
 
-Para más información, si queres contribuír con el proyecto, no dejes de visitar:
+Para más información, si queres contribuír con el proyecto, no dejes de visitar el [*Manual básico de supervivencia para colaborar con el sitio de PyAr*](https://github.com/samuelbustamante/pyarweb/wiki/Manual-b%C3%A1sico-de-supervivencia-para-colaborar-con-el-sitio-de-PyAr).
 
-https://github.com/samuelbustamante/pyarweb/wiki/Manual-b%C3%A1sico-de-supervivencia-para-colaborar-con-el-sitio-de-PyAr
+## Cómo obtener los datos de la wiki
 
-## Como obtener los datos de la Wiki
+Además de la wiki en sí, algunas paginas especiales son gestionadas con [waliki](https://github.com/mgaitan/waliki), por lo que podrías querer los datos.
 
-Ademas de la wiki en si, algunas paginas especiales son gestionadas con waliki, por lo que podrias querer los datos.
-
-Para eso podes clonar el repo https://github.com/PyAr/wiki.git en el directorio
+Para eso, podés clonar el repo https://github.com/PyAr/wiki.git en el directorio
 `waliki_data` del root de tu proyecto (o el que indique la constante `WALIKI_DATA_DIR` de tu `local_settings.py`)
 
-Luego de clonar el repo, tenes que sincronizar la base de datos ejecuntando
+Luego de clonar el repo, tenés que sincronizar la base de datos ejecutando:
 
 ```
 python manage sync_waliki
 ```
 
-## Cargar feeds del planeta.
+## Cargar feeds del planeta
 
-El archivo /fixtures/planeta_pyar.json contiene los feeds del planeta actual, asociados al usuario con id 1.
+El archivo [`fixtures/planeta_pyar.json`](fixtures/planeta_pyar.json) contiene los feeds del planeta actual, asociados al usuario con id 1.
 
-Para cargarlos
+Para cargarlos, ejecuta:
 
 ```
 $ python manage.py loaddata fixtures/planeta_pyar.json
 ```
 
-Mas adelante habrá que asociar cada blog al usuario correspondiente
+Más adelante habrá que asociar cada blog al usuario correspondiente.
 
 
 
