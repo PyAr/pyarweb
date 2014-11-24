@@ -3,9 +3,9 @@
 {% load i18n %}
 {% load waliki_tags %}
 
-{% block title %}
+{% block title_wrapper %}
     {% if page.title %}{{ page.title }} - {% endif %} Wiki
-{% endblock title %}
+{% endblock title_wrapper %}
 
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/pygments.css'%}">
@@ -54,7 +54,9 @@
     {% endblock actions %}
     </div>
 
-        <h2>{{ page.title }} </h2>
+        {% block title %}
+            <h2>{{ page.title }} </h2>
+        {% endblock title %}
       </div>
 {% endblock header %}
 {% block content %}
