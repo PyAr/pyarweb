@@ -13,13 +13,15 @@
 
 {% endblock %}
 
+
+
 {% block container_wrapper %}
 <main id="main" class="container" role="main">
     <div class="col-lg-12">
 
 
-{% block content %}
 
+{% block header %}
 
       <div class="page-header">
 
@@ -54,8 +56,9 @@
 
         <h2>{{ page.title }} </h2>
       </div>
-
-<article>
+{% endblock header %}
+{% block content %}
+    <article>
 
     {% if page %}
         {{ page.body|safe }}
