@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400italic,700);
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
 
 /*
@@ -525,8 +526,8 @@ time.published {
 }
 
 pre {
-    font-family: Menlo,Monaco,Consolas,"Courier" !important;
-    font-size: 13px !important;
+    font-family: 'Ubuntu Mono', monospace !important;
+    font-size: 1em !important;
 }
 
 .editable button {
