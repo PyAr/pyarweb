@@ -16,7 +16,7 @@ class CompanyDetail(LoginRequiredMixin, DetailView):
     template_name = 'companies/company_detail.html'
 
 
-class CompanyList(LoginRequiredMixin, ListView):
+class CompanyList(ListView):
     template_name = 'companies/company_list.html'
     context_object_name = 'companies'
 
@@ -25,8 +25,9 @@ class CompanyList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyList, self).get_context_data(**kwargs)
-        context['own_companies_count'] = self.request.user.companies.all() \
-            .count()
+        if self.request.user.is_anonymous() is False:
+            context['own_companies_count'] = self.request.user.companies.all() \
+                .count()
         return context
 
 
@@ -48,7 +49,7 @@ class CompanyUpdate(LoginRequiredMixin, OwnedObject, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyUpdate, self).get_context_data(**kwargs)
-        context['page_title'] = _('Editar compania')
+        context['page_title'] = _('Editar Empresa')
         return context
 
 
