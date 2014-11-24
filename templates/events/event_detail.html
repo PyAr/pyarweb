@@ -52,10 +52,10 @@
       <div class="row">
 	        <div class="col-md-6">
 
-            <h3>{% trans "¿De que se trata?" %}</h3>
+            <h3>{% trans "¿De qué se trata?" %}</h3>
             <p>{{ event.description }}</p>
 
-            <h3>{% trans "¿ Cuando ?" %}</h3>
+            <h3>{% trans "¿Cuándo?" %}</h3>
             {% if event.start_at %}
               <p>*{% trans "Comienza" %}: {{ event.start_at }}</p>
             {% endif %}
@@ -65,7 +65,7 @@
             {% endif %}
 
             {% if event.url %}
-              <h3>{% trans "Mas Información" %}</h3>
+              <h3>{% trans "Más Información" %}</h3>
               <p>
                 <a href="{{ event.url }}">{{ event.url }}</a>
               </p>
@@ -75,7 +75,7 @@
 
           <div class="col-md-6">
 
-            <h3>{% trans "¿ Donde ?" %}</h3>
+            <h3>{% trans "¿Dónde?" %}</h3>
             <p>{{ event.place }} | {{ event.address }}</p>
 
             <div id="map-canvas"></div>
