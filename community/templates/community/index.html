@@ -76,7 +76,7 @@
           {% for job in jobs %}
               <article class="list-group-item">
                   <time class="published" datetime="{{ job.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ job.created|date:"d/m/Y" }}</time>
-                  <h4 class="list-group-item-heading"><a href="{{ article.get_absolute_url }}">{{ job.title }}</a></h4>
+                  <h4 class="list-group-item-heading"><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></h4>
                   <p class="list-group-item-text">{{ job.description|html2text|truncatewords:25 }}</p>
               </article>
           {% endfor %}
