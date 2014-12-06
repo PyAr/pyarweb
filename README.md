@@ -64,25 +64,25 @@ Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
 e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hacer:
 
     ```
-    easy_install-3.3 pip
+    $ easy_install-3.3 pip
     ```
 
 4. Instalar librerías de desarrollo.
 
     ```
-    sudo apt-get install python3-dev libxml2-dev libxslt1-dev
+    $ sudo apt-get install python3-dev libxml2-dev libxslt1-dev zlib1g-dev
     ```
 
 5. Instalar las dependencias.
 
     ```
-    pip3 install -r ./requirements.txt
+    $ pip3 install -r ./requirements.txt
     ```
 
 6. Instalar Redis
 
     ```
-    sudo apt-get install redis-server
+    $ sudo apt-get install redis-server
     ```
 
 
@@ -91,7 +91,7 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
 1. Sincronizar BD con los modelos:
 
     ```
-    python manage.py syncdb
+    $ python manage.py syncdb
     ```
 
 2. Correr Celery para Planeta PyAr:
@@ -99,13 +99,21 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
   2. Correr Celery (usando el comando dentro de tu virtualenv)
 
     ```
-    celery -A pyarweb worker --beat --autoreload --loglevel=INFO
+    $ celery -A pyarweb worker --beat --autoreload --loglevel=INFO
     ```
 
 3. Correr el servidor de desarrollo:
 
+    En Vagrant:
+
     ```
-    python manage.py runserver
+    $ python3 manage.py runserver 0.0.0.0:8000
+    ```
+
+    En local:
+
+    ```
+    $ python3 manage.py runserver
     ```
 
   Visita con tu browser la dirección [`http://localhost:8000`](http://localhost:8000) para ver el sitio.
