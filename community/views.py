@@ -1,13 +1,22 @@
+# -*- coding: utf-8 -*-
+
+
+"""Handle the Views of the Homepage and others."""
+
+
+from django.http import Http404
 from django.shortcuts import render
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
-from django.http import Http404
+from jobs.models import Job
 from news.models import NewsArticle
 
 
 def homepage(request):
     news = NewsArticle.objects.order_by('-created')[:3]
-    return render(request, 'community/index.html', {'news': news})
+    jobs = Job.objects.order_by('-created')[:3]
+    return render(request, 'community/index.html',
+                  {'news': news, 'jobs': jobs})
 
 
 class OwnedObject(SingleObjectMixin):
@@ -20,7 +29,7 @@ class OwnedObject(SingleObjectMixin):
         try:
             if not obj.owner == self.request.user:
                 raise Http404()
-        except (AttributeError):
+        except AttributeError:
             pass
         return obj
 
