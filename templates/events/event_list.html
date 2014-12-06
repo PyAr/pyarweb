@@ -33,16 +33,7 @@
                 </a> |
                 <small>{{ event.start_at }}</small>
               </h4>
-              <p class="list-group-item-text">{{ event.description|truncatewords:"20" }}</p>
-              <blockquote>
-                <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
-                  {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> |
-                  <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
-                  {% endif %}
-                </footer>
-              </blockquote>
+              <p class="list-group-item-text">{{ event.description|striptags| truncatewords:"20" }}</p>
             </article>
       {% empty %}
         <article class="list-group-item">
@@ -67,16 +58,7 @@
                 </a> |
                 <small>{{ event.start_at }}</small>
               </h4>
-              <p class="list-group-item-text">{{ event.description|truncatewords:"20" }}</p>
-              <blockquote>
-                <footer>
-                {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
-                  {% if event.owner == user %}
-                  <a href="{% url 'events:delete' event.id %}">{% trans 'Borrar' %}</a> |
-                  <a href="{% url 'events:edit' event.id %}">{% trans 'Modificar' %}</a>
-                  {% endif %}
-                </footer>
-              </blockquote>
+              <p class="list-group-item-text">{{ event.description|striptags|truncatewords:"20" }}</p>
             </article>
 
       {% empty %}

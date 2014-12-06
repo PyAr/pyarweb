@@ -41,17 +41,9 @@ class EventCreate(LoginRequiredMixin, EventMixin, CreateView):
         form.instance.owner = self.request.user
         return super(EventCreate, self).form_valid(form)
 
-    def get_initial(self):
-        return {'lat': '-35.245619', 'lng': '-65.492249'}
-
 
 class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
     form_class = EventForm
-
-    def get_initial(self):
-        event = self.get_object()
-
-        return {'lat': event.lat, 'lng': event.lng, 'zoom': event.zoom}
 
 
 class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):

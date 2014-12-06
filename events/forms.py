@@ -1,4 +1,5 @@
 from django import forms
+from django_summernote.widgets import SummernoteInplaceWidget
 from django.utils.translation import ugettext_lazy as _
 
 from bootstrap3_datetime.widgets import DateTimePicker
@@ -10,39 +11,26 @@ from .models import Event
 
 class EventForm(forms.ModelForm):
 
-    start_at = forms.DateTimeField(
+    description = forms.CharField(widget=SummernoteInplaceWidget())
+
+    start_at = forms.DateField(
         required=False,
+        label=_('Comienza'),
         widget=DateTimePicker(
             options={
-                "format": "DD/MM/YYYY HH:mm",
-                "pickTime": True,
+                "format": "DD/MM/YYYY"
             }
         )
     )
 
-    end_at = forms.DateTimeField(
+    end_at = forms.DateField(
         required=False,
+        label=_('Finaliza'),
         widget=DateTimePicker(
             options={
-                "format": "DD/MM/YYYY HH:mm",
-                "pickTime": True
+                "format": "DD/MM/YYYY"
             }
         )
-    )
-
-    lat = forms.CharField(
-        max_length=20,
-        required=True,
-        widget=forms.HiddenInput()
-    )
-    lng = forms.CharField(
-        max_length=20,
-        required=True,
-        widget=forms.HiddenInput()
-    )
-
-    zoom = forms.IntegerField(
-        widget=forms.HiddenInput()
     )
 
     class Meta:
@@ -72,18 +60,19 @@ class EventForm(forms.ModelForm):
                 'url',
                 'start_at',
                 'end_at',
-                'lat',
-                'lng',
-                'zoom'
-            ),
-            Div(
-                css_id="map-canvas",
             )
         )
 
+    def clean(self):
+        cleaned_data = super(EventForm, self).clean()
+        start_at = cleaned_data.get('start_at')
+        end_at = cleaned_data.get('end_at')
+        if start_at > end_at:
+            msg = 'La fecha de inicio es menor a la fecha de finalizacion'
+            self._errors['start_at'] = [_(msg)]
+            self._errors['end_at'] = [_(msg)]
+        return cleaned_data
+
     def save(self, *args, **kwargs):
         super(EventForm, self).save(*args, **kwargs)
-        self.instance.lat = self.cleaned_data.get('lat')
-        self.instance.lng = self.cleaned_data.get('lng')
-        self.instance.zoom = self.cleaned_data.get('zoom')
         self.instance.save()
