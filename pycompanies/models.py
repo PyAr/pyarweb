@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.core.urlresolvers import reverse
 
 from model_utils.models import TimeStampedModel
 
@@ -15,9 +16,8 @@ class Company(TimeStampedModel):
     photo = models.ImageField('Logo', upload_to='pycompanies/logos')
     link = models.URLField('URL')
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('company_view', (self.id,), {})
+        return reverse('companies:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return u'%s' % self.name
