@@ -1,30 +1,49 @@
 # -*- coding: utf-8 -*-
-import os
+
+
+"""URLS configurations for PyAr Web."""
+
+
+from django.conf import settings
+from django.conf.urls import include, patterns, url
 from django.contrib import admin
-from django.conf.urls import patterns, include, url
 from waliki.settings import WALIKI_SLUG_PATTERN
 
-from .views import (
-    irc, special_page, buscador, old_url_redirect
-)
+from .views import buscador, irc, old_url_redirect, special_page
+
 
 admin.autodiscover()
 
+
 urlpatterns = patterns(
     '',
+    # Static files
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.STATIC_ROOT}),
+    # Media files
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT}),
+
     url(r'^$', include('community.urls')),
     url(r'^irc/$', irc, name='irc'),
     url(r'^buscador/$', buscador, name='buscador'),
 
-    url(r'^aprendiendo-python/$', special_page, {'slug': 'AprendiendoPython',
-                                         'title': 'Aprendiendo Python'}, name='aprendiendo'),
-    url(r'^sobre-pyar/$', special_page, {'slug': 'QuienesSomos',
-                                  'title': 'Acerca de PyAr'}, name='about_pyar'),
-    url(r'^miembros/$', special_page, {'slug': 'MiembrosDePyAr',
-                                          'title': '¿Donde viven los miembros de PyAr?' },
-                                          name='pyar_members'),
-    url(r'^lista/$', special_page, {'slug': 'ListaDeCorreo',
-                        'title': 'Lista de correo'}, name='mailing_list'),
+    url(r'^aprendiendo-python/$', special_page,
+        {'slug': 'AprendiendoPython', 'title': 'Aprendiendo Python'},
+        name='aprendiendo'),
+
+    url(r'^sobre-pyar/$', special_page,
+        {'slug': 'QuienesSomos', 'title': 'Acerca de PyAr'},
+        name='about_pyar'),
+
+    url(r'^miembros/$', special_page,
+        {'slug': 'MiembrosDePyAr',
+         'title': '¿Donde viven los miembros de PyAr?'}, name='pyar_members'),
+
+    url(r'^lista/$', special_page,
+        {'slug': 'ListaDeCorreo',
+         'title': 'Lista de correo'}, name='mailing_list'),
+
     url(r'^noticias/', include('news.urls')),
     url(r'^empresas/', include('pycompanies.urls', namespace='companies')),
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
@@ -38,6 +57,6 @@ urlpatterns = patterns(
     url(r'^faq/', include('faq.urls')),
     url(r'^planet/', include('planet.urls')),
     url(r'^wiki/', include('waliki.urls')),
-    url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?', old_url_redirect, name='old_url_redirect'),
-
+    url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
+        old_url_redirect, name='old_url_redirect'),
 )
