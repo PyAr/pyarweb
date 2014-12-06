@@ -3,48 +3,43 @@
 {% load i18n staticfiles pagination_tags devtags %}
 {% block title %}Empresas que utilizan Python{% endblock %}
 {% block left-column %}
-<!-- Empresas que utilizan python -->
-<section>
-    <div class="col-md-12">
-        <div class="page-header">
-            <h2>{% trans 'Empresas que utilizan Python' %}
-              {% if user.is_authenticated %}
-                <span class="section-button-group pull-right">
-                    <a href="{% url 'companies:add' %}" class="btn btn-info">{% trans 'Agregar Empresa' %}</a>
-                </span>
-              {% else %}
-                <span class="section-button-group pull-right">
-                    <a href="#" class="btn btn-info login-required">{% trans 'Agregar Empresa' %}</a>
-                </span>
-              {% endif %}
-            </h2>
-        </div>
-        {% if object_list %}
-            {% for object in object_list %}
-            <article class="board-list-item">
-                <h3>
-                    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
-                </h3>
-                <p>{% if object.description|length > 250 %}
-                {{ object.description|slice:":250" }} ...
-                {% else %}
-                {{ object.description }}
-                {% endif %}
-                </p>
-                <p><a href="{{ object.get_absolute_url }}">{% trans 'Más información...' %}</a></p>
-            </article>
-            {% endfor %}
+  <!-- Empresas que utilizan python -->
+  <section>
+      <div class="col-md-12">
+          <div class="page-header">
+              <h2>{% trans 'Empresas que utilizan Python' %}
+                  <span class="section-button-group pull-right">
+                      <a href="{% url 'companies:add' %}" class="btn btn-info">{% trans 'Agregar Empresa' %}</a>
+                  </span>
+              </h2>
+          </div>
+          {% if object_list %}
+              {% for object in object_list %}
+              <article class="board-list-item">
+                  <h3>
+                      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
+                  </h3>
+                  <p>{% if object.description|length > 250 %}
+                  {{ object.description|slice:":250" }} ...
+                  {% else %}
+                  {{ object.description }}
+                  {% endif %}
+                  </p>
+                  <p><a href="{{ object.get_absolute_url }}">{% trans 'Más información...' %}</a></p>
+              </article>
+              {% endfor %}
 
-            {% paginate %}
-        {% else %}
-            <div class="col-md-12">
-                <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
-            </div>
-        {% endif %}
-    </div>
-</section>
+              {% paginate %}
+          {% else %}
+              <div class="col-md-12">
+                  <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
+              </div>
+          {% endif %}
+      </div>
+  </section>
 {% endblock %}
+
 {% block right-column %}
-{{ block.super }}
-{% include "_tags_filtering_form.html" %}
+  {{ block.super }}
+  {% include "_tags_filtering_form.html" %}
 {% endblock %}
