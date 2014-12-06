@@ -1,8 +1,15 @@
-from __future__ import absolute_import
+# -*- coding: utf-8 -*-
+
+
+"""Configure Celery for PyAr Web."""
+
 
 import os
+
 from celery import Celery
+
 from django.conf import settings
+
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pyarweb.settings')
