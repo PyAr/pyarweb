@@ -1,22 +1,32 @@
+# -*- coding: utf-8 -*-
+
+
+"""Views for PyArWeb Django App."""
+
+
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from waliki.models import Page, Redirect
 
 
 def irc(request):
+    """Render the IRC Chat template."""
     return render(request, 'irc/irc.html')
 
 
 def special_page(request, **kwargs):
+    """Render a basic template of special pages."""
     return render(request, 'special_page.html', kwargs)
 
 
 def buscador(request):
-    return render(request, 'buscador.html', {'buscar': request.GET.get('buscar', '')})
+    """Render the Google Search template."""
+    return render(request, 'buscador.html',
+                  {'buscar': request.GET.get('buscar', '')})
 
 
 def old_url_redirect(request, slug):
-
+    """Redirect old URLs to the New site."""
     try:
         redirect = Redirect.objects.get(old_slug=slug)
         slug = redirect.new_slug
