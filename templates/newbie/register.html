@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 
-<div class="jumbotron">
-  <h1>{% trans 'I want to be a Jedi'</h1>
-  <p>...</p>
-  <p><a class="btn btn-primary btn-lg" role="button">{% trans 'I want to teach' %}</a></p>
-</div>
+{% load i18n %}
 
+{% block content %}
 <div class="jumbotron">
-  <h1>{% trans 'I wan to be a Padawan'</h1>
-  <p>...</p>
-  <p><a class="btn btn-primary btn-lg" role="button">{% trans 'I want to learn' %}</a></p>
+  <p><a href="{% url "jedi.list" %}" class="btn btn-primary btn-lg" role="button">{% trans "Quiero aprender" %}</a></p>
+
+  {% if not is_jedi %}
+    <p><a href="{% url "jedi.add" %}" class="btn btn-primary btn-lg" role="button">{% trans "Quiero ser un Jedi" %}</a></p>
+  {% endif %}
+
+  {% if not is_padawan %}
+    <p><a href="{% url "padawan.add" %}" class="btn btn-primary btn-lg" role="button">{% trans "Quiero ser un Padawan" %}</a></p>
+  {% endif %}
 </div>
+{% endblock %}

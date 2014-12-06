@@ -12,9 +12,11 @@
               <td>{{ jedi.id }}</td>
               <td>{{ jedi.user.username }}</td>
               <td>
-                <a href="{% url 'jedi.request' jedi.id %}" role="button" class="btn btn-primary btn-sm">{% trans 'Send request' %}</a>
+                <a href="{% url 'jedi.request' jedi.id %}" role="button" class="btn btn-primary btn-sm">{% trans "Enviar solicitud" %}</a>
               </td>
             </tr>
+            {% empty %}
+              <p>No hay ningun Jedi por el momento :(</p>
             {% endfor %}
           </table>
         </div>

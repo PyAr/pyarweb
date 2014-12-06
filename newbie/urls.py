@@ -15,7 +15,7 @@ from .views import (
 
 urlpatterns = patterns('',
 
-    url(r'^register$', register, name='register'),
+    url(r'^$', register, name='newbie.home'),
     url(r'^padawan/register$', padawan_add, name='padawan.add'),
     url(r'^jedi/register$', jedi_add, name='jedi.add'),
 

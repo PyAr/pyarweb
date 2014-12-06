@@ -10,7 +10,7 @@ class PadawanForm(forms.ModelForm):
         model = Padawan
         fields = ('description', 'interests')
 
-    interests = TagField(label='Interests')
+    interests = TagField(label=_("Intereses"))
 
 
 class JediForm(forms.ModelForm):
@@ -19,4 +19,4 @@ class JediForm(forms.ModelForm):
         model = Jedi
         fields = ('description', 'available', 'skills')
 
-    skills = TagField(label='What i can teach...')
+    skills = TagField(label=_("Lo que puedo enseñar"))

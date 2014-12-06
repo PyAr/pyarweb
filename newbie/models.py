@@ -1,5 +1,6 @@
 from django.contrib.sites.models import Site
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.utils.translation import ugettext as _
@@ -61,6 +62,15 @@ class Jedi(models.Model):
 
     def accept_padawan(self, padawan_id):
         """ A jedi can accept a Padawan """
+
+        padawan = get_object_or_404(Padawan, id=padawan_id)
+        project = Project.objects.create(
+            title="Aprendiendo",
+            created_by=self.user
+        )
+        project.padawan.add(padawan)
+        project.jedi.add(self)
+        project.save()
         self.slots -= 1
         self.save()
 
@@ -84,7 +94,7 @@ class Padawan(models.Model):
     )
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    description = models.TextField(blank=True, verbose_name=_('Description'))
+    description = models.TextField(blank=True, verbose_name=_('Descripción'))
     start_date = models.DateTimeField(auto_now_add=True)
     notifications_ignored = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=50, choices=PADAWAN_STATUS_CHOICES, default=WAITING)
