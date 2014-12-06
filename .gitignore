@@ -6,3 +6,4 @@ db.sqlite3
 waliki_data
 waliki_attachments
 media
+celerybeat-schedule
