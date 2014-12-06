@@ -31,7 +31,7 @@
             </tr>
             <tr>
               <th>{% trans 'Stats' %}</th>
-              <td>Has published {{ blog|post_count }} posts about or related to Django</td>
+              <td>{% blocktrans %}Ha publicado {{ blog|post_count }} posts sobre o relacionado con %}</td>
             </tr>
         </table>
         {% if tag %}

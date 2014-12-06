@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 
-{% load devtags %}
+{% load devtags i18n %}
 
 {% block content %}
 <main id="main" class="container" role="main">
     <div class="row">
         <div class="col-md-12">
-          <form class="form-addcompanie" role="form" action="#" method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn btn-lg btn-primary btn-block" type="submit">I want to be Jedi</button>
-          </form>
+          {% if success %}
+            {% trans "¡Ya eres un Jedi!" %}
+          {% else %}
+            <form class="form-addcompanie" role="form" action="#" method="POST">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "Quiero ser un Jedi" %}</button>
+            </form>
+          {% endif %}
         </div>
     </div>
 </main>

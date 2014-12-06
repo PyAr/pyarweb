@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 <main id="main" class="container" role="main">
     <div class="row">
         <div class="col-md-12">
-          <h1>Lista de Padawan</h1>
+          <h1>{% trans "Lista de Padawan" %}</h1>
           <table class="table">
             {% for padawan in padawan_list %}
             <tr>

@@ -2,5 +2,11 @@
 {% load i18n %}
 
 {% block content %}
-<h1>{% trans 'Request sent successfully!' %}</h1>
+<div class="jumbotron">
+  {% if jedi_accept %}
+    <h1>{% blocktrans %}Ahora eres el Jedi de {{ padawan_email }}{% endblocktrans %}</h1>
+  {% else %}
+    <h1>{% blocktrans %}Solicitud enviada.{% endblocktrans %}</h1>
+  {% endif %}
+</div>
 {% endblock %}

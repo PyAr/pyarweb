@@ -10,7 +10,9 @@ from .models import Jedi, Padawan
 
 
 def register(request):
-    return render(request, 'newbie/register.html', {})
+    is_padawan = Padawan.objects.filter(user=request.user).exists()
+    is_jedi = Jedi.objects.filter(user=request.user).exists()
+    return render(request, 'newbie/register.html', {"is_padawan": is_padawan, "is_jedi": is_jedi})
 
 
 @login_required
@@ -24,7 +26,8 @@ def padawan_add(request):
             padawan.save()
             form.save_m2m()
         except Exception:
-            return HttpResponse(_('You really are a Padawan'))
+            return HttpResponse(_("En realidad ya eres un Padawan"))
+        return render(request, 'newbie/add-padawan.html', {'success': True})
 
     context = dict(form=form)
     return render(request, 'newbie/add-padawan.html', context)
@@ -42,7 +45,8 @@ def jedi_add(request):
             jedi.save()
             form.save_m2m()
         except Exception:
-            return HttpResponse(_('You really are a Jedi'))
+            return HttpResponse(_("En realidad ya eres un Jedi"))
+        return render(request, 'newbie/add-jedi.html', {'success': True})
 
 
     context = dict(form=form)
@@ -81,5 +85,11 @@ def jedi_request(request, jedi_id):
 
 def jedi_answer(request, jedi_id, padawan_id, answer):
     jedi = get_object_or_404(Jedi, id=jedi_id)
+    padawan = get_object_or_404(Padawan, user=request.user)
     jedi.accept_padawan(padawan_id)
-    return render(request, 'newbie/jedi-request-successfully.html', {})
+    return render(request, 'newbie/jedi-request-successfully.html',
+        {
+            "padawan_email": padawan.user.email,
+            "jedi_accept": True
+        }
+    )
