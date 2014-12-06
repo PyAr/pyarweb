@@ -18,6 +18,22 @@ def homepage(request):
     return render(request, 'community/index.html',
                   {'news': news, 'jobs': jobs})
 
+def learning(request):
+    title = _('Aprendiendo Python')
+    return render(request, 'special_page.html', {'title': title})
+
+def about_pyar(request):
+    title = _('Acerca de PyAr')
+    return render(request, 'special_page.html', {'title': title})
+
+def members(request):
+    title = _('¿Dónde viven los miembros de PyAr?')
+    return render(request, 'special_page.html', {'title': title})
+
+def mailing_list(request):
+    title = _('Lista de Correo')
+    return render(request, 'special_page.html', {'title': title})
+
 
 class OwnedObject(SingleObjectMixin):
 
