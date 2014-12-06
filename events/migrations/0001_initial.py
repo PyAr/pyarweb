@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Event',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
+                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
                 ('name', models.CharField(verbose_name='Título', max_length=100)),
                 ('description', models.TextField(verbose_name='Descripcion')),
                 ('place', models.CharField(verbose_name='Lugar', max_length=100)),
