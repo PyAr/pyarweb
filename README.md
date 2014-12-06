@@ -45,7 +45,7 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
 
 4. Instalar librerías de desarrollo.
   ```
-  sudo apt-get install python3-dev libxml2-dev libxlst1-dev
+  sudo apt-get install python3-dev libxml2-dev libxslt1-dev
   ```
 
 5. Instalar las dependencias.
