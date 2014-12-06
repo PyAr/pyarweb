@@ -1,81 +1,123 @@
 pyarweb
 =======
 Es la implementación del sitio para PyAr / Python Argentina hecha con Django
-por su comunidad, wooohooo!.
+por su comunidad, wooohooo!
 
 Mas de 20 personas sprinteando en PyconAr!!!
 
 
-¿Cómo arranco / instalo el proyecto en mi máquina?
---------------------------------------------------
+## ¿Cómo arranco / instalo el proyecto en mi máquina?
+
+
+## Provisionamiento:
+
+### Con Vagrant:
+
+1. Instalar [VirtualBox](https://www.virtualbox.org/) y [Vagrant](https://www.vagrantup.com/).
+
+2. Levantar maquina virtual (esto ya instala todas las dependencias):
+
+        $ cd path/to/pyarweb
+        $ vagrant up
+
+3. Entrar a la maquina virtual y levantar servicios:
+
+        $ cd path/to/pyarweb
+        $ vagrant ssh
+        vagrant@vagrant $ cd /vagrant/
+
+### Sin Vagrant:
+
 
 Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
 
 1. Debes crear un nuevo virtualenv.
 
-    * Usando *pyvenv*
+  	* Usando *pyvenv*
+
       ```
-      pyvenv3-3 pyarweb
+	    $ pyvenv3-3 pyarweb
       ```
 
     * Usando *virtualenvwrapper*
+
       ```
-      export VIRTUALENV_PYTHON=/usr/bin/python3
-      mkvirtualenv pyarweb
+      $ export VIRTUALENV_PYTHON=/usr/bin/python3
+      $ mkvirtualenv pyarweb
       ```
 
 2. Activas tu virtualenv.
 
-  * Mediante *source* 
+  * Mediante *source*
+
       ```
-      source pyarweb/bin/activate
+      $ source pyarweb/bin/activate
       ```
 
   * Mediante *virtualenvwrapper*
+
       ```
-      workon pyarweb
+      $ workon pyarweb
       ```
 
 3. Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
 e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hacer:
 
     ```
-    easy_install-3.3 pip
+    $ easy_install-3.3 pip
     ```
 
 4. Instalar librerías de desarrollo.
-  ```
-  sudo apt-get install python3-dev libxml2-dev libxslt1-dev
-  ```
+
+    ```
+    $ sudo apt-get install python3-dev libxml2-dev libxslt1-dev zlib1g-dev
+    ```
 
 5. Instalar las dependencias.
-  ```
-  pip3 install -r ./requirements.txt
-  ```
 
-6. Para poder usar el Planeta PyAr
+    ```
+    $ pip3 install -r ./requirements.txt
+    ```
 
-  1. Instalar Redis
+6. Instalar Redis
+
     ```
-    sudo apt-get install redis-server
+    $ sudo apt-get install redis-server
     ```
+
+
+## Correr Servicios:
+
+1. Sincronizar BD con los modelos:
+
+    ```
+    $ python manage.py syncdb
+    ```
+
+2. Correr Celery para Planeta PyAr:
 
   2. Correr Celery (usando el comando dentro de tu virtualenv)
+
     ```
-    /bin/celery -A pyarweb worker -B --loglevel=INFO
+    $ celery -A pyarweb worker --beat --autoreload --loglevel=INFO
     ```
 
-7. Sincronizar BD con los modelos.
-  ```
-  python manage.py syncdb
-  ```
+3. Correr el servidor de desarrollo:
 
-8. Ejecutar el servidor de desarrollo.
-  ```
-  python manage.py runserver
-  ```
+    En Vagrant:
 
-9. Visita con tu browser la dirección [`http://localhost:8000`](http://localhost:8000) para ver el sitio.
+    ```
+    $ python3 manage.py runserver 0.0.0.0:8000
+    ```
+
+    En local:
+
+    ```
+    $ python3 manage.py runserver
+    ```
+
+  Visita con tu browser la dirección [`http://localhost:8000`](http://localhost:8000) para ver el sitio.
+
 
 Para más información, si queres contribuír con el proyecto, no dejes de visitar el [*Manual básico de supervivencia para colaborar con el sitio de PyAr*](https://github.com/samuelbustamante/pyarweb/wiki/Manual-b%C3%A1sico-de-supervivencia-para-colaborar-con-el-sitio-de-PyAr).
 
@@ -103,6 +145,3 @@ $ python manage.py loaddata fixtures/planeta_pyar.json
 ```
 
 Más adelante habrá que asociar cada blog al usuario correspondiente.
-
-
-
