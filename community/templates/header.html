@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles i18n %}
 
 <header id="header" class="navbar navbar-static-top" role="banner">
     <div class="container">
@@ -14,9 +14,9 @@
                     <a href="/" class="navbar-brand">PyAr</a>
                     <div class="loginreg">
                       {% if user.is_authenticated %}
-                      Hola {{ user }}. <a href="{% url 'account_logout' %}">Cerrar sesión</a>
+                      Hola {{ user }}. <a href="{% url 'account_logout' %}">{% trans 'Cerrar sesión' %}</a>
                       {% else %}
-                      <a href="{% url 'account_login' %}">Ingresá</a> o <a href="{% url 'account_signup' %}">Registrate</a>
+                      <a href="{% url 'account_login' %}">{% trans 'Ingresá' %}</a> o <a href="{% url 'account_signup' %}">{% trans 'Registrate' %}</a>
                       {% endif %}
                     </div>
                 </div>
@@ -25,32 +25,32 @@
                 <nav id="header-navbar-collapse" class="collapse navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="/"><span class="inicio"></span>Inicio</a>
+                            <a href="/"><span class="inicio"></span>{% trans 'Inicio' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'about_pyar' %}"><span class="quienes_somos"></span>Nosotros</a>
+                            <a href="{% url 'about_pyar' %}"><span class="quienes_somos"></span>{% trans 'Nosotros' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'mailing_list' %}"><span class="navbar_lista_de_correo"></span>Lista</a>
+                            <a href="{% url 'mailing_list' %}"><span class="navbar_lista_de_correo"></span>{% trans 'Lista' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'waliki_home' %}"><span class="wiki"></span>Wiki</a>
+                            <a href="{% url 'waliki_home' %}"><span class="wiki"></span>{% trans 'Wiki' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'news_list_all' %}"><span class="news"></span>Noticias</a>
+                            <a href="{% url 'news_list_all' %}"><span class="news"></span>{% trans 'Noticias' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'irc' %}"><span class="irc"></span>Chat</a>
+                            <a href="{% url 'irc' %}"><span class="irc"></span>{% trans 'Chat' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'events:events_list_all' %}"><span class="eventos"></span>Eventos</a>
+                            <a href="{% url 'events:events_list_all' %}"><span class="eventos"></span>{% trans 'Eventos' %}</a>
                         </li>
                         <li>
                             <!--<a href="{% url 'planet.views.posts_list' %}"><span class="pyar"></span>Planeta</a>-->
-                            <a href="http://planeta.python.org.ar/" target="_blank"><span class="pyar"></span>Planeta</a>
+                            <a href="http://planeta.python.org.ar/" target="_blank"><span class="pyar"></span>{% trans 'Planeta' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'jobs_list_all' %}"><span class="jobs"></span>Trabajos</a>
+                            <a href="{% url 'jobs_list_all' %}"><span class="jobs"></span>{% trans 'Trabajos' %}</a>
                         </li>
                     </ul>
                 </nav>
