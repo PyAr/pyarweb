@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/PyAr/pyarweb.png?label=ready&title=Ready)](https://waffle.io/PyAr/pyarweb)
 pyarweb
 =======
 Es la implementación del sitio para PyAr / Python Argentina hecha con Django
