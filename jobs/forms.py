@@ -8,6 +8,7 @@ from django_summernote.widgets import SummernoteInplaceWidget
 
 class JobForm(forms.ModelForm):
     """A PyAr Jobs form."""
+
     def __init__(self, *args, **kwargs):
         super(JobForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()

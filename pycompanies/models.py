@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from model_utils.models import TimeStampedModel
 
@@ -13,11 +15,12 @@ class Company(TimeStampedModel):
     name = models.CharField('Nombre', max_length=255, unique=True)
     description = models.TextField('Descripción')
     photo = models.ImageField('Logo', upload_to='pycompanies/logos')
-    link = models.URLField('URL')
+    link = models.URLField('URL',
+                           help_text=_('Dirección web de la empresa')
+                           )
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('company_view', (self.id,), {})
+        return reverse('companies:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return u'%s' % self.name

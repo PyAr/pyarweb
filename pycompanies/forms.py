@@ -1,4 +1,5 @@
 from django import forms
+from django_summernote.widgets import SummernoteInplaceWidget
 from django.utils.translation import ugettext_lazy as _
 
 from crispy_forms.helper import FormHelper
@@ -9,6 +10,8 @@ from .models import Company
 
 class CompanyForm(forms.ModelForm):
     """A PyAr companies form."""
+
+    description = forms.CharField(widget=SummernoteInplaceWidget())
 
     def __init__(self, *args, **kwargs):
         super(CompanyForm, self).__init__(*args, **kwargs)

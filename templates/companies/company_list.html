@@ -1,91 +1,40 @@
-{% extends "base.html" %}
-
-{% load i18n %}
-{% load static %}
-
+{% extends "base_site.html" %}
 {% load devtags %}
-{% block title %}Empresas {% endblock %}
+{% load i18n staticfiles pagination_tags devtags %}
+{% block title %}Empresas que utilizan Python{% endblock %}
+{% block left-column %}
+  <!-- Empresas que utilizan python -->
+  <section>
+      <div class="col-md-12">
+          <div class="page-header">
+              <h2>{% trans 'Empresas que utilizan Python' %}
+                  <span class="section-button-group pull-right">
+                      <a href="{% url 'companies:add' %}" class="btn btn-info">{% trans 'Agregar Empresa' %}</a>
+                  </span>
+              </h2>
+          </div>
+          {% if object_list %}
+              {% for object in object_list %}
+              <article class="board-list-item">
+                  <h3>
+                      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
+                  </h3>
+                  <p>{{ object.description|striptags|truncatewords:"20" }}</p>
+                  <p><a href="{{ object.get_absolute_url }}">{% trans 'Más información...' %}</a></p>
+              </article>
+              {% endfor %}
 
-{% block content %}
-<main id="main" class="container" role="main">
-    <div class="row">
-        <div class="col-md-7">
-            <!-- Últimas noticias -->
+              {% paginate %}
+          {% else %}
+              <div class="col-md-12">
+                  <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
+              </div>
+          {% endif %}
+      </div>
+  </section>
+{% endblock %}
 
-            <section class="list-group">
-                <header class="list-group-item">
-                    <h3 class="list-group-item-heading">
-                        Empresas y organizaciones que usan Python
-                    </h3>
-                    {% if own_companies_count < 1 %}
-                      <a href="{% url 'companies:add' %}">
-                            {% trans "Agregar Empresa" %}
-                      </a>
-                    {% endif %}
-                    </header>
-                    {% for company in companies %}
-                        <article class="list-group-item">
-                          <h4 class="list-group-item-heading">{{ company.link }}</h4>
-                          {% if company.photo %} 
-                          <img src="{% static company.photo.url %}"></img>
-                          {% endif %}
-                          <a href='/companies/{{company.id}}/edit'>{{company.link}}</a>
-
-                            <blockquote>
-                                <footer>
-                                {{ company.updated_at }} {% trans 'por' %} {{ company.owner}}
-                                  {% if company.owner == user %}
-                                  <a href="{% url 'companies:delete' company.id %}">{% trans 'Borrar' %}</a> |
-                                  <a href="{% url 'companies:edit' company.id %}">{% trans 'Modificar' %}</a>
-                                  {% endif %}
-                                </footer>
-                            </blockquote>
-
-                        </article>
-                    {% endfor %}
-            </section>
-        </div>
-        <div class="col-md-5">
-
-            <!-- SeachBox -->
-
-            <form id="search-form" class="input-group" role="form">
-                <input type="text" class="form-control input-lg" placeholder="Buscar...">
-                <span class="input-group-btn">
-                    <button class="btn btn-default btn-lg" type="button">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
-            </form>
-
-            <!-- Próximos eventos -->
-
-            <section class="list-group">
-                <header class="list-group-item">
-                    <h3 class="list-group-item-heading">Próximos eventos</h3>
-                </header>
-                {% for i in 4|get_range %}
-                    <article class="list-group-item">
-                        <h4 class="list-group-item-heading">PyCon Argentina</h4>
-                        <p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
-                    </article>
-                {% endfor %}
-            </section>
-
-            <!-- Planeta PyAr -->
-
-            <section class="list-group">
-                <header class="list-group-item">
-                    <h3 class="list-group-item-heading">Planeta PyAr</h3>
-                </header>
-                {% for i in 4|get_range %}
-                    <article class="list-group-item">
-                        <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
-                        <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
-                    </article>
-                {% endfor %}
-            </section>
-        </div>
-    </div>
-</main>
+{% block right-column %}
+  {{ block.super }}
+  {% include "_tags_filtering_form.html" %}
 {% endblock %}

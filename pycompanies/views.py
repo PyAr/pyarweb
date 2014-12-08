@@ -11,7 +11,7 @@ from pycompanies.models import Company
 from community.views import OwnedObject
 
 
-class CompanyDetail(LoginRequiredMixin, DetailView):
+class CompanyDetail(DetailView):
     model = Company
     template_name = 'companies/company_detail.html'
 
