@@ -21,7 +21,7 @@ def deploy():
     django_command('collectstatic')
     restart()
 
-
+@task
 def restart():
     """Restart gunicorn sending HUP signal to his pid."""
     run('kill -HUP $(cat /tmp/pyar_web.pid)')
