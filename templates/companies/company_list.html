@@ -19,12 +19,7 @@
                   <h3>
                       <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
                   </h3>
-                  <p>{% if object.description|length > 250 %}
-                  {{ object.description|slice:":250" }} ...
-                  {% else %}
-                  {{ object.description }}
-                  {% endif %}
-                  </p>
+                  <p>{{ object.description|striptags|truncatewords:"20" }}</p>
                   <p><a href="{{ object.get_absolute_url }}">{% trans 'Más información...' %}</a></p>
               </article>
               {% endfor %}

@@ -8,11 +8,9 @@
     <div class="col-md-12">
         <div class="page-header">
             <h2>{% trans 'Trabajos con Python' %}
-              {% if user.is_authenticated %}
                 <span class="section-button-group pull-right">
                     <a href="{% url 'jobs_add' %}" class="btn btn-info">{% trans 'Agregar trabajo' %}</a>
                 </span>
-              {% endif %}
             </h2>
         </div>
         {% if object_list %}

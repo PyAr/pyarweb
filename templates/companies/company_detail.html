@@ -1,1 +1,30 @@
-detail
+{% extends "base.html" %}
+{% load disqus_tags %}
+{% load i18n %}
+{% load email_obfuscator %}
+{% load devtags %}
+{% block title %}
+  {{ object.title }}
+{% endblock title %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="col-lg-12">
+      <div class="page-header">
+        <h2>
+          {{ object.title }}
+          <span class="pull-right">
+            {% if object.owner == user %}
+            <a href="{% url 'companies:edit' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
+            <a href="{% url 'companies:delete' object.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
+            {% endif %}
+          </span>
+        </h2>
+      </div>
+      <article>
+        <h1>{% autoescape off %}{{ object.name|linebreaks|safe }}{% endautoescape %}</h1>
+        <p>{% autoescape off %}{{ object.description|linebreaks|safe }}{% endautoescape %}</p>
+      </article>
+  </div>
+</main>
+{% endblock %}
