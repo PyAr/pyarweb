@@ -25,7 +25,7 @@
                 <p>
                     {{ object.introduction }}
                 </p>
-                <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %}<a href="{% url 'news_tags_list' tag=t.name %}" class="label label-default">{{ t.name }}</a>{% endfor %}</div>
+                <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %}<a href="{% url 'news_tags_list' tag=t.slug %}" class="label label-default">{{ t.name }}</a>{% endfor %}</div>
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             </article>
             {% endfor %}

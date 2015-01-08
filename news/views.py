@@ -50,6 +50,6 @@ class NewsArticleListTag(ListView, FilterableList):
     def get_queryset(self):
         tag = self.kwargs['tag']
         filter_news = NewsArticle.objects.filter(
-            tags__name__in=[tag]).distinct()
+            tags__slug__in=[tag]).distinct()
 
         return filter_news
