@@ -28,8 +28,8 @@ def buscador(request):
 def old_url_redirect(request, slug):
     """Redirect old URLs to the New site."""
     try:
-        redirect = Redirect.objects.get(old_slug=slug)
-        slug = redirect.new_slug
+        waliki_redirect = Redirect.objects.get(old_slug=slug)
+        slug = waliki_redirect.new_slug
     except Redirect.DoesNotExist:
         pass
 
