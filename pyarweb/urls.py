@@ -9,7 +9,7 @@ from django.conf.urls import include, patterns, url
 from django.contrib import admin
 from waliki.settings import WALIKI_SLUG_PATTERN
 
-from .views import buscador, irc, old_url_redirect, special_page
+from .views import buscador, irc, old_url_redirect
 
 
 admin.autodiscover()

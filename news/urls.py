@@ -7,7 +7,8 @@ from .views import (
     NewsArticleDelete,
     NewsArticleList,
     NewsArticleUpdate,
-    NewsArticleListTag )
+    NewsArticleListTag
+)
 
 
 urlpatterns = patterns('',
