@@ -10,31 +10,30 @@
 {% block container %}
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
+    <div class="text-center">
+        <h1>{% trans "Sign In" %}</h1>
 
-    <h1>{% trans "Sign In" %}</h1>
+        {% if socialaccount.providers  %}
+        <p>
+            {% blocktrans with site.name as site_name %}Please sign in with one
+            of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+            for a {{site_name}} account and sign in below:{% endblocktrans %}
+        </p>
 
-    {% if socialaccount.providers  %}
-    <p>{% blocktrans with site.name as site_name %}Please sign in with one
-    of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-    for a {{site_name}} account and sign in below:{% endblocktrans %}</p>
+        <div class="socialaccount_ballot">
+          <ul class="socialaccount_providers">
+            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+          </ul>
+          <div class="login-or">{% trans 'or' %}</div>
+        </div>
 
-    <div class="socialaccount_ballot">
+        {% include "socialaccount/snippets/login_extra.html" %}
 
-      <ul class="socialaccount_providers">
-        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-      </ul>
-
-      <div class="login-or">{% trans 'or' %}</div>
-
+        {% else %}
+        <p>{% blocktrans %}Si aún no tenes cuenta, podes registrarte
+        <a href="{{ signup_url }}">acá</a>.{% endblocktrans %}</p>
+        {% endif %}
     </div>
-
-    {% include "socialaccount/snippets/login_extra.html" %}
-
-    {% else %}
-    <p>{% blocktrans %}Si no tenes cuenta, create una
-    <a href="{{ signup_url }}">aca</a>.{% endblocktrans %}</p>
-    {% endif %}
-
     <form class="login" method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
       {{ form|crispy }}
