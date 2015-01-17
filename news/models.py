@@ -14,7 +14,7 @@ class NewsArticle(TimeStampedModel):
                                     verbose_name=_('Introducción'))
     body = models.TextField(verbose_name=_('Contenido'))
     owner = models.ForeignKey(User)
-    tags = TaggableManager(verbose_name=_('Etiquetas'))
+    tags = TaggableManager(verbose_name=_('Etiquetas'), blank=True)
 
     @models.permalink
     def get_absolute_url(self):
