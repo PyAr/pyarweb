@@ -67,10 +67,11 @@ class EventForm(forms.ModelForm):
         cleaned_data = super(EventForm, self).clean()
         start_at = cleaned_data.get('start_at')
         end_at = cleaned_data.get('end_at')
-        if start_at > end_at:
-            msg = 'La fecha de inicio es menor a la fecha de finalizacion'
-            self._errors['start_at'] = [_(msg)]
-            self._errors['end_at'] = [_(msg)]
+        if start_at is not None and end_at is not None:
+            if start_at > end_at:
+                msg = 'La fecha de inicio es menor a la fecha de finalizacion'
+                self._errors['start_at'] = [_(msg)]
+                self._errors['end_at'] = [_(msg)]
         return cleaned_data
 
     def save(self, *args, **kwargs):
