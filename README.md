@@ -1,4 +1,5 @@
-[![Stories in Ready](https://badge.waffle.io/pyar/pyarweb.png?label=ready&title=Ready)](https://waffle.io/pyar/pyarweb)
+¿Queres colaborar en el proyecto? Al momento tenemos [![Stories in Ready](https://badge.waffle.io/pyar/pyarweb.png?label=ready&title=Ready)](https://waffle.io/pyar/pyarweb) tareas en
+las que podes colaborar, sube a bordo! 
 pyarweb
 =======
 Es la implementación del sitio para PyAr / Python Argentina hecha con Django
