@@ -1,11 +1,6 @@
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 from community.views import OwnedObject, FilterableList
 from .models import NewsArticle
@@ -50,6 +45,6 @@ class NewsArticleListTag(ListView, FilterableList):
     def get_queryset(self):
         tag = self.kwargs['tag']
         filter_news = NewsArticle.objects.filter(
-            tags__name__in=[tag]).distinct()
+            tags__slug__in=[tag]).distinct()
 
         return filter_news
