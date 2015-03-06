@@ -11,18 +11,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='event',
-            name='lat',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='lng',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='zoom',
-        ),
         migrations.AlterField(
             model_name='event',
             name='end_at',
