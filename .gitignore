@@ -11,3 +11,6 @@ src
 pyarweb
 celerybeat-schedule
 local_settings.py
+Dockerfile
+docker-compose.yml
+run-docker.sh

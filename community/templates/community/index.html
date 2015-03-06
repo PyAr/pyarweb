@@ -41,11 +41,15 @@
                 <h3 class="text-center"><a href="{% url "companies:company_list_all" %}">Quiénes usan Python</a></h3>
                 <p class="text-center">Información sobre organizaciones que utilizan Python en Argentina.</p>
             </article>
+
+            {# IMPLEMENTAR #}
+            <!--
             <article class="col-sm-4">
                 <div class="img adopta_un_newbie"></div>
                 <h3 class="text-center"><a href="{% url 'newbie.home' %}">Adopta un newbie</a></h3>
                 <p class="text-center">Donde expertos y principiantes se encuentran</p>
             </article>
+            -->
             <article class="col-sm-4">
                 <div class="img proyectos_comunidad"></div>
                 <h3 class="text-center"><a href="{% url 'projects_list_all' %}">Proyectos de la comunidad</a></h3>
@@ -53,6 +57,31 @@
             </article>
         </div>
     </section>
+
+    {# IMPLEMENTAR #}
+    {% comment %}
+    <!-- Estadísticas de la lista de correo -->
+
+    <section class="list-group">
+        <header class="list-group-item">
+            <h3 class="list-group-item-heading">Estadísticas de la lista de correo</h3>
+        </header>
+        {% for i in 3|get_range %}
+            <article class="list-group-item">
+                <p class="list-group-item-text">Mensajes de esta semana: 212</p>
+            </article>
+        {% endfor %}
+    </section>
+    {% endcomment %}
+
+{% endblock %}
+
+{% block right-column %}
+    <div class="index-right">
+      {% with True as hide_sidebar_news %}
+      {{ block.super }}
+      {% endwith %}
+    </div>
 
     <!-- Últimas noticias -->
     <section class="list-group">
@@ -81,30 +110,4 @@
               </article>
           {% endfor %}
     </section>
-
-
-    {# IMPLEMENTAR #}
-    {% comment %}
-    <!-- Estadísticas de la lista de correo -->
-
-    <section class="list-group">
-        <header class="list-group-item">
-            <h3 class="list-group-item-heading">Estadísticas de la lista de correo</h3>
-        </header>
-        {% for i in 3|get_range %}
-            <article class="list-group-item">
-                <p class="list-group-item-text">Mensajes de esta semana: 212</p>
-            </article>
-        {% endfor %}
-    </section>
-    {% endcomment %}
-
-{% endblock %}
-
-{% block right-column %}
-    <div class="index-right">
-      {% with True as hide_sidebar_news %}
-      {{ block.super }}
-      {% endwith %}
-    </div>
 {% endblock %}
