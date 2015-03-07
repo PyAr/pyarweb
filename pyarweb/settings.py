@@ -204,6 +204,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 WALIKI_INDEX_SLUG = 'Inicio'
+WALIKI_ANONYMOUS_USER_PERMISSIONS = ('view_page', )
+WALIKI_LOGGED_USER_PERMISSIONS = ('view_page', 'add_page', 'change_page')
+WALIKI_CODEMIRROR_SETTINGS = {'lineNumbers': True,
+                              'theme': 'monokai',
+                              'autofocus': True}
 SENDFILE_BACKEND = 'sendfile.backends.simple'
 
 try:
