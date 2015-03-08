@@ -5,7 +5,7 @@ anyjson==0.3.3
 argparse==1.1
 beautifulsoup4==4.3.2
 billiard==3.3.0.18
-celery==3.1.16
+#celery==3.1.16
 django-bootstrap3==4.8.2
 django-bootstrap3-datetimepicker==2.2.3
 django-crispy-forms==1.4.0

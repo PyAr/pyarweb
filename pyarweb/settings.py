@@ -84,7 +84,8 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_autosuggest',
     'bootstrap3_datetime',
-    'planet',
+    # Incluir planet cuando este funcionando
+    # 'planet',
     'pagination',
     'tagging',
     'bootstrap3',
@@ -167,7 +168,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.i18n",
     "django.contrib.messages.context_processors.messages",
-    "planet.context_processors.context"
+    # Incluir planet cuando este funcionando
+    # "planet.context_processors.context"
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -192,12 +194,13 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-CELERYBEAT_SCHEDULE = {
-    'update_feeds': {
-        'task': 'planet.tasks.update_feeds',
-        'schedule': timedelta(hours=12)
-    },
-}
+# Incluir planet cuando este funcionando
+#CELERYBEAT_SCHEDULE = {
+#    'update_feeds': {
+#        'task': 'planet.tasks.update_feeds',
+#        'schedule': timedelta(hours=12)
+#    },
+#}
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
