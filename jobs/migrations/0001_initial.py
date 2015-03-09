@@ -25,8 +25,6 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=75)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('remote_work', models.BooleanField(default=False, verbose_name='Trabajo Remoto')),
-                ('seniority', models.CharField(max_length=100, choices=[('Trainee', 'Trainee'), ('Junior', 'Junior'), ('Semi Senior', 'Semi Senior'), ('Senior', 'Senior')], blank=True, verbose_name='Experiencia')),
                 ('company', models.ForeignKey(null=True, blank=True, to='pycompanies.Company', verbose_name='Empresa')),
                 ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('tags', taggit_autosuggest.managers.TaggableManager(through='taggit.TaggedItem', to='taggit.Tag', help_text='A comma-separated list of tags.', verbose_name='Etiquetas')),

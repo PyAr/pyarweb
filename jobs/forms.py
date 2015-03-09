@@ -42,10 +42,22 @@ class JobForm(forms.ModelForm):
             'Django, Python, MySQL, Linux'
         ))
 
+        seniority_help_text = ''.join((
+            'Opcionalmente puede especificar la experiencia requerida ',
+            'para el puesto.'
+        ))
+
+        remote_work_help_text = ''.join((
+            'Se permite la modalidad de trabajo desde casa (homeworking).'
+        ))
+
         self.fields['title'].label = 'Empleo'
+        self.fields['tags'].label = 'Etiquetas / Tags / Tecnologías'
         self.fields['title'].help_text = title_help_text
         self.fields['tags'].help_text = tags_help_text
+        self.fields['seniority'].help_text = seniority_help_text
         self.fields['company'].help_text = company_help_text
+        self.fields['remote_work'].help_text = remote_work_help_text
         self.fields['description'].label = 'Descripción'
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -53,6 +65,8 @@ class JobForm(forms.ModelForm):
             'company',
             'location',
             'email',
+            'seniority',
+            'remote_work',
             'tags',
             'description',
         )

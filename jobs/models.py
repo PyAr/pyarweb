@@ -35,6 +35,7 @@ class Job(models.Model):
     seniority = models.CharField(
         max_length=100,
         blank=True,
+        default='',
         choices=JOB_SENIORITIES,
         verbose_name=_('Experiencia'))
 
