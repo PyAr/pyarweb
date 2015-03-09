@@ -14,8 +14,8 @@ class NewsArticleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(NewsArticleForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('job_submit', _('Guardar')))
-        self.helper.add_input(Reset('job_reset', _('Limpiar'), css_class='btn-default'))
+        self.helper.add_input(Submit('news_submit', _('Guardar')))
+        self.helper.add_input(Reset('news_reset', _('Limpiar'), css_class='btn-default'))
 
     class Meta:
         model = NewsArticle

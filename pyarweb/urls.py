@@ -42,7 +42,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^projects/', include('projects.urls')),
-    url(r'^events/', include('events.urls', namespace='events')),
+    url(r'^eventos/', include('events.urls', namespace='events')),
     url(r'^faq/', include('faq.urls')),
     # Descomentar cuando planet este funcionando
     # url(r'^planeta/', include('planet.urls')),
