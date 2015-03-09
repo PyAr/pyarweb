@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load disqus_tags %}
 {% load i18n %}
-{% load email_obfuscator %}
+{% load staticfiles %}
 {% load devtags %}
 {% block title %}
   {{ object.title }}
@@ -12,7 +12,7 @@
     <div class="col-lg-12">
       <div class="page-header">
         <h2>
-          {{ object.title }}
+          {{ object.name }}
           <span class="pull-right">
             {% if object.owner == user %}
             <a href="{% url 'companies:edit' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
@@ -21,10 +21,18 @@
           </span>
         </h2>
       </div>
-      <article>
-        <h1>{% autoescape off %}{{ object.name|linebreaks|safe }}{% endautoescape %}</h1>
-        <p>{% autoescape off %}{{ object.description|linebreaks|safe }}{% endautoescape %}</p>
-      </article>
+      <div class="row">
+        <div class="col-md-8">
+          <article>
+            <p>{% autoescape off %}{{ object.description|linebreaks|safe }}{% endautoescape %}</p>
+          </article>
+        </div>
+        <div class="col-md-4">
+          <a href="{{ object.link }}" target="blank">
+            <img style="max-width:200px; height:auto;" src="{{ MEDIA_URL }}{{ object.photo }}"></img>
+          </a>
+        </div>
+      </div>
   </div>
 </main>
 {% endblock %}

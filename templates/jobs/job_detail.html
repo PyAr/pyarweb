@@ -6,7 +6,9 @@
 
 {% block content %}
 <main id="main" class="container" role="main">
+
     <div class="col-lg-12">
+
       <div class="page-header">
         <h2>{{ object.title }}
           <span class="pull-right">
@@ -17,42 +19,55 @@
           </span>
         </h2>
       </div>
-      <article>
-        <p>{{ object.description|linebreaks }}</p>
-        <table class="table table-no-border table-user-information">
-          <tbody>
-            <tr>
-              <td class="text-right"><label>{% trans 'Fecha' %}</label></td>
-              <td>{{ object.created|date:"SHORT_DATE_FORMAT" }}</td>
-            </tr>
-            <tr>
-              <td class="text-right"><label>{% trans 'Lugar' %}</label></td>
-              <td>{{ object.location }}</td>
-            </tr>
-            {% if object.company %}
-            <tr>
-              <td class="text-right"><label>{% trans 'Empresa' %}</label></td>
-              <td>{{ object.company }}</td>
-            </tr>
-            {% endif %}
-            <tr>
-              <td class="text-right"><label>Email</label></td>
-              <td>{{ object.email|obfuscate_mailto }}</td>
-            </tr>
-            <tr>
-              <td class="text-right"><label>{% trans 'Etiquetas' %}</label></td>
-              <td>{% for t in object.tags.all %}<span class="label label-default">{{ t.name }}</span> {% endfor %}</td>
-            </tr>
-            <tr>
-              <td class="text-right"><label>{% trans 'Creado por' %}</label></td>
-              <td>{{ object.owner }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
+
       <div class="row">
-      {% disqus_show_comments %}
+
+        <div class="col-md-8">
+          <h1>{{ object.title|title }}</h1>
+          <p>{{ object.description|html2text }}</p>
+        </div>
+
+        <div class="col-md-4">
+          <div class="panel panel-default panel-primary">
+            <div class="panel-heading"><strong>Datos del Empleo</strong></div>
+            <div class="panel-body">
+              <article class="list-group-item">
+                <dl>
+                  <dt>Fecha de publicación</dt>
+                  <dd>
+                    <time class="published" datetime="{{ object.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ object.created|date:"d/m/Y" }}</time>
+                  </dd>
+                  <dt>Lugar de trabajo</dt>
+                  <dd>{{ object.location|title }}</dd>
+                  {% if object.company %}
+                    <dt>Empresa</dt>
+                    <dd>
+                      <a href="{{ object.company.link }}">{{ object.company.name }}</a>
+                    </dd>
+                  {% endif %}
+                  <dt>Permite trabajar remoto</dt>
+                  <dd>{% if object.remote_work %}Si{% else %}No{% endif %}</dd>
+                  {% if object.seniority %}
+                    <dt>Seniority requerido</dt>
+                    <dd>{{ object.seniority|title }} </dd>
+                  {% endif %}
+                  <dt>Email de contacto </dt>
+                  <dd>{{ object.email }} </dd>
+                  <dt> </dt>
+                  <dd> </dd>
+                </dl>
+              </article>
+            </div>
+          </div>
+        </div>
+
       </div>
+
+    </div>
+
+    <div class="row">
+    {% disqus_show_comments %}
+    </div>
   </div>
 </main>
 {% endblock %}
