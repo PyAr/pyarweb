@@ -534,3 +534,17 @@ pre {
     float: right;
     margin: 0 0 1em 1em;
 }
+
+.waliki-nav {
+    width: 100%;
+    border-top: 1px solid #eee;
+    margin-bottom: -20px;
+
+}
+
+.waliki-nav > li > a {
+    padding-bottom: 0px;
+    padding-top: 0px;
+    font-size: 0.85em;
+    color: #ccc;
+}

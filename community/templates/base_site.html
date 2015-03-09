@@ -24,7 +24,7 @@
 
 
           <form id="search-form" class="input-group" role="form" action="{% url "buscador" %}" method="get">
-              <input type="search" name="buscar" class="form-control input-lg" placeholder="{% trans 'Buscar...' %}" required >
+              <input type="search" name="buscar" class="form-control input-lg" placeholder="{% trans 'Buscar...' %}" value="{{ buscar }}" required >
               <span class="input-group-btn">
                   <button class="btn btn-default btn-lg" type="submit">
                       <span class="glyphicon glyphicon-search"></span>
@@ -34,7 +34,7 @@
 
           <section class="list-group">
             <header class="list-group-item">
-              <h3 class="list-group-item-heading">{% trans "Suscribite al Newsletter" %}</h3>
+              <h3 class="list-group-item-heading">{% trans "Suscribite a la lista" %}</h3>
             </header>
             <article class="list-group-item">
               <form id="newsletter-form" class="inline-form" action="http://listas.python.org.ar/mailman/subscribe/pyar" method="POST">
