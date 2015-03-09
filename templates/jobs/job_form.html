@@ -9,12 +9,13 @@
     <div class="col-lg-12">
 	    <div class="page-header">
 	    	<h2>{% if form.instance.id %}
-	    			{% trans 'Editar trabajo' %}
+	    			{% trans 'Actualizando información' %}
 	    		{% else %}
-	    			{% trans 'Agregar trabajo' %}
+	    			{% trans 'Agregar un nuevo empleo' %}
 	    		{% endif %}
 	    	</h2>
 	    </div>
+	    {{ form.media }}
 	    {% crispy form %}
 	</div>
 </main>
