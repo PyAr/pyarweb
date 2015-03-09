@@ -17,6 +17,7 @@
 {% endblock %}
 
 {% block left-column %}
+
     <section>
         <div class="row index-content">
             <article class="col-sm-4">
@@ -31,7 +32,7 @@
             </article>
 
             <article class="col-sm-4">
-                <div class="img adopta_un_newbie"></div>
+                <div class="img proyectos_comunidad"></div>
                 <h3 class="text-center"><a href="{% url 'jobs_list_all' %}">Bolsa de Trabajo</a></h3>
                 <p class="text-center">Ofrece o busca empleos relacionados con Python.</p>
             </article>
@@ -51,13 +52,49 @@
             </article>
 
             <article class="col-sm-4">
-                <div class="img proyectos_comunidad"></div>
+                <div class="img adopta_un_newbie"></div>
                 <h3 class="text-center"><a href="/wiki/Proyectos">Proyectos de la comunidad</a></h3>
                 <p class="text-center">Los proyectos que desarrollamos como grupo o en los que participan nuestros miembros.</p>
             </article>
 
         </div>
     </section>
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+
+        <div class="panel panel-default panel-primary">
+          <div class="panel-heading"><strong>Últimas noticias</strong></div>
+          <div class="panel-body">
+            {% for article in news %}
+                <article class="list-group-item">
+                    <time class="published" datetime="{{ article.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ article.created|date:"d/m/Y" }}</time>
+                    <h4 class="list-group-item-heading"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h4>
+                    <p class="list-group-item-text">{{ article.introduction|default:article.body|html2text|truncatewords:30 }}</p>
+                </article>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+
+        <div class="panel panel-default panel-primary">
+          <div class="panel-heading"><strong>Últimos Empleos publicados</strong></div>
+          <div class="panel-body">
+            {% for job in jobs %}
+                <article class="list-group-item">
+                    <time class="published" datetime="{{ job.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ job.created|date:"d/m/Y" }}</time>
+                    <h4 class="list-group-item-heading"><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></h4>
+                    <p class="list-group-item-text">{{ job.description|html2text|truncatewords:30 }}</p>
+                </article>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
 
     {# IMPLEMENTAR #}
     {% comment %}
@@ -83,32 +120,4 @@
       {{ block.super }}
       {% endwith %}
     </div>
-
-    <!-- Últimas noticias -->
-    <section class="list-group">
-        <header class="list-group-item">
-            <h3 class="list-group-item-heading">Últimas noticias</h3>
-        </header>
-        {% for article in news %}
-            <article class="list-group-item">
-                <time class="published" datetime="{{ article.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ article.created|date:"d/m/Y" }}</time>
-                <h4 class="list-group-item-heading"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h4>
-                <p class="list-group-item-text">{{ article.introduction|default:article.body|html2text|truncatewords:25 }}</p>
-            </article>
-        {% endfor %}
-    </section>
-
-    <!-- jobs -->
-    <section class="list-group">
-          <header class="list-group-item">
-              <h3 class="list-group-item-heading">Últimos trabajos</h3>
-          </header>
-          {% for job in jobs %}
-              <article class="list-group-item">
-                  <time class="published" datetime="{{ job.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ job.created|date:"d/m/Y" }}</time>
-                  <h4 class="list-group-item-heading"><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></h4>
-                  <p class="list-group-item-text">{{ job.description|html2text|truncatewords:25 }}</p>
-              </article>
-          {% endfor %}
-    </section>
 {% endblock %}
