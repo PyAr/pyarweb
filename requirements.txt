@@ -32,3 +32,4 @@ ipdb
 #rst2pdf==0.93
 django-braces==1.4.0
 django-sendfile==0.3.6
+hovercraft==1.1

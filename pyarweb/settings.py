@@ -96,6 +96,8 @@ INSTALLED_APPS = (
     'waliki',
     'waliki.git',
     'waliki.attachments',
+    'waliki.slides',
+    'waliki.togheterjs',
     #'waliki.pdf'
 )
 
