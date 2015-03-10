@@ -46,7 +46,7 @@
                   {% if object.company %}
                     <dt>Empresa</dt>
                     <dd>
-                      <a href="{{ object.company.link }}">{{ object.company.name }}</a>
+                    <a href="{% url 'companies:detail' object.company.id %}">{{ object.company.name }}</a>
                     </dd>
                   {% endif %}
                   <dt>Permite trabajar remoto</dt>
