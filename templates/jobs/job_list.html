@@ -1,16 +1,16 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 {% load i18n staticfiles pagination_tags %}
-{% block title %}Trabajos de Python {% endblock %}
+{% block title %}Ofertas laborales con Python{% endblock %}
 {% block left-column %}
 
 <!-- Lista de trabajos -->
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{% trans 'Trabajos con Python' %}
+            <h2>{% trans 'Ofertas laborales con Python' %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'jobs_add' %}" class="btn btn-info">{% trans 'Agregar trabajo' %}</a>
+                    <a href="{% url 'jobs_add' %}" class="btn btn-info">{% trans 'Publicar oferta laboral' %}</a>
                 </span>
             </h2>
         </div>

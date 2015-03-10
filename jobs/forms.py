@@ -52,7 +52,7 @@ class JobForm(forms.ModelForm):
             'Se permite la modalidad de trabajo desde casa (homeworking).'
         ))
 
-        self.fields['title'].label = 'Empleo'
+        self.fields['title'].label = 'Título de la oferta'
         self.fields['tags'].label = 'Etiquetas / Tags / Tecnologías'
         self.fields['title'].help_text = title_help_text
         self.fields['tags'].help_text = tags_help_text
