@@ -4,6 +4,10 @@
 {% load email_obfuscator %}
 {% load devtags %}
 
+{% block title %}
+{{ object.title }}
+{% endblock %}
+
 {% block content %}
 <main id="main" class="container" role="main">
 
