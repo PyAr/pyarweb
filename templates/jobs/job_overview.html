@@ -1,0 +1,26 @@
+
+                <dl>
+                  <dt>Fecha de publicación</dt>
+                  <dd>
+                    <time class="published" datetime="{{ obj.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ obj.created|date:"d/m/Y" }}</time>
+                  </dd>
+                  <dt>Lugar de trabajo</dt>
+                  <dd>{{ obj.location|title }}</dd>
+                  {% if obj.company %}
+                    <dt>Empresa</dt>
+                    <dd>
+                    <a href="{{ obj.company.get_absolute_url }}">{{ obj.company.name }}</a>
+                    </dd>
+                  {% endif %}
+                  <dt>Permite trabajar remoto</dt>
+                  <dd>{% if obj.remote_work %}Si{% else %}No{% endif %}</dd>
+                  {% if obj.seniority %}
+                    <dt>Seniority requerido</dt>
+                    <dd>{{ obj.seniority|title }} </dd>
+                  {% endif %}
+                  <dt>Email de contacto </dt>
+                  <dd>{{ obj.email }} </dd>
+                  <dt> </dt>
+                  <dd> </dd>
+                </dl>
+

@@ -14,6 +14,7 @@
                 </span>
             </h2>
         </div>
+
         {% if object_list %}
             {% for object in object_list %}
                 <h4>
@@ -30,6 +31,14 @@
                 <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
             </div>
         {% endif %}
+
+
+
+            <div class="pull-right">
+                <a href="{% url 'jobs_feed' %}" class="badge">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+           </div>
     </div>
 </section>
 {% endblock %}

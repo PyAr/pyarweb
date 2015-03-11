@@ -7,13 +7,16 @@ from .views import (
     NewsArticleDelete,
     NewsArticleList,
     NewsArticleUpdate,
-    NewsArticleListTag
+    NewsArticleListTag,
+    NewsFeed
 )
 
 
 urlpatterns = patterns('',
                        url(r'^$', NewsArticleList.as_view(),
                            name='news_list_all'),
+                       url(r'^rss$', NewsFeed(),
+                           name='news_feed'),
                        url(r'^add/$',
                            login_required(NewsArticleCreate.as_view()),
                            name='news_add'),

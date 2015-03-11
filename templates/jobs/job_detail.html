@@ -35,32 +35,9 @@
           <div class="panel panel-default panel-primary">
             <div class="panel-heading"><strong>Datos de la oferta laboral</strong></div>
             <div class="panel-body">
-              <article class="list-group-item">
-                <dl>
-                  <dt>Fecha de publicación</dt>
-                  <dd>
-                    <time class="published" datetime="{{ object.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ object.created|date:"d/m/Y" }}</time>
-                  </dd>
-                  <dt>Lugar de trabajo</dt>
-                  <dd>{{ object.location|title }}</dd>
-                  {% if object.company %}
-                    <dt>Empresa</dt>
-                    <dd>
-                    <a href="{% url 'companies:detail' object.company.id %}">{{ object.company.name }}</a>
-                    </dd>
-                  {% endif %}
-                  <dt>Permite trabajar remoto</dt>
-                  <dd>{% if object.remote_work %}Si{% else %}No{% endif %}</dd>
-                  {% if object.seniority %}
-                    <dt>Seniority requerido</dt>
-                    <dd>{{ object.seniority|title }} </dd>
-                  {% endif %}
-                  <dt>Email de contacto </dt>
-                  <dd>{{ object.email }} </dd>
-                  <dt> </dt>
-                  <dd> </dd>
-                </dl>
-              </article>
+               <article class="list-group-item">
+                {% include 'jobs/job_overview.html' with obj=object %}
+               </article>
             </div>
           </div>
         </div>

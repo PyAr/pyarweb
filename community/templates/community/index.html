@@ -64,7 +64,15 @@
       <div class="col-md-12">
 
         <div class="panel panel-default panel-primary">
-          <div class="panel-heading"><strong>Últimas noticias</strong></div>
+          <div class="panel-heading"><strong>Últimas noticias</strong>
+          <div class="pull-right">
+            <span class="badge">
+                <a href="{% url 'news_feed' %}">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+            </span>
+           </div>
+        </div>
           <div class="panel-body">
             {% for article in news %}
                 <article class="list-group-item">
@@ -80,7 +88,18 @@
       <div class="col-md-12">
 
         <div class="panel panel-default panel-primary">
-          <div class="panel-heading"><strong>Últimos empleos publicados</strong></div>
+          <div class="panel-heading"><strong>Últimos empleos publicados</strong>
+
+          <div class="pull-right">
+            <span class="badge">
+                <a href="{% url 'jobs_feed' %}">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+            </span>
+           </div>
+
+
+          </div>
           <div class="panel-body">
             {% for job in jobs %}
                 <article class="list-group-item">

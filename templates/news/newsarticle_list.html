@@ -33,6 +33,15 @@
                 <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
             </div>
         {% endif %}
+
+
+
+
+            <div class="pull-right">
+                <a href="{% url 'news_feed' %}" class="badge">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+           </div>
     </div>
 </section>
 {% endblock %}
