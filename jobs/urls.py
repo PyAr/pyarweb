@@ -2,11 +2,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 from django.conf.urls import patterns, url
 from .models import Job
-from .views import JobCreate, JobList, JobDelete, JobUpdate
+from .views import JobCreate, JobList, JobDelete, JobUpdate, JobsFeed
+
 
 
 urlpatterns = patterns('',
                        url(r'^$', JobList.as_view(), name='jobs_list_all'),
+                       url(r'^rss$', JobsFeed(), name='jobs_feed'),
                        url(r'^add/$', login_required(
                            JobCreate.as_view()), name='jobs_add'),
                        url(r'^(?P<pk>\d+)/$',
