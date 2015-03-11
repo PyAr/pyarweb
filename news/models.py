@@ -22,3 +22,6 @@ class NewsArticle(TimeStampedModel):
 
     def __unicode__(self):
         return u'{0}'.format(self.title)
+
+    class Meta:
+        ordering = ('-created',)

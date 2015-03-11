@@ -28,7 +28,9 @@ def get_range(value):
 
 @register.filter
 def html2text(html):
-    return etree.tostring(
-        etree.HTML(html),
-        encoding='utf8', method='text'
-    )
+    if html:
+        return etree.tostring(
+            etree.HTML(html),
+            encoding='utf8', method='text'
+        )
+    return ''

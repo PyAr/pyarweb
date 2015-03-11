@@ -5,6 +5,32 @@ from django.utils.translation import ugettext as _
 from community.views import OwnedObject, FilterableList
 from .models import NewsArticle
 from .forms import NewsArticleForm
+from django.contrib.syndication.views import Feed
+from django.core.urlresolvers import reverse
+
+
+
+class NewsFeed(Feed):
+    title = "Feed de Noticias de Pyar"
+    link = reverse_lazy("news_list_all")
+    description = "Novedades e información de Python Argentina"
+
+    def items(self):
+        return NewsArticle.objects.order_by('-created')[0:10]
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.body
+
+    def item_pubdate(self, item):
+        return item.created
+
+    def categories(self, item):
+        if item:
+            return item.tags.values_list('name', flat=True)
+        return ()
 
 
 class NewsArticleCreate(CreateView):
