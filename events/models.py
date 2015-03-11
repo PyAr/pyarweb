@@ -12,8 +12,8 @@ class Event(models.Model):
     place = models.CharField(max_length=100, verbose_name=_('Lugar'))
     address = models.CharField(max_length=100, verbose_name=_('Direccion'))
     url = models.URLField(blank=True, null=True)
-    start_at = models.DateField(verbose_name=_('Comienza a las'), null=True)
-    end_at = models.DateField(verbose_name=_('Termina a las'), null=True)
+    start_at = models.DateField(verbose_name=_('Comienza a las'))
+    end_at = models.DateField(verbose_name=_('Termina a las'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
