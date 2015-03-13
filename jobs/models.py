@@ -1,10 +1,10 @@
-from django.db import models
+from autoslug import AutoSlugField
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.db import models
 from django.utils.translation import ugettext as _
-from taggit_autosuggest.managers import TaggableManager
 from pycompanies.models import Company
-
+from taggit_autosuggest.managers import TaggableManager
 
 JOB_SENIORITIES = (
     ('Trainee', 'Trainee'),
@@ -38,6 +38,7 @@ class Job(models.Model):
         default='',
         choices=JOB_SENIORITIES,
         verbose_name=_('Experiencia'))
+    slug = AutoSlugField(populate_from='title', unique=True)
 
     def __str__(self):
         return u'{0}'.format(self.title)
@@ -47,4 +48,5 @@ class Job(models.Model):
         return self.remote_work
 
     def get_absolute_url(self):
-        return reverse('jobs_view', kwargs={'pk': self.pk})
+        return reverse('jobs_view', kwargs={'slug': self.slug})
+

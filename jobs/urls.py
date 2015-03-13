@@ -11,7 +11,7 @@ urlpatterns = patterns('',
                        url(r'^rss$', JobsFeed(), name='jobs_feed'),
                        url(r'^add/$', login_required(
                            JobCreate.as_view()), name='jobs_add'),
-                       url(r'^(?P<pk>\d+)/$',
+                       url(r'^(?P<slug>[\w-]+)/$',
                            DetailView.as_view(model=Job),
                            name='jobs_view'),
                        url(r'^(?P<pk>\d+)/delete/$',
