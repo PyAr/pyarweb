@@ -1,7 +1,8 @@
+from autoslug import AutoSlugField
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 
 
 class Event(models.Model):
@@ -17,9 +18,10 @@ class Event(models.Model):
     end_at = models.DateField(verbose_name=_('Termina a las'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    slug = AutoSlugField(populate_from='name', unique=True)
 
     def __str__(self):
         return "%s by %s" % (self.name, self.owner)
 
     def get_absolute_url(self):
-        return reverse('events:detail', args=[self.id])
+        return reverse('events:detail', args=[self.slug])
