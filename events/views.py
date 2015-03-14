@@ -12,6 +12,33 @@ from .forms import EventForm
 from .models import Event
 from .mixins import EventMixin
 
+from django.contrib.syndication.views import Feed
+from django.core.urlresolvers import reverse_lazy
+
+
+class EventsFeed(Feed):
+    title = "Feed de Próximos Eventos de PyAr"
+    link = reverse_lazy("events:events_list_all")
+    description = "Eventos de Python Argentina y relacionados"
+    description_template = "events/event_detail_body.html"
+
+    def items(self):
+        return Event.objects.filter(end_at__gte=timezone.now()).order_by('-updated_at')[:10]
+
+    def item_title(self, item):
+        return item.name
+
+    def item_pubdate(self, item):
+        return item.created_at
+
+    def item_updateddate(self, item):
+        return item.updated_at
+
+    def author_name(self, item):
+        if item:
+            return str(item.owner)
+        return ''
+
 
 class EventList(ListView):
     queryset = Event.objects.filter(
@@ -45,4 +72,4 @@ class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
 
 class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
     model = Event
-    success_url = '/events/'
+    success_url = reverse_lazy("events_list_all")
