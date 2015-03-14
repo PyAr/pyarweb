@@ -14,7 +14,7 @@ class EventForm(forms.ModelForm):
     description = forms.CharField(widget=SummernoteInplaceWidget())
 
     start_at = forms.DateField(
-        required=False,
+        required=True,
         label=_('Comienza'),
         widget=DateTimePicker(
             options={
@@ -24,7 +24,7 @@ class EventForm(forms.ModelForm):
     )
 
     end_at = forms.DateField(
-        required=False,
+        required=True,
         label=_('Finaliza'),
         widget=DateTimePicker(
             options={
