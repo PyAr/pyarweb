@@ -21,8 +21,18 @@
           </span>
         {% endif %}
 
+        <div class="pull-right">
+                <a href="{% url 'events:events_feed' %}" class="badge">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+           </div>
+
+
       </h2>
+
+
     </div>
+
 
       {% for event in eventos_proximos %}
 

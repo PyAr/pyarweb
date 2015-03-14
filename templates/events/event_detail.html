@@ -50,35 +50,10 @@
       </div>
 
       <div class="row">
-	        <div class="col-md-6">
 
-            <h3>{% trans "¿De qué se trata?" %}</h3>
-            <p>{{ event.description|safe }}</p>
+      {% include "events/event_detail_body.html" with obj=event %}
 
-          </div>
-
-          <div class="col-md-6">
-
-            <h3>{% trans "¿Cuándo?" %}</h3>
-            {% if event.start_at %}
-              <p>{% trans "Comienza" %}: {{ event.start_at }}</p>
-            {% endif %}
-
-            {% if event.end_at %}
-              <p>{% trans "Termina" %}: {{ event.end_at }}</p>
-            {% endif %}
-
-            <h3>{% trans "¿Dónde?" %}</h3>
-            <p>{{ event.place }} | {{ event.address }}</p>
-
-            {% if event.url %}
-              <h3>{% trans "Más Información" %}</h3>
-              <p>
-                <a href="{{ event.url }}">{{ event.url }}</a>
-              </p>
-            {% endif %}
-
-          </div>
+      </div>
 
             <input type="hidden" id="id_lat" value="{{ event.lat }}">
             <input type="hidden" id="id_lng" value="{{ event.lng }}">
