@@ -10,7 +10,7 @@ from .views import (EventDetail,
 
 urlpatterns = patterns('',
                        url(r'^$', EventList.as_view(), name='events_list_all'),
-                       url(r'^rss$', EventsFeed(), name='events_feeds'),
+                       url(r'^rss$', EventsFeed(), name='events_feed'),
                        url(r'^(?P<pk>\d+)/$', EventDetail.as_view(), name='detail'),
                        url(r'^add/$', EventCreate.as_view(), name='add'),
                        url(r'^(?P<pk>\d+)/edit/$', EventUpdate.as_view(), name='edit'),
