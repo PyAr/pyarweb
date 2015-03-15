@@ -93,6 +93,7 @@ INSTALLED_APPS = (
     'sendfile',
     'crispy_forms',
     'email_obfuscator',
+    'dbbackup',
     'waliki',
     'waliki.git',
     'waliki.attachments',
@@ -216,6 +217,13 @@ WALIKI_CODEMIRROR_SETTINGS = {'lineNumbers': True,
                               'theme': 'monokai',
                               'autofocus': True}
 SENDFILE_BACKEND = 'sendfile.backends.simple'
+
+
+# django-db backups
+DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
+DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
+
+
 
 try:
     from .local_settings import *
