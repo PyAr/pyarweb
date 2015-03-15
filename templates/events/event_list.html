@@ -38,7 +38,7 @@
 
           <article class="list-group-item">
               <h4 class="list-group-item-heading">
-                <a href="{% url 'events:detail' event.id %}">
+                <a href="{% url 'events:detail' event.slug %}">
                   {{ event.name }}
                 </a> |
                 <small>{{ event.start_at }}</small>
@@ -63,7 +63,7 @@
 
           <article class="list-group-item">
               <h4 class="list-group-item-heading">
-                <a href="{% url 'events:detail' event.id %}">
+                <a href="{% url 'events:detail' event.slug %}">
                   {{ event.name }}
                 </a> |
                 <small>{{ event.start_at }}</small>
