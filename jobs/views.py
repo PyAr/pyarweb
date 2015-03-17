@@ -25,7 +25,7 @@ class JobsFeed(Feed):
         return Job.objects.order_by('-created')[0:10]
 
     def item_title(self, item):
-        return item.name
+        return item.title
 
     def item_pubdate(self, item):
         return item.created
