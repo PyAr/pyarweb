@@ -8,14 +8,14 @@ import autoslug.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('jobs', '0002_auto_20150308_2348'),
+        ('jobs', '0004_auto_20150316_2322'),
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='job',
             name='slug',
-                field=autoslug.fields.AutoSlugField(default='', editable=False),
-            preserve_default=False,
+            field=autoslug.fields.AutoSlugField(unique=True, editable=False),
+            preserve_default=True,
         ),
     ]
