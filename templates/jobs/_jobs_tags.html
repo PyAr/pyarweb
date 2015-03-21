@@ -1,5 +1,5 @@
 {% load i18n %}
 {% trans 'Etiquetas:' %}
 {% for tag in object.tags.all %}
-      <a class="label label-default" href="{% url 'jobs_list_all' %}?tag={{tag.slug}}" >{{ tag.name }}</a>
+      <a class="label label-default" href="{% url 'jobs_list_by_tag' tag=tag.slug%}" >{{ tag.name }}</a>
 {% endfor %}

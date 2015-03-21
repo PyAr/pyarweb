@@ -58,7 +58,7 @@ class JobList(ListView, FilterableList):
     paginate_by = 20
 
     def get_queryset(self):
-        tag_slug = self.request.GET.get('tag')
+        tag_slug = self.kwargs.get('tag')
         if tag_slug:
             return Job.objects.filter(tags__slug=tag_slug)
         return Job.objects.all()
