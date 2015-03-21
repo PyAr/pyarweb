@@ -1,13 +1,7 @@
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
-from django.utils.translation import ugettext as _
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
 from django.contrib.syndication.views import Feed
-from django.core.urlresolvers import reverse
 from community.views import OwnedObject, FilterableList
 from .models import Job
 from .forms import JobForm
@@ -19,7 +13,6 @@ class JobsFeed(Feed):
     description = "Todas las ofertas laborales con Python publicadas en Python Argentina"
 
     description_template = "jobs/job_detail_feed.html"
-
 
     def items(self):
         return Job.objects.order_by('-created')[0:10]
@@ -49,7 +42,6 @@ class JobsFeed(Feed):
         if item:
             return item.tags.values_list('name', flat=True)
         return ()
-
 
 
 class JobCreate(CreateView):
