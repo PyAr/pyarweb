@@ -5,7 +5,6 @@ from .models import Job
 from .views import JobCreate, JobList, JobDelete, JobUpdate, JobsFeed
 
 
-
 urlpatterns = patterns('',
                        url(r'^$', JobList.as_view(), name='jobs_list_all'),
                        url(r'^rss$', JobsFeed(), name='jobs_feed'),
