@@ -35,6 +35,12 @@ p {
     padding: 0px 20px 30px;
 }
 
+@media (max-width: 992px) {
+    #main {
+        padding-top: 20px;
+    }
+}
+
 #main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img {
         background-image: url(/static/img/icons/icons.png);
         height: 62px;
@@ -392,21 +398,29 @@ h3 {
 	background-image: url(/static/img/pyar-footer.png);
 }
 
+#footer li.usla,
+#footer li.python {
+    background-position: right center;
+    background-repeat: no-repeat;
+    float: left;
+    text-align: right;
+}
 #footer li.usla {
-	text-align: right;
-	padding-right: 80px;
-	background-repeat: no-repeat;
-	background-position: right center;
-	background-image: url(/static/img/usla-footer.png);
+    background-image: url(/static/img/usla-footer.png);
+    padding-right: 80px;
 }
 
 #footer li.python {
-	text-align: right;
-	margin-left: 25px;
-	padding-right: 52px;
-	background-repeat: no-repeat;
-	background-position: right center;
-	background-image: url(/static/img/python-footer.png);
+    background-image: url(/static/img/python-footer.png);
+    margin-left: 25px;
+    padding-right: 52px;
+ }
+@media (max-width: 992px) {
+    #footer li.python {
+        clear: left;
+        float: right;
+        margin: 15px 0 0;
+    }
 }
 
 /*
