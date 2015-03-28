@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'c2*wzebi9p3vola_tamd7zu4=4(2^9m$v0vdj(5_ybhhw6t629'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Sites framework
 SITE_ID = 1
@@ -223,9 +223,16 @@ SENDFILE_BACKEND = 'sendfile.backends.simple'
 DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
 DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
 
-
+RAVEN_CONFIG = None
 
 try:
     from .local_settings import *
 except:
     pass
+
+
+if RAVEN_CONFIG:
+    INSTALLED_APPS = INSTALLED_APPS + (
+        # ...
+            'raven.contrib.django.raven_compat',
+            )
