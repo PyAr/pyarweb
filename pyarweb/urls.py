@@ -38,14 +38,18 @@ urlpatterns = patterns(
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     url(r'^summernote/', include('django_summernote.urls')),
     url(r'^trabajo/', include('jobs.urls')),
-    url(r'^newbie/', include('newbie.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^projects/', include('projects.urls')),
     url(r'^eventos/', include('events.urls', namespace='events')),
-    url(r'^faq/', include('faq.urls')),
     # Descomentar cuando planet este funcionando
     # url(r'^planeta/', include('planet.urls')),
+    # No se que va a pasar con la app de newbie, lanzamos primer release y
+    # lo comento hasta que se decida que se hace
+    # url(r'^newbie/', include('newbie.urls')),
+    # No se que va a pasar con la app de project, lanzamos primer release y
+    # lo comento hasta que se decida que se hace
+    # url(r'^projects/', include('projects.urls')),
+    # url(r'^faq/', include('faq.urls')),
     url(r'^wiki/', include('waliki.urls')),
     url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
         old_url_redirect, name='old_url_redirect'),
