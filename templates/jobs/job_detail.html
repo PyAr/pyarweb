@@ -28,6 +28,7 @@
 
         <div class="col-md-8">
           <h1>{{ object.title|title }}</h1>
+          {% include "jobs/_jobs_tags.html" %}
           <p>{{ object.description|html2text }}</p>
         </div>
 

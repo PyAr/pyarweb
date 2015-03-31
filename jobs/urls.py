@@ -5,7 +5,6 @@ from .models import Job
 from .views import JobCreate, JobList, JobDelete, JobUpdate, JobsFeed
 
 
-
 urlpatterns = patterns('',
                        url(r'^$', JobList.as_view(), name='jobs_list_all'),
                        url(r'^rss$', JobsFeed(), name='jobs_feed'),
@@ -20,4 +19,7 @@ urlpatterns = patterns('',
                        url(r'^(?P<pk>\d+)/update/$',
                            login_required(JobUpdate.as_view()),
                            name='jobs_update'),
+                       url(r'^tag/(?P<tag>[\w-]+)/$',
+                           JobList.as_view(),
+                           name='jobs_list_by_tag'),
                        )
