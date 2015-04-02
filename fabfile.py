@@ -4,8 +4,8 @@ from fabric.contrib.console import confirm
 
 env.hosts = ['python.org.ar']
 env.user = 'www-pyar'
-env.project_path = '/home/www-pyar/pyarweb_beta/pyarweb/'
-env.venv_path = '/home/www-pyar/pyarweb_beta/pyarweb_venv/'
+env.project_path = '/home/www-pyar/pyarweb/pyarweb/'
+env.venv_path = '/home/www-pyar/pyarweb/pyarweb_venv/'
 env.pip_bin = '%sbin/pip' % (env.venv_path)
 env.python_bin = '%sbin/python' % (env.venv_path)
 env.gunicorn_bin = '%sbin/gunicorn' % (env.venv_path)
@@ -13,12 +13,12 @@ env.gunicorn_bin = '%sbin/gunicorn' % (env.venv_path)
 
 @task
 def deploy():
-    """Deploy de PyArweb en beta.python.org.ar."""
+    """Deploy de PyArweb en python.org.ar."""
     git_pull()
     if confirm("Install/upgrade requirements with pip?"):
         install_requeriments()
-    django_command('migrate')
     django_command('collectstatic')
+    django_command('migrate')
     restart()
 
 @task
