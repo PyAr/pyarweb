@@ -28,9 +28,11 @@
 
         <div class="col-md-8">
 
+
       {% autoescape off %}
           {{ object.description }}
       {% endautoescape %}
+      {% include "jobs/_jobs_tags.html" %}
 
         </div>
 
