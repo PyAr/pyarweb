@@ -562,3 +562,12 @@ pre {
     font-size: 0.85em;
     color: #ccc;
 }
+
+a.white {
+    color: #fff;
+}
+
+a.white:hover {
+    color: #fff;
+    text-decoration: none;
+}
