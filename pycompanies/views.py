@@ -21,7 +21,7 @@ class CompanyList(ListView):
     context_object_name = 'companies'
 
     def get_queryset(self):
-        return Company.objects.all()
+        return Company.objects.all().order_by('?')
 
     def get_context_data(self, **kwargs):
         context = super(CompanyList, self).get_context_data(**kwargs)
