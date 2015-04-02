@@ -11,7 +11,7 @@
             <h2>{% trans 'Noticias' %}
               {% if user.is_authenticated %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'news_add' %}" class="btn btn-info">{% trans 'Agregar noticia' %}</a>
+                    <a href="{% url 'news_add' %}" class="btn btn-info">{% trans 'Publicar una noticia' %}</a>
                 </span>
               {% endif %}
             </h2>
@@ -24,7 +24,7 @@
                 <p>
                     {{ object.introduction|html2text|truncatewords:50 }}
                 </p>
-                <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %}<a href="{% url 'news_tags_list' tag=t.slug %}" class="label label-default">{{ t.name }}</a>{% endfor %}</div>
+                <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %} <a href="{% url 'news_tags_list' tag=t.slug %}" class="label label-default">{{ t.name }}</a> {% endfor %}</div>
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             {% endfor %}
             {% paginate %}
