@@ -28,8 +28,8 @@ requests==2.2.1
 six==1.6.1
 ipython
 ipdb
--e git+https://github.com/mgaitan/micawber.git@py3#egg=micawber
--e git+https://github.com/mgaitan/waliki.git#egg=waliki[all]
+https://github.com/coleifer/micawber/archive/master.zip#egg=micawber
+https://github.com/mgaitan/waliki/archive/master.zip#egg=waliki[all]
 #rst2pdf==0.93
 django-braces==1.4.0
 django-sendfile==0.3.6
