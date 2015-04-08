@@ -1,5 +1,7 @@
 {% load staticfiles i18n %}
 
+{% load devtags %}
+
 <header id="header" class="navbar navbar-static-top" role="banner">
     <div class="container">
         <div class="row">
@@ -14,7 +16,7 @@
                     <a href="/" class="navbar-brand">PyAr</a>
                     <div class="loginreg">
                       {% if user.is_authenticated %}
-                      Hola {{ user }}. <a href="{% url 'account_logout' %}">{% trans 'Cerrar sesión' %}</a>
+                      Hola <a href="{{ user|wikify:"miembros/" }}">{{ user }}</a>. <a href="{% url 'account_logout' %}">{% trans 'Cerrar sesión' %}</a>
                       {% else %}
                       <a href="{% url 'account_login' %}">{% trans 'Ingresá' %}</a> o <a href="{% url 'account_signup' %}">{% trans 'Registrate' %}</a>
                       {% endif %}
