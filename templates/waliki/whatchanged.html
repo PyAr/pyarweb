@@ -1,0 +1,41 @@
+{% extends "waliki/detail.html" %}
+{% load i18n %}
+{% load devtags %}
+
+{% block header %}
+    {% block title %}<h1>{% trans "What changed" %}</h1>{% endblock title %}
+{% endblock %}
+{% block content %}
+
+
+<table class="table table-striped">
+        <tbody>
+            {% for change in changes %}
+                <tr>
+                  <td class="col-sm-1"><a href="{{ change.page.get_absolute_url }}">{{ change.page.slug }}</td>
+                  <td class="col-sm-1"><a href="{% url 'waliki_version' change.page.slug change.version %}" rel="nofollow">{{ change.version }}</a></td>
+                  {% with change.version|add:"^" as parent %}
+                  <td class="col-sm-1"><a href="{% url 'waliki_diff' change.page.slug parent change.version %}" rel="nofollow">{% trans "diff" %}</a></td>
+                  {% endwith %}
+                  <td class="col-sm-1"><a href="{{ change.author|wikify:"miembros/" }}">{{ change.author }}</a></td>
+                  <td class="col-sm-2" title="{{ change.date }}">{{ change.date }}</td>
+                  <td class="col-sm-3">{{ change.message }}</td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+
+      <nav>
+        <ul class="pager">
+          <li class="previous {% if not prev %}disabled{% endif %}"><a href="{% if prev %}{% url 'waliki_whatchanged' prev %}{% else %}#{% endif %}">{% trans "Previous" %}</a></li>
+          <li class="next {% if not next %}disabled{% endif %}"><a href="{% if next %}{% url 'waliki_whatchanged' next %}{% else %}#{% endif %}">{% trans "Next" %}</a></li>
+        </ul>
+      </nav>
+
+
+</div>
+</div>
+{% endblock content %}
