@@ -29,11 +29,6 @@ SITE_ID = 1
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 TEMPLATE_DEBUG = True
 
-# Instead of sending out real emails the console backend just writes
-# the emails that would be sent to the standard output.
-# By default, the console backend writes to stdout
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALLOWED_HOSTS = []
 
@@ -131,7 +126,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'es-AR'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
@@ -229,6 +224,12 @@ try:
     from .local_settings import *
 except:
     pass
+
+# Instead of sending out real emails the console backend just writes
+# the emails that would be sent to the standard output.
+# By default, the console backend writes to stdout
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 if RAVEN_CONFIG:
