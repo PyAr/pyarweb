@@ -6,22 +6,23 @@
 {% block extra_head %}
   {{ block.super }}
 
-  <link rel="alternate" type="application/rss+xml" title="{% trans "Last changes in the wiki" %}"href="{% url "waliki_whatchanged_rss" %}">
+  <link rel="alternate" type="application/rss+xml" title="{% trans "Last changes in the wiki" %}" href="{% url "waliki_whatchanged_rss" %}">
 
 {% endblock %}
 
 
 
 {% block header %}
-    {% block title %}<h1>{% trans "What changed" %}</h1>{% endblock title %}
+    {% block title %}<h1>{% trans "What changed" %}
 
-    <div class="pull-right">
+        <div class="pull-right">
 
             <a class="btn btn-default btn-xs" href="{% url "waliki_whatchanged_rss" %}">
                 <i class="fa fa-rss"></i> RSS
             </a>
+        </div>
+      </h1>{% endblock title %}
 
-      </div>
 {% endblock %}
 
 {% block content %}
