@@ -50,3 +50,5 @@ class Job(models.Model):
     def get_absolute_url(self):
         return reverse('jobs_view', kwargs={'slug': self.slug})
 
+    class Meta:
+        ordering = ['-modified']
