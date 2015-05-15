@@ -18,7 +18,7 @@
                       {% if user.is_authenticated %}
                       Hola <a href="{{ user|wikify:"miembros/" }}">{{ user }}</a>. <a href="{% url 'account_logout' %}">{% trans 'Cerrar sesión' %}</a>
                       {% else %}
-                      <a href="{% url 'account_login' %}">{% trans 'Ingresá' %}</a> o <a href="{% url 'account_signup' %}">{% trans 'Registrate' %}</a>
+                      <a href="{% url 'account_login' %}?next={{ request.path }}">{% trans 'Ingresá' %}</a> o <a href="{% url 'account_signup' %}?next={{ request.path }}">{% trans 'Registrate' %}</a>
                       {% endif %}
                     </div>
                 </div>
