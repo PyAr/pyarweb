@@ -7,13 +7,7 @@
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{% trans "Blog" %}: {{ blog.title }}
-                {% if blog.owner = user %}
-                <span class="section-button-group pull-right">
-                    <a href="{% url 'planet_blog_delete' blog.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
-                </span>
-                {% endif %}
-            </h2>
+            <h2>{% trans "Blog" %}: {{ blog.title }}</h2>
         </div>
         
         <table class="blog details table table-hover table-no-border">
@@ -28,10 +22,6 @@
                   <a href="{{ author.get_absolute_url }}" title="{% trans 'See author profile and his/her blog posts' %}">{{ author.name }}</a>
                 {% endfor %}
               </td>
-            </tr>
-            <tr>
-              <th>{% trans 'Stats' %}</th>
-              <td>{% blocktrans %}Ha publicado {{ blog|post_count }} posts sobre o relacionado con %}</td>
             </tr>
         </table>
         {% if tag %}

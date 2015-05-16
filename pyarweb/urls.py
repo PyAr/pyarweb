@@ -41,8 +41,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^eventos/', include('events.urls', namespace='events')),
-    # Descomentar cuando planet este funcionando
-    # url(r'^planeta/', include('planet.urls')),
+    url(r'^planeta/', include('planet.urls')),
     # No se que va a pasar con la app de newbie, lanzamos primer release y
     # lo comento hasta que se decida que se hace
     # url(r'^newbie/', include('newbie.urls')),

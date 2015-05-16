@@ -8,8 +8,7 @@
 </h3>
 <p class="content">
     <span>{{ post.date_modified|date:"d/m/y" }}</span> &blacksquare;
-    <a href="{{ post.get_absolute_url }}" title="{% trans 'Read an archived version of' %} {{ post.title|safe }}"
-      onclick="javascript: _gaq.push(['_trackEvent', 'Archived Version Link', 'Click', 'long-content']);">
+    <a href="{{ post.get_absolute_url }}" title="{% trans 'Read an archived version of' %} {{ post.title|safe }}">
       {% trans "[Archived Version]" %}
     </a> &blacksquare;
     Published at <a href="{{ post.feed.blog.get_absolute_url }}" title="{% trans 'See all posts for this blog' %}">{{ post.feed.blog.title }}</a>
