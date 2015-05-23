@@ -42,14 +42,14 @@ class EventsFeed(Feed):
 
 class EventList(ListView):
     queryset = Event.objects.filter(
-        end_at__lt=timezone.now()).order_by('-updated_at')
+        end_at__lt=timezone.now()).order_by('-start_at')
     paginate_by = 5
     context_object_name = "eventos_pasados"
 
     def get_context_data(self, **kwargs):
         context = super(EventList, self).get_context_data(**kwargs)
         context['eventos_proximos'] = Event.objects.filter(
-            end_at__gte=timezone.now()).order_by('-updated_at')
+            end_at__gte=timezone.now()).order_by('start_at')
 
         return context
 
