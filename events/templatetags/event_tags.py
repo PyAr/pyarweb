@@ -11,6 +11,6 @@ def next_events():
     events = Event.objects.filter(
         end_at__gte=timezone.now()
     ).order_by(
-        '-updated_at'
+        'start_at'
     )
     return {'events': events}
