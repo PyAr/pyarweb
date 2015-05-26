@@ -1,0 +1,22 @@
+{% extends "base_site.html" %}
+{% load i18n_ %}
+
+{% block title %}404 {% endblock %}
+
+{% block left-column %}
+    <section>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1>404 - Esta página no existe</h1>
+                </div>
+                <p>Lo sentimos, pero la página que estás intentando visitar no existe.</p>
+                <script>
+                    var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),
+                            GOOG_FIXURL_SITE = location.host;
+                </script>
+                <script src="http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
+            </div>
+        </div>
+    </section>
+{% endblock %}
