@@ -1,17 +1,20 @@
-{% extends "base_site.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {% block title %}500 {% endblock %}
 
-{% block left-column %}
-    <section>
+{% block content %}
+    <main id="main" class="container" role="main">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="page-header">
                     <h1>{% trans "Server Error" %}</h1>
                 </div>
                 <p>Lo sentimos, pero el servidor encontró un error al procesar su solicitud.</p>
             </div>
+            <div class="col-md-4" style="margin-top:20px;">
+                {% include 'search_form.html' %}
+            </div>
         </div>
-    </section>
+    </main>
 {% endblock %}
