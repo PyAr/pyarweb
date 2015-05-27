@@ -22,15 +22,7 @@
         {% block right-column %}
           <!-- SeachBox -->
 
-
-          <form id="search-form" class="input-group" role="form" action="{% url "buscador" %}" method="get">
-              <input type="search" name="buscar" class="form-control input-lg" placeholder="{% trans 'Buscar...' %}" value="{{ buscar }}" required >
-              <span class="input-group-btn">
-                  <button class="btn btn-default btn-lg" type="submit">
-                      <span class="glyphicon glyphicon-search"></span>
-                  </button>
-              </span>
-          </form>
+          {% include 'search_form.html' %}
 
           <section class="list-group">
             <header class="list-group-item">
