@@ -1,0 +1,16 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+
+{% block title %}403 {% endblock %}
+
+{% block left-column %}
+    <section>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 20px">
+                <div class="alert alert-dismissable alert-danger">
+                    {% trans "You aren't authorized to see this page." %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
