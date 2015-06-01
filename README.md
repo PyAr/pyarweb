@@ -133,7 +133,7 @@ Para eso, podés clonar el repo https://github.com/PyAr/wiki.git en el directori
 Luego de clonar el repo, tenés que sincronizar la base de datos ejecutando:
 
 ```
-python manage sync_waliki
+python manage.py sync_waliki
 ```
 
 ## Cargar feeds del planeta
