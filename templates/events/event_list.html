@@ -15,11 +15,9 @@
       <h2>
         {% trans "Proximos Eventos" %}
 
-        {% if user.is_authenticated %}
-          <span class="section-button-group pull-right">
-            <a href="{% url 'events:add' %}" class="btn btn-info">{% trans "Agregar" %}</a>
-          </span>
-        {% endif %}
+        <span class="section-button-group pull-right">
+          <a href="{% url 'events:add' %}" class="btn btn-info">{% trans "Agregar" %}</a>
+        </span>
 
         <div class="pull-right">
                 <a href="{% url 'events:events_feed' %}" class="badge">
