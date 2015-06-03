@@ -19,7 +19,4 @@ urlpatterns = patterns('',
                        url(r'^(?P<pk>\d+)/update/$',
                            login_required(JobUpdate.as_view()),
                            name='jobs_update'),
-                       url(r'^tag/(?P<tag>[\w-]+)/$',
-                           JobList.as_view(),
-                           name='jobs_list_by_tag'),
                        )

@@ -7,7 +7,6 @@
     <article class="list-group-item">
         <form method="GET" class="col-md-12" id="tags-form">
             <div class="row tags-group">
-                {% csrf_token %}
                 {% for tag in tags %}
                 <select name="tag_{{ tag.name }}" id="tag_{{ tag.name }}" class="hidden">
                     <option value="0"></option>

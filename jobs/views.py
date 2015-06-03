@@ -57,12 +57,6 @@ class JobList(ListView, FilterableList):
     model = Job
     paginate_by = 20
 
-    def get_queryset(self):
-        tag_slugs = self.kwargs.get('tag')
-        if tag_slugs:
-            return Job.objects.filter(tags__slug__in=[tag_slugs])
-        return Job.objects.all()
-
 
 class JobUpdate(UpdateView, OwnedObject):
 
