@@ -1,0 +1,5 @@
+{% load i18n %}
+{% trans 'Etiquetas:' %}
+{% for tag in object.tags.all %}
+      <a class="label label-default" href="{% url 'news_list_all' %}?tag_{{ tag.slug }}=1" >{{ tag.name }}</a>
+{% endfor %}
