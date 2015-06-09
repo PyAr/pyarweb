@@ -72,4 +72,4 @@ class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
 
 class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
     model = Event
-    success_url = reverse_lazy("events_list_all")
+    success_url = reverse_lazy("events:events_list_all")

@@ -37,7 +37,10 @@
           <a href="{% url 'events:detail' event.id %}">
             {{ event.name }}
           </a> |
-          <small>{{ event.start_at }}</small>
+          <small>
+            {{ event.start_at|date:"DATE_FORMAT" }} |
+            {{ event.start_at|time:"TIME_FORMAT" }}
+          </small>
         </h4>
         <p class="list-group-item-text">
           {{ event.description|truncatewords:"100"|striptags|safe }}
@@ -65,7 +68,10 @@
           <a href="{% url 'events:detail' event.id %}">
             {{ event.name }}
           </a> |
-          <small>{{ event.start_at }}</small>
+          <small>
+            {{ event.start_at|date:"DATE_FORMAT" }} |
+            {{ event.start_at|time:"TIME_FORMAT" }}
+          </small>
         </h4>
         <p class="list-group-item-text">{{ event.description|striptags|truncatewords:"20" }}</p>
       </article>
