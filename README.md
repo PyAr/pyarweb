@@ -25,8 +25,6 @@ en el botón "Fork" que lo podes encontrar en la parte superior a la derecha.
 3- Una vez forkeado el proyecto, te lo clonas. Siempre recordar trabajar
 sobre el branch "develop". A continuación un ejemplo: 
 
-::
-
     [edvm@laptop mixes] $ git clone git@github.com:edvm/pyarweb.git pyar
     Cloning into 'pyar'...
     remote: Counting objects: 3007, done.
@@ -56,7 +54,6 @@ es genial! http://nvie.com/posts/a-successful-git-branching-model/
 5- Perfecto, hiciste tus modificaciones, y las pusheaste al branch "develop",
 por ejemplo:
 
-:: 
     [edvm@laptop pyar] (develop) $ git push origin develop
     Counting objects: 3, done.
     Delta compression using up to 2 threads.
