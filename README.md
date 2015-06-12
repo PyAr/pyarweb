@@ -57,15 +57,41 @@ es genial! http://nvie.com/posts/a-successful-git-branching-model/
 por ejemplo:
 
 :: 
-
     [edvm@laptop pyar] (develop) $ git push origin develop
-    ...
+    Counting objects: 3, done.
+    Delta compression using up to 2 threads.
+    Compressing objects: 100% (3/3), done.
+    Writing objects: 100% (3/3), 1.51 KiB | 0 bytes/s, done.
+    Total 3 (delta 2), reused 0 (delta 0)
+    To git@github.com:edvm/pyarweb.git
+       1925eca..9c2f38c  develop -> develop
+    [edvm@laptop pyar] (develop)
 
 6- Genial, ahora tus cambios están subidos a tu branch "develop" en Github.
 Queres integrar esos cambios con el branch "develop" de PyAr, y la forma
-en que se hace es creando a lo que le llaman "Pull Request", que bueno le
+en que se hace es creando a lo que le llaman "Pull Request", que le
 pusieron ese nombre, pero para mi tiene más sentido si se llamara 
 "Push Request", porque lo que queres hacer es mandar/"pushear" código jeje.
+Bueno, para crear el Pull Request vas a la url de tu fork, en mi caso es:
+https://github.com/edvm/pyarweb/tree/develop
+
+Asegurate de seleccionar como branch "develop", vas a ver un botón verde
+que dice "Compare and Pull Request". Le das click, te va a pedir algunos
+datos. El title sería como el "subject", un mensaje corto bien descriptivo
+por ejemplo: "Resuelvo el issue #13", y en el body/cuerpo del mensaje, si
+lo consideras necesario podes escribir lo que quieras. Finalmente le das
+click al botón verde "Create pull request", eso es todo! Lo que acaba de
+suceder, es que el repositorio "PyAr" recibe una notificación de que hay
+un "Pull Request" pendiente de revisión. En ese momento se revisa el
+PR (pull request) y si todo esta ok, PyAr acepta el PR y tus cambios 
+quedan integrados en el repositorio de PyAr. Puede también suceder que
+no se acepte el PR y te comenten el porque no se aceptó, quizá hay algún
+error en el código, etc. Animos! es cuestión de corregir lo comentado,
+y volver a comenzar desde el punto 4 :).  
+
+7- Más referencias sobre los pull requests:
+
+- https://help.github.com/articles/creating-a-pull-request/
    
 
 ## ¿Cómo arranco / instalo el proyecto en mi máquina?
