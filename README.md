@@ -8,6 +8,66 @@ por su comunidad, wooohooo!
 Mas de 20 personas sprinteando en PyconAr!!!
 
 
+## Como trabajar con Github y los pull requests?
+
+1- Tener una cuenta en github, y estar logueado en github.
+
+2- Ingresar a https://github.com/PyAr/pyarweb, y forkear el proyecto.
+Al forkear el proyecto, github hace una copia entera del proyecto y lo
+crea como un repositorio donde vos sos el propietario, osea un repositorio
+tuyo. Es como un "copy/paste" desde la "compu de pyar" a tu "compu". Esto
+quiere decir que las modificaciones que hagas en el fuente estarán en tu
+repositorio, pero no en el repositorio de PyAr. Para poder enviar las
+modificaciones presentes en tu repositorio (en tu fork), es que luego vas
+a crear un Pull Request. Podes forkear el proyecto de PyAr haciendo click
+en el botón "Fork" que lo podes encontrar en la parte superior a la derecha.
+
+3- Una vez forkeado el proyecto, te lo clonas. Siempre recordar trabajar
+sobre el branch "develop". A continuación un ejemplo: 
+
+::
+
+    [edvm@laptop mixes] $ git clone git@github.com:edvm/pyarweb.git pyar
+    Cloning into 'pyar'...
+    remote: Counting objects: 3007, done.
+    remote: Total 3007 (delta 0), reused 0 (delta 0), pack-reused 3006
+    Receiving objects: 100% (3007/3007), 822.01 KiB | 73.00 KiB/s, done.
+    Resolving deltas: 100% (1917/1917), done.
+    Checking connectivity... done.
+    [edvm@laptop mixes] $ cd pyar
+    [edvm@laptop pyar] (master) $ git checkout develop
+    Branch develop set up to track remote branch develop from origin.
+    Switched to a new branch 'develop'
+    [edvm@laptop pyar] (develop) $ git branch -r
+      origin/HEAD -> origin/master
+      origin/develop
+      origin/master
+      origin/waliki
+    [edvm@laptop pyar] (develop) $ git pull origin develop
+    From github.com:edvm/pyarweb
+     * branch            develop    -> FETCH_HEAD
+    Already up-to-date.
+    [edvm@laptop pyar] (develop)
+
+
+4- Ahora metes código. Te tiro un tip por si no lo conocías, usar "git flow"
+es genial! http://nvie.com/posts/a-successful-git-branching-model/
+
+5- Perfecto, hiciste tus modificaciones, y las pusheaste al branch "develop",
+por ejemplo:
+
+:: 
+
+    [edvm@laptop pyar] (develop) $ git push origin develop
+    ...
+
+6- Genial, ahora tus cambios están subidos a tu branch "develop" en Github.
+Queres integrar esos cambios con el branch "develop" de PyAr, y la forma
+en que se hace es creando a lo que le llaman "Pull Request", que bueno le
+pusieron ese nombre, pero para mi tiene más sentido si se llamara 
+"Push Request", porque lo que queres hacer es mandar/"pushear" código jeje.
+   
+
 ## ¿Cómo arranco / instalo el proyecto en mi máquina?
 
 
