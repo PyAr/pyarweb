@@ -13,22 +13,24 @@ class EventForm(forms.ModelForm):
 
     description = forms.CharField(widget=SummernoteInplaceWidget())
 
-    start_at = forms.DateField(
+    start_at = forms.DateTimeField(
         required=True,
+        input_formats=['%d/%m/%Y %H:%M:%S'],
         label=_('Comienza'),
         widget=DateTimePicker(
             options={
-                "format": "DD/MM/YYYY"
+                "format": "DD/MM/YYYY HH:ss:mm"
             }
         )
     )
 
-    end_at = forms.DateField(
+    end_at = forms.DateTimeField(
         required=True,
+        input_formats=['%d/%m/%Y %H:%M:%S'],
         label=_('Finaliza'),
         widget=DateTimePicker(
             options={
-                "format": "DD/MM/YYYY"
+                "format": "DD/MM/YYYY HH:ss:mm"
             }
         )
     )
