@@ -57,6 +57,10 @@ class JobList(ListView, FilterableList):
     model = Job
     paginate_by = 20
 
+    def get_queryset(self):
+        object_list = super(JobList, self).get_queryset()
+        return object_list.order_by('-modified')
+
 
 class JobUpdate(UpdateView, OwnedObject):
 
