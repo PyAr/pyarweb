@@ -72,16 +72,16 @@ class FilterableList(MultipleObjectMixin):
         return super(FilterableList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        object_list = self.model.objects.order_by('-created')
+        object_list = self.model.objects
         included = self.included_tags
         excluded = self.excluded_tags
         if included:
-            object_list = object_list.filter(
+            return object_list.filter(
                 tags__name__in=included).distinct()
         if excluded:
-            object_list = object_list.exclude(
+            return object_list.exclude(
                 tags__name__in=excluded).distinct()
-        return object_list
+        return object_list.all()
 
     def get_context_data(self, **kwargs):
         context = super(FilterableList, self).get_context_data(**kwargs)
