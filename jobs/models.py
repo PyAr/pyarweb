@@ -51,4 +51,4 @@ class Job(models.Model):
         return reverse('jobs_view', kwargs={'slug': self.slug})
 
     class Meta:
-        ordering = ['-modified']
+        ordering = ['-created']
