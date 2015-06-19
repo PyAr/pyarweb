@@ -22,7 +22,8 @@
                 <p>
                     {{ object.introduction|html2text|truncatewords:50 }}
                 </p>
-                <div class="text-muted">{% trans 'Etiquetas:' %}{% for t in object.tags.all %} <a href="{% url 'news_tags_list' tag=t.slug %}" class="label label-default">{{ t.name }}</a> {% endfor %}</div>
+                <div class="text-muted">
+                {% include "news/_news_tags.html" %}
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             {% endfor %}
             {% paginate %}

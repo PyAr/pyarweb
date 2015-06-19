@@ -6,8 +6,6 @@ from community.views import OwnedObject, FilterableList
 from .models import NewsArticle
 from .forms import NewsArticleForm
 from django.contrib.syndication.views import Feed
-from django.core.urlresolvers import reverse
-
 
 
 class NewsFeed(Feed):
@@ -62,15 +60,3 @@ class NewsArticleUpdate(UpdateView, OwnedObject):
 class NewsArticleList(ListView, FilterableList):
     model = NewsArticle
     paginate_by = 10
-
-
-class NewsArticleListTag(ListView, FilterableList):
-    model = NewsArticle
-    paginate_by = 10
-
-    def get_queryset(self):
-        tag = self.kwargs['tag']
-        filter_news = NewsArticle.objects.filter(
-            tags__slug__in=[tag]).distinct()
-
-        return filter_news

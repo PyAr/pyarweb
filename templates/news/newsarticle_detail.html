@@ -22,7 +22,9 @@
         </h2>
         <div class="tags">
           <small>{{ object.created|date:"SHORT_DATE_FORMAT" }} -{# <strong>{{ object.owner }}</strong> #}</small>
-          <p> {% for t in object.tags.all %}<a href="{% url 'news_tags_list' tag=t.slug %}" class="label label-default">{{ t.name }}</a> {% endfor %}</p>
+          <p>
+              {% include "news/_news_tags.html" %}
+          </p>
         </div>
       </div>
       <article>
