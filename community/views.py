@@ -72,7 +72,7 @@ class FilterableList(MultipleObjectMixin):
         return super(FilterableList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        object_list = self.model.objects.order_by('-created')
+        object_list = self.model.objects.all()
         included = self.included_tags
         excluded = self.excluded_tags
         if included:
