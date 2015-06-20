@@ -61,9 +61,6 @@ INSTALLED_APPS = (
     'pycompanies',
     'jobs',
     'events',
-    #'newbie',
-    #'projects',
-    #'faq',
 
     # 3rd party apps
     'allauth',
