@@ -91,7 +91,8 @@ INSTALLED_APPS = (
     'waliki.attachments',
     'waliki.slides',
     'waliki.togetherjs',
-    #'waliki.pdf'
+    #'waliki.pdf',
+    'profiles',
 )
 
 MIDDLEWARE_CLASSES = (
