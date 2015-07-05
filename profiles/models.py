@@ -42,7 +42,7 @@ class ProfilesMediosContactos(TimeStampedModel):
     Relacion perfiles con medios de contactos
     """
     profile = models.ForeignKey(Profiles)
-    medio_contacto = models.ForeignKey(MediosContactos)
+    medio_contacto = models.ForeignKey(MediosContactos, verbose_name=_("Medio de contácto"))
     valor = models.CharField(max_length=150)
     preferido = models.BooleanField(blank=False)
     publico = models.BooleanField(blank=False)
