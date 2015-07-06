@@ -14,6 +14,9 @@ from .views import buscador, irc, old_url_redirect
 
 admin.autodiscover()
 
+import autocomplete_light
+autocomplete_light.autodiscover()
+
 
 urlpatterns = patterns(
     '',
@@ -24,6 +27,7 @@ urlpatterns = patterns(
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': settings.MEDIA_ROOT}),
 
+    url(r'^autocomplete/', include('autocomplete_light.urls')),
     url(r'^irc/$', irc, name='irc'),
     url(r'^buscador/$', buscador, name='buscador'),
     url(r'^$', 'community.views.homepage', name='homepage'),

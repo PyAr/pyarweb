@@ -36,3 +36,5 @@ django-sendfile==0.3.6
 hovercraft==1.1
 django-autoslug==1.7.2
 django-dbbackup==2.0.4
+django-autocomplete-light==2.2.3
+django-cities-light==3.1.2

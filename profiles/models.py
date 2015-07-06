@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from taggit_autosuggest.managers import TaggableManager
 from model_utils.models import TimeStampedModel
+from cities_light.models import City
 
 
 class Profiles(TimeStampedModel):
@@ -16,6 +17,7 @@ class Profiles(TimeStampedModel):
                                    default=False)
     disponibilidad_semanal = models.IntegerField(verbose_name=_("Cantidad de horas semanales"))
     intereses = TaggableManager(verbose_name=_('Que temas te interesan?'), blank=True)
+    ciudad = models.ForeignKey("cities_light.City")
 
     class Meta:
         ordering = ['-created']
