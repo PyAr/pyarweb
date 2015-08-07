@@ -27,6 +27,8 @@ urlpatterns = patterns(
     url(r'^irc/$', irc, name='irc'),
     url(r'^buscador/$', buscador, name='buscador'),
 
+    url(r'^tutoring/', include('tutoring.urls')),
+
     url(r'^$', 'community.views.homepage', name='homepage'),
     url(r'^aprendiendo-python/', 'community.views.learning', name='aprendiendo'),
     url(r'^nosotros/', 'community.views.about_pyar', name='about_pyar'),
