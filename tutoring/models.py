@@ -32,7 +32,7 @@ class Mentor(models.Model):
         return self.user.username
 
     def get_absolute_url(self):
-        return reverse('update_mentor', kwargs={'pk': self.id})
+        return reverse('display_mentor', kwargs={'pk': self.pk})
 
 
 class Apprentice(models.Model):
