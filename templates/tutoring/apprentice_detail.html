@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="col-lg-12">
+	    <div class="page-header">
+	    	<h2>
+                {% trans 'Detalles del aprendiz' %} {{ object.user }}
+            </h2>
+	    </div>
+        <p>{% trans 'Descripción:' %} {{ object.description }}</p>
+        <p>{% trans 'Desde:' %} {{ object.start_date }}</p>
+        <p>{% trans 'Estado:' %} {{ object.get_status_display }}</p>
+        <p>{% trans 'Skills:' %} {% for tag in object.interests.all %}
+                 {{ tag.name }},
+            {% endfor %}
+        </p>
+
+	</div>
+</main>
+{% endblock %}

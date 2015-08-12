@@ -13,6 +13,7 @@ class MentorForm(forms.ModelForm):
         self.helper.add_input(Submit('mentor_submit', _('Guardar')))
         self.helper.add_input(Reset('mentor_reset', _('Limpiar'),
                                     css_class='btn-default'))
+
     class Meta:
         model = Mentor
         exclude = ('user',)
@@ -26,6 +27,7 @@ class ApprenticeForm(forms.ModelForm):
         self.helper.add_input(Submit('apprentice_submit', _('Guardar')))
         self.helper.add_input(Reset('apprentice_reset', _('Limpiar'),
                                     css_class='btn-default'))
+
     class Meta:
         model = Apprentice
         exclude = ('user',)
@@ -36,9 +38,10 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('apprentice_submit', _('Guardar')))
-        self.helper.add_input(Reset('apprentice_reset', _('Limpiar'),
+        self.helper.add_input(Submit('project_submit', _('Guardar')))
+        self.helper.add_input(Reset('project_reset', _('Limpiar'),
                                     css_class='btn-default'))
+
     class Meta:
         model = Project
         exclude = ('owner',)
