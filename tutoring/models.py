@@ -7,18 +7,6 @@ from django.db import models
 from taggit.managers import TaggableManager
 
 
-class Project(models.Model):
-    title = models.CharField(max_length=250, verbose_name=_('Título'))
-    description = models.TextField(blank=True, verbose_name=_('Descripción'))
-    link_repo = models.URLField(blank=True, verbose_name=_('URL del repositorio'))
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-
-    tags = TaggableManager()
-
-    def __str__(self):
-        return self.title
-
-
 class Mentor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     description = models.TextField(blank=True, null=True)
@@ -54,6 +42,44 @@ class Apprentice(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def get_absolute_url(self):
+        return reverse('display_apprentice', kwargs={'pk': self.pk})
+
+
+class Project(models.Model):
+    LOOKING_FOR_MENTOR = 'M'
+    LOOKING_FOR_APPRENTICE = 'A'
+    STATUS_OPEN = 'O'
+    STATUS_IN_COURSE = 'I'
+    STATUS_CLOSED = 'C'
+
+    LOOKING_CHOICES = (
+        (LOOKING_FOR_MENTOR, _('Buscando mentor')),
+        (LOOKING_FOR_APPRENTICE, _('Buscando aprendiz')),
+    )
+    STATUS_CHOICES = (
+        (STATUS_OPEN, _('Abierto')),
+        (STATUS_IN_COURSE, _('En curso')),
+        (STATUS_CLOSED, _('Cerrado')),
+    )
+    title = models.CharField(max_length=250, verbose_name=_('Título'))
+    description = models.TextField(blank=True, verbose_name=_('Descripción'))
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_OPEN)
+    link_repo = models.URLField(blank=True, verbose_name=_('URL del repositorio'))
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    looking_for = models.CharField(max_length=1, choices=LOOKING_CHOICES, default=LOOKING_FOR_MENTOR)
+    multiple_mentors = models.BooleanField(default=True, verbose_name=_('Múltiples mentores'))
+    multiple_apprentices = models.BooleanField(default=True, verbose_name=_('Múltiples aprendices'))
+    tags = TaggableManager()
+    mentors = models.ManyToManyField(Mentor, blank=True)
+    apprentices = models.ManyToManyField(Apprentice, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('display_project', kwargs={'pk': self.pk})
 
 
 class Mentorship(models.Model):
