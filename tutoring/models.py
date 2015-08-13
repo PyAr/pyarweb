@@ -8,7 +8,7 @@ from taggit.managers import TaggableManager
 
 
 class Mentor(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL)
     description = models.TextField(blank=True, null=True)
     available = models.BooleanField(default=True, verbose_name=_('Disponible'))
     start_date = models.DateTimeField(auto_now_add=True)
@@ -17,7 +17,7 @@ class Mentor(models.Model):
     skills = TaggableManager(verbose_name=_('Skills'))
 
     def __str__(self):
-        return self.user.username
+        return self.owner.username
 
     def get_absolute_url(self):
         return reverse('display_mentor', kwargs={'pk': self.pk})
@@ -33,7 +33,7 @@ class Apprentice(models.Model):
         (STATUS_IDLE, _('Inactivo')),
         (STATUS_WAITING, _('Buscando mentor')),
     )
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL)
     description = models.TextField(blank=True, null=True, verbose_name=_('Descripción'))
     start_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_WAITING)
@@ -41,7 +41,7 @@ class Apprentice(models.Model):
     interests = TaggableManager(verbose_name=_('Intereses'))
 
     def __str__(self):
-        return self.user.username
+        return self.owner.username
 
     def get_absolute_url(self):
         return reverse('display_apprentice', kwargs={'pk': self.pk})
@@ -86,6 +86,12 @@ class Mentorship(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('Proyecto'))
     mentor = models.ForeignKey(Mentor, verbose_name=_('Mentor'))
     apprentice = models.ForeignKey(Apprentice, verbose_name=_('Aprendiz'))
-    start_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha de inicio'))
-    end_date = models.DateTimeField(null=True, blank=True, verbose_name=_('Fecha de finalización'))
+    start_date = models.DateField(auto_now_add=True, verbose_name=_('Fecha de inicio'))
+    end_date = models.DateField(null=True, blank=True, verbose_name=_('Fecha de finalización'))
     blog_link = models.URLField(blank=True, verbose_name=_('URL del blog'))
+
+    def __str__(self):
+        return '"{} - {} - {} - {}"'.format(self.project, self.mentor, self.apprentice, self.start_date)
+
+    def get_absolute_url(self):
+        return reverse('display_mentorship', kwargs={'pk': self.pk})

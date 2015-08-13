@@ -1,0 +1,53 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+{% load i18n staticfiles pagination_tags %}
+{% block title %}Proyectos para tutorías{% endblock %}
+{% block left-column %}
+
+<!-- Lista de trabajos -->
+<section>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>{% trans 'Proyectos para tutorías' %}
+                <span class="section-button-group pull-right">
+                    <a href="{% url 'new_project' %}" class="btn btn-info">{% trans 'Crear proyecto' %}</a>
+                </span>
+            </h2>
+        </div>
+
+        {% if object_list %}
+            {% for object in object_list %}
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+                    <span class="job-date">
+                        ({{ object.get_status_display }}, {{ object.get_looking_for_display }})
+                    </span>
+                </h4>
+                <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                <div class="text-muted">
+                {% include "jobs/_jobs_tags.html" %}
+                <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+            {% endfor %}
+
+            {% paginate %}
+        {% else %}
+            <div class="col-md-12">
+                <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
+            </div>
+        {% endif %}
+
+
+
+            <div class="pull-right">
+                <a href="{% url 'jobs_feed' %}" class="badge">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+           </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block right-column %}
+{{ block.super }}
+{% include "_tags_filtering_form.html" %}
+{% endblock %}

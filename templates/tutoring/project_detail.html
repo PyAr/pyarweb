@@ -14,7 +14,7 @@
 	    </div>
         <p>{% trans 'Descripción:' %} {{ object.description }}</p>
         <p>{% trans 'Estado:' %} {{ object.get_status_display }}</p>
-        <p>{% trans 'Link repositorio: ' %}<a href="{{ object.link_repo }}" target="_blank">
+        <p>{% trans 'Enlace al repositorio: ' %}<a href="{{ object.link_repo }}" target="_blank">
             {{ object.link_repo }}</a></p>
         <p>{% trans 'Buscando:' %} {{ object.get_looking_for_display }}</p>
         <p>{% trans 'Múltiples mentores:' %}
@@ -32,11 +32,11 @@
             {% endif %}
         </p>
         <p>{% trans 'Mentores:' %} {% for mentor in object.mentors.all %}
-                 {{ mentor.user }},
+                 {{ mentor.owner }},
             {% endfor %}
         </p>
         <p>{% trans 'Aprendices:' %} {% for apprentice in object.apprentices.all %}
-                 {{ apprentice.user }},
+                 {{ apprentice.owner }},
             {% endfor %}
         </p>
         <p>{% trans 'Tags:' %} {% for tag in object.tags.all %}

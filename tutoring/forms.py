@@ -1,5 +1,5 @@
 from django import forms
-from .models import Mentor, Apprentice, Project
+from .models import Mentor, Apprentice, Project, Mentorship
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
@@ -16,7 +16,7 @@ class MentorForm(forms.ModelForm):
 
     class Meta:
         model = Mentor
-        exclude = ('user',)
+        exclude = ('owner',)
 
 
 class ApprenticeForm(forms.ModelForm):
@@ -30,7 +30,7 @@ class ApprenticeForm(forms.ModelForm):
 
     class Meta:
         model = Apprentice
-        exclude = ('user',)
+        exclude = ('owner',)
 
 
 class ProjectForm(forms.ModelForm):
@@ -45,3 +45,17 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         exclude = ('owner',)
+
+
+class MentorshipForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(MentorshipForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('mentorship_submit', _('Guardar')))
+        self.helper.add_input(Reset('mentorship_reset', _('Limpiar'),
+                                    css_class='btn-default'))
+
+    class Meta:
+        model = Mentorship
+        # exclude = ('owner',)
