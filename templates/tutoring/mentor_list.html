@@ -1,14 +1,14 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 {% load i18n staticfiles pagination_tags %}
-{% block title %}Proyectos para tutorías{% endblock %}
+{% block title %}Mentores{% endblock %}
 {% block left-column %}
 
 <!-- Project list -->
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{% trans 'Proyectos para tutorías' %}
+            <h2>{% trans 'Mentores' %}
                 <span class="section-button-group pull-right">
                     <a href="{% url 'new_project' %}" class="btn btn-info">{% trans 'Crear proyecto' %}</a>
                 </span>
@@ -16,17 +16,23 @@
         </div>
 
         {% if object_list %}
-            {% for object in object_list %}
-                <h4>
-                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
-                    <span class="job-date">
-                        ({{ object.get_status_display }}, {{ object.get_looking_for_display }})
-                    </span>
-                </h4>
-                <p>{{ object.description|html2text|truncatewords:50 }}</p>
-                <div class="text-muted">
-                {% include "tutoring/_tutoring_tags.html" %}
-                <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+            {% regroup object_list by available as object2_list %}
+            {% for obj in object2_list %}
+                {% if obj.grouper == True %}
+                       <h4>Disponible</h4>
+                {% else %}
+                    <h4>No disponible</h4>
+                {% endif %}
+                {% for object in obj.list %}
+                    <h4>
+                        <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
+                    </h4>
+                    <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                    <div class="text-muted">
+                        {% include "tutoring/_tutoring_tags.html" %}
+                    </div>
+                    <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+                {% endfor %}
             {% endfor %}
 
             {% paginate %}

@@ -37,6 +37,11 @@ class DeleteMentor(DeleteView, OwnedObject):
     success_url = reverse_lazy('new_mentor')
 
 
+class ListMentor(ListView, FilterableList):
+    model = Mentor
+    paginate_by = 20
+
+
 class AddApprentice(CreateView):
     model = Apprentice
     form_class = ApprenticeForm
@@ -63,6 +68,16 @@ class UpdateApprentice(UpdateView, OwnedObject):
 class DeleteApprentice(DeleteView, OwnedObject):
     model = Apprentice
     success_url = reverse_lazy('new_apprentice')
+
+
+class ListApprentice(ListView, FilterableList):
+    model = Apprentice
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super(ListApprentice, self).get_context_data(**kwargs)
+        context['status_choices'] = Apprentice.STATUS_CHOICES
+        return context
 
 
 class AddProject(CreateView):
@@ -114,3 +129,8 @@ class DisplayMentorship(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DisplayMentorship, self).get_context_data(**kwargs)
         return context
+
+
+class ListMentorship(ListView):
+    model = Mentorship
+    paginate_by = 20
