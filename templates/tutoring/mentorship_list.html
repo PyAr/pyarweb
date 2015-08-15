@@ -1,16 +1,18 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 {% load i18n staticfiles pagination_tags %}
-{% block title %}Proyectos para tutorías{% endblock %}
+{% block title %}Mentorías de tutorías{% endblock %}
 {% block left-column %}
 
-<!-- Project list -->
+<!-- Mentorship list -->
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{% trans 'Proyectos para tutorías' %}
+            <h2>{% trans 'Mentrorías de tutorías' %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'new_project' %}" class="btn btn-info">{% trans 'Crear proyecto' %}</a>
+                    {% if user.mentor %}
+                        <a href="{% url 'new_mentorship' %}" class="btn btn-info">{% trans 'Agregar mentoría' %}</a>
+                    {% endif %}
                 </span>
             </h2>
         </div>
@@ -18,15 +20,8 @@
         {% if object_list %}
             {% for object in object_list %}
                 <h4>
-                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
-                    <span class="job-date">
-                        ({{ object.get_status_display }}, {{ object.get_looking_for_display }})
-                    </span>
+                    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
                 </h4>
-                <p>{{ object.description|html2text|truncatewords:50 }}</p>
-                <div class="text-muted">
-                {% include "tutoring/_tutoring_tags.html" %}
-                <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
             {% endfor %}
 
             {% paginate %}

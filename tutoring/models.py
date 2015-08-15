@@ -14,7 +14,7 @@ class Mentor(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     slots = models.PositiveIntegerField(default=2, validators=[MaxValueValidator(4),
                                                                MinValueValidator(1)])
-    skills = TaggableManager(verbose_name=_('Skills'))
+    tags = TaggableManager(verbose_name=_('Skills'))
 
     def __str__(self):
         return self.owner.username
@@ -38,7 +38,7 @@ class Apprentice(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_WAITING)
 
-    interests = TaggableManager(verbose_name=_('Intereses'))
+    tags = TaggableManager(verbose_name=_('Intereses'))
 
     def __str__(self):
         return self.owner.username
