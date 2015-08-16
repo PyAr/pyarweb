@@ -15,9 +15,10 @@
         <p>{% trans 'Descripción:' %} {{ object.description }}</p>
         <p>{% trans 'Desde:' %} {{ object.start_date }}</p>
         <p>{% trans 'Estado:' %} {{ object.get_status_display }}</p>
-        <p>{% trans 'Skills:' %} {% for tag in object.interests.all %}
-                 {{ tag.name }},
-            {% endfor %}
+        <p>{% include "tutoring/_tutoring_tags.html" with tags_type="apprentice" %}
+{#            {% for tag in object.tags.all %}#}
+{#                 {{ tag.name }},#}
+{#            {% endfor %}#}
         </p>
 
 	</div>

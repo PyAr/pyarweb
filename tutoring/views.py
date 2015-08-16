@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.base import TemplateView
 from django.core.urlresolvers import reverse_lazy
 from community.views import OwnedObject, FilterableList
 from django.http import HttpResponse
@@ -134,3 +135,14 @@ class DisplayMentorship(DetailView):
 class ListMentorship(ListView):
     model = Mentorship
     paginate_by = 20
+
+
+class IndexView(TemplateView):
+    template_name = 'tutoring/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['mentors'] = Mentor.objects.all()
+        context['apprentices'] = Apprentice.objects.all()
+        context['projects'] = Project.objects.all()[:5]
+        return context

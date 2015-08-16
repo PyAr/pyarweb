@@ -81,6 +81,9 @@ class Project(models.Model):
     def get_absolute_url(self):
         return reverse('display_project', kwargs={'pk': self.pk})
 
+    class Meta:
+        ordering = ['-id']
+
 
 class Mentorship(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('Proyecto'))

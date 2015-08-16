@@ -22,10 +22,7 @@
         </p>
         <p>{% trans 'Desde:' %} {{ object.start_date }}</p>
         <p>{% trans 'Slots:' %} {{ object.slots }}</p>
-        <p>{% trans 'Skills:' %} {% for tag in object.tags.all %}
-                 {{ tag.name }},
-            {% endfor %}
-        </p>
+        <p>{% include "tutoring/_tutoring_tags.html" with tags_type="mentor" %}</p>
 
 	</div>
 </main>
