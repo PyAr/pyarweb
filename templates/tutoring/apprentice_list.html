@@ -16,7 +16,7 @@
         </div>
 
         {% if object_list %}
-            {% regroup object_list by status as object2_list %}
+            {% regroup object_list|dictsort:"status" by status as object2_list %}
             {% for obj in object2_list %}
                 {% for i in status_choices %}
                     {% if obj.grouper == i.0 %}

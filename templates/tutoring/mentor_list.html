@@ -16,7 +16,7 @@
         </div>
 
         {% if object_list %}
-            {% regroup object_list by available as object2_list %}
+            {% regroup object_list|dictsort:"available" by available as object2_list %}
             {% for obj in object2_list %}
                 {% if obj.grouper == True %}
                        <h3>Disponible</h3>

@@ -4,16 +4,24 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from django.shortcuts import redirect
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from community.views import OwnedObject, FilterableList
 from django.http import HttpResponse
 from .models import Project, Mentor, Apprentice, Mentorship
 from .forms import MentorForm, ApprenticeForm, ProjectForm, MentorshipForm
+from django.views.generic.detail import SingleObjectMixin
 
 
 class AddMentor(CreateView):
     model = Mentor
     form_class = MentorForm
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            mentor = Mentor.objects.get(owner=request.user)
+            return redirect(reverse('update_mentor', kwargs={'slug': mentor.owner}))
+        except Mentor.DoesNotExist:
+            return super(AddMentor, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -23,6 +31,7 @@ class AddMentor(CreateView):
 class DisplayMentor(DetailView):
     model = Mentor
     form_class = MentorForm
+    slug_field = 'owner__username'
 
     def get_context_data(self, **kwargs):
         context = super(DisplayMentor, self).get_context_data(**kwargs)
@@ -32,10 +41,12 @@ class DisplayMentor(DetailView):
 class UpdateMentor(UpdateView, OwnedObject):
     model = Mentor
     form_class = MentorForm
+    slug_field = 'owner__username'
 
 
 class DeleteMentor(DeleteView, OwnedObject):
     model = Mentor
+    slug_field = 'owner__username'
     success_url = reverse_lazy('new_mentor')
 
 
@@ -48,6 +59,13 @@ class AddApprentice(CreateView):
     model = Apprentice
     form_class = ApprenticeForm
 
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            apprentice = Apprentice.objects.get(owner=request.user)
+            return redirect(reverse('update_apprentice', kwargs={'slug': apprentice.owner}))
+        except Mentor.DoesNotExist:
+            return super(AddApprentice, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(AddApprentice, self).form_valid(form)
@@ -56,6 +74,7 @@ class AddApprentice(CreateView):
 class DisplayApprentice(DetailView):
     model = Apprentice
     form_class = ApprenticeForm
+    slug_field = 'owner__username'
 
     def get_context_data(self, **kwargs):
         context = super(DisplayApprentice, self).get_context_data(**kwargs)
@@ -65,10 +84,12 @@ class DisplayApprentice(DetailView):
 class UpdateApprentice(UpdateView, OwnedObject):
     model = Apprentice
     form_class = ApprenticeForm
+    slug_field = 'owner__username'
 
 
 class DeleteApprentice(DeleteView, OwnedObject):
     model = Apprentice
+    slug_field = 'owner__username'
     success_url = reverse_lazy('new_apprentice')
 
 
@@ -120,16 +141,28 @@ class AddMentorship(CreateView):
     form_class = MentorshipForm
 
     def dispatch(self, request, *args, **kwargs):
-        if hasattr(self.request.user, 'mentor'):
-            return super(AddMentorship, self).dispatch(request,
-                                                      *args, **kwargs)
+        if hasattr(request.user, 'mentor'):
+            return super(AddMentorship, self).dispatch(request, *args, **kwargs)
         else:
-            return redirect(reverse_lazy('new_mentor'))
+            return redirect(reverse('new_mentor'))
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        form.instance.owner = Mentor.objects.get(owner=self.request.user)
         return super(AddMentorship, self).form_valid(form)
 
+
+class UpdateMentorship(UpdateView, SingleObjectMixin):
+    model = Mentorship
+    form_class = MentorshipForm
+
+    def get_object(self, *args, **kwargs):
+        obj = super(UpdateMentorship, self).get_object(*args, **kwargs)
+        try:
+            if not obj.owner.owner == self.request.user:
+                raise Http404()
+        except AttributeError:
+            pass
+        return obj
 
 class DisplayMentorship(DetailView):
     model = Mentorship

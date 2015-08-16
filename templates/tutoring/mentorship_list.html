@@ -1,14 +1,14 @@
 {% extends "base_site.html" %}
 {% load devtags %}
 {% load i18n staticfiles pagination_tags %}
-{% block title %}Mentorías de tutorías{% endblock %}
+{% block title %}Mentorías{% endblock %}
 {% block left-column %}
 
 <!-- Mentorship list -->
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{% trans 'Mentrorías de tutorías' %}
+            <h2>{% trans 'Mentrorías' %}
                 <span class="section-button-group pull-right">
                     {% if user.mentor %}
                         <a href="{% url 'new_mentorship' %}" class="btn btn-info">{% trans 'Agregar mentoría' %}</a>
