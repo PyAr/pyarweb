@@ -3,7 +3,8 @@ from django.conf.urls import patterns, url
 from tutoring import views
 
 urlpatterns = patterns('',
-    url(r'^$', views.ListProject.as_view(), name='project_list_all'),
+    # url(r'^$', views.ListProject.as_view(), name='project_list_all'),
+    url(r'^$', views.IndexView.as_view(), name='tutoring_index'),
     url(r'^mentor/$', views.ListMentor.as_view(), name='mentor_list_all'),
     url(r'^mentor/add/$', login_required(views.AddMentor.as_view()), name='new_mentor'),
     url(r'^mentor/update/(?P<pk>[0-9]+)/$', login_required(views.UpdateMentor.as_view()), name='update_mentor'),
@@ -16,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^apprentice/delete/(?P<pk>[0-9]+)/$', login_required(views.DeleteApprentice.as_view()),
         name='delete_apprentice'),
     url(r'^apprentice/(?P<pk>[0-9]+)/$', views.DisplayApprentice.as_view(), name='display_apprentice'),
+    url(r'^project/$', views.ListProject.as_view(), name='project_list_all'),
     url(r'^project/add/$', login_required(views.AddProject.as_view()), name='new_project'),
     url(r'^project/update/(?P<pk>[0-9]+)/$', login_required(views.UpdateProject.as_view()),
         name='update_project'),

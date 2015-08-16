@@ -10,7 +10,7 @@
         <div class="page-header">
             <h2>{% trans 'Aprendices' %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'new_project' %}" class="btn btn-info">{% trans 'Crear proyecto' %}</a>
+                    <a href="{% url 'new_apprentice' %}" class="btn btn-info">{% trans 'Quiero aprender' %}</a>
                 </span>
             </h2>
         </div>
@@ -20,7 +20,7 @@
             {% for obj in object2_list %}
                 {% for i in status_choices %}
                     {% if obj.grouper == i.0 %}
-                        <h4>{{ i.1 }}</h4>
+                        <h3>{{ i.1 }}</h3>
                     {% endif %}
                 {% endfor %}
                 {% for object in obj.list %}
@@ -29,7 +29,7 @@
                     </h4>
                     <p>{{ object.description|html2text|truncatewords:50 }}</p>
                     <div class="text-muted">
-                        {% include "tutoring/_tutoring_tags.html" %}
+                        {% include "tutoring/_tutoring_tags.html" with tags_type="apprentice" %}
                     </div>
                     <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
                 {% endfor %}

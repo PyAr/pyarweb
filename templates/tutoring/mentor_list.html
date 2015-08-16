@@ -10,7 +10,7 @@
         <div class="page-header">
             <h2>{% trans 'Mentores' %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'new_project' %}" class="btn btn-info">{% trans 'Crear proyecto' %}</a>
+                    <a href="{% url 'new_mentor' %}" class="btn btn-info">{% trans 'Quiero enseñar' %}</a>
                 </span>
             </h2>
         </div>
@@ -19,9 +19,9 @@
             {% regroup object_list by available as object2_list %}
             {% for obj in object2_list %}
                 {% if obj.grouper == True %}
-                       <h4>Disponible</h4>
+                       <h3>Disponible</h3>
                 {% else %}
-                    <h4>No disponible</h4>
+                    <h3>No disponible</h3>
                 {% endif %}
                 {% for object in obj.list %}
                     <h4>
@@ -29,7 +29,7 @@
                     </h4>
                     <p>{{ object.description|html2text|truncatewords:50 }}</p>
                     <div class="text-muted">
-                        {% include "tutoring/_tutoring_tags.html" %}
+                        {% include "tutoring/_tutoring_tags.html" with tags_type="mentor" %}
                     </div>
                     <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
                 {% endfor %}

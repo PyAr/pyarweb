@@ -1,0 +1,76 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+{% load i18n staticfiles pagination_tags %}
+{% block title %}Tutorías{% endblock %}
+{% block left-column %}
+
+<!-- Project list -->
+<section>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>{% trans 'Tutorías' %}
+                <span class="section-button-group pull-right">
+                    <a href="{% url 'apprentice_list_all' %}" class="btn btn-info">{% trans 'Ver apredices' %}</a>
+                    <a href="{% url 'mentor_list_all' %}" class="btn btn-info">{% trans 'Ver mentores' %}</a>
+                </span>
+            </h2>
+        </div>
+
+        {% if mentors %}
+            <h3>{% trans 'Mentores disponibles' %}</h3>
+            {% for object in mentors %}
+                {% if object.available %}
+                    <h4>
+                        <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
+                    </h4>
+                    <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                    <div class="text-muted">
+                        {% include "tutoring/_tutoring_tags.html" with tags_type="mentor" %}
+                    </div>
+                    <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if apprentices %}
+            <h3>{% trans 'Aprendices disponibles' %}</h3>
+            {% for object in apprentices %}
+                {% if object.status == 'W' %}
+                    <h4>
+                        <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
+                    </h4>
+                    <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                    <div class="text-muted">
+                        {% include "tutoring/_tutoring_tags.html" with tags_type="apprentice" %}
+                    </div>
+                    <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if projects %}
+            <h3>{% trans 'Últimos proyectos' %}</h3>
+            {% for object in projects %}
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+                </h4>
+                <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                <div class="text-muted">
+                    {% include "tutoring/_tutoring_tags.html" %}
+                </div>
+                <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+            {% endfor %}
+        {% endif %}
+
+
+
+            <!-- <div class="pull-right">
+                <a href="{% url 'jobs_feed' %}" class="badge">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+           </div> -->
+    </div>
+</section>
+{% endblock %}
+
+
