@@ -3,6 +3,7 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
 from community.views import OwnedObject, FilterableList
 from django.http import HttpResponse
@@ -118,8 +119,15 @@ class AddMentorship(CreateView):
     model = Mentorship
     form_class = MentorshipForm
 
+    def dispatch(self, request, *args, **kwargs):
+        if hasattr(self.request.user, 'mentor'):
+            return super(AddMentorship, self).dispatch(request,
+                                                      *args, **kwargs)
+        else:
+            return redirect(reverse_lazy('new_mentor'))
+
     def form_valid(self, form):
-        # form.instance.owner = self.request.user
+        form.instance.owner = self.request.user
         return super(AddMentorship, self).form_valid(form)
 
 

@@ -86,15 +86,15 @@ class Project(models.Model):
 
 
 class Mentorship(models.Model):
-    project = models.ForeignKey(Project, verbose_name=_('Proyecto'))
-    mentor = models.ForeignKey(Mentor, verbose_name=_('Mentor'))
+    project = models.ForeignKey(Project, null=True, blank=True, verbose_name=_('Proyecto'))
+    owner = models.ForeignKey(Mentor, verbose_name=_('Mentor'))
     apprentice = models.ForeignKey(Apprentice, verbose_name=_('Aprendiz'))
     start_date = models.DateField(auto_now_add=True, verbose_name=_('Fecha de inicio'))
     end_date = models.DateField(null=True, blank=True, verbose_name=_('Fecha de finalización'))
-    blog_link = models.URLField(blank=True, verbose_name=_('URL del blog'))
+    blog_link = models.URLField(null=True, blank=True, verbose_name=_('URL del blog'))
 
     def __str__(self):
-        return '"{} - {} - {} - {}"'.format(self.project, self.mentor, self.apprentice, self.start_date)
+        return '"{} - {} - {} - {}"'.format(self.project, self.owner, self.apprentice, self.start_date)
 
     def get_absolute_url(self):
         return reverse('display_mentorship', kwargs={'pk': self.pk})
