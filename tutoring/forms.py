@@ -58,4 +58,4 @@ class MentorshipForm(forms.ModelForm):
 
     class Meta:
         model = Mentorship
-        # exclude = ('owner',)
+        exclude = ('owner',)

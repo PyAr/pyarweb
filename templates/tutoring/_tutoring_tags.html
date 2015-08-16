@@ -1,16 +1,16 @@
 {% load i18n %}
 {% if tags_type == 'apprentice' %}
-    {% trans 'Intereses:' %}
+    {% trans 'Intereses' %}:
     {% for tag in object.tags.all %}
           <a class="label label-default" href="{% url 'apprentice_list_all' %}?tag_{{ tag.slug }}=1" >{{ tag.name }}</a>
     {% endfor %}
 {% elif tags_type == 'mentor' %}
-    {% trans 'Habilidades' %}: 
+    {% trans 'Habilidades' %}:
     {% for tag in object.tags.all %}
           <a class="label label-default" href="{% url 'mentor_list_all' %}?tag_{{ tag.slug }}=1" >{{ tag.name }}</a>
     {% endfor %}
 {% else %}
-    {% trans 'Etiquetas:' %}
+    {% trans 'Etiquetas' %}:
     {% for tag in object.tags.all %}
           <a class="label label-default" href="{% url 'project_list_all' %}?tag_{{ tag.slug }}=1" >{{ tag.name }}</a>
     {% endfor %}
