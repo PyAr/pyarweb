@@ -20,7 +20,7 @@ class Mentor(models.Model):
         return self.owner.username
 
     def get_absolute_url(self):
-        return reverse('display_mentor', kwargs={'pk': self.pk})
+        return reverse('display_mentor', kwargs={'slug': self.owner.username})
 
 
 class Apprentice(models.Model):
@@ -44,7 +44,7 @@ class Apprentice(models.Model):
         return self.owner.username
 
     def get_absolute_url(self):
-        return reverse('display_apprentice', kwargs={'pk': self.pk})
+        return reverse('display_apprentice', kwargs={'slug': self.owner.username})
 
 
 class Project(models.Model):
@@ -86,15 +86,26 @@ class Project(models.Model):
 
 
 class Mentorship(models.Model):
+    STATUS_ON_HOLD = 'O'
+    STATUS_IN_COURSE = 'I'
+    STATUS_CLOSED = 'C'
+
+    STATUS_CHOICES = (
+        (STATUS_IN_COURSE, _('En curso')),
+        (STATUS_ON_HOLD, _('En espera')),
+        (STATUS_CLOSED, _('Cerrado')),
+    )
     project = models.ForeignKey(Project, null=True, blank=True, verbose_name=_('Proyecto'))
     owner = models.ForeignKey(Mentor, verbose_name=_('Mentor'))
     apprentice = models.ForeignKey(Apprentice, verbose_name=_('Aprendiz'))
     start_date = models.DateField(auto_now_add=True, verbose_name=_('Fecha de inicio'))
     end_date = models.DateField(null=True, blank=True, verbose_name=_('Fecha de finalización'))
     blog_link = models.URLField(null=True, blank=True, verbose_name=_('URL del blog'))
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_IN_COURSE, verbose_name=_('Estado'))
+
 
     def __str__(self):
-        return '"{} - {} - {} - {}"'.format(self.project, self.owner, self.apprentice, self.start_date)
+        return '"{} - {} - {}"'.format(self.owner, self.apprentice, self.start_date)
 
     def get_absolute_url(self):
         return reverse('display_mentorship', kwargs={'pk': self.pk})
