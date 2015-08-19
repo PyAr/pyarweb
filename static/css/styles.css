@@ -566,3 +566,9 @@ a.white:hover {
     color: #fff;
     text-decoration: none;
 }
+
+.medios_ctos_inline {
+    padding: 20px;
+    background-color: #F4F4F4;
+    margin-bottom: 15px
+}

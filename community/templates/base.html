@@ -24,7 +24,9 @@
         <script src="{% static "jquery/1.11.0/jquery.min.js" %}"></script>
         <script src="{% static "bootstrap/3.1.1/js/bootstrap.min.js" %}"></script>
         <script src="{% static "bootstrap/3.1.1/js/bootstrap-growl.min.js" %}"></script>
+        <script src="{% static "js/jquery.formset.min.js" %}"></script>
         <script src="{% static "js/web.js" %}"></script>
+        {% include 'autocomplete_light/static.html' %}
         <link rel="icon" href="{% static 'img/icons/pyar.ico' %}" type="image/ico">
 
         {% block extra_head %}{% endblock %}
@@ -72,7 +74,6 @@
             }
         });
         {% endfor %}
-
         </script>
     </body>
 </html>

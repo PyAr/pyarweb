@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'pycompanies',
     'jobs',
     'events',
+    'profiles',
 
     # 3rd party apps
     'allauth',
@@ -91,7 +92,10 @@ INSTALLED_APPS = (
     'waliki.attachments',
     'waliki.slides',
     'waliki.togetherjs',
-    #'waliki.pdf'
+    #'waliki.pdf',
+    'autocomplete_light',
+    'cities_light',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -216,6 +220,9 @@ DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
 DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
 
 RAVEN_CONFIG = None
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['es']
+CITIES_LIGHT_CITY_SOURCES = ['http://download.geonames.org/export/dump/AR.zip']
 
 try:
     from .local_settings import *

@@ -14,6 +14,9 @@ from .views import buscador, irc, old_url_redirect
 
 admin.autodiscover()
 
+import autocomplete_light
+autocomplete_light.autodiscover()
+
 
 urlpatterns = patterns(
     '',
@@ -24,9 +27,9 @@ urlpatterns = patterns(
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': settings.MEDIA_ROOT}),
 
+    url(r'^autocomplete/', include('autocomplete_light.urls')),
     url(r'^irc/$', irc, name='irc'),
     url(r'^buscador/$', buscador, name='buscador'),
-
     url(r'^$', 'community.views.homepage', name='homepage'),
     url(r'^aprendiendo-python/', 'community.views.learning', name='aprendiendo'),
     url(r'^nosotros/', 'community.views.about_pyar', name='about_pyar'),
@@ -39,6 +42,7 @@ urlpatterns = patterns(
     url(r'^summernote/', include('django_summernote.urls')),
     url(r'^trabajo/', include('jobs.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/profile/', include('profiles.urls', namespace='profiles')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^eventos/', include('events.urls', namespace='events')),
     # Descomentar cuando planet este funcionando
