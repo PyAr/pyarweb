@@ -8,7 +8,8 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from community.views import OwnedObject, FilterableList
 from django.http import HttpResponse
 from .models import Project, Mentor, Apprentice, Mentorship
-from .forms import MentorForm, ApprenticeForm, ProjectForm, MentorshipForm
+# from .forms import MentorForm, ApprenticeForm, ProjectForm, MentorshipForm
+from .forms import MentorForm, ApprenticeForm, MentorshipForm
 from django.views.generic.detail import SingleObjectMixin
 
 
@@ -44,10 +45,10 @@ class UpdateMentor(UpdateView, OwnedObject):
     slug_field = 'owner__username'
 
 
-class DeleteMentor(DeleteView, OwnedObject):
-    model = Mentor
-    slug_field = 'owner__username'
-    success_url = reverse_lazy('new_mentor')
+# class DeleteMentor(DeleteView, OwnedObject):
+#     model = Mentor
+#     slug_field = 'owner__username'
+#     success_url = reverse_lazy('new_mentor')
 
 
 class ListMentor(ListView, FilterableList):
@@ -87,10 +88,10 @@ class UpdateApprentice(UpdateView, OwnedObject):
     slug_field = 'owner__username'
 
 
-class DeleteApprentice(DeleteView, OwnedObject):
-    model = Apprentice
-    slug_field = 'owner__username'
-    success_url = reverse_lazy('new_apprentice')
+# class DeleteApprentice(DeleteView, OwnedObject):
+#     model = Apprentice
+#     slug_field = 'owner__username'
+#     success_url = reverse_lazy('new_apprentice')
 
 
 class ListApprentice(ListView, FilterableList):
@@ -103,37 +104,37 @@ class ListApprentice(ListView, FilterableList):
         return context
 
 
-class AddProject(CreateView):
-    model = Project
-    form_class = ProjectForm
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super(AddProject, self).form_valid(form)
-
-
-class DisplayProject(DetailView):
-    model = Project
-    form_class = ProjectForm
-
-    def get_context_data(self, **kwargs):
-        context = super(DisplayProject, self).get_context_data(**kwargs)
-        return context
-
-
-class ListProject(ListView, FilterableList):
-    model = Project
-    paginate_by = 20
-
-
-class UpdateProject(UpdateView, OwnedObject):
-    model = Project
-    form_class = ProjectForm
-
-
-class DeleteProject(DeleteView, OwnedObject):
-    model = Project
-    success_url = reverse_lazy('new_project')
+# class AddProject(CreateView):
+#     model = Project
+#     form_class = ProjectForm
+#
+#     def form_valid(self, form):
+#         form.instance.owner = self.request.user
+#         return super(AddProject, self).form_valid(form)
+#
+#
+# class DisplayProject(DetailView):
+#     model = Project
+#     form_class = ProjectForm
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(DisplayProject, self).get_context_data(**kwargs)
+#         return context
+#
+#
+# class ListProject(ListView, FilterableList):
+#     model = Project
+#     paginate_by = 20
+#
+#
+# class UpdateProject(UpdateView, OwnedObject):
+#     model = Project
+#     form_class = ProjectForm
+#
+#
+# class DeleteProject(DeleteView, OwnedObject):
+#     model = Project
+#     success_url = reverse_lazy('new_project')
 
 
 class AddMentorship(CreateView):
@@ -185,5 +186,5 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['mentors'] = Mentor.objects.all()
         context['apprentices'] = Apprentice.objects.all()
-        context['projects'] = Project.objects.all()[:5]
+        # context['projects'] = Project.objects.all()[:5]
         return context
