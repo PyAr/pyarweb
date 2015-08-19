@@ -10,7 +10,7 @@
 	    <div class="page-header">
 	    	<h2>{% trans 'Detalles de la tutoría' %} {{ object }} </h2>
 	    </div>
-        <p>{% trans 'Proyecto:' %} {{ object.project }}</p>
+{#        <p>{% trans 'Proyecto:' %} {{ object.project }}</p>#}
         <p>{% trans 'Mentor:' %} {{ object.owner }}</p>
         <p>{% trans 'Aprendiz:' %} {{ object.apprentice.owner }}</p>
         <p>{% trans 'Fecha de inicio:' %} {{ object.start_date }}</p>

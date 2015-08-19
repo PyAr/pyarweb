@@ -36,7 +36,7 @@ class Apprentice(models.Model):
     owner = models.OneToOneField(settings.AUTH_USER_MODEL)
     description = models.TextField(blank=True, null=True, verbose_name=_('Descripción'))
     start_date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_WAITING)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_WAITING, verbose_name=_('Estado'))
 
     tags = TaggableManager(verbose_name=_('Intereses'))
 
