@@ -1,4 +1,3 @@
-from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
