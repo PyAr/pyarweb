@@ -147,6 +147,11 @@ class AddMentorship(CreateView):
         else:
             return redirect(reverse('new_mentor'))
 
+    def get_form_kwargs(self):
+        kwargs = super(AddMentorship, self).get_form_kwargs()
+        kwargs['mentor'] = self.request.user.mentor
+        return kwargs
+
     def form_valid(self, form):
         form.instance.owner = Mentor.objects.get(owner=self.request.user)
         return super(AddMentorship, self).form_valid(form)
