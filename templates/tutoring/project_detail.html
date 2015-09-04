@@ -11,6 +11,11 @@
 	    	<h2>
                 {% trans 'Detalles del proyecto' %} {{ object.title }}
             </h2>
+            {% if object.owner == request.user %}
+                <span class="section-button-group pull-right" style="position: absolute;right: 14px;top: 32px;">
+                    <a href="{% url 'update_project' object.pk %}" class="btn btn-info">{% trans 'Editar' %}</a>
+                </span>
+            {% endif %}
 	    </div>
         <p>{% trans 'Descripción:' %} {{ object.description }}</p>
         <p>{% trans 'Estado:' %} {{ object.get_status_display }}</p>

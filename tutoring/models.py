@@ -84,6 +84,20 @@ class Project(models.Model):
         ordering = ['-id']
 
 
+class UsersInProjects(models.Model):
+    ROLE_MENTOR = 'M'
+    ROLE_APPRENTICE = 'A'
+
+    ROLE_CHOICES = (
+        (ROLE_MENTOR, _('Mentor')),
+        (ROLE_APPRENTICE, _('Aprendiz')),
+    )
+    project = models.ForeignKey(Project)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES, verbose_name=_('Rol'))
+    available = models.BooleanField(default=True, verbose_name=_('Disponible'))
+
+
 class Mentorship(models.Model):
     STATUS_ON_HOLD = 'O'
     STATUS_IN_COURSE = 'I'

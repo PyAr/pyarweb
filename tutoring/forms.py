@@ -34,18 +34,18 @@ class ApprenticeForm(forms.ModelForm):
         exclude = ('owner',)
 
 
-# class ProjectForm(forms.ModelForm):
-#
-#     def __init__(self, *args, **kwargs):
-#         super(ProjectForm, self).__init__(*args, **kwargs)
-#         self.helper = FormHelper()
-#         self.helper.add_input(Submit('project_submit', _('Guardar')))
-#         self.helper.add_input(Reset('project_reset', _('Limpiar'),
-#                                     css_class='btn-default'))
-#
-#     class Meta:
-#         model = Project
-#         exclude = ('owner',)
+class ProjectForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProjectForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('project_submit', _('Guardar')))
+        self.helper.add_input(Reset('project_reset', _('Limpiar'),
+                                    css_class='btn-default'))
+
+    class Meta:
+        model = Project
+        exclude = ('owner',)
 
 
 class MentorshipForm(forms.ModelForm):
