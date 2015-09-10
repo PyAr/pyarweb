@@ -62,7 +62,7 @@ class AddApprentice(CreateView):
         try:
             apprentice = Apprentice.objects.get(owner=request.user)
             return redirect(reverse('update_apprentice', kwargs={'slug': apprentice.owner}))
-        except Mentor.DoesNotExist:
+        except Apprentice.DoesNotExist:
             return super(AddApprentice, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
