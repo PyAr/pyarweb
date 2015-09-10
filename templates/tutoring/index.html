@@ -18,51 +18,52 @@
             </h2>
         </div>
 
-        {% if mentors %}
-            <h3>{% trans 'Mentores disponibles' %}</h3>
-            {% for object in mentors %}
-                {% if object.available %}
-                    <h4>
-                        <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
-                    </h4>
-                    <p>{{ object.description|html2text|truncatewords:50 }}</p>
-                    <div class="text-muted">
-                        {% include "tutoring/_tutoring_tags.html" with tags_type="mentor" %}
-                    </div>
-                    <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-
-        {% if apprentices %}
-            <h3>{% trans 'Aprendices disponibles' %}</h3>
-            {% for object in apprentices %}
-                {% if object.status == 'W' %}
-                    <h4>
-                        <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
-                    </h4>
-                    <p>{{ object.description|html2text|truncatewords:50 }}</p>
-                    <div class="text-muted">
-                        {% include "tutoring/_tutoring_tags.html" with tags_type="apprentice" %}
-                    </div>
-                    <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-
-        {% if projects %}
-            <h3>{% trans 'Últimos proyectos' %}</h3>
-            {% for object in projects %}
+        <h3>{% trans 'Mentores disponibles' %}</h3>
+        {% for object in mentors %}
+            {% if object.available %}
                 <h4>
-                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+                    <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
                 </h4>
                 <p>{{ object.description|html2text|truncatewords:50 }}</p>
                 <div class="text-muted">
-                    {% include "tutoring/_tutoring_tags.html" %}
+                    {% include "tutoring/_tutoring_tags.html" with tags_type="mentor" %}
                 </div>
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
-            {% endfor %}
-        {% endif %}
+            {% endif %}
+        {% empty %}
+             <p>{% trans 'No se encontraron mentores disponibles.' %}</p>
+        {% endfor %}
+
+
+        <h3>{% trans 'Aprendices disponibles' %}</h3>
+        {% for object in apprentices %}
+            {% if object.status == 'W' %}
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
+                </h4>
+                <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                <div class="text-muted">
+                    {% include "tutoring/_tutoring_tags.html" with tags_type="apprentice" %}
+                </div>
+                <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+            {% endif %}
+        {% empty %}
+            <p>{% trans 'No se encontraron aprendices disponibles.' %}</p>
+        {% endfor %}
+
+        <h3>{% trans 'Últimos proyectos' %}</h3>
+        {% for object in projects %}
+            <h4>
+                <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            </h4>
+            <p>{{ object.description|html2text|truncatewords:50 }}</p>
+            <div class="text-muted">
+                {% include "tutoring/_tutoring_tags.html" %}
+            </div>
+            <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+        {% empty %}
+            <p>{% trans 'No se encontraron proyectos.' %}</p>
+        {% endfor %}
 
 
 
