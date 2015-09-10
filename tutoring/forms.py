@@ -50,19 +50,27 @@ class ProjectForm(forms.ModelForm):
 
 class MentorshipForm(forms.ModelForm):
 
-    def __init__(self, mentor, *args, **kwargs):
+    def __init__(self, mentor=None, *args, **kwargs):
         super(MentorshipForm, self).__init__(*args, **kwargs)
-        self.mentor = mentor
+        if mentor is not None:
+            self.instance.owner = mentor
         self.helper = FormHelper()
         self.helper.add_input(Submit('mentorship_submit', _('Guardar')))
         self.helper.add_input(Reset('mentorship_reset', _('Limpiar'),
                                     css_class='btn-default'))
 
     def clean(self):
-        max_slots = self.mentor.slots
-        mentorships = self.mentor.mentorship_set.filter(status=Mentorship.STATUS_IN_COURSE).count()
-        if mentorships >= max_slots:
-            raise ValidationError(u'No te quedan slots disponibles')
+        active = Mentorship.STATUS_IN_COURSE
+        status = self.cleaned_data.get('status')
+        if status == active:
+            mentor = self.instance.owner
+            max_slots = mentor.slots
+            mentorships = mentor.mentorship_set.filter(status=active)
+            if self.instance.pk:
+                mentorships = mentorships.exclude(id=self.instance.pk)
+            mentorships = mentorships.count()
+            if mentorships >= max_slots:
+                raise ValidationError(u'No te quedan slots disponibles.')
 
     class Meta:
         model = Mentorship

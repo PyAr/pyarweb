@@ -42,6 +42,11 @@ class ApprenticeDetailViewTests(TestCase):
         response = self.client.get(reverse('display_apprentice', args=(self.apprentice.owner.username,)))
         self.assertEqual(response.status_code, 200)
 
+    def test_apprentice_create_success(self):
+        self.client.login(username='jacob2', password='top_secret')
+        response = self.client.get(reverse('new_apprentice',))
+        self.assertEqual(response.status_code, 200)
+
     def test_apprentice_update_success(self):
         self.client.login(username='jacob', password='top_secret')
         response = self.client.get(reverse('update_apprentice', args=(self.apprentice.owner.username,)))
