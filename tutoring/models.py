@@ -84,20 +84,6 @@ class Project(models.Model):
         ordering = ['-id']
 
 
-class UsersInProjects(models.Model):
-    ROLE_MENTOR = 'M'
-    ROLE_APPRENTICE = 'A'
-
-    ROLE_CHOICES = (
-        (ROLE_MENTOR, _('Mentor')),
-        (ROLE_APPRENTICE, _('Aprendiz')),
-    )
-    project = models.ForeignKey(Project)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    role = models.CharField(max_length=1, choices=ROLE_CHOICES, verbose_name=_('Rol'))
-    available = models.BooleanField(default=True, verbose_name=_('Disponible'))
-
-
 class Mentorship(models.Model):
     STATUS_ON_HOLD = 'O'
     STATUS_IN_COURSE = 'I'
@@ -115,7 +101,6 @@ class Mentorship(models.Model):
     end_date = models.DateField(null=True, blank=True, verbose_name=_('Fecha de finalización'))
     blog_link = models.URLField(null=True, blank=True, verbose_name=_('URL del blog'))
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_IN_COURSE, verbose_name=_('Estado'))
-
 
     def __str__(self):
         return '"{} - {} - {}"'.format(self.owner, self.apprentice, self.start_date)
