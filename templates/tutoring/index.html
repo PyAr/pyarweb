@@ -1,0 +1,86 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+{% load i18n staticfiles pagination_tags %}
+{% block title %}Tutorías{% endblock %}
+{% block left-column %}
+
+<!-- Project list -->
+<section>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>{% trans 'Tutorías' %}</h2>
+        </div>
+
+        <h3>{% trans 'Mentores disponibles' %}</h3>
+        {% for object in mentors %}
+            {% if object.available %}
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
+                </h4>
+                <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                <div class="text-muted">
+                    {% include "tutoring/_tutoring_tags.html" with tags_type="mentor" %}
+                </div>
+            {% endif %}
+        {% empty %}
+             <p>{% trans 'No se encontraron mentores disponibles.' %}</p>
+        {% endfor %}
+
+
+        <h3>{% trans 'Aprendices disponibles' %}</h3>
+        {% for object in apprentices %}
+            {% if object.status == 'W' %}
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.owner }}</a>
+                </h4>
+                <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                <div class="text-muted">
+                    {% include "tutoring/_tutoring_tags.html" with tags_type="apprentice" %}
+                </div>
+            {% endif %}
+        {% empty %}
+            <p>{% trans 'No se encontraron aprendices disponibles.' %}</p>
+        {% endfor %}
+
+        <h3>{% trans 'Últimos proyectos' %}</h3>
+        {% for object in projects %}
+            <h4>
+                <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            </h4>
+            <p>{{ object.description|html2text|truncatewords:50 }}</p>
+            <div class="text-muted">
+                {% include "tutoring/_tutoring_tags.html" %}
+            </div>
+        {% empty %}
+            <p>{% trans 'No se encontraron proyectos.' %}</p>
+        {% endfor %}
+
+
+
+            <!-- <div class="pull-right">
+                <a href="{% url 'jobs_feed' %}" class="badge">
+                    <i class="fa fa-rss"></i> RSS
+                </a>
+           </div> -->
+    </div>
+</section>
+{% endblock %}
+
+{% block right-column %}
+<section class="list-group">
+    <header class="list-group-item">
+        <h3 class="list-group-item-heading">{% trans 'Tutorías' %}</h3>
+    </header>
+    <article class="list-group-item">
+        <div class="section-button-group">
+            <a href="{% url 'apprentice_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver apredices' %}</a>
+            <a href="{% url 'mentor_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver mentores' %}</a>
+            <a href="{% url 'mentorship_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver mentorías' %}</a>
+            <a href="{% url 'project_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver proyectos' %}</a>
+        </div>
+    </article>
+</section>
+{{ block.super }}
+{% endblock %}
+
+
