@@ -1,6 +1,6 @@
 {% extends "base_site.html" %}
 
-{% load i18n %}
+{% load i18n pagination_tags %}
 
 {% load devtags %}
 
@@ -82,21 +82,9 @@
       </article>
     {% endfor %}
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">{% trans 'anterior' %}</a>
-            {% endif %}
-
-            <span class="current">
-              {% trans "Pagina" %} {{ page_obj.number }} {% trans 'de' %} {{ page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">{% trans 'siguiente' %}</a>
-            {% endif %}
-        </span>
-    </div>
+    {% if eventos_pasados %}
+        {% paginate %}
+    {% endif %}
 
   </section>
 {% endblock %}
