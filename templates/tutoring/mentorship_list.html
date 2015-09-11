@@ -20,8 +20,28 @@
         {% if object_list %}
             {% for object in object_list %}
                 <h4>
-                    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+                    <a href="{{ object.get_absolute_url }}">{% trans 'Mentor:' %} {{ object.owner }} -
+                    {% trans 'Aprendiz' %}: {{ object.apprentice }}</a>
                 </h4>
+                <div class="text-muted">
+                    {% trans 'Fecha de inicio:' %} {{ object.start_date }}
+                </div>
+                <div class="text-muted">
+                    {% trans 'Fecha de finalización:' %}
+                    {% if object.end_date %}
+                        {{ object.end_date }}
+                    {% else %}
+                        --
+                    {% endif %}
+                </div>
+                <div class="text-muted">
+                    {% trans 'Enlace al blog:' %}
+                    {% if object.blog_link %}
+                        <a href="{{ object.blog_link }}" target="_blank">{{ object.blog_link }}</a></p>
+                    {% else %}
+                        --
+                    {% endif %}
+                </div>
             {% endfor %}
 
             {% paginate %}
@@ -43,6 +63,19 @@
 {% endblock %}
 
 {% block right-column %}
+<section class="list-group">
+    <header class="list-group-item">
+        <h3 class="list-group-item-heading">{% trans 'Tutorías' %}</h3>
+    </header>
+    <article class="list-group-item">
+        <div class="section-button-group">
+            <a href="{% url 'apprentice_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver apredices' %}</a>
+            <a href="{% url 'mentor_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver mentores' %}</a>
+            <a href="{% url 'mentorship_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver mentorías' %}</a>
+            <a href="{% url 'project_list_all' %}" class="btn btn-info btn-block">{% trans 'Ver proyectos' %}</a>
+        </div>
+    </article>
+</section>
 {{ block.super }}
 {% include "_tags_filtering_form.html" %}
 {% endblock %}
