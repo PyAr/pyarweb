@@ -103,7 +103,7 @@ class Mentorship(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_IN_COURSE, verbose_name=_('Estado'))
 
     def __str__(self):
-        return '"{} - {} - {}"'.format(self.owner, self.apprentice, self.start_date)
+        return '{} - {} - {}'.format(self.owner, self.apprentice, self.start_date)
 
     def get_absolute_url(self):
         return reverse('display_mentorship', kwargs={'pk': self.pk})
