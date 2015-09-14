@@ -7,13 +7,7 @@
 <section>
     <div class="col-md-12">
         <div class="page-header">
-            <h2>{{ post.title|striptags|safe }}
-                {% if post.feed.blog.owner = user %}
-                <span class="section-button-group pull-right">
-                    <a href="{% url 'planet_post_delete' post.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
-                </span>
-                {% endif %}
-            </h2>
+            <h2>{{ post.title|striptags|safe }}</h2>
         </div>
         
         {% post_full_details post %}
@@ -23,6 +17,7 @@
     </div>
 </section>
 {% endblock %}
+
 {% block right-column %}
 <section class="list-group">
     <header class="list-group-item">

@@ -77,8 +77,7 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_autosuggest',
     'bootstrap3_datetime',
-    # Incluir planet cuando este funcionando
-    # 'planet',
+    'planet',
     'pagination',
     'tagging',
     'bootstrap3',
@@ -164,8 +163,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.i18n",
     "django.contrib.messages.context_processors.messages",
-    # Incluir planet cuando este funcionando
-    # "planet.context_processors.context"
+    "planet.context_processors.context"
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -176,7 +174,7 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-PLANET = {"USER_AGENT": "pyarweb/0.1"}
+PLANET = {"USER_AGENT": "pyarweb/0.1", "LOGIN_REQUIRED_FOR_ADDING_FEED": True}
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
@@ -190,13 +188,12 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-# Incluir planet cuando este funcionando
-#CELERYBEAT_SCHEDULE = {
-#    'update_feeds': {
-#        'task': 'planet.tasks.update_feeds',
-#        'schedule': timedelta(hours=12)
-#    },
-#}
+CELERYBEAT_SCHEDULE = {
+    'update_feeds': {
+        'task': 'planet.tasks.update_feeds',
+        'schedule': timedelta(hours=12)
+    },
+}
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
