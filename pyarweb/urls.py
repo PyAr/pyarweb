@@ -43,19 +43,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^eventos/', include('events.urls', namespace='events')),
-<<<<<<< HEAD
-    # Descomentar cuando planet este funcionando
-    # url(r'^planeta/', include('planet.urls')),
-=======
     url(r'^planeta/', include('planet.urls')),
-    # No se que va a pasar con la app de newbie, lanzamos primer release y
-    # lo comento hasta que se decida que se hace
-    # url(r'^newbie/', include('newbie.urls')),
-    # No se que va a pasar con la app de project, lanzamos primer release y
-    # lo comento hasta que se decida que se hace
-    # url(r'^projects/', include('projects.urls')),
-    # url(r'^faq/', include('faq.urls')),
->>>>>>> 0e53e4a4db45d43649a47fa0b4a210bcbe9fab4c
     url(r'^wiki/', include('waliki.urls')),
     url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
         old_url_redirect, name='old_url_redirect'),

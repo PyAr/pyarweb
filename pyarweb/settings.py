@@ -91,8 +91,14 @@ INSTALLED_APPS = (
     'waliki.attachments',
     'waliki.slides',
     'waliki.togetherjs',
+    'kombu.transport.django',
+    'djcelery'
     #'waliki.pdf'
 )
+
+
+import djcelery
+djcelery.setup_loader()
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -183,7 +189,8 @@ SUMMERNOTE_CONFIG = {
 }
 
 # CELERY SETTINGS
-BROKER_URL = 'redis://localhost:6379/0'
+# BROKER_URL = 'redis://localhost:6379/0'
+BROKER_URL = "django://"
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
