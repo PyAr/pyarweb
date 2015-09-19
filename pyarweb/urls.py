@@ -43,8 +43,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^eventos/', include('events.urls', namespace='events')),
-    # Descomentar cuando planet este funcionando
-    # url(r'^planeta/', include('planet.urls')),
+    url(r'^planeta/', include('planet.urls')),
     url(r'^wiki/', include('waliki.urls')),
     url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
         old_url_redirect, name='old_url_redirect'),

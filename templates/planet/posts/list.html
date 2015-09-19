@@ -28,8 +28,8 @@
             <h2>{% trans 'Planeta PyAr' %}
               {% if user.is_authenticated %}
                 <span class="section-button-group pull-right">
-                    <a href="{% url 'feed_add' %}" class="btn btn-info">{% trans 'Agregar feeds' %}</a>
-                    <a href="{% url 'planet_blog_list_by_user' %}" class="btn btn-info">{% trans 'Mis blogs' %}</a>
+                  <a href="{% url 'planet_feed_add' %}" class="btn btn-info">{% trans 'Agregar feeds' %}</a>
+                  <a href="{% url 'planet_blog_list_by_user' %}" class="btn btn-info">{% trans 'Mis blogs' %}</a>
                 </span>
               {% endif %}
             </h2>
