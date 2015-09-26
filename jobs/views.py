@@ -50,6 +50,7 @@ class JobCreate(CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        form.instance.is_active = True
         return super(JobCreate, self).form_valid(form)
 
 
@@ -68,5 +69,11 @@ class JobUpdate(UpdateView, OwnedObject):
 class JobDelete(DeleteView, OwnedObject):
 
     """Delete a Job."""
+    model = Job
+    success_url = reverse_lazy('jobs_list_all')
+
+
+class JobInactivate(UpdateView):
+    """ Inactivate Job by moderator """
     model = Job
     success_url = reverse_lazy('jobs_list_all')

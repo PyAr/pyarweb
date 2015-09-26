@@ -14,6 +14,12 @@ JOB_SENIORITIES = (
 )
 
 
+class JobManager(models.Manager):
+    def get_query_set(self):
+        # -- only active jobs
+        return super(JobManager, self).get_query_set().filter(is_active=True)
+
+
 class Job(models.Model):
     """A PyAr Job."""
 
@@ -39,6 +45,9 @@ class Job(models.Model):
         choices=JOB_SENIORITIES,
         verbose_name=_('Experiencia'))
     slug = AutoSlugField(populate_from='title', unique=True)
+    is_active = models.BooleanField(default=True)
+
+    objects = JobManager()
 
     def __str__(self):
         return u'{0}'.format(self.title)
@@ -52,3 +61,4 @@ class Job(models.Model):
 
     class Meta:
         ordering = ['-modified']
+

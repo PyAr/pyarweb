@@ -77,4 +77,4 @@ class JobForm(forms.ModelForm):
 
     class Meta:
         model = Job
-        exclude = ('owner',)
+        exclude = ('owner', 'is_active')
