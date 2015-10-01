@@ -1,10 +1,12 @@
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django.contrib.syndication.views import Feed
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from community.views import OwnedObject, FilterableList
-from .models import Job
-from .forms import JobForm
+from .models import Job, JobInactivated
+from .forms import JobForm, JobInactivateForm
 
 
 class JobsFeed(Feed):
@@ -73,7 +75,8 @@ class JobDelete(DeleteView, OwnedObject):
     success_url = reverse_lazy('jobs_list_all')
 
 
-class JobInactivate(UpdateView):
+class JobInactivate(CreateView):
     """ Inactivate Job by moderator """
-    model = Job
-    success_url = reverse_lazy('jobs_list_all')
+    template_name = 'jobs/inactivate.html'
+    model = JobInactivated
+    form_class = JobInactivateForm

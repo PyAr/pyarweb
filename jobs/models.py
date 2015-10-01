@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from pycompanies.models import Company
 from taggit_autosuggest.managers import TaggableManager
+from model_utils.models import TimeStampedModel
 
 JOB_SENIORITIES = (
     ('Trainee', 'Trainee'),
@@ -61,4 +62,20 @@ class Job(models.Model):
 
     class Meta:
         ordering = ['-modified']
+
+
+class JobInactivated(TimeStampedModel):
+    """ Jobs Inactivated """
+    REASONS = (
+        ('No es un aviso relacionado con Python', 'No es un aviso relacionado con Python'),
+        ('Spam', 'Spam'),
+    )
+
+    job = models.ForeignKey(Job)
+    reason = models.CharField(
+        max_length=100,
+        blank=False,
+        choices=REASONS,
+        verbose_name=_('Motivo/Razón'))
+    comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
 
