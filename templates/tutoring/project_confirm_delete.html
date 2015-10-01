@@ -1,0 +1,21 @@
+
+
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="col-lg-12">
+	    <div class="page-header">
+	    	<h2>{% trans 'Eliminar aprendiz' %}</h2>
+	    </div>
+	    <form action="" method="post">{% csrf_token %}
+            <p>{% trans 'Está seguro que desea eliminar al aprendiz' %} "{{ object }}"?</p>
+            <input type="submit" value="Confirm" />
+        </form>
+	</div>
+</main>
+{% endblock %}

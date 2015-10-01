@@ -1,5 +1,6 @@
 ¿Queres colaborar en el proyecto? Al momento tenemos [![Stories in Ready](https://badge.waffle.io/pyar/pyarweb.png?label=ready&title=Ready)](https://waffle.io/pyar/pyarweb) tareas en
 las que podes colaborar, sube a bordo! 
+
 pyarweb
 =======
 Es la implementación del sitio para PyAr / Python Argentina hecha con Django
@@ -87,7 +88,6 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
     $ sudo apt-get install redis-server
     ```
 
-
 ## Correr Servicios:
 
 1. Sincronizar BD con los modelos:
@@ -121,7 +121,6 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
   Visita con tu browser la dirección [`http://localhost:8000`](http://localhost:8000) para ver el sitio.
 
 
-Para más información, si queres contribuír con el proyecto, no dejes de visitar el [*Manual básico de supervivencia para colaborar con el sitio de PyAr*](https://github.com/samuelbustamante/pyarweb/wiki/Manual-b%C3%A1sico-de-supervivencia-para-colaborar-con-el-sitio-de-PyAr).
 
 ## Cómo obtener los datos de la wiki
 
@@ -147,3 +146,26 @@ $ python manage.py loaddata fixtures/planeta_pyar.json
 ```
 
 Más adelante habrá que asociar cada blog al usuario correspondiente.
+
+## Contribuyendo con PyArWeb
+
+Existen varias maneras de contribuir con la web de PyAr, reportando bugs,
+revisando que esos bugs se encuentren vigentes, etc, los pasos que se
+encuentran a continuación describen como realizar contribuciones a nivel de la
+aplicación.
+
+Todas las contribuciones son mas que bienvenidas, pero para empezar a
+contribuir (con código) estos serían los siguientes pasos:
+
+1. Lee el archivo [`CONTRIBUTING.md`](CONTRIBUTING.md) para entender cómo
+funciona git, git-flow y tener una calidad mínima del código
+
+2. Recuerda hacer tests! (en lo posible) de los cambios que hagas, si bien la
+base de tests en este momento no es muy grande es algo que estaremos intentando
+cambiar
+
+3. Una vez tengas todo revisado haz un pull request a este proyecto
+https://github.com/PyAr/pyarweb/ y haz referencia al issue.
+
+Una vez tu pull request sea aprobado tu código pasará a la inmortalidad de
+PyAr :)

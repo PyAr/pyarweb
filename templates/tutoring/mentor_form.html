@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% load devtags %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+    <div class="col-lg-12">
+	    <div class="page-header">
+	    	<h2>{% if form.instance.id %}
+	    			{% trans 'Actualizando información' %}
+	    		{% else %}
+	    			{% trans 'Agregar un nuevo mentor' %}
+	    		{% endif %}
+	    	</h2>
+	    </div>
+	    {{ form.media }}
+	    {% crispy form %}
+	</div>
+</main>
+{% endblock %}

@@ -61,7 +61,7 @@ class Job(models.Model):
         return reverse('jobs_view', kwargs={'slug': self.slug})
 
     class Meta:
-        ordering = ['-modified']
+        ordering = ['-created']
 
 
 class JobInactivated(TimeStampedModel):
@@ -78,4 +78,3 @@ class JobInactivated(TimeStampedModel):
         choices=REASONS,
         verbose_name=_('Motivo/Razón'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
-

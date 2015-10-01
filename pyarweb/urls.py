@@ -27,6 +27,8 @@ urlpatterns = patterns(
     url(r'^irc/$', irc, name='irc'),
     url(r'^buscador/$', buscador, name='buscador'),
 
+    url(r'^tutoring/', include('tutoring.urls')),
+
     url(r'^$', 'community.views.homepage', name='homepage'),
     url(r'^aprendiendo-python/', 'community.views.learning', name='aprendiendo'),
     url(r'^nosotros/', 'community.views.about_pyar', name='about_pyar'),
@@ -43,13 +45,6 @@ urlpatterns = patterns(
     url(r'^eventos/', include('events.urls', namespace='events')),
     # Descomentar cuando planet este funcionando
     # url(r'^planeta/', include('planet.urls')),
-    # No se que va a pasar con la app de newbie, lanzamos primer release y
-    # lo comento hasta que se decida que se hace
-    # url(r'^newbie/', include('newbie.urls')),
-    # No se que va a pasar con la app de project, lanzamos primer release y
-    # lo comento hasta que se decida que se hace
-    # url(r'^projects/', include('projects.urls')),
-    # url(r'^faq/', include('faq.urls')),
     url(r'^wiki/', include('waliki.urls')),
     url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
         old_url_redirect, name='old_url_redirect'),
