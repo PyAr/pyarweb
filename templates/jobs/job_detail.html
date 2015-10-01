@@ -20,7 +20,10 @@
             <a href="{% url 'jobs_update' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
             <a href="{% url 'jobs_delete' object.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
             {% endif %}
-            <a href="{% url 'jobs_inactivate' object.id %}" class="btn btn-danger">{% trans 'Inactivar' %}</a>
+
+            {% if request.user|has_group:"job_moderator" == True %}
+                <a href="{% url 'jobs_inactivate' object.id %}" class="btn btn-danger">{% trans 'Inactivar' %}</a>
+            {% endif %}
           </span>
         </h2>
       </div>

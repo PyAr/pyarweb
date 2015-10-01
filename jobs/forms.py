@@ -83,6 +83,9 @@ class JobForm(forms.ModelForm):
 class JobInactivateForm(forms.ModelForm):
     """ Form to inactivate Job  """
 
+    send_email = forms.BooleanField(label='¿Enviar mail al dueño del aviso?',
+                                    required=False)
+
     def __init__(self, *args, **kwargs):
         super(JobInactivateForm, self).__init__(*args, **kwargs)
 
@@ -90,6 +93,7 @@ class JobInactivateForm(forms.ModelForm):
         self.helper.layout = Layout(
             'reason',
             'comment',
+            'send_email',
         )
 
         self.helper.add_input(Submit('job_inactivate_submit', _('Guardar')))

@@ -15,10 +15,11 @@ JOB_SENIORITIES = (
 )
 
 
-class JobManager(models.Manager):
-    def get_query_set(self):
-        # -- only active jobs
-        return super(JobManager, self).get_query_set().filter(is_active=True)
+class JobQuerySet(models.QuerySet):
+
+    def actives(self):
+        # -- only active records
+        return self.filter(is_active=True)
 
 
 class Job(models.Model):
@@ -48,7 +49,7 @@ class Job(models.Model):
     slug = AutoSlugField(populate_from='title', unique=True)
     is_active = models.BooleanField(default=True)
 
-    objects = JobManager()
+    objects = JobQuerySet.as_manager()
 
     def __str__(self):
         return u'{0}'.format(self.title)
@@ -76,5 +77,15 @@ class JobInactivated(TimeStampedModel):
         max_length=100,
         blank=False,
         choices=REASONS,
-        verbose_name=_('Motivo/Razón'))
-    comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
+        verbose_name=_('Motivo'))
+    comment = models.TextField(blank=True,
+                               null=True,
+                               verbose_name=_('Comentario'))
+
+    def __str__(self):
+        return u'%s' % self.job.title
+
+    def get_absolute_url(self):
+        return reverse('jobs_list_all')
+
+
