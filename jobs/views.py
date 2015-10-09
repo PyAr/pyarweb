@@ -2,9 +2,12 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
 from django.contrib.syndication.views import Feed
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 from community.views import OwnedObject, FilterableList
 from .models import Job, JobInactivated
 from .forms import JobForm, JobInactivateForm
+from pyarweb.settings import DEFAULT_FROM_EMAIL
 
 
 class JobActiveMixin(object):
@@ -97,6 +100,19 @@ class JobInactivate(CreateView):
 
         # -- ¿send mail to job owner?
         if form.cleaned_data['send_email']:
-            print(job.company.owner.email)
+            context = {
+                'job_title': job.title,
+                'reason': form.cleaned_data['reason'],
+                'comment': form.cleaned_data['comment']
+            }
+
+            body = render_to_string('jobs/inactivate_job_email.txt', context)
+            email = EmailMessage(
+                subject="[PyAr] Aviso de trabajo dado de baja",
+                to=(job.company.owner.email, ),
+                from_email=DEFAULT_FROM_EMAIL,
+                body=body
+            )
+            email.send()
 
         return super(JobInactivate, self).form_valid(form)

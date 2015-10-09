@@ -68,8 +68,9 @@ class Job(models.Model):
 class JobInactivated(TimeStampedModel):
     """ Jobs Inactivated """
     REASONS = (
-        ('No es un aviso relacionado con Python', 'No es un aviso relacionado con Python'),
+        ('No es un trabajo relacionado con Python', 'No es un trabajo relacionado con Python'),
         ('Spam', 'Spam'),
+        ('Información insuficiente', 'Información insuficiente'),
     )
 
     job = models.ForeignKey(Job)
