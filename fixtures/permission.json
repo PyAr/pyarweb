@@ -1,0 +1,1 @@
+[{"pk": 1, "model": "auth.group", "fields": {"name": "job_moderator", "permissions": [95, 96, 97]}}]

@@ -2,7 +2,7 @@ from random import choice
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from .models import Job
+from .models import Job, JobInactivated
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
 from django.utils.safestring import mark_safe
@@ -77,4 +77,29 @@ class JobForm(forms.ModelForm):
 
     class Meta:
         model = Job
-        exclude = ('owner',)
+        exclude = ('owner', 'is_active')
+
+
+class JobInactivateForm(forms.ModelForm):
+    """ Form to inactivate Job  """
+
+    send_email = forms.BooleanField(label='¿Enviar mail al dueño del aviso?',
+                                    required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(JobInactivateForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            'reason',
+            'comment',
+            'send_email',
+        )
+
+        self.helper.add_input(Submit('job_inactivate_submit', _('Guardar')))
+        self.helper.add_input(Reset('job_inactivate_reset', _('Limpiar'),
+                                    css_class='btn-default'))
+
+    class Meta:
+        model = JobInactivated
+        exclude = ('job', )

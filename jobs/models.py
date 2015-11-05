@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from pycompanies.models import Company
 from taggit_autosuggest.managers import TaggableManager
+from model_utils.models import TimeStampedModel
 
 JOB_SENIORITIES = (
     ('Trainee', 'Trainee'),
@@ -12,6 +13,13 @@ JOB_SENIORITIES = (
     ('Semi Senior', 'Semi Senior'),
     ('Senior', 'Senior'),
 )
+
+
+class JobQuerySet(models.QuerySet):
+
+    def actives(self):
+        # -- only active records
+        return self.filter(is_active=True)
 
 
 class Job(models.Model):
@@ -39,6 +47,9 @@ class Job(models.Model):
         choices=JOB_SENIORITIES,
         verbose_name=_('Experiencia'))
     slug = AutoSlugField(populate_from='title', unique=True)
+    is_active = models.BooleanField(default=True)
+
+    objects = JobQuerySet.as_manager()
 
     def __str__(self):
         return u'{0}'.format(self.title)
@@ -52,3 +63,30 @@ class Job(models.Model):
 
     class Meta:
         ordering = ['-created']
+
+
+class JobInactivated(TimeStampedModel):
+    """ Jobs Inactivated """
+    REASONS = (
+        ('No es un trabajo relacionado con Python', 'No es un trabajo relacionado con Python'),
+        ('Spam', 'Spam'),
+        ('Información insuficiente', 'Información insuficiente'),
+    )
+
+    job = models.ForeignKey(Job)
+    reason = models.CharField(
+        max_length=100,
+        blank=False,
+        choices=REASONS,
+        verbose_name=_('Motivo'))
+    comment = models.TextField(blank=True,
+                               null=True,
+                               verbose_name=_('Comentario'))
+
+    def __str__(self):
+        return u'%s' % self.job.title
+
+    def get_absolute_url(self):
+        return reverse('jobs_list_all')
+
+
