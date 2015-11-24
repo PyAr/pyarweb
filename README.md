@@ -147,3 +147,12 @@ $ python manage.py loaddata fixtures/planeta_pyar.json
 ```
 
 Más adelante habrá que asociar cada blog al usuario correspondiente.
+
+Como funciona el sitio en producción 
+==================================== 
+
+Estamos ejecutando gunicorn atrás de un Apache que hace proxy reverso. 
+
+Gunicorn corre con supervisor:
+
+`supervisorctl start|stop|restart pyarweb`
