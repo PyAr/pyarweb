@@ -1,0 +1,8 @@
+Te informamos que tu aviso de trabajo "{{ job_title }}" fue dado de baja.
+
+Motivo: {{ reason }}
+{% if comment %}
+Detalles:  {{ comment }}
+{% endif %}
+
+El equipo de PyAr.

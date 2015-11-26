@@ -1,6 +1,7 @@
 from django.template import Library
 from lxml import etree
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import Group
 from waliki.settings import get_slug
 
 register = Library()
@@ -42,3 +43,9 @@ def html2text(html):
 def wikify(value, prefix=''):
     slug = get_slug(prefix + str(value))
     return reverse('waliki_detail', args=[slug])
+
+
+@register.filter
+def has_group(user, group_name):
+    group = Group.objects.get(name=group_name)
+    return True if group in user.groups.all() else False
