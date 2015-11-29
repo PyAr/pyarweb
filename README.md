@@ -1,5 +1,6 @@
 ¿Queres colaborar en el proyecto? Al momento tenemos [![Stories in Ready](https://badge.waffle.io/pyar/pyarweb.png?label=ready&title=Ready)](https://waffle.io/pyar/pyarweb) tareas en
 las que podes colaborar, sube a bordo! 
+
 pyarweb
 =======
 Es la implementación del sitio para PyAr / Python Argentina hecha con Django
@@ -48,7 +49,7 @@ Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
       $ mkvirtualenv pyarweb
       ```
 
-      * Usando *virtualenv*
+    * Usando *virtualenv*
 
       ```
       $ virtualenv -p /usr/bin/python3.4 pyarweb
@@ -69,7 +70,7 @@ Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
       $ workon pyarweb
       ```
 
-      * Mediante *virtualenv*
+  * Mediante *virtualenv*
 
       ```
       $ source pyarweb/bin/activate
@@ -100,7 +101,6 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
     $ sudo apt-get install redis-server
     ```
 
-
 ## Correr Servicios:
 
 1. Sincronizar BD con los modelos:
@@ -114,7 +114,7 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
   2. Correr Celery (usando el comando dentro de tu virtualenv)
 
     ```
-    $ python3 manage.py celery -A pyarweb worker --beat --autoreload --loglevel=INFO
+    $ python manage.py celery -A pyarweb worker --beat --autoreload --loglevel=INFO
     ```
 
 3. Correr el servidor de desarrollo:
