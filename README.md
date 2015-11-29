@@ -163,17 +163,23 @@ Más adelante habrá que asociar cada blog al usuario correspondiente.
 
 ## Contribuyendo con PyArWeb
 
-Todas las contribuciones son mas que bienvenidas, pero para empezar a
-contribuir estos serían los siguientes pasos:
+Existen varias maneras de contribuir con la web de PyAr, reportando bugs,
+revisando que esos bugs se encuentren vigentes, etc, los pasos que se
+encuentran a continuación describen como realizar contribuciones a nivel de la
+aplicación.
 
-1. Forkea este repo http://github.com/pyar/PyArWeb
-2. Haz los cambios en tu repo
-3. Recuerda hacer tests! (en lo posible) de los cambios que hagas, si bien la
+Todas las contribuciones son mas que bienvenidas, pero para empezar a
+contribuir (con código) estos serían los siguientes pasos:
+
+1. Lee el archivo [`CONTRIBUTING.md`](CONTRIBUTING.md) para entender cómo
+funciona git, git-flow y tener una calidad mínima del código
+
+2. Recuerda hacer tests! (en lo posible) de los cambios que hagas, si bien la
 base de tests en este momento no es muy grande es algo que estaremos intentando
 cambiar
-4. Lee el archivo [`CONTRIBUTING.md`](CONTRIBUTING.md) para mas información acerca de la calidad
-mínima del código
-5. Una vez tengas todo revisado haz un pull request a este proyecto
-https://github.com/PyAr/pyarweb/ y haz referencia al issue
-6. Una vez tu pull request sea aprobado tu código pasará a la inmortalidad de
+
+3. Una vez tengas todo revisado haz un pull request a este proyecto
+https://github.com/PyAr/pyarweb/ y haz referencia al issue.
+
+Una vez tu pull request sea aprobado tu código pasará a la inmortalidad de
 PyAr :)
