@@ -36,3 +36,4 @@ django-sendfile==0.3.6
 hovercraft==1.1
 django-autoslug==1.7.2
 django-dbbackup==2.0.4
+django-planet==0.8.3

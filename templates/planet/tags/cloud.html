@@ -1,20 +1,10 @@
-{% extends "planet/base.html" %}
+{% extends "base_site.html" %}
 {% load i18n pagination_tags  %}
 {% load url from future %}
 
-{% block head_title %}{% trans "Tags cloud" %}{% endblock %}
+{% block title %}{% trans "Tags cloud" %}{% endblock %}
 
-{% block extra_head %}
-    <meta name="title" content="{% trans 'Tags cloud' %} " />
-    <meta name="description" content="{% trans 'Tags cloud' %} " />
-    <meta name="robots" content="noindex, follow" />
-{% endblock %}
-
-{% block breadcrumb_section %}<li class="active">Tags</li>{% endblock %}
-
-{% block tags_class %}class="active"{% endblock %}
-
-{% block content %}
+{% block left-column %}
 <h1>{% trans "Tag cloud" %}</h1>
 <div class="tags cloud">
     {% autopaginate tags_cloud 200 %}
