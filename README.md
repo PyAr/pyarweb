@@ -1,6 +1,8 @@
 ¿Queres colaborar en el proyecto? Al momento tenemos [![Stories in Ready](https://badge.waffle.io/pyar/pyarweb.png?label=ready&title=Ready)](https://waffle.io/pyar/pyarweb) tareas en
 las que podes colaborar, sube a bordo! 
 
+[![Build Status](https://travis-ci.org/PyAr/pyarweb.png)](https://secure.travis-ci.org/PyAr/pyarweb.svg?branch=master)
+
 pyarweb
 =======
 Es la implementación del sitio para PyAr / Python Argentina hecha con Django
@@ -49,6 +51,13 @@ Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
       $ mkvirtualenv pyarweb
       ```
 
+    * Usando *virtualenv*
+
+      ```
+      $ virtualenv -p /usr/bin/python3.4 pyarweb
+      ```
+
+
 2. Activas tu virtualenv.
 
   * Mediante *source*
@@ -61,6 +70,12 @@ Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
 
       ```
       $ workon pyarweb
+      ```
+
+  * Mediante *virtualenv*
+
+      ```
+      $ source pyarweb/bin/activate
       ```
 
 3. Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
@@ -93,7 +108,7 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
 1. Sincronizar BD con los modelos:
 
     ```
-    $ python manage.py syncdb
+    $ python manage.py migrate
     ```
 
 2. Correr Celery para Planeta PyAr:
@@ -101,7 +116,7 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
   2. Correr Celery (usando el comando dentro de tu virtualenv)
 
     ```
-    $ celery -A pyarweb worker --beat --autoreload --loglevel=INFO
+    $ python manage.py celery -A pyarweb worker --beat --autoreload --loglevel=INFO
     ```
 
 3. Correr el servidor de desarrollo:
@@ -121,6 +136,7 @@ e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hace
   Visita con tu browser la dirección [`http://localhost:8000`](http://localhost:8000) para ver el sitio.
 
 
+Para más información, si queres contribuír con el proyecto, no dejes de visitar el [*Manual básico de supervivencia para colaborar con el sitio de PyAr*](https://github.com/samuelbustamante/pyarweb/wiki/Manual-b%C3%A1sico-de-supervivencia-para-colaborar-con-el-sitio-de-PyAr).
 
 ## Cómo obtener los datos de la wiki
 
