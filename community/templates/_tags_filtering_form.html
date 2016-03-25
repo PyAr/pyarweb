@@ -6,8 +6,19 @@
     </header>
     <article class="list-group-item">
         <form method="GET" class="col-md-12" id="tags-form">
+            <div class="row">
+                <div class="form-group">
+                    <input id="search-tag" autocomplete="off" class="form-control" name="filtro" placeholder="{% trans 'Buscar etiqueta' %}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{% trans 'Filtrar' %}</button>
+                    <button type="button" class="btn btn-default" id="reset-btn">{% trans 'Limpiar' %}</button>
+                </div>
+            </div>
             <div class="row tags-group">
-                {% for tag in tags %}
+                {% for tag in tags|dictsort:"name" %}
                 <select name="tag_{{ tag.slug }}" id="tag_{{ tag.slug }}" class="hidden">
                     <option value="0"></option>
                     <option value="1" {% if tag.slug in included %}selected{% endif %}></option>
@@ -17,12 +28,6 @@
                     {{ tag.name }}
                 </label>
                 {% endfor %}
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">{% trans 'Filtrar' %}</button>
-                    <button type="button" class="btn btn-default" id="reset-btn">{% trans 'Limpiar' %}</button>
-                </div>
             </div>
         </form>
         <div class="clearfix"></div>
