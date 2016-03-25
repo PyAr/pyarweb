@@ -22,3 +22,9 @@ $('#tags-form #reset-btn').click(function() {
     });
     $('#tags-form .filter_tag').addClass(classNames[0]);
 });
+
+
+$('#search-tag').on('keyup', function(event){
+    $('.filter_tag:not(:contains("' + $(event.target).val() + '"))').css('display', 'none');
+    $('.filter_tag:contains("' + $(event.target).val() + '"), .filter_tag.included').css('display', 'inline-block');
+})
