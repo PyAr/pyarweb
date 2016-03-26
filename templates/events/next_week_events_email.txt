@@ -1,0 +1,15 @@
+{% load i18n %}
+
+{% trans 'Estos eventos de python se llevaran a cabo dentro de los próximos 7 días' %}
+{% for event in events %}
+
+{{ event.start_at }} - {{ event.name }}
+{{ event.description|striptags|safe }}
+{{ event.address }}
+{{ event.url }}
+
+{% endfor %}
+
+-
+
+python.org.ar

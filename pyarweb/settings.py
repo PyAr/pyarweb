@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 from datetime import timedelta
+from celery.schedules import crontab
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -37,7 +38,7 @@ ALLOWED_HOSTS = []
 ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'webmaster@python.org.ar'
 LOGIN_REDIRECT_URL = '/'
-
+PYAR_MAILING_LIST = 'pyar@python.org.ar'
 
 # Disqus
 DISQUS_API_KEY = '3t6eKCbxRGuIG3SmdHb8malOf1h2WxSYEfXbBjWyNBaFLMyD1GOIfWYFciqJqo69'
@@ -199,6 +200,10 @@ CELERYBEAT_SCHEDULE = {
         'task': 'planet.tasks.update_feeds',
         'schedule': timedelta(hours=12)
     },
+    'notify-events': {
+        'task': 'events.tasks.notify_events',
+        'schedule': crontab(day_of_week=0)
+    }
 }
 
 
