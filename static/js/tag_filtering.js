@@ -22,3 +22,11 @@ $('#tags-form #reset-btn').click(function() {
     });
     $('#tags-form .filter_tag').addClass(classNames[0]);
 });
+
+$("#tags-form").submit(function() {
+    $(this).find("select")
+    .prop('disabled', false)
+    .filter(function() {
+        return $(this).val() == 0;
+    }).prop("disabled", true);
+});
