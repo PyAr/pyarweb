@@ -31,7 +31,7 @@ en el botón "Fork" que lo podes encontrar en la parte superior a la derecha.
 
 3. Una vez forkeado el proyecto, te lo clonas. Siempre recordar trabajar
 sobre el branch "develop". A continuación un ejemplo: 
-
+    ```
     [edvm@laptop mixes] $ git clone git@github.com:edvm/pyarweb.git pyar
     Cloning into 'pyar'...
     remote: Counting objects: 3007, done.
@@ -53,7 +53,7 @@ sobre el branch "develop". A continuación un ejemplo:
      * branch            develop    -> FETCH_HEAD
     Already up-to-date.
     [edvm@laptop pyar] (develop)
-
+    ```
 
 4. Hacer tus modificaciones en el branch "develop" no es la mejor práctica. 
 Un pull-request en github representa una peticion de merge (de pull = fetch + merge), 
