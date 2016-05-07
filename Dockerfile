@@ -1,27 +1,7 @@
-FROM ubuntu:14.04
-
-ENV PYTHONUNBUFFERED 1
-
-RUN apt-get -qq update && apt-get install -y  --no-install-recommends \
-    build-essential \
-    git \
-    python3 \
-    python3-dev \
-    gettext \
-    libpq-dev \
-    libffi-dev \
-    libssl-dev \
-    libxml2-dev \
-    libxslt1-dev \
-    zlib1g-dev \
-    libjpeg-dev \
-    libpng12-dev \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN mkdir /code
-WORKDIR /code
-
-ADD . /code/
-RUN pip3 install -U pip setuptools
-RUN pip3 install -r requirements.txt
+from python:3.4-wheezy
+ADD ./requirements.txt /opt/ 
+ADD ./scripts/install-openjpeg.sh /opt/
+RUN apt-get update && apt-get install -y cmake gcc make tk-dev libjpeg-dev zlib1g-dev libtiff5-dev libfreetype6-dev liblcms2-dev libwebp-dev libtk-img-doc libopenjpeg-dev && /opt/install-openjpeg.sh
+RUN pip install -r /opt/requirements.txt
+CMD [ "python", "/opt/code/manage.py runserver 0.0.0.0:8000" ]
+EXPOSE 8000
