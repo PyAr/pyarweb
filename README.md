@@ -12,7 +12,84 @@ Decenas de personas han colaborado de [diversas maneras](https://github.com/PyAr
 ## ¿Cómo arranco / instalo el proyecto en mi máquina?
 
 
-### Via [Docker](http://docker.com) (recomendando):
+## Provisionamiento:
+
+
+### Con Docker (Recomendado)
+
+0. Forkea el repositorio
+
+1. Instalar [Docker](https://docs.docker.com/engine/installation/)
+
+2. Clona / Forkea el repositorio. Dentro del directorio *scripts* se encuentra el
+archivo *webcli.py*, Ejecutalo pasando --help para ver las opciones disponibles:
+
+    `
+    edvm@debian:~/Repos/edvm/pyarweb (develop)*$ ./scripts/webcli.py --help
+    usage: webcmd [-h] [--build-image] [--run-container] [--del-container]
+                  [--run-shell]
+
+    Helper to start a Pyarweb development instance.
+
+    optional arguments:
+      -h, --help       show this help message and exit
+      --build-image    Build PyAr web docker image
+      --run-container  Creates the docker container 
+      --del-container  Removes PyAr web container
+      --run-shell      Exec a bash interpreter on a running containe
+    `
+
+    2.1.  Crea la imagen (build) localmente, para ello ejecuta: `scripts/webcli.py --build-image`
+    2.2.  Crea el container a partir de la imagen generada anteriormente, para ello ejecuta: `scripts/webcli.py --run-container`.
+
+3. Una vez ejecutado `scripts/webcli.py --run-container`, debes instalar los requirements del proyecto, y correr el script de migration.
+    3.1  Instala los requirements con: `pip install -r /opt/code/requirements.txt` 
+    3.2  Corre los migrations con: `cd /opt/code && ./manage.py migrate` 
+
+
+### Con Vagrant:
+
+1. Instalar [VirtualBox](https://www.virtualbox.org/) y [Vagrant](https://www.vagrantup.com/).
+
+2. Levantar maquina virtual (esto ya instala todas las dependencias):
+
+        $ cd path/to/pyarweb
+        $ vagrant up
+
+3. Entrar a la maquina virtual y levantar servicios:
+
+        $ cd path/to/pyarweb
+        $ vagrant ssh
+        vagrant@vagrant $ cd /vagrant/
+
+### Sin Vagrant:
+
+
+Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
+
+1. Debes crear un nuevo virtualenv.
+
+  	* Usando *pyvenv*
+
+      ```
+	    $ pyvenv3-3 pyarweb
+      ```
+
+    * Usando *virtualenvwrapper*
+
+      ```
+      $ export VIRTUALENV_PYTHON=/usr/bin/python3
+      $ mkvirtualenv pyarweb
+      ```
+
+    * Usando *virtualenv*
+
+      ```
+      $ virtualenv -p /usr/bin/python3.4 pyarweb
+      ```
+
+
+2. Activas tu virtualenv.
 
 
 1. Instalar [docker-compose](https://docs.docker.com/compose/install/) de la manera recomendada
