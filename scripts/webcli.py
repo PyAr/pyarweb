@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-import shlex
 import argparse
-import subprocess
 
 
 CONTAINER_NAME = 'pyar'
@@ -24,9 +22,24 @@ parser.add_argument(
     help='Build PyAr web docker image')
 
 parser.add_argument(
-    '--run-shell',
+    '--del-container',
+    action='store_true',
+    help='Removes PyAr web container')
+
+parser.add_argument(
+    '--shell',
     action='store_true',
     help='Exec a bash interpreter on a running container')
+
+parser.add_argument(
+    '--install-requirements',
+    action='store_true',
+    help='Install project requirements')
+
+parser.add_argument(
+    '--run-migrate',
+    action='store_true',
+    help='Run manage.py migrate')
 
 
 def build():
@@ -36,7 +49,7 @@ def build():
     assert os.path.isfile(dockerfile), "{} file not found.".format(dockerfile)
 
     cmd = "docker build -t pyarweb/django ."
-    subprocess.run(shlex.split(cmd))
+    os.system(cmd)
 
 
 def run():
@@ -46,13 +59,19 @@ def run():
     assert os.path.isfile(dockerfile), "{} file not found.".format(dockerfile)
 
     cmd = "docker run -it -v {}:/opt/code -p 8000:8000 --name {} pyarweb/django".format(curdir, CONTAINER_NAME)
-    subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    os.system(cmd)
+
+
+def delete_container():
+    """Removes PyAr ."""
+    cmd = "docker rm {}".format(CONTAINER_NAME)
+    os.system(cmd)
 
 
 def shell():
     """Get a bash shell in docker container."""
     cmd = "docker exec -it {} /bin/bash".format(CONTAINER_NAME)
-    subprocess.run(shlex.split(cmd))
+    os.system(cmd)
 
 
 args = parser.parse_args()
@@ -60,5 +79,7 @@ if args.build_image:
     build()
 elif args.run_container:
     run()
-elif args.run_shell:
+elif args.shell:
     shell()
+elif args.del_container:
+    delete_container()

@@ -16,6 +16,39 @@ Mas de 20 personas sprinteando en PyconAr!!!
 
 ## Provisionamiento:
 
+
+### Con Docker (Recomendado)
+
+0. Forkea el repositorio
+
+1. Instalar [Docker](https://docs.docker.com/engine/installation/)
+
+2. Clona / Forkea el repositorio. Dentro del directorio *scripts* se encuentra el
+archivo *webcli.py*, Ejecutalo pasando --help para ver las opciones disponibles:
+
+    `
+    edvm@debian:~/Repos/edvm/pyarweb (develop)*$ ./scripts/webcli.py --help
+    usage: webcmd [-h] [--build-image] [--run-container] [--del-container]
+                  [--run-shell]
+
+    Helper to start a Pyarweb development instance.
+
+    optional arguments:
+      -h, --help       show this help message and exit
+      --build-image    Build PyAr web docker image
+      --run-container  Creates the docker container 
+      --del-container  Removes PyAr web container
+      --run-shell      Exec a bash interpreter on a running containe
+    `
+
+    2.1.  Crea la imagen (build) localmente, para ello ejecuta: `scripts/webcli.py --build-image`
+    2.2.  Crea el container a partir de la imagen generada anteriormente, para ello ejecuta: `scripts/webcli.py --run-container`.
+
+3. Una vez ejecutado `scripts/webcli.py --run-container`, debes instalar los requirements del proyecto, y correr el script de migration.
+    3.1  Instala los requirements con: `pip install -r /opt/code/requirements.txt` 
+    3.2  Corre los migrations con: `cd /opt/code && ./manage.py migrate` 
+
+
 ### Con Vagrant:
 
 1. Instalar [VirtualBox](https://www.virtualbox.org/) y [Vagrant](https://www.vagrantup.com/).
