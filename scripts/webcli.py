@@ -31,16 +31,6 @@ parser.add_argument(
     action='store_true',
     help='Exec a bash interpreter on a running container')
 
-parser.add_argument(
-    '--install-requirements',
-    action='store_true',
-    help='Install project requirements')
-
-parser.add_argument(
-    '--run-migrate',
-    action='store_true',
-    help='Run manage.py migrate')
-
 
 def build():
     """Run docker build, then docker run."""
