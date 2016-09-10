@@ -3,13 +3,10 @@ from django_summernote.widgets import SummernoteInplaceWidget
 from django.utils.translation import ugettext_lazy as _
 
 from bootstrap3_datetime.widgets import DateTimePicker
-from crispy_forms.layout import Submit, Reset, Layout, Div, Field
-from crispy_forms.helper import FormHelper
+from .models import Event, EventParticipation
+from .mixins import CrispyFormMixin
 
-from .models import Event
-
-
-class EventForm(forms.ModelForm):
+class EventForm(CrispyFormMixin):
 
     description = forms.CharField(widget=SummernoteInplaceWidget())
 
@@ -35,7 +32,7 @@ class EventForm(forms.ModelForm):
         )
     )
 
-    class Meta:
+    class Meta(CrispyFormMixin.Meta):
         model = Event
         fields = (
             'name',
@@ -47,25 +44,8 @@ class EventForm(forms.ModelForm):
             'end_at',
             'registration_enabled'
         )
+        crispy_fields = fields
 
-    def __init__(self, *args, **kwargs):
-        super(EventForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.form_method = "post"
-        self.helper.add_input(Submit('job_submit', _('Guardar')))
-        self.helper.add_input(Reset('job_reset', _('Limpiar'), css_class='btn-default'))
-        self.helper.layout = Layout(
-            Div(
-                'name',
-                'description',
-                'place',
-                'address',
-                'url',
-                'start_at',
-                'end_at',
-                'registration_enabled'
-            )
-        )
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
@@ -81,3 +61,15 @@ class EventForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         super(EventForm, self).save(*args, **kwargs)
         self.instance.save()
+
+
+class EventParticipationForm(CrispyFormMixin):
+    class Meta(CrispyFormMixin.Meta):
+        model = EventParticipation
+        fields = (
+            'name',
+            'email',
+            'interest',
+            'seniority',
+        )
+        crispy_fields = fields
