@@ -1,39 +1,39 @@
 {% load i18n %}
 
 
-            <div class="col-md-6">
+<div class="col-md-6">
 
-            <h3>{% trans "¿De qué se trata?" %}</h3>
-            <p>{{ obj.description|safe }}</p>
+<h3>{% trans "¿De qué se trata?" %}</h3>
+<p>{{ obj.description|safe }}</p>
 
-          </div>
+</div>
 
-          <div class="col-md-6">
+<div class="col-md-6">
 
-            <h3>{% trans "¿Cuándo?" %}</h3>
-            {% if obj.start_at %}
-              <p>{% trans "Comienza" %}: {{ obj.start_at }}</p>
-            {% endif %}
+<h3>{% trans "¿Cuándo?" %}</h3>
+{% if obj.start_at %}
+  <p>{% trans "Comienza" %}: {{ obj.start_at }}</p>
+{% endif %}
 
-            {% if obj.end_at %}
-              <p>{% trans "Termina" %}: {{ obj.end_at }}</p>
-            {% endif %}
+{% if obj.end_at %}
+  <p>{% trans "Termina" %}: {{ obj.end_at }}</p>
+{% endif %}
 
-            <h3>{% trans "¿Dónde?" %}</h3>
-            <p>{{ obj.place }} | {{ obj.address }}</p>
+<h3>{% trans "¿Dónde?" %}</h3>
+<p>{{ obj.place }} | {{ obj.address }}</p>
 
 
-            {% if obj.url %}
-              <h3>{% trans "Más Información" %}</h3>
-              <p>
-                <a href="{{ obj.url }}">{{ obj.url }}</a>
-              </p>
-            {% endif %}
+{% if obj.url %}
+  <h3>{% trans "Más Información" %}</h3>
+  <p>
+    <a href="{{ obj.url }}">{{ obj.url }}</a>
+  </p>
+{% endif %}
 
-            {% if obj.registration_enabled %}
-              <p>
-                <a class="btn btn-primary center" href="{% url 'events:edit' event.id %}">
-                  {% trans 'Inscribirme' %}
-                </a>
-              </p>
-            {% endif %}
+{% if obj.registration_enabled %}
+  <p>
+    <a class="btn btn-primary center" href="{% url 'events:participate' event.id %}">
+      {% trans 'Inscribirme' %}
+    </a>
+  </p>
+{% endif %}
