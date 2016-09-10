@@ -44,7 +44,8 @@ class EventForm(forms.ModelForm):
             'address',
             'url',
             'start_at',
-            'end_at'
+            'end_at',
+            'registration_enabled'
         )
 
     def __init__(self, *args, **kwargs):
@@ -62,6 +63,7 @@ class EventForm(forms.ModelForm):
                 'url',
                 'start_at',
                 'end_at',
+                'registration_enabled'
             )
         )
 
