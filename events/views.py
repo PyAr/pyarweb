@@ -1,19 +1,19 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import (CreateView,
                                        UpdateView,
                                        DeleteView)
-
 from braces.views import LoginRequiredMixin
 
 from community.views import OwnedObject
 
-from .forms import EventForm
-from .models import Event
+from .forms import EventForm, EventParticipationForm
+from .models import Event, EventParticipation
 from .mixins import EventMixin
 
 from django.contrib.syndication.views import Feed
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 
 
 class EventsFeed(Feed):
@@ -73,3 +73,17 @@ class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
 class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
     model = Event
     success_url = reverse_lazy("events:events_list_all")
+
+
+class EventParticipationCreate(SuccessMessageMixin, CreateView):
+    model = EventParticipation
+    form_class = EventParticipationForm
+    success_message = "Participation successfully registered. <b>hey</>"
+
+    def form_valid(self, form):
+        # If user is authenticated, then set instance.owner, else dont worry
+        form.instance.event_id = self.kwargs['pk']
+        return super(EventParticipationCreate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('events:detail', kwargs=self.kwargs)
