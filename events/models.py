@@ -17,6 +17,9 @@ class Event(models.Model):
     end_at = models.DateTimeField(verbose_name=_('Termina a las'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    registration_enabled = models.BooleanField(default=False,
+    										   verbose_name=_('Habilitar suscripción'))
+
 
     def __str__(self):
         return "%s by %s" % (self.name, self.owner)
