@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
+from jobs.models import JOB_SENIORITIES
+
 
 class Event(models.Model):
     """A PyAr events."""
@@ -17,12 +19,43 @@ class Event(models.Model):
     end_at = models.DateTimeField(verbose_name=_('Termina a las'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    registration_enabled = models.BooleanField(default=False,
-    										   verbose_name=_('Habilitar suscripción'))
-
+    registration_enabled = models.BooleanField(
+        default=False,
+        verbose_name=_('Habilitar suscripción')
+    )
 
     def __str__(self):
         return "%s by %s" % (self.name, self.owner)
 
     def get_absolute_url(self):
         return reverse('events:detail', args=[self.id])
+
+
+class EventParticipation(models.Model):
+    """A registration record to a PyAr event."""
+
+    event = models.ForeignKey(Event, related_name='participants')
+    user = models.ForeignKey(User, null=True)
+    name = models.CharField(max_length=100, verbose_name=_('nombre, nick, alias...'))
+    email = models.EmailField(max_length=255, verbose_name=_('email'))
+    interest = models.TextField(verbose_name=_('intereses'), null=True)
+    seniority = models.CharField(
+        max_length=100,
+        blank=True,
+        default='',
+        choices=JOB_SENIORITIES,
+        verbose_name=_('experiencia')
+    )
+    confirmed = models.BooleanField(
+        default=False,
+        verbose_name=_('Participación confirmada')
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self):
+        return "%s participation in %s" % (self.name, self.event.name)
+
+    def get_absolute_url(self):
+        return reverse('events:participation', args=[self.id])
