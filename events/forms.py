@@ -45,6 +45,10 @@ class EventForm(CrispyFormMixin):
             'registration_enabled'
         )
         crispy_fields = fields
+        help_texts = {
+            'registration_enabled': _('Esta opción habilita la posiblidad de que la gente se '
+                                      'inscriba al evento'),
+        }
 
 
     def clean(self):
