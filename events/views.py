@@ -1,4 +1,5 @@
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView
@@ -82,8 +83,14 @@ class EventParticipationCreate(SuccessMessageMixin, CreateView):
     success_message = _("Tu inscripción al evento ha sido registrada.<br><i>¡Muchas gracias!</i>")
 
     def form_valid(self, form):
-        # If user is authenticated, then set instance.owner, else dont worry
-        form.instance.event_id = self.kwargs['pk']
+        event_id = self.kwargs['pk']
+        already_subscribed = EventParticipation.objects.filter(event_id=event_id,
+                                                               email=form.instance.email).exists()
+        if already_subscribed:
+            form.add_error('email', ValidationError(_('Este email ya se inscripto en este evento')))
+            return super(EventParticipationCreate, self).form_invalid(form)
+
+        form.instance.event_id = event_id
         return super(EventParticipationCreate, self).form_valid(form)
 
     def get_success_url(self):
