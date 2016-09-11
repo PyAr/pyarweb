@@ -16,19 +16,29 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EventParticipation',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
                 ('name', models.CharField(verbose_name='nombre, nick, alias...', max_length=100)),
                 ('email', models.EmailField(verbose_name='email', max_length=255)),
-                ('interest', models.TextField(verbose_name='intereses', null=True)),
-                ('seniority', models.CharField(verbose_name='experiencia', blank=True, choices=[('Trainee', 'Trainee'), ('Junior', 'Junior'), ('Semi Senior', 'Semi Senior'), ('Senior', 'Senior')], default='', max_length=100)),
+                ('interest', models.TextField(verbose_name='intereses', blank=True)),
+                ('seniority', models.CharField(verbose_name='experiencia', max_length=100, default='', blank=True, choices=[('Trainee', 'Trainee'), ('Junior', 'Junior'), ('Semi Senior', 'Semi Senior'), ('Senior', 'Senior')])),
                 ('confirmed', models.BooleanField(verbose_name='Participación confirmada', default=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('event', models.ForeignKey(to='events.Event', related_name='participants')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(null=True, to=settings.AUTH_USER_MODEL)),
             ],
             options={
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='eventparticipation',
+            unique_together=set([('event', 'email')]),
+        ),
+        migrations.AlterField(
+            model_name='event',
+            name='registration_enabled',
+            field=models.BooleanField(verbose_name='Habilitar inscripción', default=False),
+            preserve_default=True,
         ),
     ]
