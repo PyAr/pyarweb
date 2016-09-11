@@ -21,7 +21,7 @@ class Event(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     registration_enabled = models.BooleanField(
         default=False,
-        verbose_name=_('Habilitar suscripción')
+        verbose_name=_('Habilitar inscripción')
     )
 
     def __str__(self):
@@ -38,7 +38,7 @@ class EventParticipation(models.Model):
     user = models.ForeignKey(User, null=True)
     name = models.CharField(max_length=100, verbose_name=_('nombre, nick, alias...'))
     email = models.EmailField(max_length=255, verbose_name=_('email'))
-    interest = models.TextField(verbose_name=_('intereses'), null=True)
+    interest = models.TextField(verbose_name=_('intereses'), blank=True)
     seniority = models.CharField(
         max_length=100,
         blank=True,
