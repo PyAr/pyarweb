@@ -1,5 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import (CreateView,
                                        UpdateView,
@@ -78,7 +79,7 @@ class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
 class EventParticipationCreate(SuccessMessageMixin, CreateView):
     model = EventParticipation
     form_class = EventParticipationForm
-    success_message = "Participation successfully registered. <b>hey</>"
+    success_message = _("Tu inscripción al evento ha sido registrada.<br><i>¡Muchas gracias!</i>")
 
     def form_valid(self, form):
         # If user is authenticated, then set instance.owner, else dont worry
