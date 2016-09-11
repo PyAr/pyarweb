@@ -97,6 +97,58 @@ Debes tener Python 3.3 o 3.4, no hay compatibilidad con Python 2.
 
 2. Activas tu virtualenv.
 
+  * Mediante *source*
+
+      ```
+      $ source pyarweb/bin/activate
+      ```
+
+  * Mediante *virtualenvwrapper*
+
+      ```
+      $ workon pyarweb
+      ```
+
+  * Mediante *virtualenv*
+
+      ```
+      $ source pyarweb/bin/activate
+      ```
+
+3. Si no tenés pip instalado, descarga el .tar.gz desde https://pypi.python.org/pypi/setuptools
+e instalalo con el `python3` de tu virtualenv. Luego de instalar setuptools hacer:
+
+    ```
+    $ easy_install-3.3 pip
+    ```
+
+4. Instalar librerías de desarrollo.
+
+    ```
+    $ sudo apt-get install python3-dev libxml2-dev libxslt1-dev zlib1g-dev libffi-dev
+    ```
+
+5. Instalar las dependencias.
+
+    ```
+    $ pip3 install -r ./requirements.txt
+    ```
+
+6. Instalar Redis
+
+    ```
+    $ sudo apt-get install redis-server
+    ```
+
+## Correr Servicios:
+
+1. Sincronizar BD con los modelos:
+
+    ```
+    $ python manage.py migrate
+    ```
+
+2. Correr Celery para Planeta PyAr:
 
 1. Instalar [docker-compose](https://docs.docker.com/compose/install/) de la manera recomendada
    para tu sistema operativo. 
