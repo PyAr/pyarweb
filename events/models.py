@@ -53,9 +53,14 @@ class EventParticipation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ("event", "email")
 
     def __str__(self):
-        return "%s participation in %s" % (self.name, self.event.name)
+        result = "%s inscription" % self.name
+        if self.event:
+            result += " in %s" % self.event.name
+        return result
 
     def get_absolute_url(self):
         return reverse('events:participation', args=[self.id])
