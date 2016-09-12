@@ -8,7 +8,7 @@ from django.views.generic.edit import (CreateView,
                                        DeleteView)
 from braces.views import LoginRequiredMixin
 
-from community.views import OwnedObject
+from community.views import validate_obj_owner, OwnedObject
 
 from .forms import EventForm, EventParticipationForm
 from .models import Event, EventParticipation
@@ -95,3 +95,24 @@ class EventParticipationCreate(SuccessMessageMixin, CreateView):
 
     def get_success_url(self):
         return reverse('events:detail', kwargs=self.kwargs)
+
+
+class EventParticipationList(LoginRequiredMixin, ListView):
+    http_method_names = [u'get']
+    context_object_name = 'participants'
+
+    def get_context_data(self, **kwargs):
+        """Overwrite get_context_data to add the related Event's ID to the template context."""
+        context = super(EventParticipationList, self).get_context_data(**kwargs)
+        context['event'] = self.event
+        return context
+
+    def get_event(self):
+        event = Event.objects.get(pk=self.kwargs['pk'])
+        self.event = validate_obj_owner(event, self.request.user)
+        return self.event
+
+    def get_queryset(self):
+        event = self.get_event()
+        self.queryset = event.participants.all()
+        return super().get_queryset()
