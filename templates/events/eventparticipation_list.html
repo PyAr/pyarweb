@@ -1,0 +1,92 @@
+{% extends "base_site.html" %}
+
+{% load i18n pagination_tags %}
+
+{% load devtags %}
+
+{% block title %}Participantes{% endblock %}
+
+{% block left-column %}
+
+<!-- Proximos eventos -->
+
+<section>
+    <div class="page-header">
+        <h2>
+            {% trans "Participantes" %}
+            <span class="section-button-group pull-right">
+                <button type="button" class="btn btn-default" onClick="alert('Not implemented yet')">
+                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                    {% trans "Bajar CSV" %}
+                </button>
+                <a href="{% url 'events:detail' event.id %}" class="btn btn-info">{% trans "Volver al evento" %}</a>
+            </span>
+        </h2>
+        <h4>Lista de inscriptos al evento <strong><i>{{ event.name }}</i></strong></h4>
+    </div>
+
+    {% for participant in participants %}
+        {% if forloop.first %}
+            <div class="table-responsive">
+            <table class="table table-hover table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans 'Nombre' %}</th>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Nivel' %}</th>
+                        <th>{% trans 'Usuario PyAr' %}</th>
+                        <th>{% trans 'Confirmado' %}</th>
+                        <th>{% trans 'Acciones' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+        {% endif %}
+
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ participant.name }}</td>
+            <td>{{ participant.email|urlize }}</td>
+            <td>{{ participant.seniority }}</td>
+            <td>{{ participant.user|default_if_none:"" }}</td>
+            <td>
+                <span
+                    class="glyphicon {% if participant.confirmed %} glyphicon-ok {% else %} glyphicon-remove {% endif %}"
+                    aria-hidden="true"
+                    title="Última actualización: {{ participant.updated_at|date:"D d M Y" }}">
+                </span>
+            </td>
+            <td>
+                <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                    <button type="button" class="btn btn-success" onClick="alert('Not implemented yet')">
+                        <span
+                            class="glyphicon glyphicon-ok"
+                            aria-hidden="true">
+                        </span>
+                        {% trans 'Confirm' %}
+                    </button>
+                    <button type="button" class="btn btn-danger" onClick="alert('Not implemented yet')">
+                        <span
+                            class="glyphicon glyphicon-remove-sign"
+                            aria-hidden="true">
+                        </span>
+                        {% trans 'Eliminar' %}
+                    </button>
+                </div>
+            </td>
+        </tr>
+
+        {% if forloop.last %}
+                </tbody>
+            </table>
+            </div>
+        {% endif %}
+
+    {% empty %}
+
+        <p class="list-group-item-text">{% trans "No hay inscriptos" %}</p>
+
+    {% endfor %}
+</section>
+
+{% endblock %}

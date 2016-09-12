@@ -32,8 +32,14 @@
 
 {% if obj.registration_enabled %}
   <p>
-    <a class="btn btn-primary center" href="{% url 'events:participate' event.id %}">
-      {% trans 'Inscribirme' %}
-    </a>
+    {% if user == event.owner %}
+        <a class="btn btn-primary center" href="{% url 'events:participants' event.id %}">
+          {% trans 'Ver inscriptos' %}
+        </a>
+    {% else %}
+        <a class="btn btn-primary center" href="{% url 'events:participate' event.id %}">
+          {% trans 'Inscribirme' %}
+        </a>
+    {% endif %}
   </p>
 {% endif %}
