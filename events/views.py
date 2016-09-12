@@ -93,6 +93,17 @@ class EventParticipationCreate(SuccessMessageMixin, CreateView):
         form.instance.event_id = event_id
         return super(EventParticipationCreate, self).form_valid(form)
 
+    def get_initial(self):
+        """
+        Returns the initial data to use for forms on this view.
+        """
+        initial = super().get_initial()
+        user = self.request.user
+        if user.is_authenticated():
+            initial['name'] = user.get_full_name() or user.get_username()
+            initial['email'] = user.email
+        return initial
+
     def get_success_url(self):
         return reverse('events:detail', kwargs=self.kwargs)
 
