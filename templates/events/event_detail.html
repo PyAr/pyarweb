@@ -29,16 +29,20 @@
           <h1>
             {{ event.name }}
 
-            {% if event.owner == user %}
-              <span class="section-button-group pull-right">
-                <a class="btn btn-default" href="{% url 'events:edit' event.id %}">
-                  {% trans 'Modificar' %}
-                </a>
-                <a class="btn btn-danger" href="{% url 'events:delete' event.id %}">
-                  {% trans 'Borrar' %}
-                </a>
-              </span>
-            {% endif %}
+            <span class="section-button-group pull-right">
+              {% if event.owner == user %}
+                    <a class="btn btn-default" href="{% url 'events:edit' event.id %}">
+                      {% trans 'Modificar' %}
+                    </a>
+                    <a class="btn btn-danger" href="{% url 'events:delete' event.id %}">
+                      {% trans 'Borrar' %}
+                    </a>
+                {% else %}
+                    <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
+                      {% trans "Volver a eventos" %}
+                    </a>
+                {% endif %}
+            </span>
           </h1>
 
           <small>
