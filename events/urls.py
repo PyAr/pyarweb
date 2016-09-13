@@ -8,7 +8,8 @@ from .views import (EventDetail,
                     EventDelete,
                     EventsFeed,
                     EventParticipationList,
-                    EventParticipationCreate)
+                    EventParticipationCreate,
+                    EventParticipationDetail)
 
 urlpatterns = patterns(
     '',
@@ -16,10 +17,12 @@ urlpatterns = patterns(
     url(r'^rss$', EventsFeed(), name='events_feed'),
     url(r'^(?P<pk>\d+)/$', EventDetail.as_view(), name='detail'),
     url(r'^add/$', EventCreate.as_view(), name='add'),
-    url(r'^(?P<pk>\d+)/edit/$', EventUpdate.as_view(), name='edit'),
-    url(r'^(?P<pk>\d+)/delete/$', EventDelete.as_view(), name='delete'),
-    url(r'^(?P<pk>\d+)/participate/$', EventParticipationCreate.as_view(),
-        name='participate'),
-    url(r'^(?P<pk>\d+)/participants/$', EventParticipationList.as_view(),
-        name='participants')
+    url(r'^(?P<pk>\d+)/editar/$', EventUpdate.as_view(), name='edit'),
+    url(r'^(?P<pk>\d+)/borrar/$', EventDelete.as_view(), name='delete'),
+    url(r'^(?P<pk>\d+)/inscribirse/$', EventParticipationCreate.as_view(),
+        name='register'),
+    url(r'^(?P<pk>\d+)/inscriptos/$', EventParticipationList.as_view(),
+        name='registered'),
+    url(r'^(?P<pk>\d+)/inscripcion/(?P<participation_pk>\d+)/$', EventParticipationDetail.as_view(),
+        name='registration'),
 )
