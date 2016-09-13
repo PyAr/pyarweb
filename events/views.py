@@ -10,7 +10,7 @@ from braces.views import LoginRequiredMixin
 
 from community.views import validate_obj_owner, OwnedObject
 
-from .forms import EventForm, EventParticipationForm
+from .forms import EventForm, AnonymousEventParticipationForm, AuthenticatedEventParticipationForm
 from .models import Event, EventParticipation
 from .mixins import EventMixin
 
@@ -59,6 +59,33 @@ class EventList(ListView):
 class EventDetail(EventMixin, DetailView):
     context_object_name = "event"
 
+    def user_participation_details(self):
+        """
+        Collect the necessary info for the template context if the user is already registered to the
+        Event.
+        :return: dict with 'user_is_registered' (bool) and  'participation_id' (int | None) fields
+
+        """
+        details = {
+            'user_is_registered': False,
+            'participation_id': None
+        }
+        user = self.request.user
+        if user.is_anonymous():
+            return details
+
+        try:
+            participation = self.object.participants.get(user=user)
+            details.update(user_is_registered=True, participation_id=participation.id)
+        except EventParticipation.DoesNotExist:
+            pass
+        return details
+
+    def get_context_data(self, **kwargs):
+        context = super(EventDetail, self).get_context_data(**kwargs)
+        context.update(self.user_participation_details())
+        return context
+
 
 class EventCreate(LoginRequiredMixin, EventMixin, CreateView):
     form_class = EventForm
@@ -79,19 +106,37 @@ class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
 
 class EventParticipationCreate(SuccessMessageMixin, CreateView):
     model = EventParticipation
-    form_class = EventParticipationForm
+    form_class = AnonymousEventParticipationForm
     success_message = _("Tu inscripción al evento ha sido registrada.<br><i>¡Muchas gracias!</i>")
+
+    def aux_get_user_name(self):
+        user = self.request.user
+        return user.get_full_name() or user.get_username()
 
     def form_valid(self, form):
         event_id = self.kwargs['pk']
-        already_subscribed = EventParticipation.objects.filter(event_id=event_id,
-                                                               email=form.instance.email).exists()
-        if already_subscribed:
-            form.add_error('email', ValidationError(_('Este email ya se inscripto en este evento')))
-            return super(EventParticipationCreate, self).form_invalid(form)
+        inscription = form.instance
+        inscription.event_id = event_id
 
-        form.instance.event_id = event_id
+        user = self.request.user
+        if user.is_authenticated():
+            inscription.user = user
+            inscription.name = self.aux_get_user_name()
+            inscription.email = user.email
+        else:
+            # send validation email
+            pass
+
         return super(EventParticipationCreate, self).form_valid(form)
+
+    def get_form_class(self):
+        """
+        Returns the form class to use in this view
+        """
+        self.form_class = AnonymousEventParticipationForm
+        if self.request.user.is_authenticated():
+            self.form_class = AuthenticatedEventParticipationForm
+        return self.form_class
 
     def get_initial(self):
         """
@@ -100,12 +145,30 @@ class EventParticipationCreate(SuccessMessageMixin, CreateView):
         initial = super().get_initial()
         user = self.request.user
         if user.is_authenticated():
-            initial['name'] = user.get_full_name() or user.get_username()
+            initial['name'] = self.aux_get_user_name()
             initial['email'] = user.email
         return initial
 
     def get_success_url(self):
         return reverse('events:detail', kwargs=self.kwargs)
+
+
+class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = EventParticipation
+    pk_url_kwarg = 'participation_pk'
+    success_message = _("Tu inscripción al evento ha sido actualizada.")
+
+    def get_form_class(self):
+        """
+        Returns the form class to use in this view
+        """
+        self.form_class = AnonymousEventParticipationForm
+        if self.request.user.is_authenticated():
+            self.form_class = AuthenticatedEventParticipationForm
+        return self.form_class
+
+    def get_success_url(self):
+        return self.object.event.get_absolute_url()
 
 
 class EventParticipationList(LoginRequiredMixin, ListView):
