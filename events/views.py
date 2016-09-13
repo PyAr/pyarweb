@@ -1,5 +1,5 @@
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import ValidationError
+from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView
@@ -188,6 +188,13 @@ class EventParticipationList(LoginRequiredMixin, ListView):
         return super().get_queryset()
 
 
-class EventParticipationDelete(LoginRequiredMixin, OwnedObject, EventParticipationMixin,
-                               DeleteView):
+class EventParticipationDelete(LoginRequiredMixin, EventParticipationMixin, DeleteView):
     pk_url_kwarg = 'participation_pk'
+
+    def get_object(self, *args, **kwargs):
+        """A User can delete its participation to an Event. The Event owner can also do that."""
+
+        inscription = super(EventParticipationDelete, self).get_object(*args, **kwargs)
+        if self.request.user not in [inscription.user, inscription.event.owner]:
+            raise Http404()
+        return inscription
