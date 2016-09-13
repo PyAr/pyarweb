@@ -9,7 +9,8 @@ from .views import (EventDetail,
                     EventsFeed,
                     EventParticipationList,
                     EventParticipationCreate,
-                    EventParticipationDetail)
+                    EventParticipationDetail,
+                    EventParticipationDelete)
 
 urlpatterns = patterns(
     '',
@@ -19,10 +20,12 @@ urlpatterns = patterns(
     url(r'^add/$', EventCreate.as_view(), name='add'),
     url(r'^(?P<pk>\d+)/editar/$', EventUpdate.as_view(), name='edit'),
     url(r'^(?P<pk>\d+)/borrar/$', EventDelete.as_view(), name='delete'),
-    url(r'^(?P<pk>\d+)/inscribirse/$', EventParticipationCreate.as_view(),
-        name='register'),
-    url(r'^(?P<pk>\d+)/inscriptos/$', EventParticipationList.as_view(),
-        name='registered'),
+
+    # Event Registration Management
+    url(r'^(?P<pk>\d+)/inscribirse/$', EventParticipationCreate.as_view(), name='register'),
+    url(r'^(?P<pk>\d+)/inscriptos/$', EventParticipationList.as_view(), name='registered'),
     url(r'^(?P<pk>\d+)/inscripcion/(?P<participation_pk>\d+)/$', EventParticipationDetail.as_view(),
         name='registration'),
+    url(r'^(?P<pk>\d+)/inscripcion/(?P<participation_pk>\d+)/borrar/$',
+        EventParticipationDelete.as_view(), name='unregister'),
 )
