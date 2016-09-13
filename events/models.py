@@ -61,6 +61,3 @@ class EventParticipation(models.Model):
         if self.event:
             result += " in %s" % self.event.name
         return result
-
-    def get_absolute_url(self):
-        return reverse('events:participation', args=[self.id])
