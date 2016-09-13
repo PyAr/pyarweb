@@ -12,7 +12,7 @@ from community.views import validate_obj_owner, OwnedObject
 
 from .forms import EventForm, AnonymousEventParticipationForm, AuthenticatedEventParticipationForm
 from .models import Event, EventParticipation
-from .mixins import EventMixin
+from .mixins import EventMixin, EventParticipationMixin
 
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -104,8 +104,7 @@ class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
     success_url = reverse_lazy("events:events_list_all")
 
 
-class EventParticipationCreate(SuccessMessageMixin, CreateView):
-    model = EventParticipation
+class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, CreateView):
     form_class = AnonymousEventParticipationForm
     success_message = _("Tu inscripción al evento ha sido registrada.<br><i>¡Muchas gracias!</i>")
 
@@ -149,12 +148,9 @@ class EventParticipationCreate(SuccessMessageMixin, CreateView):
             initial['email'] = user.email
         return initial
 
-    def get_success_url(self):
-        return reverse('events:detail', kwargs=self.kwargs)
 
-
-class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = EventParticipation
+class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, EventParticipationMixin,
+                               UpdateView):
     pk_url_kwarg = 'participation_pk'
     success_message = _("Tu inscripción al evento ha sido actualizada.")
 
@@ -190,3 +186,8 @@ class EventParticipationList(LoginRequiredMixin, ListView):
         event = self.get_event()
         self.queryset = event.participants.all()
         return super().get_queryset()
+
+
+class EventParticipationDelete(LoginRequiredMixin, OwnedObject, EventParticipationMixin,
+                               DeleteView):
+    pk_url_kwarg = 'participation_pk'
