@@ -8,7 +8,13 @@
 	        <div class="col-md-12">
 		        <form method="post">{% csrf_token %}
                     <h4>
-                        {% trans "Seguro que quiere cancelar su inscripción al evento " %}
+                        {% if user == object.user %}
+                            {% trans "Seguro que quiere cancelar su inscripción al evento " %}
+                        {% else %}
+                            {% trans "Seguro que quiere cancelar la inscripción de" %}
+                            "{{ object.user }}"<{{ object.email|urlize }}>
+                            {% trans "al evento" %}
+                        {% endif %}
                         <strong>"{{ object.event.name }}" </strong>?
                     </h4>
 
