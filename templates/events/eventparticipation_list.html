@@ -65,13 +65,13 @@
                         </span>
                         {% trans 'Confirm' %}
                     </button>
-                    <button type="button" class="btn btn-danger" onClick="alert('Not implemented yet')">
+                    <a href="{% url 'events:unregister' participant.event.id participant.id %}" class="btn btn-danger">
                         <span
                             class="glyphicon glyphicon-remove-sign"
                             aria-hidden="true">
                         </span>
                         {% trans 'Eliminar' %}
-                    </button>
+                    </a>
                 </div>
             </td>
         </tr>
