@@ -92,8 +92,9 @@ INSTALLED_APPS = (
     'waliki.slides',
     'waliki.togetherjs',
     'kombu.transport.django',
-    'djcelery'
+    'djcelery',
     #'waliki.pdf'
+    'captcha',
 )
 
 
