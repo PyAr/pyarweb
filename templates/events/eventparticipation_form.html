@@ -21,8 +21,11 @@
                     <span class="section-button-group pull-right">
                       {% if form.instance.id %}
                           <a href="{% url 'events:detail' form.instance.event.id %}" class="btn btn-info">
-                          {% trans "Volver al evento" %}
-                        </a>
+                            {% trans "Volver al evento" %}
+                          </a>
+                          <a href="{% url 'events:unregister' form.instance.event.id form.instance.id %}" class="btn btn-danger">
+                            {% trans "Eliminar" %}
+                          </a>
                       {% else %}
                           <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
                           {% trans "Volver a eventos" %}
