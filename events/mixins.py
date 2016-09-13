@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Reset, Layout, Div, Field
-from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit, Reset, Layout, Div
 from django import forms
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Event
+from .models import Event, EventParticipation
 
 
 class CrispyFormMixin(forms.ModelForm):
@@ -35,6 +34,15 @@ class EventMixin(object):
 
     def get_success_url(self):
         return reverse_lazy('events:events_list_all')
+
+
+class EventParticipationMixin(object):
+    """Mixin for common attrs."""
+
+    model = EventParticipation
+
+    def get_success_url(self):
+        return reverse_lazy('events:detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class ReadOnlyFieldsMixin(object):
