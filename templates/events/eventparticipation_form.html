@@ -1,53 +1,45 @@
 {% extends "base.html" %}
-
 {% load i18n %}
 {% load devtags %}
 {% load crispy_forms_tags %}
-
 {% block stylesheets %}
-  <link rel="stylesheet" href="/static/css/event_map.css">
-  {{ form.media.css }}
+    <link rel="stylesheet" href="/static/css/event_map.css">
+    {{ form.media.css }}
 {% endblock %}
 
 {% block content %}
+    <main id="main" class="container" role="main">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h2>
+                    {% if form.instance.id %}
+                        {% trans 'Editar participación' %}
+                    {% else %}
+                        {% trans 'Participar' %}
+                    {% endif %}
 
-  <main id="main" class="container" role="main">
-    <div class="col-lg-12">
-      <div class="page-header">
-        <h2>
-          {% if form.instance.id %}
-            {% trans 'Editar participación' %}
-          {% else %}
-            {% trans 'Participar' %}
-          {% endif %}
+                    <span class="section-button-group pull-right">
+                      {% if form.instance.id %}
+                          <a href="{% url 'events:detail' form.instance.event.id %}" class="btn btn-info">
+                          {% trans "Volver al evento" %}
+                        </a>
+                      {% else %}
+                          <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
+                          {% trans "Volver a eventos" %}
+                        </a>
+                      {% endif %}
+                    </span>
+                </h2>
+            </div>
 
-          <span class="section-button-group pull-right">
-              {% if form.instance.id %}
-                <a href="{% url 'events:detail' form.instance.event.id  %}" class="btn btn-info">
-                  {% trans "Volver al evento" %}
-                </a>
-              {% else %}
-                <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
-                  {% trans "Volver a eventos" %}
-                </a>
-              {% endif %}
+            {% crispy form %}
 
-            </span>
-        </h2>
-      </div>
-
-      {% crispy form %}
-
-    </div>
-  </main>
-
+        </div>
+    </main>
 {% endblock %}
 
 {% block javascripts %}
-
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-
-  {{ form.media.js }}
-
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    {{ form.media.js }}
 {% endblock %}
 
