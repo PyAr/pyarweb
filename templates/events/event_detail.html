@@ -22,17 +22,16 @@
                         {{ event.name }}
 
                         <span class="section-button-group pull-right">
+                          <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
+                              {% trans "Volver a eventos" %}
+                          </a>
                           {% if event.owner == user %}
                               <a class="btn btn-default" href="{% url 'events:edit' event.id %}">
                                   {% trans 'Modificar' %}
-                                </a>
+                              </a>
                               <a class="btn btn-danger" href="{% url 'events:delete' event.id %}">
                                   {% trans 'Borrar' %}
-                                </a>
-                          {% else %}
-                              <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
-                                  {% trans "Volver a eventos" %}
-                                </a>
+                              </a>
                           {% endif %}
                         </span>
                     </h1>
