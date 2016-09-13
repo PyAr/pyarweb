@@ -1,3 +1,4 @@
+from captcha.fields import CaptchaField
 from django import forms
 from django_summernote.widgets import SummernoteInplaceWidget
 from django.utils.translation import ugettext_lazy as _
@@ -68,6 +69,8 @@ class EventForm(CrispyFormMixin):
 
 
 class AnonymousEventParticipationForm(CrispyFormMixin):
+    captcha = CaptchaField()
+
     class Meta(CrispyFormMixin.Meta):
         model = EventParticipation
         fields = (
@@ -75,6 +78,7 @@ class AnonymousEventParticipationForm(CrispyFormMixin):
             'email',
             'interest',
             'seniority',
+            'captcha',
         )
         crispy_fields = fields
 
