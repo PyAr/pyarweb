@@ -4,7 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from bootstrap3_datetime.widgets import DateTimePicker
 from .models import Event, EventParticipation
-from .mixins import CrispyFormMixin
+from .mixins import CrispyFormMixin, ReadOnlyFieldsMixin
+
 
 class EventForm(CrispyFormMixin):
 
@@ -50,7 +51,6 @@ class EventForm(CrispyFormMixin):
                                       'inscriba al evento'),
         }
 
-
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
         start_at = cleaned_data.get('start_at')
@@ -67,7 +67,7 @@ class EventForm(CrispyFormMixin):
         self.instance.save()
 
 
-class EventParticipationForm(CrispyFormMixin):
+class AnonymousEventParticipationForm(CrispyFormMixin):
     class Meta(CrispyFormMixin.Meta):
         model = EventParticipation
         fields = (
@@ -77,3 +77,7 @@ class EventParticipationForm(CrispyFormMixin):
             'seniority',
         )
         crispy_fields = fields
+
+
+class AuthenticatedEventParticipationForm(ReadOnlyFieldsMixin, AnonymousEventParticipationForm):
+    readonly_fields = ('name', 'email')
