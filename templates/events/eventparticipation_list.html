@@ -27,20 +27,31 @@
 
     {% for participant in participants %}
         {% if forloop.first %}
-            <div class="table-responsive">
-            <table class="table table-hover table-bordered table-condensed">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>{% trans 'Nombre' %}</th>
-                        <th>{% trans 'Email' %}</th>
-                        <th>{% trans 'Nivel' %}</th>
-                        <th>{% trans 'Usuario PyAr' %}</th>
-                        <th>{% trans 'Confirmado' %}</th>
-                        <th>{% trans 'Acciones' %}</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="row hidden-sm hidden-xs">
+                <div class="col-md-12">
+                    <p>Los participantes <strong>Verificados</strong> son aquellos que:</p>
+                    <ul>
+                        <li>tienen login en PyAr o</li>
+                        <li>inscriptos que verificaron su email siguiendo el link que les fue enviado.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>{% trans 'Nombre' %}</th>
+                                    <th>{% trans 'Email' %}</th>
+                                    <th>{% trans 'Nivel' %}</th>
+                                    <th>{% trans 'Usuario PyAr' %}</th>
+                                    <th>{% trans 'Verificado' %}</th>
+                                    <th>{% trans 'Acciones' %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
         {% endif %}
 
         <tr>
@@ -50,21 +61,23 @@
             <td>{{ participant.seniority }}</td>
             <td>{{ participant.user|default_if_none:"" }}</td>
             <td>
-                <span
-                    class="glyphicon {% if participant.confirmed %} glyphicon-ok {% else %} glyphicon-remove {% endif %}"
-                    aria-hidden="true"
-                    title="Última actualización: {{ participant.updated_at|date:"D d M Y" }}">
-                </span>
+                {% if participant.is_verified %}
+                    {% trans 'Si' %}
+                    <span
+                        class="glyphicon glyphicon-ok text-success"
+                        aria-hidden="true">
+                    </span>
+                {% else %}
+                    {% trans 'No' %}
+                    <span
+                        class="glyphicon glyphicon-remove text-warning"
+                        aria-hidden="true">
+                    </span>
+                {% endif %}
+
             </td>
             <td>
-                <div class="btn-group btn-group-xs" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default disabled" disabled="disabled">
-                        <span
-                            class="glyphicon glyphicon-ok"
-                            aria-hidden="true">
-                        </span>
-                        {% trans 'Confirm' %}
-                    </button>
+                <div class="btn-group btn-group-xs" role="group" aria-label="">
                     <a href="{% url 'events:unregister' participant.event.id participant.id %}" class="btn btn-danger">
                         <span
                             class="glyphicon glyphicon-remove-sign"
@@ -77,8 +90,10 @@
         </tr>
 
         {% if forloop.last %}
-                </tbody>
-            </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         {% endif %}
 
