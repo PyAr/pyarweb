@@ -9,6 +9,7 @@ django-bootstrap3-datetimepicker==2.2.3
 django-crispy-forms==1.6.0
 git+https://github.com/PyAr/django-disqus.git#egg=django-disqus
 django-email-obfuscator==0.1.3
+django-email-confirm-la==2.3.0
 django-extensions==1.3.3
 django-model-utils==2.0.3
 django-pagination-py3==1.1.1
