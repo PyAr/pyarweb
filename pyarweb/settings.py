@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'waliki.slides',
     'waliki.togetherjs',
     'captcha',
+    'email_confirm_la',
 )
 
 
