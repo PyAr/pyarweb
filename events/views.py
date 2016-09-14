@@ -1,4 +1,8 @@
+from braces.views import LoginRequiredMixin
+from community.views import validate_obj_owner, OwnedObject
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.syndication.views import Feed
+from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -6,16 +10,10 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import (CreateView,
                                        UpdateView,
                                        DeleteView)
-from braces.views import LoginRequiredMixin
-
-from community.views import validate_obj_owner, OwnedObject
 
 from .forms import EventForm, AnonymousEventParticipationForm, AuthenticatedEventParticipationForm
 from .models import Event, EventParticipation
 from .mixins import EventMixin, EventParticipationMixin
-
-from django.contrib.syndication.views import Feed
-from django.core.urlresolvers import reverse, reverse_lazy
 
 
 class EventsFeed(Feed):
@@ -106,7 +104,6 @@ class EventDelete(LoginRequiredMixin, OwnedObject, DeleteView):
 
 class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, CreateView):
     form_class = AnonymousEventParticipationForm
-    success_message = _("Tu inscripción al evento ha sido registrada.<br><i>¡Muchas gracias!</i>")
 
     def aux_get_user_name(self):
         user = self.request.user
@@ -122,9 +119,6 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
             inscription.user = user
             inscription.name = self.aux_get_user_name()
             inscription.email = user.email
-        else:
-            # send validation email
-            pass
 
         return super(EventParticipationCreate, self).form_valid(form)
 
@@ -147,6 +141,13 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
             initial['name'] = self.aux_get_user_name()
             initial['email'] = user.email
         return initial
+
+    def get_success_message(self, cleaned_data):
+        success_message = "Tu inscripción al evento ha sido registrada."
+        if not self.request.user.is_authenticated():
+            success_message = "Recibirás un email para confirmar la dirección provista " \
+                              "y así completar tu inscripción."
+        return _(success_message + '<br><i>¡Muchas gracias!</i>')
 
 
 class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, EventParticipationMixin,
