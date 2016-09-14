@@ -1,0 +1,1 @@
+Confirma tu email para suscribirte al evento "{{ email_confirmation.content_object.event.name }}"
