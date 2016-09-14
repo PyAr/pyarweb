@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'djcelery',
     #'waliki.pdf'
     'captcha',
+    'email_confirm_la',
 )
 
 
