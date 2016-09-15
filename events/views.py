@@ -3,7 +3,7 @@ from community.views import validate_obj_owner, OwnedObject
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse_lazy
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView
@@ -110,17 +110,16 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
         return user.get_full_name() or user.get_username()
 
     def form_valid(self, form):
+        # Set the EventParticipation event from the URL param.
         event_id = self.kwargs['pk']
-        inscription = form.instance
-        inscription.event_id = event_id
+        form.instance.event_id = event_id
 
-        user = self.request.user
-        if user.is_authenticated():
-            inscription.user = user
-            inscription.name = self.aux_get_user_name()
-            inscription.email = user.email
+        if self.request.user.is_authenticated():
+            response = self.form_valid_for_authenticated_user(form)
+        else:
+            response = self.form_valid_for_anonymous_user(form)
 
-        return super(EventParticipationCreate, self).form_valid(form)
+        return response
 
     def get_form_class(self):
         """
@@ -145,9 +144,22 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
     def get_success_message(self, cleaned_data):
         success_message = "Tu inscripción al evento ha sido registrada."
         if not self.request.user.is_authenticated():
-            success_message = "Recibirás un email para confirmar la dirección provista " \
-                              "y así completar tu inscripción."
+            success_message = "Recibirás un email para confirmar la dirección provista y así " \
+                              "completar tu inscripción."
         return _(success_message + '<br><i>¡Muchas gracias!</i>')
+
+    def form_valid_for_authenticated_user(self, form):
+        form.instance.user = self.request.user
+        form.instance.name = self.aux_get_user_name()
+        form.instance.email = self.request.user.email
+        return super().form_valid(form)
+
+    def form_valid_for_anonymous_user(self, form):
+        if EventParticipation.objects.filter(email=form.instance.email).exists():
+            # If the email is already registered, silently redirect to the success URL.
+            # This is to avoid any information leaking.
+            return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
 
 class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, EventParticipationMixin,
