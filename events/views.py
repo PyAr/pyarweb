@@ -13,7 +13,7 @@ from django.views.generic.edit import (CreateView,
 
 from .forms import EventForm, AnonymousEventParticipationForm, AuthenticatedEventParticipationForm
 from .models import Event, EventParticipation
-from .mixins import EventMixin, EventParticipationMixin
+from .mixins import EventMixin, EventParticipationMixin, CSVResponseMixin
 
 
 class EventsFeed(Feed):
@@ -211,3 +211,21 @@ class EventParticipationDelete(LoginRequiredMixin, EventParticipationMixin, Dele
         if self.request.user not in [inscription.user, inscription.event.owner]:
             raise Http404()
         return inscription
+
+
+class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
+    def get_csv_filename(self):
+        event = self.get_event()
+        timestamp = timezone.now().isoformat().replace(':', '').replace('-', '').split('.')[0]
+        return '{0}-{1}.csv'.format(event, timestamp)
+
+    def get_rows(self):
+        header = [['Nombre', 'Correo electrónico', 'Nivel', 'Usuario PyAr', 'Verificado']]
+        return header + list(map(self.participation_to_row, self.get_queryset()))
+
+    def participation_to_row(self, obj):
+        """Auxiliary method to convert an EventParticipation instance in a row for the CSV file."""
+        user = ''
+        if obj.user is not None:
+            user = obj.user.get_full_name() or obj.user.get_username()
+        return [obj.name, obj.email, obj.seniority, user, obj.is_verified]
