@@ -1,1 +1,22 @@
-Email confirmation expired.
+{% extends "base_site.html" %}
+{% load i18n pagination_tags %}
+{% load devtags %}
+{% block title %} {% trans "Error" %}{% endblock %}
+{% block left-column %}
+
+<section>
+    <div class="page-header">
+        <h2>
+            {% trans "Código erróneo" %}
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                El código provisto ha caducado.
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

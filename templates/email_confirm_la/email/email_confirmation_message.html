@@ -2,19 +2,20 @@
     <p>
         El día {{ email_confirmation.content_object.created_at }}, a través del
         <a href="http://www.python.org.ar/">sitio de PyAr</a>,
-        has solicitado inscribirte al evento {{ event.name|title  }}.
+        ha solicitado inscribirse al evento {{ event.name|title  }}.
     </p>
-    <p>Para verificar la inscripción hacé click en el siguiente link:</p>
+    <p>Para verificar la inscripción haga click en el siguiente link:</p>
     {% with confirmation_url=email_confirmation.get_confirmation_url %}
         <p><a href="{{ confirmation_url }}">{{ confirmation_url }}</a></p>
     {% endwith %}
+    <p>Este link será válido durante los siguientes {{ confirmation_url_validity_time|floatformat:"0" }} días.</p>
     <hr>
     <p>Los datos de inscripción provistos fueron:</p>
     <ul>
     <li>Nombre: {{ email_confirmation.content_object.name }}</li>
     <li>Email: {{ email_confirmation.content_object.email }}</li>
     </ul>
-    <p>Si no fuiste vos quien solicitó la inscripción podés desestimar este mensaje.</p>
+    <p>Si ud. no solicitó la inscripción puede desestimar este mensaje.</p>
 {% endwith %}
 
 
