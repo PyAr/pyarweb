@@ -15,10 +15,10 @@
         <h2>
             {% trans "Participantes" %}
             <span class="section-button-group pull-right">
-                <button type="button" class="btn btn-default" onClick="alert('Not implemented yet')">
+                <a href="{% url 'events:registered_csv' event.id %}" class="btn btn-default">
                     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                     {% trans "Bajar CSV" %}
-                </button>
+                </a>
                 <a href="{% url 'events:detail' event.id %}" class="btn btn-info">{% trans "Volver al evento" %}</a>
             </span>
         </h2>
