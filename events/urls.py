@@ -10,7 +10,8 @@ from .views import (EventDetail,
                     EventParticipationList,
                     EventParticipationCreate,
                     EventParticipationDetail,
-                    EventParticipationDelete)
+                    EventParticipationDelete,
+                    EventParticipationDownload)
 
 urlpatterns = patterns(
     '',
@@ -24,6 +25,8 @@ urlpatterns = patterns(
     # Event Registration Management
     url(r'^(?P<pk>\d+)/inscribirse/$', EventParticipationCreate.as_view(), name='register'),
     url(r'^(?P<pk>\d+)/inscriptos/$', EventParticipationList.as_view(), name='registered'),
+    url(r'^(?P<pk>\d+)/inscriptos/csv/$', EventParticipationDownload.as_view(),
+        name='registered_csv'),
     url(r'^(?P<pk>\d+)/inscripcion/(?P<participation_pk>\d+)/$', EventParticipationDetail.as_view(),
         name='registration'),
     url(r'^(?P<pk>\d+)/inscripcion/(?P<participation_pk>\d+)/borrar/$',
