@@ -78,6 +78,7 @@ class EventParticipation(models.Model):
             email_field_name='email'
         )
 
+    @property
     def is_verified(self):
         is_a_pyar_user = self.user is not None
         email_was_verified = not self.email_confirmations.exists()
