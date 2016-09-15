@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+import csv
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 from django import forms
 from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Event, EventParticipation
@@ -61,3 +63,28 @@ class ReadOnlyFieldsMixin(object):
         for f in self.readonly_fields:
             self.cleaned_data.pop(f, None)
         return super(ReadOnlyFieldsMixin, self).clean()
+
+
+class CSVResponseMixin(object):
+    """Return a csv file based on a list of lists."""
+    csv_filename = 'csvfile.csv'
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_csv()
+
+    def get_rows(self):
+        raise NotImplementedError()
+
+    def get_csv_filename(self):
+        return self.csv_filename
+
+    def render_to_csv(self):
+        response = HttpResponse(content_type='text/csv')
+        cd = 'attachment; filename="{0}"'.format(self.get_csv_filename())
+        response['Content-Disposition'] = cd
+
+        writer = csv.writer(response)
+        for row in self.get_rows():
+            writer.writerow(row)
+
+        return response
