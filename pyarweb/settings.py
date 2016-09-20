@@ -92,8 +92,10 @@ INSTALLED_APPS = (
     'waliki.slides',
     'waliki.togetherjs',
     'kombu.transport.django',
-    'djcelery'
+    'djcelery',
     #'waliki.pdf'
+    'captcha',
+    'email_confirm_la',
 )
 
 
@@ -221,6 +223,20 @@ DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
 
 RAVEN_CONFIG = None
 
+#
+#  Email confirmation app settings
+#
+EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC = 3600*24*7  # 7 días
+EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
+    'confirmation_url_validity_time': EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC / (3600*24),  # days
+}
+
+#
+# Events inscription captcha
+#
+CAPTCHA_LENGTH = 6
+
+
 try:
     from .local_settings import *
 except:
@@ -240,6 +256,5 @@ if DEBUG:
 
 if RAVEN_CONFIG:
     INSTALLED_APPS = INSTALLED_APPS + (
-        # ...
-            'raven.contrib.django.raven_compat',
-            )
+        'raven.contrib.django.raven_compat',
+    )
