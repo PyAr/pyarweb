@@ -121,6 +121,21 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
 
         return response
 
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates a blank version of the form.
+        """
+        if self.request.user.is_authenticated():
+            event = self.get_event()
+            participation = event.participants.filter(user_id=self.request.user.id)
+            if participation.exists():
+                return HttpResponseRedirect(
+                    reverse_lazy('events:registration',
+                                 kwargs={'pk': event.id, 'participation_pk': participation.get().id})
+                )
+        return super().get(request, *args, **kwargs)
+
+
     def get_form_class(self):
         """
         Returns the form class to use in this view
@@ -135,6 +150,7 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
         Returns the initial data to use for forms on this view.
         """
         initial = super().get_initial()
+        initial['event'] = self.get_event()
         user = self.request.user
         if user.is_authenticated():
             initial['name'] = self.aux_get_user_name()
@@ -152,6 +168,7 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
         form.instance.user = self.request.user
         form.instance.name = self.aux_get_user_name()
         form.instance.email = self.request.user.email
+
         return super().form_valid(form)
 
     def form_valid_for_anonymous_user(self, form):
@@ -176,6 +193,14 @@ class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, EventPar
             self.form_class = AuthenticatedEventParticipationForm
         return self.form_class
 
+    def get_initial(self):
+        """
+        Returns the initial data to use for forms on this view.
+        """
+        initial = super().get_initial()
+        initial['event'] = self.get_event()
+        return initial
+
     def get_success_url(self):
         return self.object.event.get_absolute_url()
 
@@ -184,20 +209,25 @@ class EventParticipationList(LoginRequiredMixin, ListView):
     http_method_names = [u'get']
     context_object_name = 'participants'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__event = None
+
     def get_context_data(self, **kwargs):
         """Overwrite get_context_data to add the related Event's ID to the template context."""
         context = super(EventParticipationList, self).get_context_data(**kwargs)
         context['event'] = self.event
         return context
 
-    def get_event(self):
-        event = Event.objects.get(pk=self.kwargs['pk'])
-        self.event = validate_obj_owner(event, self.request.user)
-        return self.event
+    @property
+    def event(self):
+        if self.__event is None:
+            event = Event.objects.get(pk=self.kwargs['pk'])
+            self.__event = validate_obj_owner(event, self.request.user)
+        return self.__event
 
     def get_queryset(self):
-        event = self.get_event()
-        self.queryset = event.participants.all()
+        self.queryset = self.event.participants.all()
         return super().get_queryset()
 
 
@@ -215,12 +245,15 @@ class EventParticipationDelete(LoginRequiredMixin, EventParticipationMixin, Dele
 
 class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
     def get_csv_filename(self):
-        event = self.get_event()
+        event = self.event.name.lower().replace(' ', '_')
         timestamp = timezone.now().isoformat().replace(':', '').replace('-', '').split('.')[0]
         return '{0}-{1}.csv'.format(event, timestamp)
 
     def get_rows(self):
-        header = [['Nombre', 'Correo electrónico', 'Nivel', 'Usuario PyAr', 'Verificado']]
+        columns = ('Nombre', 'Correo electrónico', 'Nivel', 'Usuario PyAr', 'Verificado?')
+        if self.event.has_sponsors:
+            columns += ('CV', 'Comparte?')
+        header = [columns]
         return header + list(map(self.participation_to_row, self.get_queryset()))
 
     def participation_to_row(self, obj):
@@ -228,4 +261,7 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
         user = ''
         if obj.user is not None:
             user = obj.user.get_full_name() or obj.user.get_username()
-        return [obj.name, obj.email, obj.seniority, user, obj.is_verified]
+        row = (obj.name, obj.email, obj.seniority, user, obj.is_verified)
+        if self.event.has_sponsors:
+            row += (obj.cv, obj.share_with_sponsors)
+        return row
