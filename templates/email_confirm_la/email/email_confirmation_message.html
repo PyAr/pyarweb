@@ -8,7 +8,7 @@
     {% with confirmation_url=email_confirmation.get_confirmation_url %}
         <p><a href="{{ confirmation_url }}">{{ confirmation_url }}</a></p>
     {% endwith %}
-    <p>Este link será válido durante los siguientes {{ confirmation_url_validity_time|floatformat:"0" }} días.</p>
+    <p>Este link será válido durante los próximos {{ confirmation_url_validity_time|floatformat:"0" }} días.</p>
     <hr>
     <p>Los datos de inscripción provistos fueron:</p>
     <ul>
