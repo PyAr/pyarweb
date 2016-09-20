@@ -6,102 +6,110 @@
 
 {% block title %}Participantes{% endblock %}
 
-{% block left-column %}
-
-<!-- Proximos eventos -->
-
-<section>
-    <div class="page-header">
-        <h2>
-            {% trans "Participantes" %}
-            <span class="section-button-group pull-right">
-                <a href="{% url 'events:registered_csv' event.id %}" class="btn btn-default">
-                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-                    {% trans "Bajar CSV" %}
-                </a>
-                <a href="{% url 'events:detail' event.id %}" class="btn btn-info">{% trans "Volver al evento" %}</a>
-            </span>
-        </h2>
-        <h4>Lista de inscriptos al evento <strong><i>{{ event.name }}</i></strong></h4>
-    </div>
-
-    {% for participant in participants %}
-        {% if forloop.first %}
-            <div class="row hidden-sm hidden-xs">
-                <div class="col-md-12">
-                    <p>Los participantes <strong>Verificados</strong> son aquellos que:</p>
-                    <ul>
-                        <li>tienen login en PyAr o</li>
-                        <li>inscriptos que verificaron su email siguiendo el link que les fue enviado.</li>
-                    </ul>
-                </div>
+{% block content %}
+    <main id="main" class="container" role="main">
+        <section>
+            <div class="page-header">
+                <h2>
+                    {% trans "Participantes" %}
+                    <span class="section-button-group pull-right">
+                        <a href="{% url 'events:registered_csv' event.id %}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                            {% trans "Bajar CSV" %}
+                        </a>
+                        <a href="{% url 'events:detail' event.id %}" class="btn btn-info">{% trans "Volver al evento" %}</a>
+                    </span>
+                </h2>
+                <h4>Lista de inscriptos al evento <strong><i>{{ event.name }}</i></strong></h4>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>{% trans 'Nombre' %}</th>
-                                    <th>{% trans 'Email' %}</th>
-                                    <th>{% trans 'Nivel' %}</th>
-                                    <th>{% trans 'Usuario PyAr' %}</th>
-                                    <th>{% trans 'Verificado' %}</th>
-                                    <th>{% trans 'Acciones' %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-        {% endif %}
 
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ participant.name }}</td>
-            <td>{{ participant.email|urlize }}</td>
-            <td>{{ participant.seniority }}</td>
-            <td>{{ participant.user|default_if_none:"" }}</td>
-            <td>
-                {% if participant.is_verified %}
-                    {% trans 'Si' %}
-                    <span
-                        class="glyphicon glyphicon-ok text-success"
-                        aria-hidden="true">
-                    </span>
-                {% else %}
-                    {% trans 'No' %}
-                    <span
-                        class="glyphicon glyphicon-remove text-warning"
-                        aria-hidden="true">
-                    </span>
+            {% for participant in participants %}
+                {% if forloop.first %}
+                    <div class="row hidden-sm hidden-xs">
+                        <div class="col-md-12">
+                            <p>Los participantes <strong>Verificados</strong> son aquellos que:</p>
+                            <ul>
+                                <li>tienen login en PyAr o</li>
+                                <li>inscriptos que verificaron su email siguiendo el link que les fue enviado.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>{% trans 'Nombre' %}</th>
+                                            <th>{% trans 'Email' %}</th>
+                                            <th>{% trans 'Nivel' %}</th>
+                                            <th>{% trans 'Usuario PyAr' %}</th>
+                                            <th><small>{% trans 'Verificado?' %}</small></th>
+                                            {% if event.has_sponsors %}
+                                                <th>{% trans 'CV' %}</th>
+                                                <th><small>{% trans 'Comparte?' %}</small></th>
+                                            {% endif %}
+                                            <th>{% trans 'Acciones' %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                 {% endif %}
 
-            </td>
-            <td>
-                <div class="btn-group btn-group-xs" role="group" aria-label="">
-                    <a href="{% url 'events:unregister' participant.event.id participant.id %}" class="btn btn-danger">
-                        <span
-                            class="glyphicon glyphicon-remove-sign"
-                            aria-hidden="true">
-                        </span>
-                        {% trans 'Eliminar' %}
-                    </a>
-                </div>
-            </td>
-        </tr>
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ participant.name }}</td>
+                    <td>{{ participant.email|urlizetrunc:27 }}</td>
+                    <td>{{ participant.seniority }}</td>
+                    <td>{{ participant.user|default_if_none:"" }}</td>
+                    <td>
+                        {% with participant.is_verified as v %}
+                            {{ v|yesno:"Si,No" }}
+                            <span
+                                class="glyphicon glyphicon-{{ v|yesno:"ok,remove" }} text-{{ v|yesno:"success,warning" }}"
+                                aria-hidden="true">
+                            </span>
+                        {% endwith %}
+                    </td>
 
-        {% if forloop.last %}
-                            </tbody>
-                        </table>
+                    {% if event.has_sponsors %}
+                        <td>{{ participant.cv|urlizetrunc:27 }}</td>
+                        <td>
+                        {% with participant.share_with_sponsors as s %}
+                            {{ s|yesno:"Si,No" }}
+                            <span
+                                class="glyphicon glyphicon-{{ s|yesno:"ok,remove" }} text-{{ s|yesno:"success,warning" }}"
+                                aria-hidden="true">
+                            </span>
+                        {% endwith %}
+                        </td>
+                    {% endif %}
+                    <td>
+                        <div class="btn-group btn-group-xs" role="group" aria-label="">
+                            <a href="{% url 'events:unregister' participant.event.id participant.id %}" class="btn btn-danger">
+                                <span
+                                    class="glyphicon glyphicon-remove-sign"
+                                    aria-hidden="true">
+                                </span>
+                                {% trans 'Eliminar' %}
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                {% if forloop.last %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        {% endif %}
+                {% endif %}
 
-    {% empty %}
+            {% empty %}
 
-        <p class="list-group-item-text">{% trans "No hay inscriptos" %}</p>
+                <p class="list-group-item-text">{% trans "No hay inscriptos" %}</p>
 
-    {% endfor %}
-</section>
-
+            {% endfor %}
+        </section>
+</main>
 {% endblock %}
