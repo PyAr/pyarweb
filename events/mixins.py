@@ -22,11 +22,11 @@ class CrispyFormMixin(forms.ModelForm):
         self.helper.add_input(Reset('job_reset', _('Limpiar'),
                               css_class='btn-default'))
         self.helper.layout = Layout(
-            Div(*self.Meta.crispy_fields)
+            Div(*self.get_crispy_fields())
         )
 
-    class Meta:
-        crispy_fields = []
+    def get_crispy_fields(self):
+        return self.Meta.fields
 
 
 class EventMixin(object):
@@ -42,6 +42,10 @@ class EventParticipationMixin(object):
     """Mixin for common attrs."""
 
     model = EventParticipation
+
+    def get_event(self):
+        event_id = self.kwargs['pk']
+        return Event.objects.get(pk=event_id)
 
     def get_success_url(self):
         return reverse_lazy('events:detail', kwargs={'pk': self.kwargs['pk']})
