@@ -23,13 +23,12 @@ class Event(models.Model):
     end_at = models.DateTimeField(verbose_name=_('Termina a las'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    registration_enabled = models.BooleanField(
-        default=False,
-        verbose_name=_('Habilitar inscripción')
-    )
+    registration_enabled = models.BooleanField(default=False,
+                                               verbose_name=_('¿Habilitar inscripción'))
+    has_sponsors = models.BooleanField(default=False, verbose_name=_('¿El evento tiene sponsors?'))
 
     def __str__(self):
-        return "%s by %s" % (self.name, self.owner)
+        return "%s" % self.name
 
     def get_absolute_url(self):
         return reverse('events:detail', args=[self.id])
@@ -43,13 +42,17 @@ class EventParticipation(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('nombre, nick, alias...'))
     email = models.EmailField(max_length=255, verbose_name=_('email'))
     interest = models.TextField(verbose_name=_('intereses'), blank=True)
+
     seniority = models.CharField(
         max_length=100,
         blank=True,
         default='',
-        choices=JOB_SENIORITIES,
+        choices=JOB_SENIORITIES + (('guido', _('Soy Guido Van Rossum')),),
         verbose_name=_('experiencia')
     )
+    cv = models.URLField(max_length=1024, blank=True, default='', verbose_name='curriculum vitae')
+    share_with_sponsors = models.BooleanField(
+        default=False, verbose_name=_('¿Querés compartir tus datos con los sponsors?'))
     confirmed = models.BooleanField(
         default=False,
         verbose_name=_('Participación confirmada')
