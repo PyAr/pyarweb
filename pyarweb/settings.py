@@ -235,6 +235,11 @@ EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
     'confirmation_url_validity_time': EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC / (3600*24),  # days
 }
 
+#
+# Events inscription captcha
+#
+CAPTCHA_LENGTH = 6
+
 
 try:
     from .local_settings import *
