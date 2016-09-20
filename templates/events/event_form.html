@@ -9,6 +9,14 @@
   {{ form.media.css }}
 {% endblock %}
 
+{% block title %}
+    {% if form.instance.id %}
+        {% trans 'Editar Evento' %}
+    {% else %}
+        {% trans 'Agregar Evento' %}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 
   <main id="main" class="container" role="main">
