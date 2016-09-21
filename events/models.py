@@ -67,10 +67,10 @@ class EventParticipation(models.Model):
         unique_together = ("event", "email")
 
     def __str__(self):
-        result = "%s inscription" % self.name
+        result = "Inscripción de %s" % self.name
         if self.event:
-            result += " in %s" % self.event.name
-        return result
+            result += " a %s" % self.event.name
+        return _(result)
 
     def verify_email(self):
         """Start the email-verification process with this instance's email attribute."""
