@@ -28,7 +28,7 @@ class Event(models.Model):
     has_sponsors = models.BooleanField(default=False, verbose_name=_('¿El evento tiene sponsors?'))
 
     def __str__(self):
-        return "%s" % self.name
+        return self.name
 
     def get_absolute_url(self):
         return reverse('events:detail', args=[self.id])
