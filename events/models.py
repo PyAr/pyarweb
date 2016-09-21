@@ -28,7 +28,7 @@ class Event(models.Model):
     has_sponsors = models.BooleanField(default=False, verbose_name=_('¿El evento tiene sponsors?'))
 
     def __str__(self):
-        return "%s" % self.name
+        return self.name
 
     def get_absolute_url(self):
         return reverse('events:detail', args=[self.id])
@@ -67,10 +67,10 @@ class EventParticipation(models.Model):
         unique_together = ("event", "email")
 
     def __str__(self):
-        result = "%s inscription" % self.name
+        result = "Inscripción de %s" % self.name
         if self.event:
-            result += " in %s" % self.event.name
-        return result
+            result += " a %s" % self.event.name
+        return _(result)
 
     def verify_email(self):
         """Start the email-verification process with this instance's email attribute."""
