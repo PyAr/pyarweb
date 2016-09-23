@@ -24,9 +24,8 @@ $('#tags-form #reset-btn').click(function() {
 });
 
 $("#tags-form").submit(function() {
-    $(this).find("select")
-    .prop('disabled', false)
-    .filter(function() {
-        return $(this).val() == 0;
-    }).prop("disabled", true);
+    $('#tags-form select').not(
+            $('#tags-form option:selected').not('[value=""]').parent()
+    ).prop('disabled', true);
+    return true;
 });
