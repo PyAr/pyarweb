@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load devtags %}
+{% load crispy_forms_tags %}
+{% block stylesheets %}
+    {{ form.media.css }}
+{% endblock %}
+
+
+{% block title %}
+    {% if form.instance.id %}
+        {% trans 'Editar participación' %}
+    {% else %}
+        {% trans 'Inscripción' %}
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    <main id="main" class="container" role="main">
+        <div class="col-lg-12">
+            {% if form.initial.event.registration_enabled %}
+                <div class="page-header">
+                    <small>
+                        {{ form.initial.event.name }}
+                    </small>
+                    <h2>
+                        {% if form.instance.id %}
+                            {% trans 'Editar participación' %}
+                        {% else %}
+                            {% trans 'Participar' %}
+                        {% endif %}
+
+                        <span class="section-button-group pull-right">
+                            <a href="{% url 'events:detail' form.initial.event.id %}" class="btn btn-info">
+                                {% trans "Volver al evento" %}
+                            </a>
+                            {% if form.instance.id %}
+                                <a href="{% url 'events:unregister' form.instance.event.id form.instance.id %}" class="btn btn-danger">
+                                    {% trans "Eliminar" %}
+                                </a>
+                            {% endif %}
+                        </span>
+                    </h2>
+                </div>
+
+                {% crispy form %}
+
+            </div>
+        {% else %}
+            <div class="page-header">
+                <h2>
+                    {% trans "Este evento no permite inscripción." %}
+                    <span class="section-button-group pull-right">
+                        <a href="{% url 'events:detail' form.initial.event.id %}" class="btn btn-info">
+                            {% trans "Volver al evento" %}
+                        </a>
+                    </span>
+                </h2>
+            </div>
+        {% endif %}
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ form.media.js }}
+{% endblock %}
+

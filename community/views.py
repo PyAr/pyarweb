@@ -40,19 +40,23 @@ def mailing_list(request):
     return render(request, 'special_page.html', {'title': title, 'slug': 'ListaDeCorreo'})
 
 
-class OwnedObject(SingleObjectMixin):
+def validate_obj_owner(obj, user):
+    """Auxiliary function that raises Http404 if the given user is not the obj.owner"""
+    try:
+        if not obj.owner == user:
+            raise Http404()
+    except AttributeError:
+        pass
+    return obj
 
+
+class OwnedObject(SingleObjectMixin):
     """An object that needs to verify current user ownership
         before allowing manipulation. """
 
     def get_object(self, *args, **kwargs):
         obj = super(OwnedObject, self).get_object(*args, **kwargs)
-        try:
-            if not obj.owner == self.request.user:
-                raise Http404()
-        except AttributeError:
-            pass
-        return obj
+        return validate_obj_owner(obj, self.request.user)
 
 
 class FilterableList(MultipleObjectMixin):

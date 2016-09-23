@@ -1,67 +1,55 @@
 {% extends "base.html" %}
-
 {% load i18n %}
-
 {% load devtags %}
-
 {% block title %}
     {{ event.name }}
 {% endblock title %}
-
-
 {% block stylesheets %}
-  <link rel="stylesheet" href="/static/css/event_map.css">
+    <link rel="stylesheet" href="/static/css/event_map.css">
 {% endblock %}
 
 {% block javascripts %}
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-  <script src="/static/js/event_detail.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 {% endblock %}
 
-
 {% block content %}
+    <main id="main" class="container" role="main">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1>
 
-	<main id="main" class="container" role="main">
-	    <div class="row">
-       <div class="col-md-12">
+                        {{ event.name }}
 
-        <div class="page-header">
-          <h1>
-            {{ event.name }}
-
-            {% if event.owner == user %}
-              <span class="section-button-group pull-right">
-                <a class="btn btn-default" href="{% url 'events:edit' event.id %}">
-                  {% trans 'Modificar' %}
-                </a>
-                <a class="btn btn-danger" href="{% url 'events:delete' event.id %}">
-                  {% trans 'Borrar' %}
-                </a>
-              </span>
-            {% endif %}
-          </h1>
-
-          <small>
-            {{ event.updated_at }} {% trans 'por' %} {{ event.owner}}
-          </small>
+                        <span class="section-button-group pull-right">
+                          <a href="{% url 'events:events_list_all' %}" class="btn btn-info">
+                              {% trans "Volver a eventos" %}
+                          </a>
+                          {% if event.owner == user %}
+                              <a class="btn btn-default" href="{% url 'events:edit' event.id %}">
+                                  {% trans 'Modificar' %}
+                              </a>
+                              <a class="btn btn-danger" href="{% url 'events:delete' event.id %}">
+                                  {% trans 'Borrar' %}
+                              </a>
+                          {% endif %}
+                        </span>
+                    </h1>
+                    <small>
+                        {{ event.updated_at }} {% trans 'por' %} {{ event.owner }}
+                    </small>
+                </div>
+            </div>
         </div>
 
-       </div>
-      </div>
+        <div class="row">
+            {% include "events/event_detail_body.html" with obj=event %}
+        </div>
 
-      <div class="row">
-
-      {% include "events/event_detail_body.html" with obj=event %}
-
-      </div>
-
-            <input type="hidden" id="id_lat" value="{{ event.lat }}">
-            <input type="hidden" id="id_lng" value="{{ event.lng }}">
-            <input type="hidden" id="id_zoom" value="{{ event.zoom }}">
-	        </div>
-	    </div>
-	</main>
-
+        <input type="hidden" id="id_lat" value="{{ event.lat }}">
+        <input type="hidden" id="id_lng" value="{{ event.lng }}">
+        <input type="hidden" id="id_zoom" value="{{ event.zoom }}">
+    </main>
 {% endblock %}
 
 
