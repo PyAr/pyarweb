@@ -9,7 +9,7 @@ billiard==3.3.0.18
 django-bootstrap3==4.8.2
 django-bootstrap3-datetimepicker==2.2.3
 django-crispy-forms==1.4.0
--e git+https://github.com/PyAr/django-disqus.git#egg=django-disqus.git
+git+https://github.com/PyAr/django-disqus.git#egg=django-disqus
 django-email-obfuscator==0.1.3
 django-extensions==1.3.3
 django-model-utils==2.0.3
@@ -20,6 +20,7 @@ django-taggit==0.12.2
 django-allauth==0.19.1
 django-taggit-autosuggest==0.2.5
 feedparser==5.1.3
+psycopg2==2.6.2
 kombu==3.0.24
 lxml==3.3.5
 pytz==2014.4

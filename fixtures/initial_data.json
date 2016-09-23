@@ -1,0 +1,29 @@
+[
+{
+  "pk": 1,
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$15000$b7Zz8V6iWtC4$6aYCOytX2INR/4vpdPEYCdBLDPNJe0XUuKbr297V7zk=",
+    "user_permissions": [],
+    "first_name": "",
+    "date_joined": "2016-09-23T05:11:25.013Z",
+    "is_active": true,
+    "is_staff": true,
+    "email": "",
+    "last_name": "",
+    "username": "admin",
+    "last_login": "2016-09-23T05:11:42.256Z",
+    "groups": [],
+    "is_superuser": true
+  }
+},
+{
+  "model": "sites.site",
+  "pk": 1,
+  "fields": {
+    "domain": "localhost:8000",
+    "name": "PyAr - [Desarrollo]"
+  }
+}
+
+]
