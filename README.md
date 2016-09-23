@@ -16,7 +16,7 @@ Decenas de personas han colaborado de [diversas maneras](https://github.com/PyAr
 
 
 1. Instalar [docker-compose](https://docs.docker.com/compose/install/) de la manera recomendada
-   para tu sistema operativo. En windows podés usar
+   para tu sistema operativo. 
 
 
 2. Hacé un fork y cloná el proyecto localmente.
