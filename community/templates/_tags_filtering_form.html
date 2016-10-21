@@ -9,7 +9,7 @@
             <div class="row tags-group">
                 {% for tag in tags %}
                 <select name="tag_{{ tag.slug }}" id="tag_{{ tag.slug }}" class="hidden">
-                    <option value="0"></option>
+                    <option value=""></option>
                     <option value="1" {% if tag.slug in included %}selected{% endif %}></option>
                     <option value="2" {% if tag.slug in excluded %}selected{% endif %}></option>
                 </select>
