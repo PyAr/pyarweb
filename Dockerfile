@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get -qq update && apt-get install -y  --no-install-recommends \
+RUN apt-get update && apt-get install -y  --no-install-recommends \
     build-essential \
     git \
     python3 \
