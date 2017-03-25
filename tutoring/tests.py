@@ -1,8 +1,11 @@
 import sys
 from django.test import TestCase
 from tutoring import models as m
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+
+
+User = get_user_model()
 
 
 class MentorDetailViewTests(TestCase):
