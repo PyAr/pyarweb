@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 class Event(models.Model):
     """A PyAr events."""
 
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=100, verbose_name=_('Título'))
     description = models.TextField(verbose_name=_('Descripcion'))
     place = models.CharField(max_length=100, verbose_name=_('Lugar'))
