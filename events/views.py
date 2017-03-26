@@ -58,9 +58,8 @@ class EventDetail(EventMixin, DetailView):
     context_object_name = "event"
 
     def user_participation_details(self):
-        """
-        Collect the necessary info for the template context if the user is already registered to the
-        Event.
+        """ Collect the necessary info for the template context if the user is already registered
+        to the Event.
         :return: dict with 'user_is_registered' (bool) and  'participation_id' (int | None) fields
 
         """
@@ -129,11 +128,15 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
             event = self.get_event()
             participation = event.participants.filter(user_id=self.request.user.id)
             if participation.exists():
-                return HttpResponseRedirect(reverse_lazy(
-                    'events:registration',
-                    kwargs={'pk': event.id, 'participation_pk': participation.get().id}))
+                return HttpResponseRedirect(
+                    reverse_lazy('events:registration',
+                                 kwargs={
+                                     'pk': event.id,
+                                     'participation_pk': participation.get().id
+                                    }
+                    )
+                )
         return super().get(request, *args, **kwargs)
-
 
     def get_form_class(self):
         """

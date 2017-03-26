@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from .models import Job, JobInactivated
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
-from django.utils.safestring import mark_safe
 from django_summernote.widgets import SummernoteInplaceWidget
 
 

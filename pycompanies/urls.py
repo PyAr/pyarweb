@@ -7,7 +7,8 @@ from .views import (
     CompanyUpdate,
     CompanyDelete)
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', CompanyList.as_view(), name='company_list_all'),
     url(r'^(?P<pk>\d+)/$', CompanyDetail.as_view(), name='detail'),
     url(r'^add/$', CompanyCreate.as_view(), name='add'),
