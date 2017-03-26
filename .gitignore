@@ -2,6 +2,7 @@
 *.swp
 *.swo
 .venv
+.vscode/
 db.sqlite3
 waliki_data
 waliki_attachments
