@@ -129,10 +129,9 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
             event = self.get_event()
             participation = event.participants.filter(user_id=self.request.user.id)
             if participation.exists():
-                return HttpResponseRedirect(
-                    reverse_lazy('events:registration',
-                                 kwargs={'pk': event.id, 'participation_pk': participation.get().id})
-                )
+                return HttpResponseRedirect(reverse_lazy(
+                    'events:registration',
+                    kwargs={'pk': event.id, 'participation_pk': participation.get().id}))
         return super().get(request, *args, **kwargs)
 
 
