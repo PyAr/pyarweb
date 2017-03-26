@@ -38,7 +38,7 @@ class EventParticipation(models.Model):
     """A registration record to a PyAr event."""
 
     event = models.ForeignKey(Event, related_name='participants')
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
     name = models.CharField(max_length=100, verbose_name=_('nombre, nick, alias...'))
     email = models.EmailField(max_length=255, verbose_name=_('email'))
     interest = models.TextField(verbose_name=_('intereses'), blank=True)
