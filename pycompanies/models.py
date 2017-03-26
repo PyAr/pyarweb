@@ -11,7 +11,8 @@ from model_utils.models import TimeStampedModel
 class Company(TimeStampedModel):
     """A PyAr Company that use Python."""
 
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='companies')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              related_name='companies')
     name = models.CharField('Nombre', max_length=255, unique=True)
     description = models.TextField('Descripción')
     photo = models.ImageField('Logo', upload_to='pycompanies/logos')
