@@ -14,4 +14,5 @@ class NewsAdminForm(forms.ModelForm):
 class NewsAdmin(admin.ModelAdmin):
     form = NewsAdminForm
 
+
 admin.site.register(NewsArticle, NewsAdmin)

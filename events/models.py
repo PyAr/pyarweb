@@ -95,4 +95,3 @@ def post_anonymous_participation_creation(sender, instance, created, **kwargs):
     """
     if created and instance.user is None:
         instance.verify_email()
-

@@ -20,7 +20,7 @@ class JobActiveMixin(object):
 class JobsFeed(Feed):
     title = "Feed de ofertas laborales de Pyar"
     link = reverse_lazy("jobs_list_all")
-    description = "Todas las ofertas laborales con Python publicadas en Python Argentina"
+    description = "Todas las ofertas laborales con Python publicadas en PyAR"
 
     description_template = "jobs/job_detail_feed.html"
 

@@ -1,5 +1,3 @@
-from django.core.urlresolvers import reverse
-from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView

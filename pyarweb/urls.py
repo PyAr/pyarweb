@@ -45,8 +45,8 @@ urlpatterns = patterns(
     url(r'^planeta/', include('planet.urls')),
     url(r'^wiki/', include('waliki.urls')),
     url(r'^captcha/', include('captcha.urls')),
-    url(r'^email_confirmation/', include('email_confirm_la.urls', namespace='email_confirm_la')),
+    url(r'^email_confirmation/', include('email_confirm_la.urls',
+                                         namespace='email_confirm_la')),
     url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
         old_url_redirect, name='old_url_redirect'),
 )
-

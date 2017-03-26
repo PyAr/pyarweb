@@ -10,8 +10,10 @@ User = get_user_model()
 
 class MentorDetailViewTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
-        self.user2 = User.objects.create_user(username='jacob2', email='jacob@…', password='top_secret')
+        self.user = User.objects.create_user(
+            username='jacob', email='jacob@…', password='top_secret')
+        self.user2 = User.objects.create_user(
+            username='jacob2', email='jacob@…', password='top_secret')
         super(MentorDetailViewTests, self).setUp()
         self.mentor = m.Mentor.objects.create(description='New Post', owner=self.user)
 
@@ -36,13 +38,16 @@ class MentorDetailViewTests(TestCase):
 
 class ApprenticeDetailViewTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
-        self.user2 = User.objects.create_user(username='jacob2', email='jacob@…', password='top_secret')
+        self.user = User.objects.create_user(
+            username='jacob', email='jacob@…', password='top_secret')
+        self.user2 = User.objects.create_user(
+            username='jacob2', email='jacob@…', password='top_secret')
         super(ApprenticeDetailViewTests, self).setUp()
         self.apprentice = m.Apprentice.objects.create(description='New Post', owner=self.user)
 
     def test_apprentice_detail_success(self):
-        response = self.client.get(reverse('display_apprentice', args=(self.apprentice.owner.username,)))
+        response = self.client.get(
+            reverse('display_apprentice', args=(self.apprentice.owner.username,)))
         self.assertEqual(response.status_code, 200)
 
     def test_apprentice_create_success(self):
@@ -52,12 +57,14 @@ class ApprenticeDetailViewTests(TestCase):
 
     def test_apprentice_update_success(self):
         self.client.login(username='jacob', password='top_secret')
-        response = self.client.get(reverse('update_apprentice', args=(self.apprentice.owner.username,)))
+        response = self.client.get(
+            reverse('update_apprentice', args=(self.apprentice.owner.username,)))
         self.assertEqual(response.status_code, 200)
 
     def test_apprentice_update_no_permission(self):
         self.client.login(username='jacob2', password='top_secret')
-        response = self.client.get(reverse('update_apprentice', args=(self.apprentice.owner.username,)))
+        response = self.client.get(
+            reverse('update_apprentice', args=(self.apprentice.owner.username,)))
         self.assertEqual(response.status_code, 404)
 
     def test_apprentice_detail_404(self):
@@ -67,8 +74,10 @@ class ApprenticeDetailViewTests(TestCase):
 
 class MentorshipTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
-        self.user2 = User.objects.create_user(username='jacob2', email='jacob@…', password='top_secret')
+        self.user = User.objects.create_user(
+            username='jacob', email='jacob@…', password='top_secret')
+        self.user2 = User.objects.create_user(
+            username='jacob2', email='jacob@…', password='top_secret')
         super(MentorshipTests, self).setUp()
         self.apprentice = m.Apprentice.objects.create(description='New Post', owner=self.user)
         self.mentor = m.Mentor.objects.create(description='New Post', owner=self.user2)
