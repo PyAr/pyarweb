@@ -2,35 +2,31 @@ version: '2'
 
 volumes:
   pgdata:
-  redisdata:
 
 services:
+  postgres:
+      restart: always
+      image: postgres:9.4.4
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_PASSWORD=secret
+
   web:
       build: .
       command: python3 manage.py runserver 0.0.0.0:8000
       volumes:
-          - .:/code
+        - .:/code
       ports:
-          - "8000:8000"
-      env_file: .env
+        - "8000:8000"
       links:
         - postgres
-        - redis
-
-  postgres:
-      restart: always
-      image: postgres:latest
-      ports:
-        - "5432:5433"
-      volumes:
-        - pgdata:/var/lib/postgresql/data/
-
-  redis:
-      restart: always
-      image: redis:latest
-      ports:
-        - "6379:6379"
-      volumes:
-        - redisdata:/data
-
-
+      depends_on:
+        - postgres
+      environment:
+        - DB_USER=postgres
+        - DB_NAME=postgres
+        - DB_PASS=secret
+        - DB_SERVICE=postgres
