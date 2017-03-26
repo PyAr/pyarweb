@@ -26,7 +26,7 @@ DEBUG = True
 # Sites framework
 SITE_ID = 1
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Django registration
 # https://django-registration.readthedocs.org/en/latest/quickstart.html
