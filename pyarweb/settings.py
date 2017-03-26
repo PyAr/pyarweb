@@ -65,9 +65,9 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     # ... include the providers you want to enable:
     # Ver esto mas adelante
-    #'allauth.socialaccount.providers.github',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.twitter',
+    # 'allauth.socialaccount.providers.github',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.twitter',
     'django_extensions',
     'disqus',
     'taggit',
@@ -115,7 +115,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_NAME', "pyarweb"),
-        'USER': os.environ.get('DB_USER', "postgresql"),
+        'USER': os.environ.get('DB_USER', "postgres"),
         'PASSWORD': os.environ.get('DB_PASS', ""),
         'HOST': os.environ.get('DB_SERVICE', "localhost"),
         'PORT': os.environ.get('DB_PORT', 5432),
@@ -156,20 +156,20 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
         'DIRS': (os.path.join(BASE_DIR, 'templates'),),
-       	'OPTIONS': {
+        'OPTIONS': {
             'context_processors': [
-				#  allauth specific context processors
-				# "allauth.account.context_processors.account",
-				# "allauth.socialaccount.context_processors.socialaccount",
+                #  allauth specific context processors
+                # "allauth.account.context_processors.account",
+                # "allauth.socialaccount.context_processors.socialaccount",
 
-				"django.contrib.auth.context_processors.auth",
-				"django.core.context_processors.debug",
-				"django.core.context_processors.media",
-				'django.core.context_processors.static',
-				"django.core.context_processors.request",
-				"django.core.context_processors.i18n",
-				"django.contrib.messages.context_processors.messages",
-				"planet.context_processors.context",
+                "django.contrib.auth.context_processors.auth",
+                "django.core.context_processors.debug",
+                "django.core.context_processors.media",
+                'django.core.context_processors.static',
+                "django.core.context_processors.request",
+                "django.core.context_processors.i18n",
+                "django.contrib.messages.context_processors.messages",
+                "planet.context_processors.context",
 
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
