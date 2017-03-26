@@ -87,14 +87,8 @@ INSTALLED_APPS = (
     'waliki.attachments',
     'waliki.slides',
     'waliki.togetherjs',
-    'kombu.transport.django',
-    'djcelery'
-    #'waliki.pdf'
 )
 
-
-import djcelery
-djcelery.setup_loader()
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -244,7 +238,4 @@ if DEBUG:
 
 
 if RAVEN_CONFIG:
-    INSTALLED_APPS = INSTALLED_APPS + (
-        # ...
-            'raven.contrib.django.raven_compat',
-            )
+    INSTALLED_APPS = INSTALLED_APPS + ('raven.contrib.django.raven_compat',)

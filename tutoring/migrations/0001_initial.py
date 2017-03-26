@@ -1,83 +1,78 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
+import django.core.validators
 import taggit.managers
 from django.conf import settings
-import django.core.validators
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('taggit', '0002_auto_20150616_2121'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('taggit', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Apprentice',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
-                ('description', models.TextField(verbose_name='Descripción', null=True, blank=True)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('description', models.TextField(null=True, verbose_name='Descripción', blank=True)),
                 ('start_date', models.DateTimeField(auto_now_add=True)),
-                ('notifications_ignored', models.PositiveIntegerField(default=0)),
-                ('status', models.CharField(default='W', choices=[('T', 'Entretenando'), ('I', 'Inactivo'), ('W', 'Buscando mentor')], max_length=1)),
-                ('interests', taggit.managers.TaggableManager(through='taggit.TaggedItem', verbose_name='Tags', to='taggit.Tag', help_text='A comma-separated list of tags.')),
-                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('status', models.CharField(choices=[('T', 'Entretenando'), ('I', 'Inactivo'), ('W', 'Buscando mentor')], default='W', max_length=1, verbose_name='Estado')),
+                ('owner', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('tags', taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', verbose_name='Intereses', to='taggit.Tag')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Mentor',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('description', models.TextField(null=True, blank=True)),
                 ('available', models.BooleanField(verbose_name='Disponible', default=True)),
                 ('start_date', models.DateTimeField(auto_now_add=True)),
-                ('notifications_ignored', models.PositiveIntegerField(default=0)),
                 ('slots', models.PositiveIntegerField(default=2, validators=[django.core.validators.MaxValueValidator(4), django.core.validators.MinValueValidator(1)])),
-                ('skills', taggit.managers.TaggableManager(through='taggit.TaggedItem', verbose_name='Tags', to='taggit.Tag', help_text='A comma-separated list of tags.')),
-                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('owner', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('tags', taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', verbose_name='Skills', to='taggit.Tag')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Mentorship',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
-                ('start_date', models.DateTimeField(auto_now_add=True, verbose_name='Fecha de inicio')),
-                ('end_date', models.DateTimeField(verbose_name='Fecha de finalización', null=True, blank=True)),
-                ('blog_link', models.URLField(verbose_name='URL del blog', blank=True)),
-                ('apprentice', models.ForeignKey(verbose_name='Aprendiz', to='tutoring.Apprentice')),
-                ('mentor', models.ForeignKey(verbose_name='Mentor', to='tutoring.Mentor')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('start_date', models.DateField(auto_now_add=True, verbose_name='Fecha de inicio')),
+                ('end_date', models.DateField(null=True, verbose_name='Fecha de finalización', blank=True)),
+                ('blog_link', models.URLField(null=True, verbose_name='URL del blog', blank=True)),
+                ('status', models.CharField(choices=[('I', 'En curso'), ('O', 'En espera'), ('C', 'Cerrado')], default='I', max_length=1, verbose_name='Estado')),
+                ('apprentice', models.ForeignKey(to='tutoring.Apprentice', verbose_name='Aprendiz')),
+                ('owner', models.ForeignKey(to='tutoring.Mentor', verbose_name='Mentor')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Project',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
-                ('description', models.TextField(verbose_name='Descripción', blank=True)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('title', models.CharField(verbose_name='Título', max_length=250)),
+                ('description', models.TextField(verbose_name='Descripción', blank=True)),
+                ('status', models.CharField(choices=[('O', 'Abierto'), ('I', 'En curso'), ('C', 'Cerrado')], default='O', max_length=1)),
                 ('link_repo', models.URLField(verbose_name='URL del repositorio', blank=True)),
+                ('looking_for', models.CharField(choices=[('M', 'Buscando mentor'), ('A', 'Buscando aprendiz')], default='M', max_length=1)),
+                ('multiple_mentors', models.BooleanField(verbose_name='Múltiples mentores', default=True)),
+                ('multiple_apprentices', models.BooleanField(verbose_name='Múltiples aprendices', default=True)),
+                ('apprentices', models.ManyToManyField(to='tutoring.Apprentice', blank=True)),
+                ('mentors', models.ManyToManyField(to='tutoring.Mentor', blank=True)),
                 ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('tags', taggit.managers.TaggableManager(through='taggit.TaggedItem', verbose_name='Tags', to='taggit.Tag', help_text='A comma-separated list of tags.')),
+                ('tags', taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', verbose_name='Tags', to='taggit.Tag')),
             ],
             options={
+                'ordering': ['-id'],
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='mentorship',
             name='project',
-            field=models.ForeignKey(verbose_name='Proyecto', to='tutoring.Project'),
-            preserve_default=True,
+            field=models.ForeignKey(to='tutoring.Project', null=True, verbose_name='Proyecto', blank=True),
         ),
     ]

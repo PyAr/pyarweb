@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils.translation import ugettext as _
 from taggit_autosuggest.managers import TaggableManager
 from model_utils.models import TimeStampedModel
@@ -13,7 +13,7 @@ class NewsArticle(TimeStampedModel):
     introduction = models.TextField(null=True, blank=True,
                                     verbose_name=_('Introducción'))
     body = models.TextField(verbose_name=_('Contenido'))
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     tags = TaggableManager(verbose_name=_('Etiquetas'), blank=True)
 
     @models.permalink

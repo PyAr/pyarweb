@@ -3,11 +3,16 @@ language: python
 sudo: false
 
 python:
-  - "3.3"
   - "3.4"
 
+service:
+  - postgresql
+
+addons:
+  postgresql: "9.4"
+
 env:
-  - DJANGO<1.8
+  - DJANGO=1.8 SECRET_KEY=supersecret DB_PORT=5432 DB_SERVICE=localhost DB_PASS="" DB_USER=postgres DB_NAME=postgres
 
 install:
   - pip install -r requirements.txt
