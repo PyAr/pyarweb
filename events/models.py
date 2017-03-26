@@ -83,6 +83,10 @@ class EventParticipation(models.Model):
 
     @property
     def is_verified(self):
+        """An EventParticipation in confirmed once the user's email is verified.
+        Registered users' email is verified by default.
+
+        """
         is_a_pyar_user = self.user is not None
         email_was_verified = not self.email_confirmations.exists()
         return is_a_pyar_user or email_was_verified
@@ -95,4 +99,3 @@ def post_anonymous_participation_creation(sender, instance, created, **kwargs):
     """
     if created and instance.user is None:
         instance.verify_email()
-
