@@ -1,4 +1,4 @@
-Django>=1.8,<1.9
+Django>=1.7,<1.8
 Pillow==2.3.0
 anyjson==0.3.3
 argparse==1.1
