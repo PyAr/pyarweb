@@ -1,4 +1,3 @@
-from datetime import timedelta
 from django.utils.timezone import datetime, timedelta, utc 
 from django.contrib.auth import get_user_model
 from factory import SubFactory, Sequence
