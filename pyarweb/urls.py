@@ -50,4 +50,3 @@ urlpatterns = patterns(
     url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
         old_url_redirect, name='old_url_redirect'),
 )
-

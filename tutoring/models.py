@@ -35,7 +35,8 @@ class Apprentice(models.Model):
     owner = models.OneToOneField(settings.AUTH_USER_MODEL)
     description = models.TextField(blank=True, null=True, verbose_name=_('Descripción'))
     start_date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_WAITING, verbose_name=_('Estado'))
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_WAITING,
+                              verbose_name=_('Estado'))
 
     tags = TaggableManager(verbose_name=_('Intereses'))
 
@@ -67,7 +68,8 @@ class Project(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_OPEN)
     link_repo = models.URLField(blank=True, verbose_name=_('URL del repositorio'))
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    looking_for = models.CharField(max_length=1, choices=LOOKING_CHOICES, default=LOOKING_FOR_MENTOR)
+    looking_for = models.CharField(max_length=1, choices=LOOKING_CHOICES,
+                                   default=LOOKING_FOR_MENTOR)
     multiple_mentors = models.BooleanField(default=True, verbose_name=_('Múltiples mentores'))
     multiple_apprentices = models.BooleanField(default=True, verbose_name=_('Múltiples aprendices'))
     tags = TaggableManager()
@@ -100,7 +102,8 @@ class Mentorship(models.Model):
     start_date = models.DateField(auto_now_add=True, verbose_name=_('Fecha de inicio'))
     end_date = models.DateField(null=True, blank=True, verbose_name=_('Fecha de finalización'))
     blog_link = models.URLField(null=True, blank=True, verbose_name=_('URL del blog'))
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_IN_COURSE, verbose_name=_('Estado'))
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_IN_COURSE,
+                              verbose_name=_('Estado'))
 
     def __str__(self):
         return '{} - {} - {}'.format(self.owner, self.apprentice, self.start_date)

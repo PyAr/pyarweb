@@ -243,7 +243,7 @@ CAPTCHA_LENGTH = 6
 
 
 try:
-    from .local_settings import *
+    from .local_settings import *  # NOQA
 except:
     pass
 

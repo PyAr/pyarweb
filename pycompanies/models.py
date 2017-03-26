@@ -27,7 +27,7 @@ class Company(TimeStampedModel):
         return u'%s' % self.name
 
 
-###### SIGNALS ######
+#  SIGNALS
 
 @receiver(post_delete, sender=Company)
 def post_delete_user(sender, instance, *args, **kwargs):

@@ -48,7 +48,8 @@ def run():
     dockerfile = os.path.join(curdir, 'Dockerfile')
     assert os.path.isfile(dockerfile), "{} file not found.".format(dockerfile)
 
-    cmd = "docker run -it -v {}:/opt/code -p 8000:8000 --name {} pyarweb/django".format(curdir, CONTAINER_NAME)
+    cmd = "docker run -it -v {}:/opt/code -p 8000:8000 --name {} pyarweb/django".format(
+        curdir, CONTAINER_NAME)
     os.system(cmd)
 
 
