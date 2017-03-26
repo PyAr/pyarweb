@@ -134,7 +134,7 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
                                      'pk': event.id,
                                      'participation_pk': participation.get().id
                                     }
-                                 )
+                    )
                 )
         return super().get(request, *args, **kwargs)
 

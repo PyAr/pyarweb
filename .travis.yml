@@ -15,7 +15,7 @@ env:
   - DJANGO=1.8 SECRET_KEY=supersecret DB_PORT=5432 DB_SERVICE=localhost DB_PASS="" DB_USER=postgres DB_NAME=postgres
 
 install:
-  - pip install -r requirements.txt
+  - pip install -r dev_requirements.txt
 
 script:
   - python manage.py test

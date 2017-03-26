@@ -98,13 +98,13 @@ ENV/
 *.pyc
 *.swp
 *.swo
+.venv
+.vscode/
 db.sqlite3
 waliki_data
 waliki_attachments
 media
 .vagrant
-src
-run-docker.sh
 
 ### PyCharm stuff
 .idea/
