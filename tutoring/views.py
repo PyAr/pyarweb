@@ -1,10 +1,10 @@
-from django.shortcuts import render
-from django.views.generic.edit import UpdateView, CreateView, DeleteView
+from django.views.generic.edit import UpdateView, CreateView
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
+from django.http import Http404
 from django.shortcuts import redirect
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from community.views import OwnedObject, FilterableList
 from .models import Project, Mentor, Apprentice, Mentorship
 from .forms import MentorForm, ApprenticeForm, ProjectForm, MentorshipForm

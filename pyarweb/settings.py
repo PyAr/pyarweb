@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ.get('SECRET_KEY', "somethingverysecret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -65,9 +65,9 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     # ... include the providers you want to enable:
     # Ver esto mas adelante
-    #'allauth.socialaccount.providers.github',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.twitter',
+    # 'allauth.socialaccount.providers.github',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.twitter',
     'django_extensions',
     'disqus',
     'taggit',
@@ -114,11 +114,11 @@ WSGI_APPLICATION = 'pyarweb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASS'],
-        'HOST': os.environ['DB_SERVICE'],
-        'PORT': os.environ['DB_PORT']
+        'NAME': os.environ.get('DB_NAME', "pyarweb"),
+        'USER': os.environ.get('DB_USER', "postgres"),
+        'PASSWORD': os.environ.get('DB_PASS', ""),
+        'HOST': os.environ.get('DB_SERVICE', "localhost"),
+        'PORT': os.environ.get('DB_PORT', 5432),
     }
 }
 
@@ -156,20 +156,20 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
         'DIRS': (os.path.join(BASE_DIR, 'templates'),),
-       	'OPTIONS': {
+        'OPTIONS': {
             'context_processors': [
-				#  allauth specific context processors
-				# "allauth.account.context_processors.account",
-				# "allauth.socialaccount.context_processors.socialaccount",
+                #  allauth specific context processors
+                # "allauth.account.context_processors.account",
+                # "allauth.socialaccount.context_processors.socialaccount",
 
-				"django.contrib.auth.context_processors.auth",
-				"django.core.context_processors.debug",
-				"django.core.context_processors.media",
-				'django.core.context_processors.static',
-				"django.core.context_processors.request",
-				"django.core.context_processors.i18n",
-				"django.contrib.messages.context_processors.messages",
-				"planet.context_processors.context",
+                "django.contrib.auth.context_processors.auth",
+                "django.core.context_processors.debug",
+                "django.core.context_processors.media",
+                'django.core.context_processors.static',
+                "django.core.context_processors.request",
+                "django.core.context_processors.i18n",
+                "django.contrib.messages.context_processors.messages",
+                "planet.context_processors.context",
 
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
@@ -232,7 +232,8 @@ RAVEN_CONFIG = None
 #
 EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC = 3600*24*7  # 7 días
 EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
-    'confirmation_url_validity_time': EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC / (3600*24),  # days
+    'confirmation_url_validity_time': EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC / (
+        3600*24),  # days
 }
 
 #
@@ -242,12 +243,7 @@ CAPTCHA_LENGTH = 6
 
 
 try:
-    from .local_settings import *
-except:
-    pass
-
-try:
-    from .devsettings import *
+    from .local_settings import *  # NOQA
 except:
     pass
 
@@ -259,4 +255,4 @@ if DEBUG:
 
 
 if RAVEN_CONFIG:
-    INSTALLED_APPS = INSTALLED_APPS + ('raven.contrib.django.raven_compat',)
+    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)

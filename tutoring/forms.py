@@ -1,7 +1,7 @@
 from django import forms
 from .models import Mentor, Apprentice, Project, Mentorship
 from django.utils.translation import ugettext_lazy as _
-from crispy_forms.layout import Submit, Reset, Layout
+from crispy_forms.layout import Submit, Reset
 from crispy_forms.helper import FormHelper
 from django.core.exceptions import ValidationError
 

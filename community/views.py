@@ -22,26 +22,32 @@ def homepage(request):
 
 def learning(request):
     title = _('Aprendiendo Python')
-    return render(request, 'special_page.html', {'title': title, 'slug': 'AprendiendoPython'})
+    return render(request, 'special_page.html',
+                  {'title': title, 'slug': 'AprendiendoPython'})
 
 
 def about_pyar(request):
     title = _('Acerca de PyAr')
-    return render(request, 'special_page.html', {'title': title, 'slug': 'QuienesSomos'})
+    return render(request, 'special_page.html',
+                  {'title': title, 'slug': 'QuienesSomos'})
 
 
 def members(request):
     title = _('¿Dónde viven los miembros de PyAr?')
-    return render(request, 'special_page.html', {'title': title, 'slug': 'MiembrosDePyAr'})
+    return render(request, 'special_page.html',
+                  {'title': title, 'slug': 'MiembrosDePyAr'})
 
 
 def mailing_list(request):
     title = _('Lista de Correo')
-    return render(request, 'special_page.html', {'title': title, 'slug': 'ListaDeCorreo'})
+    return render(request, 'special_page.html',
+                  {'title': title, 'slug': 'ListaDeCorreo'})
 
 
 def validate_obj_owner(obj, user):
-    """Auxiliary function that raises Http404 if the given user is not the obj.owner"""
+    """ Auxiliary function that raises Http404 if the given user is not the
+    obj.owner
+    """
     try:
         if not obj.owner == user:
             raise Http404()
@@ -65,8 +71,8 @@ class FilterableList(MultipleObjectMixin):
         and included tags in the request. """
 
     def dispatch(self, request, *args, **kwargs):
-        self.included_tags = []
-        self.excluded_tags = []
+        self.included_tags = list()
+        self.excluded_tags = list()
         for k, v in request.GET.items():
             if k.startswith('tag_'):
                 if v == '1':
@@ -76,14 +82,14 @@ class FilterableList(MultipleObjectMixin):
         return super(FilterableList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        object_list = super(FilterableList, self).get_queryset()
+        obj_list = super(FilterableList, self).get_queryset()
         included = self.included_tags
         excluded = self.excluded_tags
         if included:
-            object_list = object_list.filter(tags__slug__in=included).distinct()
+            obj_list = obj_list.filter(tags__slug__in=included).distinct()
         if excluded:
-            object_list = object_list.exclude(tags__slug__in=excluded).distinct()
-        return object_list
+            obj_list = obj_list.exclude(tags__slug__in=excluded).distinct()
+        return obj_list
 
     def get_context_data(self, **kwargs):
         context = super(FilterableList, self).get_context_data(**kwargs)

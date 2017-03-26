@@ -13,8 +13,8 @@ REGISTRATION_ENABLED_HELP_TEXT = _(
     'Esta opción habilita la posiblidad de que la gente se inscriba al evento')
 HAS_SPONSORS_HELP_TEXT = _(
     'Si se marca esta opción, y se habilitan las inscripciones, entonces se le consultará a los '
-    'inscriptos si quieren compartir sus datos con los sponsors y se les dará la opción de linkear '
-    'a un CV.')
+    'inscriptos si quieren compartir sus datos con los sponsors y se les dará la opción de linkear'
+    ' a un CV.')
 
 
 class EventForm(CrispyFormMixin):
