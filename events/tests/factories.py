@@ -1,5 +1,5 @@
 from datetime import timedelta
-from django.utils.timezone import datetime, timedelta 
+from django.utils.timezone import datetime, timedelta, utc 
 from django.contrib.auth import get_user_model
 from factory import SubFactory, Sequence
 from factory.django import DjangoModelFactory
@@ -8,7 +8,7 @@ from events.models import Event, EventParticipation
 
 
 User = get_user_model()
-DEFAULT_START_TIME = datetime(1956, 1, 31, 0, 0, 0, 0)
+DEFAULT_START_TIME = datetime(1956, 1, 31, 0, 0, 0, 0, tzinfo=utc)
 DEFAULT_END_TIME = DEFAULT_START_TIME + timedelta(hours=8)
 
 
