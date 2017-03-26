@@ -246,11 +246,6 @@ try:
 except:
     pass
 
-try:
-    from .devsettings import *
-except:
-    pass
-
 # Instead of sending out real emails the console backend just writes
 # the emails that would be sent to the standard output.
 # By default, the console backend writes to stdout
@@ -259,4 +254,4 @@ if DEBUG:
 
 
 if RAVEN_CONFIG:
-    INSTALLED_APPS = INSTALLED_APPS + ('raven.contrib.django.raven_compat',)
+    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
