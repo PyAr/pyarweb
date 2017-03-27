@@ -15,7 +15,7 @@ services:
         - POSTGRES_PASSWORD=secret
 
   web:
-      build: .
+      image: pyar/pyarweb:dev
       command: python3 manage.py runserver 0.0.0.0:8000
       volumes:
         - .:/code
