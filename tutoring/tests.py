@@ -81,7 +81,8 @@ class MentorshipTests(TestCase):
         super(MentorshipTests, self).setUp()
         self.apprentice = m.Apprentice.objects.create(description='New Post', owner=self.user)
         self.mentor = m.Mentor.objects.create(description='New Post', owner=self.user2)
-        self.mentorship = m.Mentorship.objects.create(owner=self.mentor, apprentice=self.apprentice)
+        self.mentorship = m.Mentorship.objects.create(
+            owner=self.mentor, apprentice=self.apprentice)
 
     def test_mentorship_detail_success(self):
         response = self.client.get(reverse('display_mentorship', args=(self.mentorship.pk,)))

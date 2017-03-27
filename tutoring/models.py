@@ -71,7 +71,8 @@ class Project(models.Model):
     looking_for = models.CharField(max_length=1, choices=LOOKING_CHOICES,
                                    default=LOOKING_FOR_MENTOR)
     multiple_mentors = models.BooleanField(default=True, verbose_name=_('Múltiples mentores'))
-    multiple_apprentices = models.BooleanField(default=True, verbose_name=_('Múltiples aprendices'))
+    multiple_apprentices = models.BooleanField(
+        default=True, verbose_name=_('Múltiples aprendices'))
     tags = TaggableManager()
     mentors = models.ManyToManyField(Mentor, blank=True)
     apprentices = models.ManyToManyField(Apprentice, blank=True)

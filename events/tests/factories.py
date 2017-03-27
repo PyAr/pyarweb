@@ -1,4 +1,4 @@
-from django.utils.timezone import datetime, timedelta, utc 
+from django.utils.timezone import datetime, timedelta, utc
 from django.contrib.auth import get_user_model
 from factory import SubFactory, Sequence
 from factory.django import DjangoModelFactory
@@ -28,9 +28,8 @@ class EventFactory(DjangoModelFactory):
         model = Event
 
 
-
 class EventParticipationFactory(DjangoModelFactory):
     class Meta:
         model = EventParticipation
-    
-    event = SubFactory(EventFactory) 
+
+    event = SubFactory(EventFactory)
