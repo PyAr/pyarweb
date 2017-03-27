@@ -132,9 +132,9 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
                     reverse_lazy('events:registration',
                                  kwargs={
                                      'pk': event.id,
-                                     'participation_pk': participation.get().id
-                                    }
-                    )
+                                     'participation_pk': participation.get().is_authenticated
+                                 }
+                                 )
                 )
         return super().get(request, *args, **kwargs)
 
