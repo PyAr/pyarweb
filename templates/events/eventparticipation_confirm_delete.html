@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load devtags %}
+{% block content %}
+
+	<main id="main" class="container" role="main">
+	    <div class="row">
+	        <div class="col-md-12">
+		        <form method="post">{% csrf_token %}
+                    <h4>
+                        {% if user == object.user %}
+                            {% trans "Seguro que quiere cancelar su inscripción al evento " %}
+                        {% else %}
+                            {% trans "Seguro que quiere cancelar la inscripción de" %}
+                            "{{ object.name }}"<{{ object.email|urlize }}>
+                            {% trans "al evento" %}
+                        {% endif %}
+                        <strong>"{{ object.event.name }}" </strong>?
+                    </h4>
+
+				    <input type="submit" value="Si" class="btn btn-danger">
+				    <a href="{% url 'events:detail' object.event.id %}" class="btn btn-default">No</a>
+				</form>
+	        </div>
+	    </div>
+	</main>
+
+{% endblock %}

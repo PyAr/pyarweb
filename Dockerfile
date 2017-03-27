@@ -1,27 +1,20 @@
-FROM ubuntu:14.04
-
+FROM python:3.4
 ENV PYTHONUNBUFFERED 1
-
-RUN apt-get -qq update && apt-get install -y  --no-install-recommends \
-    build-essential \
-    git \
-    python3 \
+ENV PYTHONPATH /code:$PYTHONPATH
+# runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev \
-    gettext \
-    libpq-dev \
-    libffi-dev \
-    libssl-dev \
     libxml2-dev \
-    libxslt1-dev \
+    libxslt1-dev \ 
     zlib1g-dev \
-    libjpeg-dev \
-    libpng12-dev \
-    python3-pip \
+    libffi-dev \ 
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /code
 WORKDIR /code
-
-ADD . /code/
-RUN pip3 install -U pip setuptools
-RUN pip3 install -r requirements.txt
+# update pip (to use wheels)
+RUN wget -O - https://bootstrap.pypa.io/get-pip.py | python3
+COPY dev_requirements.txt /code
+COPY requirements.txt /code
+RUN pip install -r dev_requirements.txt
+COPY . /code/

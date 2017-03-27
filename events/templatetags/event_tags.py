@@ -6,6 +6,7 @@ from django.utils import timezone
 
 register = template.Library()
 
+
 @register.inclusion_tag('events/next_events.html')
 def next_events():
     events = Event.objects.filter(

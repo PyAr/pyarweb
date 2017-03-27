@@ -68,7 +68,8 @@ class Job(models.Model):
 class JobInactivated(TimeStampedModel):
     """ Jobs Inactivated """
     REASONS = (
-        ('No es un trabajo relacionado con Python', 'No es un trabajo relacionado con Python'),
+        ('No es un trabajo relacionado con Python',
+         'No es un trabajo relacionado con Python'),
         ('Spam', 'Spam'),
         ('Información insuficiente', 'Información insuficiente'),
     )
@@ -88,5 +89,3 @@ class JobInactivated(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse('jobs_list_all')
-
-

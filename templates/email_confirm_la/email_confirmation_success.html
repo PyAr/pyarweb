@@ -1,0 +1,30 @@
+{% extends "base_site.html" %}
+{% load i18n pagination_tags %}
+{% load devtags %}
+{% block title %} {% trans "Confirmación de inscripción" %}{% endblock %}
+{% block left-column %}
+
+<section>
+    <div class="page-header">
+        <h2>
+            {% trans "Inscripción confirmada" %}
+            <span class="section-button-group pull-right">
+                <a href="{% url 'events:detail' email_confirmation.content_object.event.id %}"
+                        class="btn btn-info">
+                    {% trans "Volver al evento" %}
+                </a>
+            </span>
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                La dirección de email {{ email_confirmation.email }} ha sido verificada.
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+
