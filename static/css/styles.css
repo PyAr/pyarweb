@@ -33,6 +33,7 @@ p {
     background: #fff;
     border-radius: 8px;
     padding: 0px 20px 30px;
+    word-wrap: break-word;
 }
 
 @media (max-width: 992px) {
