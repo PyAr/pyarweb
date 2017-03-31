@@ -1,5 +1,5 @@
 import datetime
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
