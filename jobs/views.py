@@ -1,12 +1,14 @@
+import datetime
+from dateutil.relativedelta import *
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
 from django.contrib.syndication.views import Feed
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-from community.views import OwnedObject, FilterableList
+from community.views import OwnedObject, FilterableList, FilterQuerySetMixin
 from .models import Job, JobInactivated
-from .forms import JobForm, JobInactivateForm
+from .forms import JobForm, JobInactivateForm, JobSearchForm
 from pyarweb.settings import DEFAULT_FROM_EMAIL
 
 
@@ -64,9 +66,44 @@ class JobCreate(CreateView):
         return super(JobCreate, self).form_valid(form)
 
 
-class JobList(ListView, JobActiveMixin, FilterableList):
+class JobList(ListView, JobActiveMixin, FilterQuerySetMixin, FilterableList):
     model = Job
     paginate_by = 20
+    filter_fields = {
+        'title': 'title__icontains',
+        'location': 'location__icontains',
+        'seniority': 'seniority',
+        'remote_work': 'remote_work',
+        'company': 'company'
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super(JobList, self).get_context_data(**kwargs)
+        context['search_jobs_form'] = JobSearchForm(self.request.GET or None)
+        return context
+
+    def get_queryset(self):
+        qry = super(JobList, self).get_queryset()
+        if 'created' in self.request.GET:
+            today = datetime.datetime.today()
+            if 'today' in self.request.GET['created']:
+                qry = qry.filter(created__year=today.year, created__month=today.month,
+                                 created__day=today.day)
+            elif 'yesterday' in self.request.GET['created']:
+                yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
+                qry = qry.filter(created__year=yesterday.year, created__month=yesterday.month,
+                                 created__day=yesterday.day)
+            elif 'last_3_days' in self.request.GET['created']:
+                last_3_days = datetime.datetime.today() - datetime.timedelta(days=3)
+                qry = qry.filter(created__lt=today, created__gt=last_3_days)
+            elif 'last_week' in self.request.GET['created']:
+                last_week = datetime.datetime.today() - datetime.timedelta(days=7)
+                qry = qry.filter(created__lt=today, created__gt=last_week)
+            elif 'month_ago' in self.request.GET['created']:
+                month_ago = datetime.datetime.now() - relativedelta(months=1)
+                qry = qry.filter(created__range=[month_ago, today])
+
+        return qry
 
 
 class JobUpdate(UpdateView, JobActiveMixin, OwnedObject):
