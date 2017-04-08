@@ -86,7 +86,7 @@ class EventParticipation(models.Model):
         result = "Inscripción de %s" % self.name
         if self.event:
             result += " a %s" % self.event.name
-        return _(result)
+        return result
 
     def verify_email(self):
         """Start the email-verification process with this instance's email attribute."""
