@@ -61,7 +61,7 @@ class EventForm(CrispyFormMixin):
         )
         crispy_fields = fields
         help_texts = {
-            'registration_enabled': HAS_SPONSORS_HELP_TEXT,
+            'registration_enabled': REGISTRATION_ENABLED_HELP_TEXT,
             'has_sponsors': HAS_SPONSORS_HELP_TEXT,
         }
 
@@ -98,13 +98,15 @@ class AnonymousEventParticipationForm(CrispyFormMixin):
             'name',
             'email',
             'interest',
+            'gender',
             'seniority',
             'share_with_sponsors',
             'cv',
             'captcha',
         )
         help_texts = {
-            'interest': _('¿Qué temas de Python te interesaría ver en una charla'),
+            'interest': _('¿Qué temas de Python te interesaría ver en una charla?'),
+            'gender':  _('Queremos reducir la brecha de género. Este dato nos ayuda.'),
             'cv': 'Dejanos un link a tu CV, perfil de LinkedIn o algo similar'
         }
 
@@ -119,6 +121,7 @@ class AuthenticatedEventParticipationForm(ReadOnlyFieldsMixin, AnonymousEventPar
             'name',
             'email',
             'interest',
+            'gender',
             'seniority',
             'share_with_sponsors',
             'cv',
