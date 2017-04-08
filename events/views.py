@@ -252,7 +252,8 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
         return '{0}-{1}.csv'.format(event, timestamp)
 
     def get_rows(self):
-        columns = ('Nombre', 'Correo electrónico', 'Género', 'Nivel', 'Usuario PyAr', 'Verificado?')
+        columns = ('Nombre', 'Correo electrónico', 'Género', 'Nivel', 'Usuario PyAr',
+                   'Verificado?')
         if self.event.has_sponsors:
             columns += ('CV', 'Comparte?')
         header = [columns]
