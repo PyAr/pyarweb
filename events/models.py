@@ -10,6 +10,13 @@ from email_confirm_la.models import EmailConfirmation
 from jobs.models import JOB_SENIORITIES
 
 
+GENDER_OPTIONS = (
+    ('female', _('femenino')),
+    ('male', _('masculino')),
+    ('Otro', _('otro')),
+)
+
+
 class Event(models.Model):
     """A PyAr events."""
 
@@ -50,6 +57,15 @@ class EventParticipation(models.Model):
         choices=JOB_SENIORITIES + (('guido', _('Soy Guido Van Rossum')),),
         verbose_name=_('experiencia')
     )
+
+    gender = models.CharField(
+        max_length=32,
+        blank=True,
+        default='',
+        choices=GENDER_OPTIONS,
+        verbose_name=_('género')
+    )
+
     cv = models.URLField(max_length=1024, blank=True, default='', verbose_name='curriculum vitae')
     share_with_sponsors = models.BooleanField(
         default=False, verbose_name=_('¿Querés compartir tus datos con los sponsors?'))
