@@ -3,21 +3,43 @@
 
 """Handle the Views of the Homepage and others."""
 
-
+from django.db.models import F, Value, CharField
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
+from events.models import Event
 from jobs.models import Job
 from news.models import NewsArticle
 
+RECENT_ITEMS_LEN = 10
+
 
 def homepage(request):
-    news = NewsArticle.objects.order_by('-created')[:3]
-    jobs = Job.objects.order_by('-created')[:3]
-    return render(request, 'community/index.html',
-                  {'news': news, 'jobs': jobs})
+    # Ensure news results have a 'body' field
+    news = NewsArticle.objects.order_by('-created')
+    news = news.annotate(description=F('body'),
+                         category=Value('Noticias', output_field=CharField()))
+
+    jobs = Job.objects.order_by('-created')
+    jobs = jobs.annotate(category=Value('Trabajos', output_field=CharField()))
+
+    events = Event.objects.filter(start_at__lt=now())
+    events = events.order_by('-start_at')
+    # Ensure events results have 'created' and 'title' fields
+    events = events.annotate(created=F('start_at'),
+                             title=F('name'),
+                             category=Value('Eventos', output_field=CharField()))
+
+    # Sort the last news, jobs and events to define the definitive 'recent' list
+    recent = (list(news[:RECENT_ITEMS_LEN]) +
+              list(jobs[:RECENT_ITEMS_LEN]) +
+              list(events[:RECENT_ITEMS_LEN]))
+    recent = sorted(recent, key=lambda r: r.created, reverse=True)[:RECENT_ITEMS_LEN]
+
+    return render(request, 'community/index.html', {'recent': recent})
 
 
 def learning(request):
