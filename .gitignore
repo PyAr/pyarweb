@@ -4,6 +4,7 @@
 .venv
 db.sqlite3
 static
+.idea
 waliki_data
 circus.ini
 local_settings.py
