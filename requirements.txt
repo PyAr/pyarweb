@@ -19,3 +19,4 @@ django-simple-captcha==0.5.3
 django-summernote==0.8.6
 psycopg2==2.7.1
 waliki==0.7
+factory_boy
