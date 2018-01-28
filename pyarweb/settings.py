@@ -244,7 +244,7 @@ CAPTCHA_LENGTH = 6
 
 try:
     from .local_settings import *  # NOQA
-except:
+except ImportError:
     pass
 
 # Instead of sending out real emails the console backend just writes
