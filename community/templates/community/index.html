@@ -60,59 +60,40 @@
         </div>
     </section>
 
-    <div class="row" style="margin-top: 20px;">
-      <div class="col-md-12">
-
-        <div class="panel panel-default panel-primary">
-          <div class="panel-heading"><strong><a class="white" href="{% url 'news_list_all' %}">Últimas noticias</a></strong>
-          <div class="pull-right">
-            <span class="badge">
-                <a href="{% url 'news_feed' %}">
-                    <i class="fa fa-rss"></i> RSS
-                </a>
-            </span>
-           </div>
+    <section>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-12">
+                <div class="panel panel-default panel-primary">
+                <div class="panel-heading">
+                    <strong>Novedades</strong>
+                </div>
+                <div class="panel-body">
+                    {% for article in recent %}
+                    <article class="list-group-item">
+                        <time 
+                            class="published" 
+                            datetime="{{ article.created.isoformat }}" 
+                            itemprop="datePublished" 
+                            title="{{ "Fecha de publicación" }}"
+                        >
+                            {{ article.created|date:"d/m/Y" }}
+                        </time> 
+                        <small class="text-muted"> 
+                            - en {{ article.category }}
+                        </small>
+                        <h4 class="list-group-item-heading">
+                            <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                        </h4>
+                        <p class="list-group-item-text">
+                            {{ article.description|html2text|truncatewords:30 }}
+                        </p>
+                    </article>
+                    {% endfor %}
+                </div>
+                </div>
+            </div>
         </div>
-          <div class="panel-body">
-            {% for article in news %}
-                <article class="list-group-item">
-                    <time class="published" datetime="{{ article.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ article.created|date:"d/m/Y" }}</time>
-                    <h4 class="list-group-item-heading"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h4>
-                    <p class="list-group-item-text">{{ article.introduction|default:article.body|html2text|truncatewords:30 }}</p>
-                </article>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-12">
-
-        <div class="panel panel-default panel-primary">
-          <div class="panel-heading"><strong><a class="white" href="{% url 'jobs_list_all' %}">Últimos avisos de trabajo publicados</a></strong>
-
-          <div class="pull-right">
-            <span class="badge">
-                <a href="{% url 'jobs_feed' %}">
-                    <i class="fa fa-rss"></i> RSS
-                </a>
-            </span>
-           </div>
-
-
-          </div>
-          <div class="panel-body">
-            {% for job in jobs %}
-                <article class="list-group-item">
-                    <time class="published" datetime="{{ job.created.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ job.created|date:"d/m/Y" }}</time>
-                    <h4 class="list-group-item-heading"><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></h4>
-                    <p class="list-group-item-text">{{ job.description|html2text|truncatewords:30 }}</p>
-                </article>
-            {% endfor %}
-          </div>
-        </div>
-
-      </div>
-    </div>
+    </section>
 
 
     {# IMPLEMENTAR #}
