@@ -20,4 +20,3 @@ django-summernote==0.8.6
 psycopg2==2.7.4
 waliki==0.7
 django-html-sanitizer==0.1.5
-factory-boy==2.10.0
