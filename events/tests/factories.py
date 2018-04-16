@@ -1,6 +1,6 @@
 from django.utils.timezone import datetime, timedelta, utc
 from django.contrib.auth import get_user_model
-from factory import SubFactory, Sequence, Faker, PostGenerationMethodCall
+from factory import SubFactory, Faker, PostGenerationMethodCall
 from factory.django import DjangoModelFactory
 
 from events.models import Event, EventParticipation

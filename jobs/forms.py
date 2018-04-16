@@ -9,6 +9,7 @@ from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
 from sanitizer.forms import SanitizedCharField
 
+
 class JobForm(forms.ModelForm):
     """A PyAr Jobs form."""
 
