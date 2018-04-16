@@ -252,7 +252,7 @@ ALLOWED_HTML_ATTRIBUTES_INPUT = ['href', 'src', 'style', 'width', 'class']
 
 try:
     from .local_settings import *  # NOQA
-except ModuleNotFoundError:
+except ImportError:
     pass
 
 # Instead of sending out real emails the console backend just writes
