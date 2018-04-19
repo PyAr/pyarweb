@@ -7,6 +7,9 @@
 {% block extra_head %}
 <script type="text/javascript">
 // Taken from jquery.init.js from django/admin
+/* El plguin que sugiere tags (django-taggit-autosuggest) está pensado para funcionar
+en el admin de django, entonces espera que django.jQuery esté definido.
+*/
 var django = {
     "jQuery": jQuery.noConflict(true)
 };
