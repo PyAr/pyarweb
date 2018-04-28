@@ -1,10 +1,13 @@
 from captcha.fields import CaptchaField
 from crispy_forms.layout import Field
 from django import forms
+from django.conf import settings
 from django_summernote.widgets import SummernoteInplaceWidget
 from django.utils.translation import ugettext_lazy as _
 
 from bootstrap3_datetime.widgets import DateTimePicker
+from sanitizer.forms import SanitizedCharField
+
 from .models import Event, EventParticipation
 from .mixins import CrispyFormMixin, ReadOnlyFieldsMixin
 
@@ -19,7 +22,10 @@ HAS_SPONSORS_HELP_TEXT = _(
 
 class EventForm(CrispyFormMixin):
 
-    description = forms.CharField(widget=SummernoteInplaceWidget())
+    description = SanitizedCharField(
+        allowed_tags=settings.ALLOWED_HTML_TAGS_INPUT,
+        allowed_attributes=settings.ALLOWED_HTML_ATTRIBUTES_INPUT,
+        strip=False, widget=SummernoteInplaceWidget())
 
     start_at = forms.DateTimeField(
         required=True,

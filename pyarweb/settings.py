@@ -89,6 +89,7 @@ INSTALLED_APPS = (
     'waliki.togetherjs',
     'captcha',
     'email_confirm_la',
+    'sanitizer',
 )
 
 
@@ -241,6 +242,13 @@ EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
 #
 CAPTCHA_LENGTH = 6
 
+ALLOWED_HTML_TAGS_INPUT = [
+    'a', 'b', 'br', 'i', 'u', 'p', 'hr',
+    'pre', 'img', 'span', 'table', 'tbody',
+    'thead', 'tr', 'th', 'td', 'blockquote',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+]
+ALLOWED_HTML_ATTRIBUTES_INPUT = ['href', 'src', 'style', 'width', 'class']
 
 try:
     from .local_settings import *  # NOQA
