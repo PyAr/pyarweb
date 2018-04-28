@@ -144,3 +144,20 @@ class FilterableList(MultipleObjectMixin):
         context['included'] = self.included_tags
         context['excluded'] = self.excluded_tags
         return context
+
+
+class FilterQuerySetMixin(object):
+    """ filter queryset """
+
+    def get_queryset_filters(self):
+        filters = {}
+        for field in self.filter_fields:
+            if field in self.request.GET:
+                if self.request.GET[field]:
+                    filters[self.filter_fields[field]] = self.request.GET[field]
+
+        return filters
+
+    def get_queryset(self):
+        qs = super(FilterQuerySetMixin, self).get_queryset()
+        return qs.filter(**self.get_queryset_filters())
