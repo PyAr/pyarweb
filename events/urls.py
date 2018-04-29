@@ -21,10 +21,10 @@ urlpatterns = patterns(
     url(r'^$', EventList.as_view(), name='events_list_all'),
     url(r'^rss$', EventsFeed(), name='events_feed'),
     url(r'^(?P<pk>\d+)/$', EventDetail.as_view(), name='detail'),
-    url(r'^(?P<slug>[\w-]+)/$', DetailView.as_view(model=Event), name='event_slug'),
     url(r'^add/$', EventCreate.as_view(), name='add'),
     url(r'^(?P<pk>\d+)/editar/$', EventUpdate.as_view(), name='edit'),
     url(r'^(?P<pk>\d+)/borrar/$', EventDelete.as_view(), name='delete'),
+    url(r'^(?P<slug>[\w-]+)/$', DetailView.as_view(model=Event), name='event_slug'),
 
     # Event Registration Management
     url(r'^(?P<pk>\d+)/inscribirse/$', EventParticipationCreate.as_view(), name='register'),

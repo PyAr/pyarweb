@@ -26,11 +26,6 @@ class EventsViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, event.name)
 
-    def test_events_view_slug(self):
-        event = EventFactory()
-        response_por_slug = self.client.get('/eventos/{}/'.format(event.slug))
-        self.assertEqual(response_por_slug.context['event'].id, event.id)
-
     def test_events_view_create(self):
         response = self.client.get(reverse('events:add'))
         event = {
@@ -38,7 +33,6 @@ class EventsViewTest(TestCase):
             'description': "Charlas y talleres",
             'place': 'UTN Regional, San Rafael',
             'address': 'Gral. Paz 1432',
-            'slug': 'slug',
             'url': 'pydaysanrafael.tk',
             'start_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 08:00:00'),
             'end_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 18:00:00'),
@@ -60,7 +54,6 @@ class EventsViewTest(TestCase):
             'description': event.description,
             'place': event.place,
             'address': event.address,
-            'slug': 'some-slug',
             'url': "http://rioiv.python.org.ar",
             'start_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 08:00:00'),
             'end_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 18:00:00'),
@@ -81,7 +74,6 @@ class EventsViewTest(TestCase):
             'description': 'an <script>evil()</script> example',
             'place': 'UTN Regional, San Rafael',
             'address': 'Gral. Paz 1432',
-            'slug': 'slug',
             'url': 'pydaysanrafael.tk',
             'start_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 08:00:00'),
             'end_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 18:00:00'),
@@ -103,3 +95,8 @@ class EventsViewTest(TestCase):
         response = self.client.post(reverse('events:delete', args=(event.pk, )))
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Event.objects.filter(name=event.name).exists())
+
+    def test_events_view_slug(self):
+        event = EventFactory()
+        response_por_slug = self.client.get('/eventos/{}/'.format(event.slug))
+        self.assertEqual(response_por_slug.context['event'].id, event.id)
