@@ -84,24 +84,40 @@ class JobList(ListView, JobActiveMixin, FilterQuerySetMixin, FilterableList):
 
     def get_queryset(self):
         qry = super(JobList, self).get_queryset()
-        if 'created' in self.request.GET:
-            today = datetime.datetime.today()
-            if 'today' in self.request.GET['created']:
-                qry = qry.filter(created__year=today.year, created__month=today.month,
-                                 created__day=today.day)
-            elif 'yesterday' in self.request.GET['created']:
-                yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
-                qry = qry.filter(created__year=yesterday.year, created__month=yesterday.month,
-                                 created__day=yesterday.day)
-            elif 'last_3_days' in self.request.GET['created']:
-                last_3_days = datetime.datetime.today() - datetime.timedelta(days=3)
-                qry = qry.filter(created__lt=today, created__gt=last_3_days)
-            elif 'last_week' in self.request.GET['created']:
-                last_week = datetime.datetime.today() - datetime.timedelta(days=7)
-                qry = qry.filter(created__lt=today, created__gt=last_week)
-            elif 'month_ago' in self.request.GET['created']:
-                month_ago = datetime.datetime.now() - relativedelta(months=1)
-                qry = qry.filter(created__range=[month_ago, today])
+        if 'created' not in self.request.GET:
+            return qry  # No filter by job creation time given, just return full queryset
+
+        filter_key = self.request.GET['created']  # filter by job creation time
+        today = datetime.datetime.today()
+
+        if JobSearchForm.CREATED_CHOICES.today in created_key:
+            qry = qry.filter(
+                created__year=today.year,
+                created__month=today.month,
+                created__day=today.day
+            )
+        elif JobSearchForm.CREATED_CHOICES.yesterday in filter_key:
+            yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
+            qry = qry.filter(
+                created__year=yesterday.year,
+                created__month=yesterday.month,
+                created__day=yesterday.day
+            )
+        elif JobSearchForm.CREATED_CHOICES.last_3_days in filter_key:
+            last_3_days = datetime.datetime.today() - datetime.timedelta(days=3)
+            qry = qry.filter(
+                created__lt=today,
+                created__gt=last_3_days
+            )
+        elif JobSearchForm.CREATED_CHOICES.last_week in filter_key:
+            last_week = datetime.datetime.today() - datetime.timedelta(days=7)
+            qry = qry.filter(
+                created__lt=today,
+                created__gt=last_week
+            )
+        elif JobSearchForm.CREATED_CHOICES.month_ago in filter_key: 
+            month_ago = datetime.datetime.now() - relativedelta(months=1)
+            qry = qry.filter(created__range=[month_ago, today])
 
         return qry
 
