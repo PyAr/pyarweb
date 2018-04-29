@@ -9,6 +9,8 @@ from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
 from sanitizer.forms import SanitizedCharField
 
+from jobs import utils
+
 
 class JobForm(forms.ModelForm):
     """A PyAr Jobs form."""
@@ -78,6 +80,11 @@ class JobForm(forms.ModelForm):
         self.helper.add_input(Submit('job_submit', _('Guardar')))
         self.helper.add_input(Reset('job_reset', _('Limpiar'),
                                     css_class='btn-default'))
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        self.cleaned_data['tags'] = utils.normalize_tags(tags)
+        return self.cleaned_data['tags']
 
     class Meta:
         model = Job
