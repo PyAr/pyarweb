@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from django.db import migrations, models
 from taggit.models import TaggedItem, Tag  # can be used since Models are actually not modified
 from django.contrib.contenttypes.models import ContentType
 
-
-# Esta funcion de normalizacion hay que importarla de lo que haga Eduzen
-def norm(t):
-    return t.lower().strip()
+from jobs.utils import normalize
 
 
 def clean_tags(apps, schema_editor):
@@ -16,11 +12,10 @@ def clean_tags(apps, schema_editor):
     all_tags = Tag.objects.all()
     n_tags = all_tags.count()
     for bad_tag in all_tags:
-        normalized = norm(bad_tag.name)
+        normalized = normalize(bad_tag.name)
         if normalized == bad_tag.name:
             # Actually a good tabg
             continue
-
         normalized_tag, _ = Tag.objects.get_or_create(name=normalized)
         tagged_objects = TaggedItem.objects.filter(tag__id=bad_tag.id)
         for o in tagged_objects:
