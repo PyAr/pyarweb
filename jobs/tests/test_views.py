@@ -33,6 +33,21 @@ class JobsTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Job.objects.filter(title='Python Dev').count(), 1)
 
+    def test_jobs_view_create_avoiding_repeated_tags(self):
+        response = self.client.get(reverse('jobs_add'))
+        job = {
+            'title': 'Python Dev',
+            'location': 'Bahia Blanca',
+            'email': 'info@undominio.com',
+            'tags': 'python,remoto,DJANGO,django',
+            'description': 'Buscamos desarrollador python freelance.'
+        }
+        response = self.client.post(reverse('jobs_add'), job)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Job.objects.filter(title='Python Dev').count(), 1)
+        self.assertEqual(Job.objects.all()[0].tags.all().count(), 3)
+
     def test_jobs_view_edit(self):
         job = JobFactory(
             owner=self.user, title='Python Dev',
