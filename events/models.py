@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from email_confirm_la.models import EmailConfirmation
 
+from autoslug import AutoSlugField
+
 from jobs.models import JOB_SENIORITIES
 
 
@@ -25,6 +27,9 @@ class Event(models.Model):
     description = models.TextField(verbose_name=_('Descripcion'))
     place = models.CharField(max_length=100, verbose_name=_('Lugar'))
     address = models.CharField(max_length=100, verbose_name=_('Direccion'))
+    slug = AutoSlugField(
+        editable=True, null=True, blank=True, unique=True, populate_from='name',
+    )
     url = models.URLField(blank=True, null=True)
     start_at = models.DateTimeField(verbose_name=_('Comienza a las'))
     end_at = models.DateTimeField(verbose_name=_('Termina a las'))
