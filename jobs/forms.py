@@ -10,6 +10,7 @@ from crispy_forms.helper import FormHelper
 from sanitizer.forms import SanitizedCharField
 
 from .models import Job, JobInactivated
+from model_utils import Choices
 
 
 class JobForm(forms.ModelForm):
@@ -114,7 +115,7 @@ class JobInactivateForm(forms.ModelForm):
 class JobSearchForm(forms.ModelForm):
     """ form to search Jobs """
 
-    CREATED_CHOICES = (
+    CREATED_CHOICES = Choices(
         ('all', "---------"),
         ('today', _('Hoy')),
         ('yesterday', _('Ayer')),
