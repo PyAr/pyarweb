@@ -11,6 +11,7 @@ from sanitizer.forms import SanitizedCharField
 
 from .models import Job, JobInactivated
 from model_utils import Choices
+from jobs import utils
 
 
 class JobForm(forms.ModelForm):
@@ -81,6 +82,11 @@ class JobForm(forms.ModelForm):
         self.helper.add_input(Submit('job_submit', _('Guardar')))
         self.helper.add_input(Reset('job_reset', _('Limpiar'),
                                     css_class='btn-default'))
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        self.cleaned_data['tags'] = utils.normalize_tags(tags)
+        return self.cleaned_data['tags']
 
     class Meta:
         model = Job

@@ -90,7 +90,7 @@ class JobList(ListView, JobActiveMixin, FilterQuerySetMixin, FilterableList):
         filter_key = self.request.GET['created']  # filter by job creation time
         today = datetime.datetime.today()
 
-        if JobSearchForm.CREATED_CHOICES.today in created_key:
+        if JobSearchForm.CREATED_CHOICES.today in filter_key:
             qry = qry.filter(
                 created__year=today.year,
                 created__month=today.month,
@@ -115,7 +115,7 @@ class JobList(ListView, JobActiveMixin, FilterQuerySetMixin, FilterableList):
                 created__lt=today,
                 created__gt=last_week
             )
-        elif JobSearchForm.CREATED_CHOICES.month_ago in filter_key: 
+        elif JobSearchForm.CREATED_CHOICES.month_ago in filter_key:
             month_ago = datetime.datetime.now() - relativedelta(months=1)
             qry = qry.filter(created__range=[month_ago, today])
 
