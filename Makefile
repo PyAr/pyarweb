@@ -11,7 +11,7 @@ help:
 
 start:
 	docker-compose up
-	
+
 stop:
 	docker-compose stop
 
@@ -31,6 +31,9 @@ test: pep8 only_test
 
 dockershell:
 	docker-compose run --rm web /bin/bash
+
+migrations:
+	docker-compose run --rm web python3 manage.py makemigrations
 
 migrate:
 	docker-compose run --rm web python3 manage.py migrate
