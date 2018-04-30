@@ -17,15 +17,18 @@ JOB_SENIORITIES = (
 
 class JobQuerySet(models.QuerySet):
 
+    # Companies have a default rank of 0, sponsored ones greater than 0
+    MIN_RANK = 0
+
     def actives(self):
         # -- only active records
         return self.filter(is_active=True)
 
-    def sponsored(self, from_date, size):
+    def sponsored(self, from_date, sponsored_size):
         sponsored_jobs = self.actives().filter(
             created__gte=from_date,
-            company__rank__gt=1).order_by(
-            '-company__rank', '-created')[:size]
+            company__rank__gt=self.MIN_RANK).order_by(
+            '-company__rank', '-created')[:sponsored_size]
         return sponsored_jobs
 
     def non_sponsored(self, from_date, sponsored_size):
