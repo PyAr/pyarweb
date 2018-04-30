@@ -567,3 +567,7 @@ a.white:hover {
     color: #fff;
     text-decoration: none;
 }
+
+div.sponsored_jobs {
+    padding: 5px;
+}
