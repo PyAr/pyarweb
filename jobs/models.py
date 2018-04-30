@@ -21,6 +21,17 @@ class JobQuerySet(models.QuerySet):
         # -- only active records
         return self.filter(is_active=True)
 
+    def sponsored(self, from_date, size):
+        sponsored_jobs = self.actives().filter(
+            created__gte=from_date,
+            company__rank__gt=1).order_by(
+            '-company__rank', '-created')[:size]
+        return sponsored_jobs
+
+    def non_sponsored(self, from_date, sponsored_size):
+        sponsored_jobs = self.sponsored(from_date, sponsored_size)
+        return self.actives().exclude(pk__in=sponsored_jobs)
+
 
 class Job(models.Model):
     """A PyAr Job."""

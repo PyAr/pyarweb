@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from jobs.models import Job
 from jobs.tests.factories import JobFactory
 from events.tests.factories import UserFactory
+from pycompanies.tests.factories import CompanyFactory
 
 
 class JobsTest(TestCase):
@@ -16,9 +17,17 @@ class JobsTest(TestCase):
 
     def test_jobs_view_list(self):
         job = JobFactory(owner=self.user)
+        company = CompanyFactory(owner=self.user, rank=3)
+        sponsored_job = JobFactory(owner=self.user, company=company)
+        sponsored_job2 = JobFactory(owner=self.user, company=company)
+
         response = self.client.get(reverse('jobs_list_all'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(job, response.context["job_list"])
+        self.assertEqual(len(response.context["job_list"]), 1)
+        self.assertIn(sponsored_job, response.context["sponsored_jobs"])
+        self.assertIn(sponsored_job2, response.context["sponsored_jobs"])
+        self.assertEqual(len(response.context["sponsored_jobs"]), 2)
 
     def test_jobs_view_create(self):
         response = self.client.get(reverse('jobs_add'))
