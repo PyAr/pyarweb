@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import patterns, url
+from django.views.generic.detail import DetailView
+
+from .models import Event
 from .views import (EventDetail,
                     EventList,
                     EventCreate,
@@ -21,6 +24,7 @@ urlpatterns = patterns(
     url(r'^add/$', EventCreate.as_view(), name='add'),
     url(r'^(?P<pk>\d+)/editar/$', EventUpdate.as_view(), name='edit'),
     url(r'^(?P<pk>\d+)/borrar/$', EventDelete.as_view(), name='delete'),
+    url(r'^(?P<slug>[\w-]+)/$', DetailView.as_view(model=Event), name='event_slug'),
 
     # Event Registration Management
     url(r'^(?P<pk>\d+)/inscribirse/$', EventParticipationCreate.as_view(), name='register'),

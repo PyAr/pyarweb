@@ -264,3 +264,5 @@ if DEBUG:
 
 if RAVEN_CONFIG:
     INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
+
+TAGGIT_CASE_INSENSITIVE = True

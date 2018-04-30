@@ -95,3 +95,8 @@ class EventsViewTest(TestCase):
         response = self.client.post(reverse('events:delete', args=(event.pk, )))
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Event.objects.filter(name=event.name).exists())
+
+    def test_events_view_slug(self):
+        event = EventFactory()
+        response_por_slug = self.client.get('/eventos/{}/'.format(event.slug))
+        self.assertEqual(response_por_slug.context['event'].id, event.id)
