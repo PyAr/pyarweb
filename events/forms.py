@@ -59,6 +59,7 @@ class EventForm(CrispyFormMixin):
             'description',
             'place',
             'address',
+            'slug',
             'url',
             'start_at',
             'end_at',
