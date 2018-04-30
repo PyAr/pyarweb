@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='company',
             name='rank',
-            field=models.PositiveIntegerField(default=1),
+            field=models.PositiveIntegerField(default=0),
         ),
     ]
