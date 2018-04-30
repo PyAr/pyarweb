@@ -8,7 +8,7 @@ import autoslug.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0003_eventparticipation_gender'),
+        ('events', '0004_auto_20180428_1949'),
     ]
 
     operations = [
