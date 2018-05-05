@@ -29,6 +29,24 @@ class JobsTest(TestCase):
         self.assertIn(sponsored_job2, response.context["sponsored_jobs"])
         self.assertEqual(len(response.context["sponsored_jobs"]), 2)
 
+    def test_jobs_view_list_regular_and_sponsored(self):
+        sponsored_company = CompanyFactory(name='Name', owner=self.user, rank=3)
+        sponsored_job = JobFactory(owner=self.user, company=sponsored_company)
+        sponsored_job_2 = JobFactory(owner=self.user, company=sponsored_company)
+
+        company = CompanyFactory(name='Other name', owner=self.user, rank=0)
+        job = JobFactory(owner=self.user, company=company)
+        job_2 = JobFactory(owner=self.user, company=company)
+
+        response = self.client.get(reverse('jobs_list_all'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(job, response.context["job_list"])
+        self.assertIn(job_2, response.context["job_list"])
+        self.assertEqual(len(response.context["job_list"]), 2)
+        self.assertIn(sponsored_job, response.context["sponsored_jobs"])
+        self.assertIn(sponsored_job_2, response.context["sponsored_jobs"])
+        self.assertEqual(len(response.context["sponsored_jobs"]), 2)
+
     def test_jobs_view_create(self):
         response = self.client.get(reverse('jobs_add'))
         job = {
