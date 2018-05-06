@@ -33,6 +33,11 @@
           </a>
         </div>
       </div>
+      {% if object.rank > 0%}
+        <hr/>
+        <p> Socia Benefactora de la <a href="https:/ac.python.org.ar/">Asociación Civil Python Argentina</a></p>
+        <img src="https://ac.python.org.ar/images/acpyar.png" class="img-thumbnail" style="max-width:300px; height:auto;"/>
+      {% endif %}
   </div>
 </main>
 {% endblock %}
