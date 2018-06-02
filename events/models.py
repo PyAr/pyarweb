@@ -7,7 +7,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from email_confirm_la.models import EmailConfirmation
 
+from autoslug import AutoSlugField
+
 from jobs.models import JOB_SENIORITIES
+
+
+GENDER_OPTIONS = (
+    ('female', _('femenino')),
+    ('male', _('masculino')),
+    ('Otro', _('otro')),
+)
 
 
 class Event(models.Model):
@@ -18,6 +27,9 @@ class Event(models.Model):
     description = models.TextField(verbose_name=_('Descripcion'))
     place = models.CharField(max_length=100, verbose_name=_('Lugar'))
     address = models.CharField(max_length=100, verbose_name=_('Direccion'))
+    slug = AutoSlugField(
+        editable=True, null=True, blank=True, unique=True, populate_from='name',
+    )
     url = models.URLField(blank=True, null=True)
     start_at = models.DateTimeField(verbose_name=_('Comienza a las'))
     end_at = models.DateTimeField(verbose_name=_('Termina a las'))
@@ -50,6 +62,15 @@ class EventParticipation(models.Model):
         choices=JOB_SENIORITIES + (('guido', _('Soy Guido Van Rossum')),),
         verbose_name=_('experiencia')
     )
+
+    gender = models.CharField(
+        max_length=32,
+        blank=True,
+        default='',
+        choices=GENDER_OPTIONS,
+        verbose_name=_('género')
+    )
+
     cv = models.URLField(max_length=1024, blank=True, default='', verbose_name='curriculum vitae')
     share_with_sponsors = models.BooleanField(
         default=False, verbose_name=_('¿Querés compartir tus datos con los sponsors?'))
@@ -70,7 +91,7 @@ class EventParticipation(models.Model):
         result = "Inscripción de %s" % self.name
         if self.event:
             result += " a %s" % self.event.name
-        return _(result)
+        return result
 
     def verify_email(self):
         """Start the email-verification process with this instance's email attribute."""

@@ -14,7 +14,21 @@
                 </span>
             </h2>
         </div>
-
+        {% if sponsored_jobs %}
+            <div class="sponsored_jobs bg-info">
+            {% for object in sponsored_jobs %}
+                <h4>
+                    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>  <span class="job-date">({{ object.created|date:"SHORT_DATE_FORMAT" }}, {{ object.location }})</span>
+                </h4>
+                <p>{{ object.description|html2text|truncatewords:50 }}</p>
+                <div class="text-muted">
+                {% include "jobs/_jobs_tags.html" %}
+                <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+                </div>
+            {% endfor %}
+            <p class="text-right"><em> Oportunidades destacadas por la <a href="https:/ac.python.org.ar">Asociación Civil Python Argentina</a></em></p>
+            </div>
+        {% endif %}
         {% if object_list %}
             {% for object in object_list %}
                 <h4>
@@ -24,6 +38,7 @@
                 <div class="text-muted">
                 {% include "jobs/_jobs_tags.html" %}
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+                </div>
             {% endfor %}
 
             {% paginate %}

@@ -33,6 +33,7 @@ p {
     background: #fff;
     border-radius: 8px;
     padding: 0px 20px 30px;
+    word-wrap: break-word;
 }
 
 @media (max-width: 992px) {
@@ -565,4 +566,8 @@ a.white {
 a.white:hover {
     color: #fff;
     text-decoration: none;
+}
+
+div.sponsored_jobs {
+    padding: 5px;
 }

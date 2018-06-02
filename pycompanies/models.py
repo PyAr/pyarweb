@@ -19,6 +19,7 @@ class Company(TimeStampedModel):
     link = models.URLField('URL',
                            help_text=_('Dirección web de la empresa')
                            )
+    rank = models.PositiveIntegerField(default=0)
 
     def get_absolute_url(self):
         return reverse('companies:detail', kwargs={'pk': self.pk})

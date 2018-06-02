@@ -132,9 +132,9 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
                     reverse_lazy('events:registration',
                                  kwargs={
                                      'pk': event.id,
-                                     'participation_pk': participation.get().id
-                                    }
-                    )
+                                     'participation_pk': participation.get().is_authenticated
+                                 }
+                                 )
                 )
         return super().get(request, *args, **kwargs)
 
@@ -252,7 +252,8 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
         return '{0}-{1}.csv'.format(event, timestamp)
 
     def get_rows(self):
-        columns = ('Nombre', 'Correo electrónico', 'Nivel', 'Usuario PyAr', 'Verificado?')
+        columns = ('Nombre', 'Correo electrónico', 'Género', 'Nivel', 'Usuario PyAr',
+                   'Verificado?')
         if self.event.has_sponsors:
             columns += ('CV', 'Comparte?')
         header = [columns]
@@ -263,7 +264,7 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
         user = ''
         if obj.user is not None:
             user = obj.user.get_full_name() or obj.user.get_username()
-        row = (obj.name, obj.email, obj.seniority, user, obj.is_verified)
+        row = (obj.name, obj.email, obj.gender, obj.seniority, user, obj.is_verified)
         if self.event.has_sponsors:
             row += (obj.cv, obj.share_with_sponsors)
         return row

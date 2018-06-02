@@ -1,3 +1,6 @@
+from datetime import datetime
+from datetime import timedelta
+
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
@@ -67,6 +70,20 @@ class JobCreate(CreateView):
 class JobList(ListView, JobActiveMixin, FilterableList):
     model = Job
     paginate_by = 20
+    ordering = ['-created']
+    two_month_ago = datetime.today() - timedelta(days=60)
+    # TODO: move to some dinamic configurable place
+    COUNT_OF_SPONSORED = 3
+
+    def get_queryset(self):
+        return Job.objects.non_sponsored(
+            self.two_month_ago, self.COUNT_OF_SPONSORED)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sponsored_jobs'] = Job.objects.sponsored(
+            self.two_month_ago, self.COUNT_OF_SPONSORED)
+        return context
 
 
 class JobUpdate(UpdateView, JobActiveMixin, OwnedObject):

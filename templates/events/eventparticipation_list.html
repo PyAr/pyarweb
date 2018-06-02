@@ -43,6 +43,7 @@
                                             <th>#</th>
                                             <th>{% trans 'Nombre' %}</th>
                                             <th>{% trans 'Email' %}</th>
+                                            <th>{% trans 'Género' %}</th>
                                             <th>{% trans 'Nivel' %}</th>
                                             <th>{% trans 'Usuario PyAr' %}</th>
                                             <th><small>{% trans 'Verificado?' %}</small></th>
@@ -60,7 +61,8 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ participant.name }}</td>
                     <td>{{ participant.email|urlizetrunc:27 }}</td>
-                    <td>{{ participant.seniority }}</td>
+                    <td>{{ participant.gender|capfirst }}</td>
+                    <td>{{ participant.seniority|capfirst }}</td>
                     <td>{{ participant.user|default_if_none:"" }}</td>
                     <td>
                         {% with participant.is_verified as v %}
