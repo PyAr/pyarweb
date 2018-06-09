@@ -38,7 +38,7 @@ Configurá tu entorno
         git config --global user.email 'tu email'
 
 - Asegurate de tener una cuenta de [GitHub](https://github.com/join).
-- "Forkea" *pyarweb* a ty cuenta de GitHub haciendo click en el botón de [Fork](https://github.com/PyAr/pyarweb/fork).
+- "Forkea" *pyarweb* a tu cuenta de GitHub haciendo click en el botón de [Fork](https://github.com/PyAr/pyarweb/fork).
 - [Clona](https://help.github.com/articles/fork-a-repo/#step-2-create-a-local-clone-of-your-fork) tu fork en tu computadora::
 
         git clone https://github.com/{username}/pyarweb
@@ -52,10 +52,10 @@ Configurá tu entorno
 
 - Ejecta pyarweb
 
-Podés ejecutar pyarweb utilizando Docker o en tu maquina local. En los siguientes links tenes los pasos a seguir en cada caso.
+Podés ejecutar pyarweb utilizando Docker o en tu maquina local.
 
-    https://github.com/PyAr/pyarweb/wiki/Instalacion-con-Docker 
-    https://github.com/PyAr/pyarweb/wiki/Instalaci%C3%B3n-manual
+    - [Docker](https://github.com/PyAr/pyarweb/wiki/Instalacion-con-Docker)
+    - [Virtualenv](https://github.com/PyAr/pyarweb/wiki/Instalaci%C3%B3n-manual)
 
 
 Empeza a escribir código
