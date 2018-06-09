@@ -54,8 +54,8 @@ Configurá tu entorno
 
 Podés ejecutar pyarweb utilizando Docker o en tu maquina local.
 
-    - [Docker](https://github.com/PyAr/pyarweb/wiki/Instalacion-con-Docker)
-    - [Virtualenv](https://github.com/PyAr/pyarweb/wiki/Instalaci%C3%B3n-manual)
+[Docker](https://github.com/PyAr/pyarweb/wiki/Instalacion-con-Docker)
+[Virtualenv](https://github.com/PyAr/pyarweb/wiki/Instalaci%C3%B3n-manual)
 
 
 Empeza a escribir código
