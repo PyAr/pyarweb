@@ -30,3 +30,4 @@ services:
         - DB_NAME=postgres
         - DB_PASS=secret
         - DB_SERVICE=postgres
+        - DJANGO_SETTINGS_MODULE=pyarweb.settings.development
