@@ -1,10 +1,8 @@
 import os
+import sys
 
-import raven
 
 from pyarweb.settings.base import *  # NOQA
-
-TEMPLATE_DEBUG = False
 
 CACHES = {
     'default': {
@@ -41,8 +39,16 @@ SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
 SENDFILE_URL = '/private'
 
 # Raven
-INSTALLED_APPS += ('raven.contrib.django.raven_compat',) # NOQA
-RAVEN_CONFIG = {
-        'dsn': os.environ.get("SENTRY_DSN", "NOT_CONFIGURED"),
-        'release': raven.fetch_git_sha(os.path.abspath(os.pardir)),
-}
+# True if we are running ./manage.py test
+TEST_RUNNING = [x for x in sys.argv if 'test' in x]
+
+if not TEST_RUNNING:
+    # Este es un workaround para evitar que unitests.discover importe el modulo y ejecute
+    # raven.
+    # Mejores maneras de evitar esto bienvenidas.
+    import raven
+    INSTALLED_APPS += ('raven.contrib.django.raven_compat',) # NOQA
+    RAVEN_CONFIG = {
+            'dsn': os.environ.get("SENTRY_DSN", "NOT_CONFIGURED"),
+            'release': raven.fetch_git_sha(BASE_DIR),  # NOQA
+    }
