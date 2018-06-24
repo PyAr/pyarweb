@@ -21,5 +21,6 @@ install:
   - pip install -r dev_requirements.txt
 
 script:
+  - ./check_migrations.sh
   - flake8
   - python3 manage.py test -v2 --noinput
