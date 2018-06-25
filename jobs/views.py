@@ -1,16 +1,16 @@
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic.edit import UpdateView, CreateView, DeleteView
-from django.views.generic import ListView
+from community.views import FilterableList, OwnedObject
 from django.contrib.syndication.views import Feed
-from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-from community.views import OwnedObject, FilterableList
-from .models import Job, JobInactivated
+from django.core.urlresolvers import reverse_lazy
+from django.template.loader import render_to_string
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.conf import settings
+
 from .forms import JobForm, JobInactivateForm
-from pyarweb.settings import DEFAULT_FROM_EMAIL
+from .models import Job, JobInactivated
 
 
 class JobActiveMixin(object):
@@ -127,7 +127,7 @@ class JobInactivate(CreateView):
             email = EmailMessage(
                 subject="[PyAr] Aviso de trabajo dado de baja",
                 to=(job.company.owner.email, ),
-                from_email=DEFAULT_FROM_EMAIL,
+                from_email=getattr(settings, "DEFAULT_FROM_EMAIL"),
                 body=body
             )
             email.send()

@@ -8,10 +8,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-from datetime import timedelta
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+# Dos veces os.path.dirname porque el archivo de settings está dentro de otro path.
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ.get('SECRET_KEY', "somethingverysecret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Sites framework
 SITE_ID = 1
@@ -50,23 +50,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
     # pyarweb apps
     'community',
     'news',
     'pycompanies',
     'jobs',
     'events',
-
     # 3rd party apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # ... include the providers you want to enable:
-    # Ver esto mas adelante
-    # 'allauth.socialaccount.providers.github',
-    # 'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.twitter',
     'django_extensions',
     'disqus',
     'taggit',
@@ -186,27 +179,11 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-PLANET = {"USER_AGENT": "pyarweb/0.1", "LOGIN_REQUIRED_FOR_ADDING_FEED": True}
-
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 SUMMERNOTE_CONFIG = {
     'inplacewidget_external_css': (),
 }
-
-# CELERY SETTINGS
-BROKER_URL = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
-CELERYBEAT_SCHEDULE = {
-    'update_feeds': {
-        'task': 'planet.tasks.update_feeds',
-        'schedule': timedelta(hours=12)
-    },
-}
-
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -224,8 +201,6 @@ SENDFILE_BACKEND = 'sendfile.backends.simple'
 # django-db backups
 DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
 DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
-
-RAVEN_CONFIG = None
 
 #
 #  Email confirmation app settings
@@ -249,20 +224,4 @@ ALLOWED_HTML_TAGS_INPUT = [
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
 ]
 ALLOWED_HTML_ATTRIBUTES_INPUT = ['href', 'src', 'style', 'width', 'class']
-
-try:
-    from .local_settings import *  # NOQA
-except ImportError:
-    pass
-
-# Instead of sending out real emails the console backend just writes
-# the emails that would be sent to the standard output.
-# By default, the console backend writes to stdout
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-
-if RAVEN_CONFIG:
-    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
-
 TAGGIT_CASE_INSENSITIVE = True
