@@ -56,7 +56,6 @@ INSTALLED_APPS = (
     'pycompanies',
     'jobs',
     'events',
-    'tutoring',
     # 3rd party apps
     'allauth',
     'allauth.account',
