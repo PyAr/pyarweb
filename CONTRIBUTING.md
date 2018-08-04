@@ -63,6 +63,8 @@ Podés ejecutar pyarweb utilizando Docker o en tu maquina local.
 Empeza a escribir código
 ------------------------
 
+> DISCLAIMER: si ya tenías tu fork del proyecto asegurate de tener el branch `master` actualizado con el _oficial_.
+
 - Generá un nuevo branch que identifique el issue en el que vas a trabajar. (EJ: ``issue_24_nueva_funcionalidad``)
 - Escribí el código utilizando tu editor preferido.
 
