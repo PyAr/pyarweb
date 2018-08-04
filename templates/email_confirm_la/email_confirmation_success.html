@@ -9,7 +9,7 @@
         <h2>
             {% trans "Inscripción confirmada" %}
             <span class="section-button-group pull-right">
-                <a href="{% url 'events:detail' email_confirmation.content_object.event.id %}"
+                <a href="{% url 'events:detail' email_confirmation.content_object.event.id %}#{{ email_confirmation.content_object.event.name | slugify }}"
                         class="btn btn-info">
                     {% trans "Volver al evento" %}
                 </a>
