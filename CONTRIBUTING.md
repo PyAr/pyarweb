@@ -9,20 +9,20 @@ Podes contribuir de muchas maneras:
 
 ## Código de conducta
 
-Al contribuir en este proyecto estás formando parte de la comunidad de Python Argentina. Como miembro te pedimos que 
-nos ayudes a mantener nuestra comunidad abierta e inclusiva. También te pedimos que leas y respetes nuestro 
+Al contribuir en este proyecto estás formando parte de la comunidad de Python Argentina. Como miembro te pedimos que
+nos ayudes a mantener nuestra comunidad abierta e inclusiva. También te pedimos que leas y respetes nuestro
 [*Código de Conducta*](https://ac.python.org.ar/#coc)
 
 
-## Reportando errores 
+## Reportando errores
 
-Una de las maneras más simples de ayudar es reportar errores. :-) 
+Una de las maneras más simples de ayudar es reportar errores. :-)
 
 Los errores se reportan en: https://github.com/PyAr/pyarweb/issues/
 
 * Describí siempre qué esperabas que pasé y qué sucedió en su lugar.
 * De ser posible incluí un ejemplo mínimo de cómo reproducir el error.
-* Incluí tracebacks, screenshots, logs de errores. 
+* Incluí tracebacks, screenshots, logs de errores.
 * Detallá la versiónes de tu browser, sistema operativo, etc.
 * En caso que estes desarrollando con la web la versión de python que estabas utilizando.
 
@@ -31,10 +31,12 @@ Los errores se reportan en: https://github.com/PyAr/pyarweb/issues/
 Configurá tu entorno
 --------------------
 
-- Asegurate de tener instalada la [última versión de git](https://git-scm.com/downloads).
-- Configurá git con tu [usuario](https://help.github.com/articles/setting-your-username-in-git/) y [email](https://help.github.com/articles/setting-your-email-in-git/):: 
+> DISCLAIMER: si ya tenés tu fork del proyecto, esta sección no hace falta. Solo asegurate de tener el branch `master` actualizado con el _oficial_.
 
-        git config --global user.name 'tu nombre' 
+- Asegurate de tener instalada la [última versión de git](https://git-scm.com/downloads).
+- Configurá git con tu [usuario](https://help.github.com/articles/setting-your-username-in-git/) y [email](https://help.github.com/articles/setting-your-email-in-git/)::
+
+        git config --global user.name 'tu nombre'
         git config --global user.email 'tu email'
 
 - Asegurate de tener una cuenta de [GitHub](https://github.com/join).
@@ -61,6 +63,8 @@ Podés ejecutar pyarweb utilizando Docker o en tu maquina local.
 Empeza a escribir código
 ------------------------
 
+> DISCLAIMER: si ya tenías tu fork del proyecto asegurate de tener el branch `master` actualizado con el _oficial_.
+
 - Generá un nuevo branch que identifique el issue en el que vas a trabajar. (EJ: ``issue_24_nueva_funcionalidad``)
 - Escribí el código utilizando tu editor preferido.
 
@@ -78,5 +82,5 @@ identación diferente a 4 espacios.
 - Hace push de tus commits a GitHub y [generá un a pull request](https://help.github.com/articles/creating-a-pull-request/).
 - Festeja!! 🎉
 
-Para más información consultá en el [*Manual básico de supervivencia para colaborar 
+Para más información consultá en el [*Manual básico de supervivencia para colaborar
 con el sitio de PyAr*](https://github.com/PyAr/pyarweb/wiki/Manual-b%C3%A1sico-de-supervivencia-para-colaborar-con-el-sitio-de-PyAr).
