@@ -10,7 +10,7 @@ CACHES = {
     }
 }
 
-ALLOWED_HOSTS = ['www.python.org.ar']
+ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = '/home/www-pyar/pyarweb/static/'
 STATIC_URL = '/static/'
