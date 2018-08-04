@@ -40,7 +40,6 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^eventos/', include('events.urls', namespace='events')),
-    url(r'^planeta/', include('planet.urls')),
     url(r'^wiki/', include('waliki.urls')),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^email_confirmation/', include('email_confirm_la.urls',
