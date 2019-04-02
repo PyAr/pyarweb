@@ -27,7 +27,7 @@ only_test:
 pep8:
 	docker-compose run --rm web flake8
 
-test: pep8 only_test
+test: pep8 check_migrations only_test
 
 dockershell:
 	docker-compose run --rm web /bin/bash
@@ -41,4 +41,7 @@ migrate:
 shell_plus:
 	docker-compose run --rm web python3 manage.py shell_plus
 
-.PHONY: help start stop ps clean test dockershell shell_plus only_test pep8
+check_migrations:
+	docker-compose run --rm web ./check_migrations.sh
+
+.PHONY: help start stop ps clean test dockershell shell_plus only_test pep8 check_migrations
