@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.5
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /code:$PYTHONPATH
 RUN mkdir /code
