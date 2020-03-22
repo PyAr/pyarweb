@@ -25,6 +25,7 @@ class EventForm(CrispyFormMixin):
     description = SanitizedCharField(
         allowed_tags=settings.ALLOWED_HTML_TAGS_INPUT,
         allowed_attributes=settings.ALLOWED_HTML_ATTRIBUTES_INPUT,
+        allowed_styles=settings.ALLOWED_HTML_STYLES_INPUT,
         strip=False, widget=SummernoteInplaceWidget())
 
     start_at = forms.DateTimeField(
