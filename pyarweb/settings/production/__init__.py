@@ -26,7 +26,7 @@ EMAIL_HOST_USER = 'pyarweb@python.org.ar'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 25
 
-PYAR_WIKI_URL = 'http://wiki.python.org.ar/pages/inicio'
+PYAR_WIKI_URL = 'http://wiki.python.org.ar/'
 
 # Disqus
 DISQUS_API_KEY = os.environ.get("DISQUS_API_KEY", 'not_configured')

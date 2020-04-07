@@ -12,7 +12,7 @@ CACHES = {
 
 ALLOWED_HOSTS = ['*']
 
-STATIC_ROOT = '/home/www-pyar/pyarweb/static/'
+STATIC_ROOT = '/code/static2/'
 STATIC_URL = '/static/'
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[PyAr]"
@@ -20,18 +20,18 @@ EMAIL_CONFIRM_LA_DOMAIN = "python.org.ar"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'localhost'
-EMAIL_HOST_USER = 'pyarweb@python.org.ar'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'pyarweb@python.org.ar')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_PORT = 25
 
 # Disqus
 DISQUS_API_KEY = os.environ.get("DISQUS_API_KEY", 'not_configured')
 DISQUS_WEBSITE_SHORTNAME = 'PyAr'
 
-# WALIKI
-WALIKI_ANONYMOUS_USER_PERMISSIONS = ('view_page', )
-WALIKI_COMMITER_NAME = 'PyArense Anónimo'
+
+PYAR_WIKI_URL = 'http://wiki.staging.python.org.ar'
+
 
 SENDFILE_BACKEND = "sendfile.backends.nginx"
 SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
