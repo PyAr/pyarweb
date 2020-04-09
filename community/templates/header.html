@@ -30,10 +30,10 @@
                             <a href="/"><span class="inicio"></span>{% trans 'Inicio' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'about_pyar' %}"><span class="quienes_somos"></span>{% trans 'Nosotros' %}</a>
+                            <a href="{{ PYAR_WIKI_URL }}/pyar"><span class="quienes_somos"></span>{% trans 'Nosotros' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'mailing_list' %}"><span class="navbar_lista_de_correo"></span>{% trans 'Lista' %}</a>
+                            <a href="{{ PYAR_WIKI_URL }}/listadecorreo"><span class="navbar_lista_de_correo"></span>{% trans 'Lista' %}</a>
                         </li>
                         <li>
                             <a href="{{ PYAR_WIKI_URL }}"><span class="wiki"></span>{% trans 'Wiki' %}</a>

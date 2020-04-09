@@ -26,10 +26,6 @@ urlpatterns = patterns(
     url(r'^buscador/$', buscador, name='buscador'),
 
     url(r'^$', 'community.views.homepage', name='homepage'),
-    url(r'^aprendiendo-python/', 'community.views.learning', name='aprendiendo'),
-    url(r'^nosotros/', 'community.views.about_pyar', name='about_pyar'),
-    url(r'^miembros/', 'community.views.members', name='pyar_members'),
-    url(r'^lista/', 'community.views.mailing_list', name='mailing_list'),
 
     url(r'^noticias/', include('news.urls')),
     url(r'^empresas/', include('pycompanies.urls', namespace='companies')),

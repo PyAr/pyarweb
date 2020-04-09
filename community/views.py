@@ -67,30 +67,6 @@ class HomePageView(TemplateView):
 homepage = HomePageView.as_view()
 
 
-def learning(request):
-    title = _('Aprendiendo Python')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'AprendiendoPython'})
-
-
-def about_pyar(request):
-    title = _('Acerca de PyAr')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'QuienesSomos'})
-
-
-def members(request):
-    title = _('¿Dónde viven los miembros de PyAr?')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'MiembrosDePyAr'})
-
-
-def mailing_list(request):
-    title = _('Lista de Correo')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'ListaDeCorreo'})
-
-
 def validate_obj_owner(obj, user):
     """ Auxiliary function that raises Http404 if the given user is not the
     obj.owner
