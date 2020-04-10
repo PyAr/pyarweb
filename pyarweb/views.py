@@ -4,8 +4,7 @@
 """Views for PyArWeb Django App."""
 
 
-from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
 
 def irc(request):
@@ -22,4 +21,3 @@ def buscador(request):
     """Render the Google Search template."""
     return render(request, 'buscador.html',
                   {'buscar': request.GET.get('buscar', '')})
-
