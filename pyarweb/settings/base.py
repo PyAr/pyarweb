@@ -65,7 +65,6 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_autosuggest',
     'bootstrap3_datetime',
-    'planet',
     'pagination',
     'tagging',
     'bootstrap3',
@@ -162,7 +161,6 @@ TEMPLATES = [
                 "django.core.context_processors.request",
                 "django.core.context_processors.i18n",
                 "django.contrib.messages.context_processors.messages",
-                "planet.context_processors.context",
 
                 # `allauth` needs this from django
                 'django.template.context_processors.request',

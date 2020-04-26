@@ -12,7 +12,6 @@ django-email-obfuscator==0.1.5
 django-extensions==1.7.7
 django-html-sanitizer==0.1.5
 django-model-utils==2.6.1
-django-planet==0.10.1
 django-sendfile==0.3.11
 django-simple-captcha==0.5.3
 django-summernote==0.8.6
