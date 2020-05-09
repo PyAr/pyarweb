@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=255, verbose_name='Título')),
                 ('introduction', models.TextField(null=True, verbose_name='Introducción', blank=True)),
                 ('body', models.TextField(verbose_name='Contenido')),
-                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                 ('tags', taggit_autosuggest.managers.TaggableManager(through='taggit.TaggedItem', help_text='A comma-separated list of tags.', blank=True, to='taggit.Tag', verbose_name='Etiquetas')),
             ],
             options={
