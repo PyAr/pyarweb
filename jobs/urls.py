@@ -7,7 +7,6 @@ from .views import (JobCreate, JobList, JobDelete, JobUpdate, JobsFeed,
 
 
 urlpatterns = [
-    '',
     re_path(r'^$', JobList.as_view(), name='jobs_list_all'),
     re_path(r'^rss$', JobsFeed(), name='jobs_feed'),
     re_path(r'^add/$', login_required(JobCreate.as_view()), name='jobs_add'),

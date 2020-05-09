@@ -81,7 +81,7 @@ INSTALLED_APPS = (
 )
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -89,8 +89,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
-    'pagination.middleware.PaginationMiddleware',
-)
+    # TODO volver a descomentar esto una vez que se tenga un fork
+    #'pagination.middleware.PaginationMiddleware',
+]
 
 ROOT_URLCONF = 'pyarweb.urls'
 
@@ -154,11 +155,11 @@ TEMPLATES = [
                 # "allauth.socialaccount.context_processors.socialaccount",
 
                 "django.contrib.auth.context_processors.auth",
-                "django.core.context_processors.debug",
-                "django.core.context_processors.media",
-                'django.core.context_processors.static',
-                "django.core.context_processors.request",
-                "django.core.context_processors.i18n",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.media",
+                'django.template.context_processors.static',
+                "django.template.context_processors.request",
+                "django.template.context_processors.i18n",
                 "django.contrib.messages.context_processors.messages",
                 "planet.context_processors.context",
                 "community.context_processors.pyar_wiki_url",

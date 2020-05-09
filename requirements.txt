@@ -1,7 +1,7 @@
 Django>=3.0,<3.1
 django-allauth==0.41.0
 django-autoslug==1.9.7
-django-bootstrap3-datetimepicker==2.2.3
+django2-bootstrap3-datetimepicker==3.0.2
 django-bootstrap3==8.2.1
 django-braces==1.14.0
 django-crispy-forms==1.9.0
@@ -11,7 +11,7 @@ django-extensions==1.7.7
 django-html-sanitizer==0.1.5
 django-model-utils==4.0.0
 django-sendfile==0.3.11
-django-simple-captcha==0.5.3
+django-simple-captcha==0.5.12
 django-summernote==0.8.11.6
 django-taggit-autosuggest==0.3.8
 django-taggit==1.2.0
@@ -23,3 +23,4 @@ six
 git+https://github.com/She110ck/django-disqus@django-3.0#egg=django-disqus
 git+https://github.com/predatell/django-email-confirm-la#egg=django-email-confirm-la
 git+https://github.com/tzulberti/django-planet#egg=django-planet
+git+https://github.com/matagus/django-pagination-py3#egg=django-pagination-py3

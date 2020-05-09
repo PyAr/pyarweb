@@ -15,8 +15,8 @@ from community.views import homepage
 
 admin.autodiscover()
 
+app_name = 'pyarweb'
 urlpatterns = [
-    '',
     # Static files
     # re_path(r'^static/(?P<path>.*)$', 'django.views.static.serve',
     #        {'document_root': settings.STATIC_ROOT}),
@@ -34,7 +34,7 @@ urlpatterns = [
     re_path(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     re_path(r'^summernote/', include('django_summernote.urls')),
     re_path(r'^trabajo/', include('jobs.urls')),
-    re_path(r'^admin/', include(admin.site.urls)),
+    re_path(r'^admin/', admin.site.urls),
     re_path(r'^accounts/', include('allauth.urls')),
     re_path(r'^eventos/', include(('events.urls', 'events'), namespace='events')),
     re_path(r'^planeta/', include('planet.urls')),

@@ -2,10 +2,10 @@ from braces.views import LoginRequiredMixin
 from community.views import validate_obj_owner, OwnedObject
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
-from django.core.urlresolvers import reverse_lazy
 from django.http import Http404, HttpResponseRedirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import (CreateView,
                                        UpdateView,

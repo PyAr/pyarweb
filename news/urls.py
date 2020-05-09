@@ -11,9 +11,7 @@ from .views import (
     NewsFeed
 )
 
-
 urlpatterns = [
-    '',
     re_path(r'^$', NewsArticleList.as_view(),
         name='news_list_all'),
     re_path(r'^rss$', NewsFeed(),
