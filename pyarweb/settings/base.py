@@ -74,11 +74,6 @@ INSTALLED_APPS = (
     'crispy_forms',
     'email_obfuscator',
     'dbbackup',
-    'waliki',
-    'waliki.git',
-    'waliki.attachments',
-    'waliki.slides',
-    'waliki.togetherjs',
     'captcha',
     'email_confirm_la',
     'sanitizer',
@@ -107,10 +102,10 @@ WSGI_APPLICATION = 'pyarweb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME', "pyarweb"),
-        'USER': os.environ.get('DB_USER', "postgres"),
-        'PASSWORD': os.environ.get('DB_PASS', ""),
-        'HOST': os.environ.get('DB_SERVICE', "localhost"),
+        'NAME': os.environ.get('DB_NAME', os.environ.get("POSTGRES_DB", "pyarweb")),
+        'USER': os.environ.get('DB_USER', os.environ.get("POSTGRES_USER", "postgres")),
+        'PASSWORD': os.environ.get('DB_PASS', os.environ.get("POSTGRES_PASSWORD", "")),
+        'HOST': os.environ.get('DB_SERVICE', os.environ.get("POSTGRES_HOST", "localhost")),
         'PORT': os.environ.get('DB_PORT', 5432),
     }
 }
@@ -144,6 +139,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+PYAR_WIKI_URL = 'http://localhost:8080/pages/inicio'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -163,6 +160,7 @@ TEMPLATES = [
                 "django.core.context_processors.i18n",
                 "django.contrib.messages.context_processors.messages",
                 "planet.context_processors.context",
+                "community.context_processors.pyar_wiki_url",
 
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
@@ -188,13 +186,6 @@ SUMMERNOTE_CONFIG = {
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-WALIKI_INDEX_SLUG = 'Inicio'
-WALIKI_AVAILABLE_MARKUPS = ['reStructuredText']
-WALIKI_ANONYMOUS_USER_PERMISSIONS = ('view_page', )
-WALIKI_LOGGED_USER_PERMISSIONS = ('view_page', 'add_page', 'change_page')
-WALIKI_CODEMIRROR_SETTINGS = {'lineNumbers': True,
-                              'theme': 'monokai',
-                              'autofocus': True}
 SENDFILE_BACKEND = 'sendfile.backends.simple'
 
 

@@ -7,9 +7,8 @@
 from django.conf import settings
 from django.conf.urls import include, patterns, url
 from django.contrib import admin
-from waliki.settings import WALIKI_SLUG_PATTERN
 
-from .views import buscador, irc, old_url_redirect
+from .views import buscador, irc
 
 
 admin.autodiscover()
@@ -27,10 +26,6 @@ urlpatterns = patterns(
     url(r'^buscador/$', buscador, name='buscador'),
 
     url(r'^$', 'community.views.homepage', name='homepage'),
-    url(r'^aprendiendo-python/', 'community.views.learning', name='aprendiendo'),
-    url(r'^nosotros/', 'community.views.about_pyar', name='about_pyar'),
-    url(r'^miembros/', 'community.views.members', name='pyar_members'),
-    url(r'^lista/', 'community.views.mailing_list', name='mailing_list'),
 
     url(r'^noticias/', include('news.urls')),
     url(r'^empresas/', include('pycompanies.urls', namespace='companies')),
@@ -45,6 +40,4 @@ urlpatterns = patterns(
     url(r'^captcha/', include('captcha.urls')),
     url(r'^email_confirmation/', include('email_confirm_la.urls',
                                          namespace='email_confirm_la')),
-    url(r'^(pyar/)?(?P<slug>' + WALIKI_SLUG_PATTERN + ')/?',
-        old_url_redirect, name='old_url_redirect'),
 )
