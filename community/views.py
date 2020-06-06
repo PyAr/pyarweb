@@ -86,9 +86,9 @@ def members(request):
 
 
 def mailing_list(request):
-    title = _('Lista de Correo')
+    title = _('Foro y redes sociales')
     return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'ListaDeCorreo'})
+                  {'title': title, 'slug': 'ForoYRedes'})
 
 
 def validate_obj_owner(obj, user):
