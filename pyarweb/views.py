@@ -21,4 +21,3 @@ def buscador(request):
     """Render the Google Search template."""
     return render(request, 'buscador.html',
                   {'buscar': request.GET.get('buscar', '')})
-
