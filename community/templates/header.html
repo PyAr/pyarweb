@@ -16,7 +16,7 @@
                     <a href="/" class="navbar-brand">PyAr</a>
                     <div class="loginreg">
                       {% if user.is_authenticated %}
-                      Hola <a href="{{ user|wikify:"miembros/" }}">{{ user }}</a>. <a href="{% url 'account_logout' %}">{% trans 'Cerrar sesión' %}</a>
+                      Hola <a href="#">{{ user }}</a>. <a href="{% url 'account_logout' %}">{% trans 'Cerrar sesión' %}</a>
                       {% else %}
                       <a href="{% url 'account_login' %}?next={{ request.path }}">{% trans 'Ingresá' %}</a> o <a href="{% url 'account_signup' %}?next={{ request.path }}">{% trans 'Registrate' %}</a>
                       {% endif %}
@@ -30,13 +30,13 @@
                             <a href="/"><span class="inicio"></span>{% trans 'Inicio' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'about_pyar' %}"><span class="quienes_somos"></span>{% trans 'Nosotros' %}</a>
+                            <a href="{{ PYAR_WIKI_URL }}/pyar"><span class="quienes_somos"></span>{% trans 'Nosotros' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'mailing_list' %}"><span class="navbar_lista_de_correo"></span>{% trans 'Lista' %}</a>
+                            <a href="{{ PYAR_WIKI_URL }}/listadecorreo"><span class="navbar_lista_de_correo"></span>{% trans 'Lista' %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'waliki_home' %}"><span class="wiki"></span>{% trans 'Wiki' %}</a>
+                            <a href="{{ PYAR_WIKI_URL }}"><span class="wiki"></span>{% trans 'Wiki' %}</a>
                         </li>
                         <li>
                             <a href="{% url 'news_list_all' %}"><span class="news"></span>{% trans 'Noticias' %}</a>

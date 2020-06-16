@@ -5,11 +5,9 @@
 
 from django.db.models import F, Value, CharField
 from django.http import Http404
-from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
-from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 from events.models import Event
 from jobs.models import Job
@@ -65,30 +63,6 @@ class HomePageView(TemplateView):
 
 
 homepage = HomePageView.as_view()
-
-
-def learning(request):
-    title = _('Aprendiendo Python')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'AprendiendoPython'})
-
-
-def about_pyar(request):
-    title = _('Acerca de PyAr')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'QuienesSomos'})
-
-
-def members(request):
-    title = _('¿Dónde viven los miembros de PyAr?')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'MiembrosDePyAr'})
-
-
-def mailing_list(request):
-    title = _('Lista de Correo')
-    return render(request, 'special_page.html',
-                  {'title': title, 'slug': 'ListaDeCorreo'})
 
 
 def validate_obj_owner(obj, user):

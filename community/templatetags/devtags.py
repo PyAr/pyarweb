@@ -1,8 +1,6 @@
 from django.template import Library
 from lxml import etree
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group
-from waliki.settings import get_slug
 
 register = Library()
 
@@ -37,12 +35,6 @@ def html2text(html):
             encoding='utf8', method='text'
         )
     return ''
-
-
-@register.filter
-def wikify(value, prefix=''):
-    slug = get_slug(prefix + str(value))
-    return reverse('waliki_detail', args=[slug])
 
 
 @register.filter

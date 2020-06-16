@@ -4,9 +4,7 @@
 """Views for PyArWeb Django App."""
 
 
-from django.http import Http404
-from django.shortcuts import redirect, render
-from waliki.models import Page, Redirect
+from django.shortcuts import render
 
 
 def irc(request):
@@ -23,19 +21,3 @@ def buscador(request):
     """Render the Google Search template."""
     return render(request, 'buscador.html',
                   {'buscar': request.GET.get('buscar', '')})
-
-
-def old_url_redirect(request, slug):
-    """Redirect old URLs to the New site."""
-    try:
-        waliki_redirect = Redirect.objects.get(old_slug=slug)
-        slug = waliki_redirect.new_slug
-    except Redirect.DoesNotExist:
-        pass
-
-    try:
-        page = Page.objects.get(slug=slug)
-    except Page.DoesNotExist:
-        raise Http404
-
-    return redirect(page.get_absolute_url(), permanent=True)
