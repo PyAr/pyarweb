@@ -216,3 +216,5 @@ ALLOWED_HTML_TAGS_INPUT = [
 ]
 ALLOWED_HTML_ATTRIBUTES_INPUT = ['href', 'src', 'style', 'width', 'class']
 TAGGIT_CASE_INSENSITIVE = True
+
+GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
