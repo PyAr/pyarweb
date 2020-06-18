@@ -22,12 +22,12 @@
         <div class="row index-content">
             <article class="col-sm-4">
                 <div class="img aprendiendo_python"></div>
-                <h3 class="text-center"><a href="{% url 'aprendiendo' %}">Aprendiendo Python</a></h3>
+                <h3 class="text-center"><a href="{{ PYAR_WIKI_URL }}/aprendiendopython">Aprendiendo Python</a></h3>
                 <p class="text-center">Recopilación de recursos que los miembros de PyAr consideramos útiles para quienes que se inician en este lenguaje.</p>
             </article>
             <article class="col-sm-4">
                 <div class="img lista_correo"></div>
-                <h3 class="text-center"><a href="{% url 'mailing_list' %}">Lista de correo</a></h3>
+                <h3 class="text-center"><a href="{{ PYAR_WIKI_URL }}/listadecorreo">Lista de correo</a></h3>
                 <p class="text-center">Instrucciones para suscribirte a nuestra lista, nuestro principal canal de comunicación.</p>
             </article>
 
@@ -47,13 +47,13 @@
 
             <article class="col-sm-4">
                 <div class="img wiki"></div>
-                <h3 class="text-center"><a href="{% url 'waliki_home' %}">Nuestra wiki</a></h3>
+                <h3 class="text-center"><a href="{{ PYAR_WIKI_URL }}">Nuestra wiki</a></h3>
                 <p class="text-center">El espacio de edición colaborativa de nuestra web</p>
             </article>
 
             <article class="col-sm-4">
                 <div class="img adopta_un_newbie"></div>
-                <h3 class="text-center"><a href="/wiki/Proyectos">Proyectos de la comunidad</a></h3>
+                <h3 class="text-center"><a href="{{ PYAR_WIKI_URL }}/proyectos">Proyectos de la comunidad</a></h3>
                 <p class="text-center">Los proyectos que desarrollamos como grupo o en los que participan nuestros miembros.</p>
             </article>
 
