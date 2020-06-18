@@ -24,21 +24,6 @@
 
           {% include 'search_form.html' %}
 
-          <section class="list-group">
-            <header class="list-group-item">
-              <h3 class="list-group-item-heading">{% trans "Suscribite a la lista" %}</h3>
-            </header>
-            <article class="list-group-item">
-              <form id="newsletter-form" class="inline-form" action="http://listas.python.org.ar/mailman/subscribe/pyar" method="GET">
-                <div class="form-group">
-                  <input class="form-control" name="email" placeholder="Email">
-                  <input type="hidden" name="language" value="es">
-                </div>
-                <input class="btn btn-primary" type="submit" value="{% trans 'Inscribirme a Pyar!' %}">
-              </form>
-            </article>
-          </section>
-
           <!-- Próximos eventos -->
           <section class="list-group">
               <header class="list-group-item">
@@ -46,8 +31,6 @@
                       <a href="{% url 'events:events_feed' %}" class="badge">
                       <i class="fa fa-rss"></i> RSS</a>
                     </div></h3>
-
-
 
               </header>
 
