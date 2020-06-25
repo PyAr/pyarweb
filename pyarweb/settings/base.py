@@ -212,7 +212,15 @@ ALLOWED_HTML_TAGS_INPUT = [
     'a', 'b', 'br', 'i', 'u', 'p', 'hr',
     'pre', 'img', 'span', 'table', 'tbody',
     'thead', 'tr', 'th', 'td', 'blockquote',
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'font',
+    'o:p', 'sup', 'sub', 'strike', 'li', 'ul',
+    'ol', 'div',
 ]
-ALLOWED_HTML_ATTRIBUTES_INPUT = ['href', 'src', 'style', 'width', 'class']
+ALLOWED_HTML_ATTRIBUTES_INPUT = [
+    'href', 'src', 'style', 'width', 'class', 'face',
+]
+ALLOWED_HTML_STYLES_INPUT = [
+    'text-align', 'margin-left', 'background-color',
+    'font-size',
+]
 TAGGIT_CASE_INSENSITIVE = True
