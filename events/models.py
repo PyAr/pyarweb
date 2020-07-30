@@ -26,7 +26,7 @@ class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Título'))
     description = models.TextField(verbose_name=_('Descripcion'))
     place = models.CharField(max_length=100, verbose_name=_('Lugar'))
-    address = models.CharField(max_length=100, verbose_name=_('Direccion'))
+    address = models.CharField(max_length=100, verbose_name=_('Dirección'))
     slug = AutoSlugField(
         editable=True, null=True, blank=True, unique=True, populate_from='name',
     )
@@ -36,7 +36,7 @@ class Event(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     registration_enabled = models.BooleanField(default=False,
-                                               verbose_name=_('¿Habilitar inscripción'))
+                                               verbose_name=_('¿Habilitar inscripción?'))
     has_sponsors = models.BooleanField(default=False, verbose_name=_('¿El evento tiene sponsors?'))
 
     def __str__(self):

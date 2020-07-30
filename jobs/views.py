@@ -1,8 +1,7 @@
-from datetime import datetime, timedelta
-
 from community.views import FilterableList, OwnedObject
 from django.contrib.syndication.views import Feed
 from django.core.mail import EmailMessage
+from django.utils.timezone import datetime, timedelta, utc
 from django.core.urlresolvers import reverse_lazy
 from django.template.loader import render_to_string
 from django.views.generic import ListView
@@ -71,7 +70,7 @@ class JobList(ListView, JobActiveMixin, FilterableList):
     model = Job
     paginate_by = 20
     ordering = ['-created']
-    two_month_ago = datetime.today() - timedelta(days=60)
+    two_month_ago = datetime.now(tz=utc) - timedelta(days=60)
     # TODO: move to some dinamic configurable place
     COUNT_OF_SPONSORED = 3
 
