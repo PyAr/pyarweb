@@ -33,7 +33,7 @@ DISQUS_API_KEY = os.environ.get("DISQUS_API_KEY", 'not_configured')
 DISQUS_WEBSITE_SHORTNAME = 'PyAr'
 
 
-PYAR_WIKI_URL = 'http://wiki.staging.python.org.ar'
+PYAR_WIKI_URL = 'https://wiki.staging.python.org.ar'
 
 SENDFILE_BACKEND = "sendfile.backends.nginx"
 SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
