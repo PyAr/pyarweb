@@ -224,3 +224,5 @@ ALLOWED_HTML_STYLES_INPUT = [
     'font-size',
 ]
 TAGGIT_CASE_INSENSITIVE = True
+
+GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
