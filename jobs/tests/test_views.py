@@ -1,7 +1,7 @@
 import bleach
 
 from django.test import TestCase, Client
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from jobs.models import Job
 from jobs.tests.factories import JobFactory

@@ -4,7 +4,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from email_confirm_la.models import EmailConfirmation
 
 from autoslug import AutoSlugField
@@ -22,7 +22,7 @@ GENDER_OPTIONS = (
 class Event(models.Model):
     """A PyAr events."""
 
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name=_('Título'))
     description = models.TextField(verbose_name=_('Descripcion'))
     place = models.CharField(max_length=100, verbose_name=_('Lugar'))
@@ -49,8 +49,8 @@ class Event(models.Model):
 class EventParticipation(models.Model):
     """A registration record to a PyAr event."""
 
-    event = models.ForeignKey(Event, related_name='participants')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    event = models.ForeignKey(Event, related_name='participants', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name=_('nombre, nick, alias...'))
     email = models.EmailField(max_length=255, verbose_name=_('email'))
     interest = models.TextField(verbose_name=_('intereses'), blank=True)

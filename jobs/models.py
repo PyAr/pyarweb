@@ -1,7 +1,7 @@
 from autoslug import AutoSlugField
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 from pycompanies.models import Company
 from taggit_autosuggest.managers import TaggableManager
@@ -43,11 +43,13 @@ class Job(models.Model):
     company = models.ForeignKey(Company,
                                 null=True,
                                 blank=True,
-                                verbose_name=_('Empresa'))
+                                verbose_name=_('Empresa'),
+                                on_delete=models.CASCADE)
     description = models.TextField(verbose_name=_('Descripción'))
     location = models.CharField(max_length=100, verbose_name=_('Lugar'))
     email = models.EmailField()
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     tags = TaggableManager(verbose_name=_('Etiquetas'))
@@ -88,7 +90,7 @@ class JobInactivated(TimeStampedModel):
         ('Información insuficiente', 'Información insuficiente'),
     )
 
-    job = models.ForeignKey(Job)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
     reason = models.CharField(
         max_length=100,
         blank=False,
