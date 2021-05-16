@@ -206,10 +206,9 @@ EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
 #
 # Events inscription captcha
 #
-# FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 CAPTCHA_LENGTH = 6
 CAPTCHA_FLITE_PATH = "/usr/bin/flite"
-# CAPTCHA_FIELD_TEMPLATE = "account/custom_field.html"
+CAPTCHA_IMAGE_TEMPLATE = "account/custom_captcha.html"
 
 ALLOWED_HTML_TAGS_INPUT = [
     'a', 'b', 'br', 'i', 'u', 'p', 'hr',
