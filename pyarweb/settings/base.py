@@ -226,3 +226,7 @@ ALLOWED_HTML_STYLES_INPUT = [
 TAGGIT_CASE_INSENSITIVE = True
 
 GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
+
+ACCOUNT_FORMS = {
+    'signup': 'pyarweb.forms.SingupFormWithCaptcha'
+}
