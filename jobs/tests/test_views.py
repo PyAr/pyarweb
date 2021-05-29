@@ -29,6 +29,18 @@ class JobsTest(TestCase):
         self.assertIn(sponsored_job2, response.context["sponsored_jobs"])
         self.assertEqual(len(response.context["sponsored_jobs"]), 2)
 
+    def test_jobs_view_list_with_tags(self):
+        job = JobFactory(owner=self.user)
+        job_2 = JobFactory(owner=self.user)
+
+        job.tags.add('tag1')
+        job_2.tags.add('tag2')
+
+        response = self.client.get(reverse('jobs_list_all'), {'tag_tag1': 1})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(job, response.context["job_list"])
+        self.assertEqual(len(response.context["job_list"]), 1)
+
     def test_jobs_view_list_regular_and_sponsored(self):
         sponsored_company = CompanyFactory(name='Name', owner=self.user, rank=3)
         sponsored_job = JobFactory(owner=self.user, company=sponsored_company)

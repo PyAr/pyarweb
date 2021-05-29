@@ -76,8 +76,9 @@ class JobList(ListView, JobActiveMixin, FilterableList):
     COUNT_OF_SPONSORED = 3
 
     def get_queryset(self):
-        return Job.objects.non_sponsored(
+        qs = Job.objects.non_sponsored(
             self.two_month_ago, self.COUNT_OF_SPONSORED)
+        return self.filter_queryset_tags(qs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
