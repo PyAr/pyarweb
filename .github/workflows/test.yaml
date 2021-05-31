@@ -4,8 +4,8 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
     # Service containers to run with `container-job`
     services:
       # Label used to access the service container
@@ -29,12 +29,12 @@ jobs:
         python-version: [3.5, 3.6]
     env:
       DJANGO: 1.8 
-      SECRET_KEY: supersecret 
+      SECRET_KEY: supersecret
       DB_PORT: 5432 
-      POSTGRES_HOST: postgres2
-      POSTGRES_PASSWORD: somepassword 
-      POSTGRES_USER: postgres 
-      POSTGRES_DB: testing_db 
+      POSTGRES_HOST: localhost
+      POSTGRES_PASSWORD: somepassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: testing_db
       DJANGO_SETTINGS_MODULE: pyarweb.settings.development
     steps:
       - uses: actions/checkout@v2
