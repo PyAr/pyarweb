@@ -11,10 +11,13 @@ jobs:
       # Label used to access the service container
       postgres:
         # Docker Hub image
-        image: postgres
+        image: postgres:9.4
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: somepassword
+          POSTGRES_DB: testing_db
+        ports:
+          - 5432:5432
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -28,10 +31,10 @@ jobs:
       DJANGO: 1.8 
       SECRET_KEY: supersecret 
       DB_PORT: 5432 
-      DB_SERVICE: postgres 
-      DB_PASS: somepassword 
-      DB_USER: postgres 
-      DB_NAME: postgres 
+      POSTGRES_HOST: postgres 
+      POSTGRES_PASSWORD: somepassword 
+      POSTGRES_USER: postgres 
+      POSTGRES_DB: testing_db 
       DJANGO_SETTINGS_MODULE: pyarweb.settings.development
     steps:
       - uses: actions/checkout@v2
