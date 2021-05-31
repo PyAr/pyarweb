@@ -9,7 +9,7 @@ jobs:
     # Service containers to run with `container-job`
     services:
       # Label used to access the service container
-      postgres:
+      postgres2:
         # Docker Hub image
         image: postgres:9.4
         # Provide the password for postgres
@@ -31,7 +31,7 @@ jobs:
       DJANGO: 1.8 
       SECRET_KEY: supersecret 
       DB_PORT: 5432 
-      POSTGRES_HOST: postgres 
+      POSTGRES_HOST: postgres2
       POSTGRES_PASSWORD: somepassword 
       POSTGRES_USER: postgres 
       POSTGRES_DB: testing_db 
