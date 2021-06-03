@@ -16,7 +16,7 @@ django-summernote==0.8.11.6
 django-taggit-autosuggest==0.3.8
 django-taggit==1.2.0
 psycopg2-binary==2.7.4
-lxml==3.7.3
+lxml==4.6.3
 six
 
 
