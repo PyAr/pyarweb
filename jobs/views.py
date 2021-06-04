@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from community.views import FilterableList, OwnedObject
 from django.contrib.syndication.views import Feed
 from django.core.mail import EmailMessage
-from django.core.urlresolvers import reverse_lazy
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.conf import settings

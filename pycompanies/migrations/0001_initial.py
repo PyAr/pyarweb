@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(verbose_name='Descripción')),
                 ('photo', models.ImageField(upload_to='pycompanies/logos', verbose_name='Logo')),
                 ('link', models.URLField(help_text='Dirección web de la empresa', verbose_name='URL')),
-                ('owner', models.ForeignKey(related_name='companies', to=settings.AUTH_USER_MODEL)),
+                ('owner', models.ForeignKey(related_name='companies', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,

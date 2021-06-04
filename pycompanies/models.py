@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from model_utils.models import TimeStampedModel
@@ -12,7 +12,8 @@ class Company(TimeStampedModel):
     """A PyAr Company that use Python."""
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
-                              related_name='companies')
+                              related_name='companies',
+                              on_delete=models.CASCADE)
     name = models.CharField('Nombre', max_length=255, unique=True)
     description = models.TextField('Descripción')
     photo = models.ImageField('Logo', upload_to='pycompanies/logos')

@@ -36,7 +36,7 @@ migrations:
 	docker-compose run --rm web python3 manage.py makemigrations
 
 migrate:
-	docker-compose run --rm web python3 manage.py migrate
+	docker-compose run --rm web python3 manage.py migrate --skip-checks
 
 shell_plus:
 	docker-compose run --rm web python3 manage.py shell_plus

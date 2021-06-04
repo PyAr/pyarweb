@@ -1,8 +1,8 @@
 import bleach
 
 from django.test import TestCase, Client
-from django.core.urlresolvers import reverse
 from django.utils.timezone import now, timedelta
+from django.urls import reverse
 
 from events.models import Event
 from events.tests.factories import UserFactory, EventFactory, FutureEventFactory

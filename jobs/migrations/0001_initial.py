@@ -32,8 +32,8 @@ class Migration(migrations.Migration):
                 ('seniority', models.CharField(max_length=100, default='', blank=True, verbose_name='Experiencia', choices=[('Trainee', 'Trainee'), ('Junior', 'Junior'), ('Semi Senior', 'Semi Senior'), ('Senior', 'Senior')])),
                 ('slug', autoslug.fields.AutoSlugField(editable=False, unique=True)),
                 ('is_active', models.BooleanField(default=True)),
-                ('company', models.ForeignKey(null=True, to='pycompanies.Company', blank=True, verbose_name='Empresa')),
-                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('company', models.ForeignKey(null=True, to='pycompanies.Company', blank=True, verbose_name='Empresa', on_delete=models.CASCADE)),
+                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                 ('tags', taggit_autosuggest.managers.TaggableManager(through='taggit.TaggedItem', to='taggit.Tag', help_text='A comma-separated list of tags.', verbose_name='Etiquetas')),
             ],
             options={
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
                 ('reason', models.CharField(max_length=100, verbose_name='Motivo', choices=[('No es un trabajo relacionado con Python', 'No es un trabajo relacionado con Python'), ('Spam', 'Spam'), ('Información insuficiente', 'Información insuficiente')])),
                 ('comment', models.TextField(null=True, blank=True, verbose_name='Comentario')),
-                ('job', models.ForeignKey(to='jobs.Job')),
+                ('job', models.ForeignKey(to='jobs.Job', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,

@@ -41,12 +41,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eventparticipation',
             name='event',
-            field=models.ForeignKey(to='events.Event', related_name='participants'),
+            field=models.ForeignKey(to='events.Event', related_name='participants', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='eventparticipation',
             name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),
         ),
         migrations.AlterUniqueTogether(
             name='eventparticipation',
