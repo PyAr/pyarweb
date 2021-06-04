@@ -3,8 +3,9 @@
 
 """URLS configurations for PyAr Web."""
 
-
+from django.conf import settings
 from django.conf.urls import include
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import re_path
 
@@ -16,13 +17,6 @@ admin.autodiscover()
 
 app_name = 'pyarweb'
 urlpatterns = [
-    # Static files
-    # re_path(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-    #        {'document_root': settings.STATIC_ROOT}),
-    # Media files
-    # re_path(r'^media/(?P<path>.*)$', 'django.views.static.serve',
-    #         {'document_root': settings.MEDIA_ROOT}),
-
     re_path(r'^irc/$', irc, name='irc'),
     re_path(r'^buscador/$', buscador, name='buscador'),
 
@@ -40,4 +34,4 @@ urlpatterns = [
     re_path(r'^captcha/', include('captcha.urls')),
     re_path(r'^email_confirmation/', include(('email_confirm_la.urls', 'email_confirm_la.urls'),
                                              namespace='email_confirm_la')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
