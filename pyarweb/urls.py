@@ -6,10 +6,9 @@ import re
 
 from django.conf import settings
 from django.conf.urls import include
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import re_path
-
+from django.views.static import serve
 
 from .views import buscador, irc
 
@@ -38,9 +37,16 @@ urlpatterns = [
                                              namespace='email_confirm_la')),
 
     # no puedo usar el static porque no funcia en produccion y en prod django esta
-    # sirviendo los archivos estaticos. Esto es sacado del codigo de la funcion. 
+    # sirviendo los archivos estaticos. Esto es sacado del codigo de la funcion.
     # si es un HACK, pero hasta que pueda solucionarlo usando django-assets o algo asi
-    re_path(r'^%s(?P<path>.*)$' % re.escape(settings.STATIC_URL.lstrip('/')), serve, kwargs=dict(document_root=settings.STATIC_ROOT)),
-    re_path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve, kwargs=dict(document_root=settings.MEDIA_ROOT)),
+    re_path(
+        r'^%s(?P<path>.*)$' % re.escape(settings.STATIC_URL.lstrip('/')),
+        serve,
+        kwargs=dict(document_root=settings.STATIC_ROOT)
+    ),
+    re_path(
+        r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')),
+        serve,
+        kwargs=dict(document_root=settings.MEDIA_ROOT)
+    ),
 ]
-
