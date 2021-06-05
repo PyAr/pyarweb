@@ -68,7 +68,7 @@ class EventDetail(EventMixin, DetailView):
             'participation_id': None
         }
         user = self.request.user
-        if user.is_anonymous():
+        if user.is_anonymous:
             return details
 
         try:
