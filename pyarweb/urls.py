@@ -9,7 +9,7 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import re_path
-from django.views.static import serve
+
 
 from .views import buscador, irc
 
@@ -43,3 +43,4 @@ urlpatterns = [
     re_path(r'^%s(?P<path>.*)$' % re.escape(settings.STATIC_URL.lstrip('/')), serve, kwargs=dict(document_root=settings.STATIC_ROOT)),
     re_path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve, kwargs=dict(document_root=settings.MEDIA_ROOT)),
 ]
+
