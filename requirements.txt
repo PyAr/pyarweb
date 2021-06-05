@@ -14,7 +14,7 @@ django-sendfile==0.3.11
 django-simple-captcha==0.5.12
 django-summernote==0.8.11.6
 django-taggit-autosuggest==0.3.8
-django-taggit==1.2.0
+django-taggit==1.3.0
 psycopg2-binary==2.7.4
 lxml==4.6.3
 six

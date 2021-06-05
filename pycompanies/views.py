@@ -23,7 +23,7 @@ class CompanyList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyList, self).get_context_data(**kwargs)
-        if self.request.user.is_anonymous() is False:
+        if self.request.user.is_anonymous is False:
             context['own_companies_count'] = self.request.user.companies.all() \
                 .count()
         return context

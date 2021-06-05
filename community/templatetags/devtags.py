@@ -32,8 +32,9 @@ def html2text(html):
     if html:
         return etree.tostring(
             etree.HTML(html),
-            encoding='utf8', method='text'
-        )
+            encoding='utf8',
+            method='text'
+        ).decode('utf8')
     return ''
 
 
