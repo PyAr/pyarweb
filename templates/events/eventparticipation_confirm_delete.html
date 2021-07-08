@@ -19,7 +19,7 @@
                     </h4>
 
 				    <input type="submit" value="Si" class="btn btn-danger">
-				    <a href="{% url 'events:detail' object.event.id %}" class="btn btn-default">No</a>
+				    <a href="{% url 'events:detail' object.event.id %#{{ object.event.name | slugify }}}" class="btn btn-default">No</a>
 				</form>
 	        </div>
 	    </div>

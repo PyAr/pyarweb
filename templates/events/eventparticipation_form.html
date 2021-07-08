@@ -32,8 +32,10 @@
                         {% endif %}
 
                         <span class="section-button-group pull-right">
-                            <a href="{% url 'events:detail' form.initial.event.id %}" class="btn btn-info">
-                                {% trans "Volver al evento" %}
+                            <a
+                                href="{% url 'events:detail' form.initial.event.id %}#{{ form.initial.event.name | slugify }}"
+                                class="btn btn-info">
+                                    {% trans "Volver al evento" %}
                             </a>
                             {% if form.instance.id %}
                                 <a href="{% url 'events:unregister' form.instance.event.id form.instance.id %}" class="btn btn-danger">
@@ -52,7 +54,7 @@
                 <h2>
                     {% trans "Este evento no permite inscripción." %}
                     <span class="section-button-group pull-right">
-                        <a href="{% url 'events:detail' form.initial.event.id %}" class="btn btn-info">
+                        <a href="{% url 'events:detail' form.initial.event.id %}#{{ form.initial.event.name | slugify }}" class="btn btn-info">
                             {% trans "Volver al evento" %}
                         </a>
                     </span>

@@ -34,7 +34,7 @@
     {% for event in eventos_proximos %}
       <article class="list-group-item">
         <h4 class="list-group-item-heading">
-          <a href="{% url 'events:detail' event.id %}">
+          <a href="{% url 'events:detail' event.id %}#{{ event.name | slugify }}">
             {{ event.name }}
           </a> |
           <small>
@@ -65,7 +65,7 @@
 
       <article class="list-group-item">
         <h4 class="list-group-item-heading">
-          <a href="{% url 'events:detail' event.id %}">
+          <a href="{% url 'events:detail' event.id %}#{{ event.name | slugify }}">
             {{ event.name }}
           </a> |
           <small>

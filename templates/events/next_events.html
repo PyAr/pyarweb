@@ -1,14 +1,14 @@
 {% for event in events %}
     <article class="list-group-item">
       <h4 class="list-group-item-heading">
-        <a href="{% url 'events:detail' event.id %}">
+        <a href="{% url 'events:detail' event.id %}#{{ event.name | slugify }}">
           {{ event.name }}
         </a>
       </h4>
-      
+
       <p class="list-group-item-text">
-        <span>{{ event.start_at|date:"DATE_FORMAT" }}</span> | 
-        <span>{{ event.start_at|time:"TIME_FORMAT" }}</span> | 
+        <span>{{ event.start_at|date:"DATE_FORMAT" }}</span> |
+        <span>{{ event.start_at|time:"TIME_FORMAT" }}</span> |
         <span>{{ event.place }}</span>
       </p>
     </article>
