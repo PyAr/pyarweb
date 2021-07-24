@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load url from future %}
 <div class="date">{{ post.date_modified|date:"M d Y" }}</div>
 <table class="blog details table table-hover table-no-border">
     {% for author in post.authors.all %}

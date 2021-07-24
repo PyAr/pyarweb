@@ -2,12 +2,13 @@
 
 
 """URLS configurations for PyAr Web."""
+import re
 
 from django.conf import settings
 from django.conf.urls import include
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import re_path
+from django.views.static import serve
 
 from .views import buscador, irc
 
@@ -34,4 +35,18 @@ urlpatterns = [
     re_path(r'^captcha/', include('captcha.urls')),
     re_path(r'^email_confirmation/', include(('email_confirm_la.urls', 'email_confirm_la.urls'),
                                              namespace='email_confirm_la')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    # no puedo usar el static porque no funcia en produccion y en prod django esta
+    # sirviendo los archivos estaticos. Esto es sacado del codigo de la funcion.
+    # si es un HACK, pero hasta que pueda solucionarlo usando django-assets o algo asi
+    re_path(
+        r'^%s(?P<path>.*)$' % re.escape(settings.STATIC_URL.lstrip('/')),
+        serve,
+        kwargs=dict(document_root=settings.STATIC_ROOT)
+    ),
+    re_path(
+        r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')),
+        serve,
+        kwargs=dict(document_root=settings.MEDIA_ROOT)
+    ),
+]
