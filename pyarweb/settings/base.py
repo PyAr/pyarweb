@@ -232,3 +232,11 @@ GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
 ACCOUNT_FORMS = {
     'signup': 'pyarweb.forms.SingupFormWithCaptcha'
 }
+
+
+# Azure blob-storage
+AZURE_ACCOUNT_KEY = os.environ.get("AZURE_ACCOUNT_KEY")
+AZURE_ACCOUNT_NAME = os.environ.get("AZURE_ACCOUNT_NAME")
+AZURE_CONTAINER = os.environ.get("AZURE_CONTAINER")
+AZURE_SSL = os.environ.get("AZURE_SSL", True)
+AZURE_QUERYSTRING_AUTH = os.environ.get("AZURE_QUERYSTRING_AUTH", False)
