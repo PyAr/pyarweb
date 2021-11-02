@@ -62,12 +62,12 @@ class JobOffer(models.Model):
         on_delete=models.CASCADE,
     )
     location = models.CharField(max_length=100, verbose_name=_('Lugar'), null=True)
-    contact_mail = models.CharField(max_length=255, null=True, verbose_name=_('E-mail'))
+    contact_mail = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('E-mail'))
     contact_phone = models.CharField(
-        max_length=255, null=True, verbose_name=_('Teléfono')
+        max_length=255, null=True, blank=True, verbose_name=_('Teléfono')
     )
     contact_url = models.CharField(
-        max_length=255, null=True, verbose_name=_('Sitio web')
+        max_length=255, null=True, blank=True, verbose_name=_('Sitio web')
     )
     experience = models.CharField(
         max_length=3, choices=Experience.choices, verbose_name=_('Experiencia')
@@ -75,14 +75,14 @@ class JobOffer(models.Model):
     remoteness = models.CharField(
         max_length=3, choices=Remoteness.choices, verbose_name=_('Modalidad de trabajo')
     )
-    tags = TaggableManager(verbose_name=_('Etiquetas'))
+    tags = TaggableManager(verbose_name=_('Etiquetas'), blank=True)
     hiring_type = models.CharField(
         max_length=3, choices=HiringType.choices, verbose_name=_('Tipo de contratación')
     )
     salary = models.CharField(
         max_length=255, null=True, verbose_name=_('Rango salarial')
     )
-    description = models.TextField(verbose_name=_('Sitio web'))
+    description = models.TextField(verbose_name=_('Descripción'))
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_('Rango salarial')
     )
