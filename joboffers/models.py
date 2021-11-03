@@ -9,12 +9,12 @@ class Experience(models.TextChoices):
     """
     Choices for JobOffer Experience.
     """
-    ZERO = '0'
-    ONE_PLUS = '1+'
-    TWO_PLUS = '2+'
-    THREE_PLUS = '3+'
-    FIVE_PLUS = '5+'
-    TEN_PLUS = '10+'
+    ZERO = '0', _('0')
+    ONE_PLUS = '1+', _('1+')
+    TWO_PLUS = '2+', _('2+')
+    THREE_PLUS = '3+', _('3+')
+    FIVE_PLUS = '5+', _('5+')
+    TEN_PLUS = '10+', _('10+')
 
 
 class Remoteness(models.TextChoices):
@@ -62,7 +62,9 @@ class JobOffer(models.Model):
         on_delete=models.CASCADE,
     )
     location = models.CharField(max_length=100, verbose_name=_('Lugar'), null=True)
-    contact_mail = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('E-mail'))
+    contact_mail = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_('E-mail')
+    )
     contact_phone = models.CharField(
         max_length=255, null=True, blank=True, verbose_name=_('Teléfono')
     )

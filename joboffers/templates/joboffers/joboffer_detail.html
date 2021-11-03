@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load email_obfuscator %}
+{% load devtags %}
+
+{% block title %}
+{{ object.title }}
+{% endblock %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+
+    <div class="col-lg-12">
+
+      <div class="page-header">
+        <h2>{{ object.title }}
+          <span class="pull-right">
+            {% if object.created_by == user %}
+            <a href="{% url 'jobs_update' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
+            <a href="{% url 'jobs_delete' object.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
+            {% endif %}
+
+            {% if request.user|has_group:"job_moderator" == True %}
+                <a href="{% url 'jobs_inactivate' object.id %}" class="btn btn-danger">{% trans 'Inactivar' %}</a>
+            {% endif %}
+          </span>
+        </h2>
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-8">
+
+          {% autoescape off %}
+            {{ object.description }}
+          {% endautoescape %}
+          <br/>
+
+          {% include "joboffers/_tags.html" %}
+
+        </div>
+
+        <div class="col-md-4">
+          <div class="panel panel-default panel-primary">
+            <div class="panel-heading"><strong>Datos de la oferta laboral</strong></div>
+            <div class="panel-body">
+               <article class="list-group-item">
+                {% include 'joboffers/joboffer_overview.html' with obj=object %}
+               </article>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+</main>
+{% endblock %}

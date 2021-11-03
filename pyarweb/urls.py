@@ -35,6 +35,7 @@ urlpatterns = [
     re_path(r'^captcha/', include('captcha.urls')),
     re_path(r'^email_confirmation/', include(('email_confirm_la.urls', 'email_confirm_la.urls'),
                                              namespace='email_confirm_la')),
+    re_path(r'^trabajo-nueva/', include('joboffers.urls')),
 
     # no puedo usar el static porque no funcia en produccion y en prod django esta
     # sirviendo los archivos estaticos. Esto es sacado del codigo de la funcion.
