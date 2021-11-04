@@ -61,7 +61,7 @@ class JobOffer(models.Model):
         verbose_name=_('Empresa'),
         on_delete=models.CASCADE,
     )
-    location = models.CharField(max_length=100, verbose_name=_('Lugar'), null=True)
+    location = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Lugar'))
     contact_mail = models.CharField(
         max_length=255, blank=True, null=True, verbose_name=_('E-mail')
     )
