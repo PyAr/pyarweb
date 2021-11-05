@@ -9,7 +9,7 @@ from .models import JobOffer
 class JobOfferCreateView(CreateView):
     model = JobOffer
     form_class = JobOfferForm
-    success_url = reverse_lazy("joboffers_admin")
+    success_url = reverse_lazy("joboffers:admin")
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user

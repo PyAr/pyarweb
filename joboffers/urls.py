@@ -6,7 +6,7 @@ from .views import JobOfferAdminView, JobOfferCreateView
 
 
 urlpatterns = [
-    re_path(r'^admin/$', login_required(JobOfferAdminView.as_view()), name='joboffers_admin'),
-    re_path(r'^nueva/$', login_required(JobOfferCreateView.as_view()), name='joboffers_add'),
-    re_path(r'^(?P<slug>[\w-]+)/$', DetailView.as_view(model=JobOffer), name='joboffers_view'),
+    re_path(r'^admin/$', login_required(JobOfferAdminView.as_view()), name='admin'),
+    re_path(r'^nueva/$', login_required(JobOfferCreateView.as_view()), name='add'),
+    re_path(r'^(?P<slug>[\w-]+)/$', DetailView.as_view(model=JobOffer), name='view'),
 ]
