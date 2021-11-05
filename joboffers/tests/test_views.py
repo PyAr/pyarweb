@@ -1,3 +1,4 @@
+import factory
 import pytest
 
 from django.test import Client
@@ -27,6 +28,7 @@ def create_logged_client(user):
 
 
 ADD_URL = reverse_lazy('joboffers:add')
+ADMIN_URL = reverse_lazy('joboffers:admin')
 
 
 @pytest.mark.django_db
@@ -35,3 +37,19 @@ def test_joboffer_creation_redirects_unlogged(client):
 
     assert 302 == response.status_code
     assert f'/accounts/login/?next={ADD_URL}' == response.url
+
+
+@pytest.mark.django_db
+def test_joboffer_creation_with_all_fields_ok(logged_client):
+    client = logged_client
+
+    job_data = factory.build(dict, FACTORY_CLASS=JobOfferFactory)
+
+    assert 0 == JobOffer.objects.count()
+
+    response = client.post(ADD_URL, job_data)
+
+    assert 302 == response.status_code
+    assert ADMIN_URL == response.url
+    assert 1 == JobOffer.objects.count()
+    # TODO: Test for deactivated state
