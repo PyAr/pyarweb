@@ -9,12 +9,13 @@ from events.models import Event, EventParticipation
 User = get_user_model()
 DEFAULT_START_TIME = datetime(1956, 1, 31, 0, 0, 0, 0, tzinfo=utc)
 DEFAULT_END_TIME = DEFAULT_START_TIME + timedelta(hours=8)
+DEFAULT_USER_PASSWORD = 'secret'
 
 
 # This factory could be in any app.
 class UserFactory(DjangoModelFactory):
     username = Faker('user_name')
-    password = PostGenerationMethodCall('set_password', 'secret')
+    password = PostGenerationMethodCall('set_password', DEFAULT_USER_PASSWORD)
 
     class Meta:
         model = User
