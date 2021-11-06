@@ -38,6 +38,9 @@ SENDFILE_BACKEND = "sendfile.backends.nginx"
 SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
 SENDFILE_URL = '/private'
 
+DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+STATICFILES_STORAGE = "storages.backends.azure_storage.AzureStorage"
+
 # Raven
 # True if we are running ./manage.py test
 TEST_RUNNING = [x for x in sys.argv if 'test' in x]
