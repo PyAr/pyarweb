@@ -23,5 +23,4 @@ six
 
 git+https://github.com/She110ck/django-disqus@django-3.0#egg=django-disqus
 git+https://github.com/predatell/django-email-confirm-la#egg=django-email-confirm-la
-git+https://github.com/tzulberti/django-planet#egg=django-planet
 git+https://github.com/matagus/django-pagination-py3#egg=django-pagination-py3
