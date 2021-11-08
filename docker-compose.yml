@@ -6,7 +6,7 @@ volumes:
 services:
   postgres:
       restart: always
-      image: postgres:9.4.4
+      image: postgres:11.5
       ports:
         - "5432:5432"
       volumes:
@@ -15,7 +15,7 @@ services:
         - POSTGRES_PASSWORD=secret
 
   web:
-      image: pyar/pyarweb:dev
+      image: pyarweb
       command: python3 manage.py runserver 0.0.0.0:8000
       volumes:
         - .:/code
