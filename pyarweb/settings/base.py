@@ -74,10 +74,8 @@ INSTALLED_APPS = (
     'email_obfuscator',
     'dbbackup',
     'captcha',
-    'email_confirm_la',
     'sanitizer',
 )
-
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -190,16 +188,6 @@ SENDFILE_BACKEND = 'sendfile.backends.simple'
 # django-db backups
 DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
 DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
-
-#
-#  Email confirmation app settings
-#
-EMAIL_CONFIRM_LA_DOMAIN = "python.org.ar"
-EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC = 3600*24*7  # 7 días
-EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
-    'confirmation_url_validity_time': EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC / (
-        3600*24),  # days
-}
 
 #
 # Events inscription captcha
