@@ -34,8 +34,8 @@ class EventFactory(DjangoModelFactory):
 
 
 class FutureEventFactory(EventFactory):
-    start_at = datetime.today() + timedelta(days=1)
-    end_at = datetime.today() + timedelta(days=2)
+    start_at = datetime.now(tz=utc) + timedelta(days=1)
+    end_at = datetime.now(tz=utc) + timedelta(days=2)
 
     class Meta:
         model = Event
