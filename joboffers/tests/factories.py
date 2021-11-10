@@ -1,4 +1,4 @@
-from factory import Faker, Sequence, SubFactory, fuzzy, post_generation
+from factory import Faker, SubFactory, fuzzy, post_generation
 from factory.django import DjangoModelFactory
 
 from events.tests.factories import UserFactory
@@ -25,6 +25,7 @@ class JobOfferFactory(DjangoModelFactory):
 
     created_by = SubFactory(UserFactory)
     modified_by = SubFactory(UserFactory)
+
     @post_generation
     def set_created(obj, create, extracted, **kwargs):
         """

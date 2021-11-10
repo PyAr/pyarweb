@@ -10,6 +10,7 @@ help:
 	@echo "bootstrap --build containers, run django migrations, load fixtures and create the a superuser"
 
 start:
+	docker build -t pyarweb .
 	docker-compose up
 
 stop:

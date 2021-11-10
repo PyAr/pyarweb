@@ -17,7 +17,6 @@ STATIC_ROOT = '/code/static2/'
 STATIC_URL = '/static/'
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[PyAr]"
-EMAIL_CONFIRM_LA_DOMAIN = "python.org.ar"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
@@ -37,6 +36,9 @@ PYAR_WIKI_URL = 'https://wiki.python.org.ar/'
 SENDFILE_BACKEND = "sendfile.backends.nginx"
 SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
 SENDFILE_URL = '/private'
+
+DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+STATICFILES_STORAGE = "storages.backends.azure_storage.AzureStorage"
 
 # Raven
 # True if we are running ./manage.py test

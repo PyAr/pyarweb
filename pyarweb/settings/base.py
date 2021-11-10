@@ -66,7 +66,6 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_autosuggest',
     'bootstrap3_datetime',
-    'planet',
     'pagination',
     'tagging',
     'bootstrap3',
@@ -76,10 +75,8 @@ INSTALLED_APPS = (
     'email_obfuscator',
     'dbbackup',
     'captcha',
-    'email_confirm_la',
     'sanitizer',
 )
-
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -160,7 +157,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.template.context_processors.i18n",
                 "django.contrib.messages.context_processors.messages",
-                "planet.context_processors.context",
                 "community.context_processors.pyar_wiki_url",
 
                 # `allauth` needs this from django
@@ -195,16 +191,6 @@ DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
 DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
 
 #
-#  Email confirmation app settings
-#
-EMAIL_CONFIRM_LA_DOMAIN = "python.org.ar"
-EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC = 3600*24*7  # 7 días
-EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
-    'confirmation_url_validity_time': EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC / (
-        3600*24),  # days
-}
-
-#
 # Events inscription captcha
 #
 CAPTCHA_LENGTH = 6
@@ -233,3 +219,11 @@ GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
 ACCOUNT_FORMS = {
     'signup': 'pyarweb.forms.SingupFormWithCaptcha'
 }
+
+
+# Azure blob-storage
+AZURE_ACCOUNT_KEY = os.environ.get("AZURE_ACCOUNT_KEY")
+AZURE_ACCOUNT_NAME = os.environ.get("AZURE_ACCOUNT_NAME")
+AZURE_CONTAINER = os.environ.get("AZURE_CONTAINER")
+AZURE_SSL = os.environ.get("AZURE_SSL", True)
+AZURE_QUERYSTRING_AUTH = os.environ.get("AZURE_QUERYSTRING_AUTH", False)
