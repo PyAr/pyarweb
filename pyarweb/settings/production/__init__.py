@@ -17,7 +17,6 @@ STATIC_ROOT = '/code/static2/'
 STATIC_URL = '/static/'
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[PyAr]"
-EMAIL_CONFIRM_LA_DOMAIN = "python.org.ar"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
