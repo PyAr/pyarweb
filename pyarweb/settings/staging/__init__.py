@@ -3,6 +3,7 @@ import sys
 
 from pyarweb.settings.base import *  # NOQA
 
+DEBUG = False
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',

@@ -4,6 +4,7 @@ import sys
 
 from pyarweb.settings.base import *  # NOQA
 
+DEBUG = False
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
@@ -31,7 +32,7 @@ EMAIL_FROM = os.environ.get('EMAIL_FROM', 'do_not_reply@python.org.ar')
 DISQUS_API_KEY = os.environ.get("DISQUS_API_KEY", 'not_configured')
 DISQUS_WEBSITE_SHORTNAME = 'PyAr'
 
-PYAR_WIKI_URL = 'https://wiki.python.org.ar/'
+PYAR_WIKI_URL = 'https://wiki.python.ogrs.ar'
 
 SENDFILE_BACKEND = "sendfile.backends.nginx"
 SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
