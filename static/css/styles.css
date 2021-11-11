@@ -584,3 +584,7 @@ div.sponsored_jobs {
     padding-rigth: 10px;
     border-radius: 0;
 }
+
+.joboffers .btn {
+  text-transform: uppercase;
+}
