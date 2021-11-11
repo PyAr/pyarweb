@@ -4,6 +4,8 @@ import sys
 from pyarweb.settings.base import *  # NOQA
 
 DEBUG = False
+TEMPLATE_DEBUG = False
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
@@ -12,9 +14,6 @@ CACHES = {
 }
 
 ALLOWED_HOSTS = ['*']
-
-STATIC_ROOT = '/code/static2/'
-STATIC_URL = '/static/'
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[PyAr]"
 
