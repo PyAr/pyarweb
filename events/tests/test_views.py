@@ -1,7 +1,6 @@
 import bleach
 
 from django.test import TestCase, Client
-from django.utils.timezone import now, timedelta
 from django.urls import reverse
 
 from events.models import Event
