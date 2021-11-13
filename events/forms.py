@@ -5,7 +5,6 @@ from django.conf import settings
 from django_summernote.widgets import SummernoteInplaceWidget
 from django.utils.translation import ugettext_lazy as _
 
-from bootstrap3_datetime.widgets import DateTimePicker
 from sanitizer.forms import SanitizedCharField
 
 from .models import Event, EventParticipation
@@ -28,26 +27,26 @@ class EventForm(CrispyFormMixin):
         allowed_styles=settings.ALLOWED_HTML_STYLES_INPUT,
         strip=False, widget=SummernoteInplaceWidget())
 
-    start_at = forms.DateTimeField(
+    start_at = forms.SplitDateTimeField(
         required=True,
-        input_formats=['%d/%m/%Y %H:%M:%S'],
         label=_('Comienza'),
-        widget=DateTimePicker(
-            options={
-                "format": "DD/MM/YYYY HH:ss:mm"
-            }
-        )
+        widget=forms.SplitDateTimeWidget(
+            date_format="DD/MM/YYYY",
+            time_format="HH:mm",
+            date_attrs={'type': 'date'},
+            time_attrs={'type': 'time'},
+        ),
     )
 
-    end_at = forms.DateTimeField(
+    end_at = forms.SplitDateTimeField(
         required=True,
-        input_formats=['%d/%m/%Y %H:%M:%S'],
         label=_('Finaliza'),
-        widget=DateTimePicker(
-            options={
-                "format": "DD/MM/YYYY HH:ss:mm"
-            }
-        )
+        widget=forms.SplitDateTimeWidget(
+            date_format="DD/MM/YYYY",
+            time_format="HH:mm",
+            date_attrs={'type': 'date'},
+            time_attrs={'type': 'time'},
+        ),
     )
 
     def get_crispy_fields(self):
