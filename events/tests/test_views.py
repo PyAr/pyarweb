@@ -1,7 +1,6 @@
 import bleach
 
 from django.test import TestCase, Client
-from django.utils.timezone import now, timedelta
 from django.urls import reverse
 
 from events.models import Event
@@ -34,8 +33,10 @@ class EventsViewTest(TestCase):
             'place': 'UTN Regional, San Rafael',
             'address': 'Gral. Paz 1432',
             'url': 'pydaysanrafael.tk',
-            'start_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 08:00:00'),
-            'end_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 18:00:00'),
+            'start_at_0': '04/04/2020',
+            'start_at_1': '12:12',
+            'end_at_0': '04/04/2020',
+            'end_at_1': '13:12',
             'registration_enabled': 1,
             'has_sponsors': 1
         }
@@ -55,8 +56,10 @@ class EventsViewTest(TestCase):
             'place': event.place,
             'address': event.address,
             'url': "http://rioiv.python.org.ar",
-            'start_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 08:00:00'),
-            'end_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 18:00:00'),
+            'start_at_0': '04/04/2020',
+            'start_at_1': '12:12',
+            'end_at_0': '04/04/2020',
+            'end_at_1': '13:12',
             'registration_enabled': 1,
             'has_sponsors': 1
         }
@@ -75,8 +78,10 @@ class EventsViewTest(TestCase):
             'place': 'UTN Regional, San Rafael',
             'address': 'Gral. Paz 1432',
             'url': 'pydaysanrafael.tk',
-            'start_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 08:00:00'),
-            'end_at': (now() + timedelta(days=1)).strftime('%d/%m/%Y 18:00:00'),
+            'start_at_0': '04/04/2020',
+            'start_at_1': '12:12',
+            'end_at_0': '04/04/2020',
+            'end_at_1': '13:12',
             'registration_enabled': 1,
             'has_sponsors': 1
         }
