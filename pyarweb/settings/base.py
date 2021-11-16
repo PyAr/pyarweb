@@ -65,7 +65,6 @@ INSTALLED_APPS = (
     'disqus',
     'taggit',
     'taggit_autosuggest',
-    'bootstrap3_datetime',
     'pagination',
     'tagging',
     'bootstrap3',
