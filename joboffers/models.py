@@ -2,6 +2,7 @@ from autoslug import AutoSlugField
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
+from django.urls import reverse
 from taggit_autosuggest.managers import TaggableManager
 
 
@@ -108,6 +109,9 @@ class JobOffer(models.Model):
     fields_hash = models.CharField(
         max_length=255, null=True, verbose_name=_('Hash de la oferta')
     )
+
+    def get_absolute_url(self):
+        return reverse('joboffers:view', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title

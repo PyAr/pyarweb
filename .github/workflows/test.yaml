@@ -11,7 +11,7 @@ jobs:
       # Label used to access the service container
       postgres2:
         # Docker Hub image
-        image: postgres:9.4
+        image: postgres:11.5
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: somepassword
@@ -26,9 +26,9 @@ jobs:
           --health-retries 5
     strategy:
       matrix:
-        python-version: [3.6, 3.7]
+        python-version: [3.9]
     env:
-      DJANGO: 3.0 
+      DJANGO: 1.8 
       SECRET_KEY: supersecret
       DB_PORT: 5432 
       POSTGRES_HOST: localhost
@@ -54,4 +54,4 @@ jobs:
           flake8
       - name: Run tests
         run: |
-          pytest -v
+          python3 manage.py test -v2 --noinput
