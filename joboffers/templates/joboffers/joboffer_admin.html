@@ -3,19 +3,25 @@
 {% load i18n static pagination_tags %}
 {% block title %}Ofertas laborales con Python{% endblock %}
 
+{% block extra_head %}
+ {{ search_form.media }}
+{% endblock %}
+
 {% block content %}
 <!-- Lista de trabajos -->
 <main id="main" class="joboffers container" role="main"
   <section>
     <div class="page-header">
-      <div class="input-group">
-        <input type="text" class="form-control form-control " placeholder="{% trans 'Buscar...' %}">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button">{% trans 'Filtrar' %}</button>
-        </span>
-      </div><!-- /input-group -->
-
       <h2>{% trans 'Ofertas de trabajo de ' %} {{ company.name }}</h2>
+    </div>
+
+    <div class="pull-rigth">
+      <form method="GET">
+        {{ search_form.search }}
+        <p>
+          {{ search_form.tags }}
+        </p>
+      </form>
     </div>
 
     {% if object_list %}

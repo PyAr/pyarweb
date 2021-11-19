@@ -1,3 +1,4 @@
+from dal import autocomplete
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -6,6 +7,8 @@ from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
 from sanitizer.forms import SanitizedCharField
+from taggit.models import Tag
+
 
 from jobs import utils
 
@@ -68,3 +71,26 @@ class JobOfferForm(forms.ModelForm):
             'salary': '',
             'description': 'Descripción de la oferta'
         }
+
+
+class CustomSelect2(autocomplete.Select2Multiple):
+    autocomplete_function = 'your_autocomplete_function'
+
+    class Media:
+        js = ('js/joboffers/search-form.js',)
+
+
+class SelectedTagWidget(forms.CheckboxSelectMultiple):
+    template_name = 'joboffers/widgets/selected_tag.html'
+
+
+class SearchForm(forms.Form):
+    search = forms.ModelChoiceField(
+        queryset=Tag.objects.all(),
+        widget=CustomSelect2(url='joboffers:tags-autocomplete')
+    )
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=SelectedTagWidget()
+    )

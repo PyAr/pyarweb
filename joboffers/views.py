@@ -1,9 +1,11 @@
+from dal import autocomplete
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
+from taggit.models import Tag
 
 from pycompanies.models import Company
-from .forms import JobOfferForm
+from .forms import JobOfferForm, SearchForm
 from .models import JobOffer
 
 
@@ -43,4 +45,20 @@ class JobOfferAdminView(ListView):
         # TODO: Implement redirect when no company associated
         ctx = super().get_context_data()
         ctx['company'] = Company.objects.first()
+        ctx['search_form'] = SearchForm()
+
         return ctx
+
+
+class TagAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Tag.objects.none()
+
+        qs = Tag.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
