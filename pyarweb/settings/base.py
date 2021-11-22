@@ -35,11 +35,6 @@ DEFAULT_FROM_EMAIL = 'webmaster@python.org.ar'
 LOGIN_REDIRECT_URL = '/'
 
 
-# Disqus
-DISQUS_API_KEY = '3t6eKCbxRGuIG3SmdHb8malOf1h2WxSYEfXbBjWyNBaFLMyD1GOIfWYFciqJqo69'
-DISQUS_WEBSITE_SHORTNAME = 'PyAr'
-
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -61,7 +56,6 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'django_extensions',
-    'disqus',
     'taggit',
     'taggit_autosuggest',
     'pagination',
