@@ -1,10 +1,13 @@
 {% with id=widget.attrs.id %}
     <div{% if id %} id="{{ id }}"{% endif %}{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
-    {% for group, options, index in widget.optgroups %}
-        {% for option in options %}
-            <span>
-                {% include option.template_name with widget=option %}
-            </span>
+        {% for group, options, index in widget.optgroups %}
+            {% for option in options %}
+                {% if option.selected %}
+                    <label class="label label-primary">
+                        {{ option.label }}
+                        {% include "django/forms/widgets/input.html" with widget=option %}
+                    </label>&nbsp;
+            {% endif %}
         {% endfor %}
     {% endfor %}
     </div>
