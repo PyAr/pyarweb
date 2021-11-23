@@ -35,11 +35,6 @@ DEFAULT_FROM_EMAIL = 'webmaster@python.org.ar'
 LOGIN_REDIRECT_URL = '/'
 
 
-# Disqus
-DISQUS_API_KEY = '3t6eKCbxRGuIG3SmdHb8malOf1h2WxSYEfXbBjWyNBaFLMyD1GOIfWYFciqJqo69'
-DISQUS_WEBSITE_SHORTNAME = 'PyAr'
-
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -61,11 +56,8 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'django_extensions',
-    'disqus',
     'taggit',
     'taggit_autosuggest',
-    'bootstrap3_datetime',
-    'planet',
     'pagination',
     'tagging',
     'bootstrap3',
@@ -75,10 +67,8 @@ INSTALLED_APPS = (
     'email_obfuscator',
     'dbbackup',
     'captcha',
-    'email_confirm_la',
     'sanitizer',
 )
-
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -159,7 +149,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.template.context_processors.i18n",
                 "django.contrib.messages.context_processors.messages",
-                "planet.context_processors.context",
                 "community.context_processors.pyar_wiki_url",
 
                 # `allauth` needs this from django
@@ -192,16 +181,6 @@ SENDFILE_BACKEND = 'sendfile.backends.simple'
 # django-db backups
 DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
 DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
-
-#
-#  Email confirmation app settings
-#
-EMAIL_CONFIRM_LA_DOMAIN = "python.org.ar"
-EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC = 3600*24*7  # 7 días
-EMAIL_CONFIRM_LA_TEMPLATE_CONTEXT = {
-    'confirmation_url_validity_time': EMAIL_CONFIRM_LA_CONFIRM_EXPIRE_SEC / (
-        3600*24),  # days
-}
 
 #
 # Events inscription captcha

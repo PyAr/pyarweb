@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load disqus_tags %}
 {% load i18n %}
 {% load email_obfuscator %}
 {% load devtags %}
@@ -30,9 +29,6 @@
       <article>
         <p>{% autoescape off %}{{ object.body|linebreaks|safe }}{% endautoescape %}</p>
       </article>
-      <div class="row">
-      {% disqus_show_comments %}
-      </div>
   </div>
 </main>
 {% endblock %}
