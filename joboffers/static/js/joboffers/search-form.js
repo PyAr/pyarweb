@@ -63,6 +63,10 @@ document.addEventListener('dal-init-function', function () {
       const data = event.params.args.data;
       const tagId = data.id;
 
+      if (tagId == '_q') {
+        return;
+      }
+
       $(`input[name="tags"][value="${tagId}"]`).prop('checked', true);
 
       const inputHtml = `<input type="checkbox" name="tags" value="${tagId}" checked>`;
