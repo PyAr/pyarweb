@@ -15,14 +15,21 @@
       <h2>{% trans 'Ofertas de trabajo de ' %} {{ company.name }}</h2>
     </div>
 
-    <div class="pull-rigth">
-      <form method="GET">
-        {{ search_form.search }}
-        <p>
-          {{ search_form.tags }}
-        </p>
-      </form>
-    </div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <form id="filter-form" class="navbar-form navbar-right" method="GET" novalidate>
+          <div class="form-group">
+            {{ search_form.q }}
+          </div>
+          <button type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </button>
+          <div style="height: 1.5em;">
+            {{ search_form.tags }}
+          </div>
+        </form>
+      </div>
+    </nav>
 
     {% if object_list %}
     <div class="list-group">

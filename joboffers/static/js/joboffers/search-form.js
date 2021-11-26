@@ -24,15 +24,10 @@ document.addEventListener('dal-init-function', function () {
     function createTag(params) {
       var term = $.trim(params.term);
 
-      if (term === '') {
-        return null;
-      }
-
-
       return {
-        id: '_q',
+        id: params.term,
         text: `Buscar '${params.term}'`,
-        term: params.term
+        search: true
       };
     };
 
@@ -41,6 +36,7 @@ document.addEventListener('dal-init-function', function () {
       containerCssClass: ':all:',
       createTag: createTag,
       tags: true,
+      multiple: false,
       placeholder: $element.attr('data-placeholder') || '',
       language: $element.attr('data-autocomplete-light-language'),
       minimumInputLength: 0,
@@ -49,29 +45,42 @@ document.addEventListener('dal-init-function', function () {
       with: null
     });
 
-    // function log(name, event) {
-    //   console.log(name);
-    //   console.log(event);
-    // }
+    function log(name, event) {
+      console.log(name, event);
+    }
 
-    // $element.on("select2:open", function (e) { log("select2:open", e); });
-    // $element.on("select2:close", function (e) { log("select2:close", e); });
-    // $element.on("select2:select", function (e) { log("select2:select", e); });
-    // $element.on("select2:unselect", function (e) { log("select2:unselect", e); });
+    $element.on("select2:select", function(event){
+      document.querySelector('#filter-form').submit();
+    });
+
+    $element.on("select2:select", function (e) { log("select2:select", e); });
+    $element.on("select2:open", function (e) { log("select2:open", e); });
+    $element.on("select2:close", function (e) { log("select2:close", e); });
+    $element.on("select2:unselect", function (e) { log("select2:unselect", e); });
+    $element.on("select2:change", function (e) { log("select2:change", e); });
+
 
     $element.on('select2:selecting', function(event) {
+      console.log('select2:selecting::', event);
+      // Crea los labels que van abajo
       const data = event.params.args.data;
-      const tagId = data.id;
+      console.log("data::", data);
 
-      if (tagId == '_q') {
+      if (data.search) {
+        // console.log('submitting...');
+        // document.querySelector('#filter-form').submit();
         return;
       }
 
-      $(`input[name="tags"][value="${tagId}"]`).prop('checked', true);
+      if (data.prevented) {
+        e.preventDefault();
+        return;
+      }
 
-      const inputHtml = `<input type="checkbox" name="tags" value="${tagId}" checked>`;
+
+      $(`input[name="tags"][value="${data.id}"]`).prop('checked', true);
+      const inputHtml = `<input type="checkbox" name="tags" value="${data.id}" checked>`;
       const labelHtml = `<label class="label label-primary">${data.text} ${inputHtml}</label>`;
-
       $('#id_tags').append($(labelHtml));
       $(element).select2('close');
       event.preventDefault();

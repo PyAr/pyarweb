@@ -85,7 +85,7 @@ class SelectedTagWidget(forms.CheckboxSelectMultiple):
 
 
 class SearchForm(forms.Form):
-    search = forms.ModelChoiceField(
+    q = forms.ModelChoiceField(
         queryset=Tag.objects.all(),
         widget=CustomSelect2(url='joboffers:tags-autocomplete')
     )
