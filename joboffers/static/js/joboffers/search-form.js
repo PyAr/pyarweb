@@ -1,15 +1,15 @@
 document.addEventListener('dal-init-function', function () {
 
   yl.registerFunction( 'your_autocomplete_function', function ($, element) {
-    var $element = $(element);
+    const $element = $(element);
 
-    var ajax = {
+    const ajax = {
       url: $element.attr('data-autocomplete-light-url'),
       dataType: 'json',
       delay: 250,
 
       data: function (params) {
-        var data = {
+        const data = {
           q: params.term, // search term
           page: params.page,
           create: $element.attr('data-autocomplete-light-create') && !$element.attr('data-tags'),
@@ -18,11 +18,19 @@ document.addEventListener('dal-init-function', function () {
 
         return data;
       },
+      processResults: function (data) {
+        const tagsEl = Array.from(document.querySelectorAll('input[name="tags"]'));
+        const selectedTags = tagsEl.map(function (element) { return element.value; });
+        data.results = data.results.filter(function (result) {
+          return !selectedTags.includes(result.id);
+        });
+        return data;
+      },
       cache: true
     };
 
     function createTag(params) {
-      var term = $.trim(params.term);
+      const term = $.trim(params.term);
 
       return {
         id: params.term,
