@@ -83,6 +83,10 @@ class CustomSelect2(autocomplete.Select2Multiple):
 class SelectedTagWidget(forms.CheckboxSelectMultiple):
     template_name = 'joboffers/widgets/selected_tag.html'
 
+    class Media:
+        css = {'screen': ('css/select2-bootstrap.min.css',)}
+        js = ('js/select2-bootstrap-theme.js',)
+
 
 class SearchForm(forms.Form):
     q = forms.ModelChoiceField(

@@ -53,30 +53,15 @@ document.addEventListener('dal-init-function', function () {
       with: null
     });
 
-    function log(name, event) {
-      console.log(name, event);
-    }
-
     $element.on("select2:select", function(event){
       document.querySelector('#filter-form').submit();
     });
 
-    $element.on("select2:select", function (e) { log("select2:select", e); });
-    $element.on("select2:open", function (e) { log("select2:open", e); });
-    $element.on("select2:close", function (e) { log("select2:close", e); });
-    $element.on("select2:unselect", function (e) { log("select2:unselect", e); });
-    $element.on("select2:change", function (e) { log("select2:change", e); });
-
-
     $element.on('select2:selecting', function(event) {
-      console.log('select2:selecting::', event);
       // Crea los labels que van abajo
       const data = event.params.args.data;
-      console.log("data::", data);
 
       if (data.search) {
-        // console.log('submitting...');
-        // document.querySelector('#filter-form').submit();
         return;
       }
 
@@ -88,8 +73,14 @@ document.addEventListener('dal-init-function', function () {
 
       $(`input[name="tags"][value="${data.id}"]`).prop('checked', true);
       const inputHtml = `<input type="checkbox" name="tags" value="${data.id}" checked>`;
-      const labelHtml = `<label class="label label-primary">${data.text} ${inputHtml}</label>`;
+      const closeIconHtml = `<span aria-hidden="true">&times;</span>`;
+      const labelHtml = `<label class="label label-primary">${data.text} ${inputHtml} ${closeIconHtml}</label>`;
       $('#id_tags').append($(labelHtml));
+
+      $('#id_tags input[name="tags"]').one('change', function(event, data) {
+        const inputEl = event.currentTarget;
+        inputEl.parentNode.remove();
+      });
       $(element).select2('close');
       event.preventDefault();
     });

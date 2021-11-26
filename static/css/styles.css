@@ -588,3 +588,22 @@ div.sponsored_jobs {
 .joboffers .btn {
   text-transform: uppercase;
 }
+
+.search-form-tags {
+  height: 1.8em;
+}
+
+.search-form-tags label {
+  font-size: 1em;
+  line-height: 2em;
+  margin-right: 0.4em;
+  cursor: pointer;
+}
+
+.search-form-tags label span {
+  color: #ccc;
+}
+
+.search-form-tags input {
+  appearance: none;
+}
