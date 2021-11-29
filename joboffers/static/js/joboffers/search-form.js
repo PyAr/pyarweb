@@ -34,10 +34,30 @@ document.addEventListener('dal-init-function', function () {
 
       return {
         id: params.term,
-        text: `Buscar '${params.term}'`,
+        text: params.term,
         search: true
       };
     };
+
+    function renderOption(state) {
+      if (!state.id) {
+        return state.text;
+      }
+
+      let tagHelp;
+      let tagValue;
+
+      if (state.search) {
+        tagHelp = `<span class="tag-help">Buscar</span>`;
+        tagValue = `<span class="option-search-term">"${state.text}"</span>`;
+      } else {
+        tagHelp = `<span class="tag-help">Etiquetados como</span>`;
+        tagValue = `<span class="label label-primary">${state.text}</span>`;
+      }
+      const $state = $(`${tagHelp} ${tagValue}`);
+      return $state;
+    };
+
 
     $element.select2({
       debug: true,
@@ -50,7 +70,8 @@ document.addEventListener('dal-init-function', function () {
       minimumInputLength: 0,
       allowClear: !$element.is('[required]'),
       ajax: ajax,
-      with: null
+      with: null,
+      templateResult: renderOption
     });
 
     $element.on("select2:select", function(event){

@@ -607,3 +607,7 @@ div.sponsored_jobs {
 .search-form-tags input {
   appearance: none;
 }
+
+#filter-form span.select2-selection__arrow {
+  display: none;
+}
