@@ -80,8 +80,8 @@ class CustomSelect2(autocomplete.Select2Multiple):
         js = ('js/joboffers/search-form.js',)
 
 
-class SelectedTagWidget(forms.CheckboxSelectMultiple):
-    template_name = 'joboffers/widgets/selected_tag.html'
+class TagListWidget(forms.CheckboxSelectMultiple):
+    template_name = 'joboffers/widgets/tag_list.html'
 
     class Media:
         css = {'screen': ('css/select2-bootstrap.min.css',)}
@@ -96,5 +96,5 @@ class SearchForm(forms.Form):
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         required=False,
-        widget=SelectedTagWidget()
+        widget=TagListWidget()
     )

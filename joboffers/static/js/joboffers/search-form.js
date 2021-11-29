@@ -78,6 +78,13 @@ document.addEventListener('dal-init-function', function () {
       document.querySelector('#filter-form').submit();
     });
 
+    function removeTag(event, data) {
+      const inputEl = event.currentTarget;
+      inputEl.parentNode.remove();
+    }
+
+    $('#id_tags input[name="tags"]').one('change', removeTag);
+
     $element.on('select2:selecting', function(event) {
       // Crea los labels que van abajo
       const data = event.params.args.data;
@@ -91,17 +98,13 @@ document.addEventListener('dal-init-function', function () {
         return;
       }
 
-
       $(`input[name="tags"][value="${data.id}"]`).prop('checked', true);
       const inputHtml = `<input type="checkbox" name="tags" value="${data.id}" checked>`;
       const closeIconHtml = `<span aria-hidden="true">&times;</span>`;
       const labelHtml = `<label class="label label-primary">${data.text} ${inputHtml} ${closeIconHtml}</label>`;
       $('#id_tags').append($(labelHtml));
 
-      $('#id_tags input[name="tags"]').one('change', function(event, data) {
-        const inputEl = event.currentTarget;
-        inputEl.parentNode.remove();
-      });
+      $('#id_tags input[name="tags"]').one('change', removeTag);
       $(element).select2('close');
       event.preventDefault();
     });

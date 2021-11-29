@@ -45,7 +45,7 @@ class JobOfferAdminView(ListView):
         # TODO: Implement redirect when no company associated
         ctx = super().get_context_data()
         ctx['company'] = Company.objects.first()
-        ctx['search_form'] = SearchForm()
+        ctx['search_form'] = SearchForm(self.request.GET)
 
         return ctx
 
