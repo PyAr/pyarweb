@@ -571,3 +571,20 @@ a.white:hover {
 div.sponsored_jobs {
     padding: 5px;
 }
+
+/*           */
+/* joboffers */
+/*           */
+
+.joboffers .list-group-item {
+    background-color: var(--grey95);
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: 10px;
+    padding-rigth: 10px;
+    border-radius: 0;
+}
+
+.joboffers .btn {
+  text-transform: uppercase;
+}
