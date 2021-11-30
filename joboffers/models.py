@@ -22,33 +22,33 @@ class Remoteness(models.TextChoices):
     """
     Choices for Remoteness.
     """
-    REMOTE = 'REM', _('Remoto')
-    OFFICE = 'OFC', _('Presencial')
-    HYBRID = 'HYB', _('Mixto')
+    REMOTE = 'REMOTE', _('Remoto')
+    OFFICE = 'IN_OFFICE', _('Presencial')
+    HYBRID = 'MIXED', _('Mixto')
 
 
 class HiringType(models.TextChoices):
     """
     Choices for HiringType.
     """
-    EMPLOYEE = 'EMP', _('Relación de dependencia')
-    MONOTRIBUTIST = 'MON', _('Monotributista')
-    CONTRACTOR_SHORT = 'CSH', _('Contractor short term')
-    CONTRACTOR_LONG = 'CLT', _('Contractor long term')
-    COOPERATIVE = 'COO', _('Cooperativa de trabajo')
-    GOVERNMENT = 'GOV', _('Estado')
-    OTHER = 'OTH', _('Otra')
+    EMPLOYEE = 'EMPLOYEE', _('Relación de dependencia')
+    MONOTRIBUTISTA = 'MONOTRIBUTO', _('Monotributista')
+    CONTRACTOR_SHORT = 'CONTRACTOR_SHORT', _('Contractor short term')
+    CONTRACTOR_LONG = 'CONTRACTOR_LONG', _('Contractor long term')
+    COOPERATIVE = 'COOPERATIVE', _('Cooperativa de trabajo')
+    GOVERNMENT = 'GOVERNMENT', _('Estado')
+    OTHER = 'OTHER', _('Otra')
 
 
 class OfferState(models.TextChoices):
     """
     Choices for JobOfferStates.
     """
-    DEACTIVATED = 'DEA', _('Desactivada')
-    MODERATION = 'MOD', _('En moderación')
-    ACTIVE = 'ACT', _('Activa')
-    REJECTED = 'REJ', _('Rechazada')
-    EXPIRED = 'EXP', _('Caducada')
+    DEACTIVATED = 'DEACTIVATED', _('Desactivada')
+    MODERATION = 'MODERATION', _('En moderación')
+    ACTIVE = 'ACTIVE', _('Activa')
+    REJECTED = 'REJECTED', _('Rechazada')
+    EXPIRED = 'EXPIRED', _('Caducada')
 
 
 class JobOffer(models.Model):
@@ -76,11 +76,11 @@ class JobOffer(models.Model):
         max_length=3, choices=Experience.choices, verbose_name=_('Experiencia')
     )
     remoteness = models.CharField(
-        max_length=3, choices=Remoteness.choices, verbose_name=_('Modalidad de trabajo')
+        max_length=32, choices=Remoteness.choices, verbose_name=_('Modalidad de trabajo')
     )
     tags = TaggableManager(verbose_name=_('Etiquetas'), blank=True)
     hiring_type = models.CharField(
-        max_length=3, choices=HiringType.choices, verbose_name=_('Tipo de contratación')
+        max_length=32, choices=HiringType.choices, verbose_name=_('Tipo de contratación')
     )
     salary = models.CharField(
         max_length=255, null=True, verbose_name=_('Rango salarial')
@@ -103,7 +103,8 @@ class JobOffer(models.Model):
         related_name='modified_offers',
     )
     state = models.CharField(
-        max_length=3, choices=OfferState.choices, verbose_name=_('Estado de la oferta')
+        max_length=32, choices=OfferState.choices, default=OfferState.DEACTIVATED,
+        verbose_name=_('Estado de la oferta')
     )
     slug = AutoSlugField(populate_from='title', unique=True)
     fields_hash = models.CharField(
@@ -149,11 +150,11 @@ class CommentType(models.TextChoices):
     """
     Choices for Types of JobOfferComments.
     """
-    MODERATION = 'MOD', _('Moderación')
-    EDITION = 'EDT', _('Edición')
-    SPAM = 'SPM', _('Spam')
-    INSUFICIENT = 'INS', _('Información insuficiente')
-    NOT_RELATED = 'NPR', _('Oferta no relacionada con Python')
+    MODERATION = 'MODERATION', _('Moderación')
+    EDITION = 'EDITION', _('Edición')
+    SPAM = 'SPAM', _('Spam')
+    INSUFICIENT = 'INSUFICIENT', _('Información insuficiente')
+    NOT_RELATED = 'NOT_PYTHON', _('Oferta no relacionada con Python')
 
 
 class JobOfferComment(models.Model):
@@ -162,7 +163,7 @@ class JobOfferComment(models.Model):
     """
     text = models.TextField(verbose_name=_('Texto'))
     comment_type = models.CharField(
-        max_length=3, choices=CommentType.choices, verbose_name=_('Tipo'))
+        max_length=32, choices=CommentType.choices, verbose_name=_('Tipo'))
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_('Rango salarial')
     )
