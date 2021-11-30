@@ -26,12 +26,6 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
 EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '10'))
 EMAIL_FROM = os.environ.get('EMAIL_FROM', 'do_not_reply@python.org.ar')
 
-
-# Disqus
-DISQUS_API_KEY = os.environ.get("DISQUS_API_KEY", 'not_configured')
-DISQUS_WEBSITE_SHORTNAME = 'PyAr'
-
-
 PYAR_WIKI_URL = 'https://wiki.staging.python.org.ar'
 
 SENDFILE_BACKEND = "sendfile.backends.nginx"

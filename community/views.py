@@ -102,8 +102,7 @@ class FilterableList(MultipleObjectMixin):
                     self.excluded_tags.append(k[4:])
         return super(FilterableList, self).dispatch(request, *args, **kwargs)
 
-    def get_queryset(self):
-        obj_list = super(FilterableList, self).get_queryset()
+    def filter_queryset_tags(self, obj_list):
         included = self.included_tags
         excluded = self.excluded_tags
         if included:
@@ -111,6 +110,9 @@ class FilterableList(MultipleObjectMixin):
         if excluded:
             obj_list = obj_list.exclude(tags__slug__in=excluded).distinct()
         return obj_list
+
+    def get_queryset(self):
+        return self.filter_queryset_tags(super(FilterableList, self).get_queryset())
 
     def get_context_data(self, **kwargs):
         context = super(FilterableList, self).get_context_data(**kwargs)
