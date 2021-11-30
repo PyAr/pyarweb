@@ -74,7 +74,7 @@ class JobOfferForm(forms.ModelForm):
 
 
 class TagSearchSelect2(autocomplete.Select2):
-    autocomplete_function = 'your_autocomplete_function'
+    autocomplete_function = 'tag_search_select2'
 
     def get_context(self, name, value, attrs=None):
         if value:

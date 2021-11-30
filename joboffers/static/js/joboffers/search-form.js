@@ -1,6 +1,6 @@
 document.addEventListener('dal-init-function', function () {
 
-  yl.registerFunction( 'your_autocomplete_function', function ($, element) {
+  yl.registerFunction( 'tag_search_select2', function ($, element) {
     const $element = $(element);
 
     const ajax = {
