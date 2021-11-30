@@ -14,13 +14,12 @@ def test_valid_actions():
     """
     Assert that the validity of actions according to previous state.
     """
-    import ipdb; ipdb.set_trace()
 
     expected_actions_map = {
         PROFILE_ADMIN: {
 
         },
-        PROFILE_PUBLISHER{
+        PROFILE_PUBLISHER: {
 
         }
     }

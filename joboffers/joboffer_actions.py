@@ -41,7 +41,11 @@ CODE_APPROVE = 'approve'
 
 def register_action(func, profile):
     for state in func.valid_prev_states:
-        ACTIONS_PUBLISHER[state].append({func.code: func})
+        if profile == PROFILE_PUBLISHER:
+            ACTIONS_PUBLISHER[state].append({func.code: func})
+        else:
+            ACTIONS_ADMIN[state].append({func.code: func})
+
 
 
 def check_state(func):
@@ -113,9 +117,6 @@ register_action(deactivate, PROFILE_PUBLISHER)
 register_action(request_moderation, PROFILE_PUBLISHER)
 
 
-# To avoid any further magic on accessing the dict
-ACTIONS_PUBLISHER = dict(ACTIONS_PUBLISHER)
-
 #Cuando vaya a una vista para saber que tengo que mostrar o
 #que acciones tengo disponibles, por ejemplo, llamo al slug
 #y me dice que acciones puedo hacer con la oferta, por ejemplo
@@ -136,3 +137,8 @@ ACTIONS = {
     PROFILE_PUBLISHER: dict(ACTIONS_PUBLISHER),
     PROFILE_ADMIN: dict(ACTIONS_ADMIN),
 }
+
+
+def get_valid_actions(job_offer, user):
+    """Return valid action for user."""
+    ...
