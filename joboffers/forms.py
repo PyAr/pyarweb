@@ -73,8 +73,14 @@ class JobOfferForm(forms.ModelForm):
         }
 
 
-class CustomSelect2(autocomplete.Select2Multiple):
+class CustomSelect2(autocomplete.Select2):
     autocomplete_function = 'your_autocomplete_function'
+
+    def get_context(self, name, value, attrs=None):
+        if value:
+            self.choices.append((value, value))
+
+        return super().get_context(name, value, attrs)
 
     class Media:
         js = ('js/joboffers/search-form.js',)
@@ -89,8 +95,7 @@ class TagListWidget(forms.CheckboxSelectMultiple):
 
 
 class SearchForm(forms.Form):
-    q = forms.ModelChoiceField(
-        queryset=Tag.objects.all(),
+    q = forms.ChoiceField(
         widget=CustomSelect2(url='joboffers:tags-autocomplete')
     )
     tags = forms.ModelMultipleChoiceField(

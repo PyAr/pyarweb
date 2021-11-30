@@ -58,7 +58,6 @@ document.addEventListener('dal-init-function', function () {
       return $state;
     };
 
-
     $element.select2({
       debug: true,
       containerCssClass: ':all:',
@@ -68,7 +67,6 @@ document.addEventListener('dal-init-function', function () {
       placeholder: $element.attr('data-placeholder') || '',
       language: $element.attr('data-autocomplete-light-language'),
       minimumInputLength: 0,
-      allowClear: !$element.is('[required]'),
       ajax: ajax,
       with: null,
       templateResult: renderOption
