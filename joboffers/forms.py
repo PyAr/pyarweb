@@ -73,7 +73,7 @@ class JobOfferForm(forms.ModelForm):
         }
 
 
-class CustomSelect2(autocomplete.Select2):
+class TagSearchSelect2(autocomplete.Select2):
     autocomplete_function = 'your_autocomplete_function'
 
     def get_context(self, name, value, attrs=None):
@@ -96,7 +96,7 @@ class TagListWidget(forms.CheckboxSelectMultiple):
 
 class SearchForm(forms.Form):
     q = forms.ChoiceField(
-        widget=CustomSelect2(url='joboffers:tags-autocomplete')
+        widget=TagSearchSelect2(url='joboffers:tags-autocomplete')
     )
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
