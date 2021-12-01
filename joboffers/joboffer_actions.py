@@ -3,29 +3,8 @@ from functools import wraps
 
 from .models import OfferState
 
-# def check_ownership(joboffer, current_editor, permission_required):
-# TRANSITIONS_PUBLISHER = defaultdict(dict)
-#
-# def check_state(valid_states, next_state):
-#    def callable(func):
-#        @wraps(func)
-#        def wrapped(job_offer):
-#
-#            if job_offer.state not in valid_states:
-#                raise ValueError('Inconsistent state')
-#            else:
-#                result = func(job_offer)
-#                return result
-#        return wrapped
-#
-#    return callable
-#
-# To check for permissions on the view, use the django decorator, pass user test_transition_path\
-# Create a function to specifically chec for that
-# https://docs.djangoproject.com/es/2.2/_modules/django/contrib/auth/decorators/
-
-ACTIONS_PUBLISHER = defaultdict(list)
-ACTIONS_ADMIN = defaultdict(list)
+ACTIONS_PUBLISHER = defaultdict(dict)
+ACTIONS_ADMIN = defaultdict(dict)
 
 PROFILE_PUBLISHER = 'publisher'
 PROFILE_ADMIN = 'admin'
@@ -42,10 +21,9 @@ CODE_APPROVE = 'approve'
 def register_action(func, profile):
     for state in func.valid_prev_states:
         if profile == PROFILE_PUBLISHER:
-            ACTIONS_PUBLISHER[state].append({func.code: func})
+            ACTIONS_PUBLISHER[state][func.code] = func
         else:
-            ACTIONS_ADMIN[state].append({func.code: func})
-
+            ACTIONS_ADMIN[state][func.code] = func
 
 
 def check_state(func):
@@ -116,19 +94,6 @@ register_action(edit, PROFILE_PUBLISHER)
 register_action(deactivate, PROFILE_PUBLISHER)
 register_action(request_moderation, PROFILE_PUBLISHER)
 
-
-#Cuando vaya a una vista para saber que tengo que mostrar o
-#que acciones tengo disponibles, por ejemplo, llamo al slug
-#y me dice que acciones puedo hacer con la oferta, por ejemplo
-#e aparece el boton editar. Tambien según el estado deberia
-#mostrar algun que otro campo mas, pero esto deberia estar configurado
-#en la vista o el template, pueden que sea mostrar o no cosas, directamente
-#pasandole show_comment=True por ejemplo o show_cartel_rojo=False. Segun
-#la vista en la que se este, y asi evitar tanta programacion en el template
-#
-#Una vez apretada la acción se manda a guardar, se podria apendear un mensaje
-#al contexto y luego simplemente se recarga la pagina. Ver si conviene mandar el
-#request a las transiciones para poder hacer esto o es ensuciar mucho
 #
 #Tambien estaria bueno poder decorar con un log para poder guardar el historial
 #
@@ -139,6 +104,25 @@ ACTIONS = {
 }
 
 
+def _get_user_profile(user):
+    """Get profile from user."""
+    return PROFILE_PUBLISHER
+
+
+def _is_owner(job_offer, user):
+    """Check ownership of a job offfer."""
+    return True
+
+
 def get_valid_actions(job_offer, user):
     """Return valid action for user."""
-    ...
+    profile = _get_user_profile(user)
+    state = job_offer.state
+
+    if profile == PROFILE_ADMIN:
+        return ACTIONS_ADMIN[state]
+    else:
+        if _is_owner(job_offer, user):
+            return ACTIONS_PUBLISHER[state]
+        else:
+            raise ValueError()
