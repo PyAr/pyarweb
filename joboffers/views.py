@@ -1,5 +1,4 @@
 from django.shortcuts import reverse
-from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, RedirectView
 from django.views.generic.detail import DetailView
@@ -17,7 +16,9 @@ from .models import JobOffer
 class JobOfferCreateView(CreateView):
     model = JobOffer
     form_class = JobOfferForm
-    success_url = reverse_lazy("joboffers:admin")
+
+    def get_success_url(self):
+        return reverse("joboffers:view", kwargs={'slug': self.object.slug})
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user

@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
 
 from .factories import JobOfferFactory
-from ..models import JobOffer
+from ..models import JobOffer, OfferState
 
 
 @pytest.fixture(name='client')
@@ -49,7 +49,13 @@ def test_joboffer_creation_with_all_fields_ok(logged_client):
 
     response = client.post(ADD_URL, job_data)
 
-    assert 302 == response.status_code
-    assert ADMIN_URL == response.url
     assert 1 == JobOffer.objects.count()
-    # TODO: Test for deactivated state
+
+    joboffer = JobOffer.objects.first()
+
+    # Asserts redirection to the joboffer status page
+    assert 302 == response.status_code
+    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+
+    # Deactivated should be the first state
+    assert OfferState.DEACTIVATED == joboffer.state

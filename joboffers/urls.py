@@ -24,7 +24,7 @@ urlpatterns = [
       name='reactivate'
     ),
     re_path(
-      r'^(?P<slug>[\w-]+)/pedir-moderacion/$', login_required(JobOfferReactivateView.as_view()),
+      r'^(?P<slug>[\w-]+)/solicitar-moderacion/$', login_required(JobOfferReactivateView.as_view()),
       name='request_moderation'
     ),
 
