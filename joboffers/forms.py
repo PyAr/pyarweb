@@ -37,6 +37,8 @@ class JobOfferForm(forms.ModelForm):
             'salary',
             'description',
         )
+        self.helper.attrs = {"novalidate": ""}
+
         self.helper.add_input(Submit('submit', _('Guardar')))
         self.helper.add_input(
             Reset('reset', _('Limpiar'), css_class='btn-default')
