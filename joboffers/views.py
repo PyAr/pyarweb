@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, RedirectView
@@ -7,30 +8,23 @@ from django.views.generic.edit import CreateView, UpdateView
 from pycompanies.models import Company
 from .forms import JobOfferForm
 from .joboffer_actions import (
-    CODE_EDIT, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
-    CODE_REQUEST_MODERATION, CODE_APPROVE
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
+    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions, validate_action
 )
-from .models import JobOffer
-
-
-class JobOfferCreateView(CreateView):
-    model = JobOffer
-    form_class = JobOfferForm
-
-    def get_success_url(self):
-        return reverse("joboffers:view", kwargs={'slug': self.object.slug})
-
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        form.instance.modified_by = self.request.user
-        return super().form_valid(form)
+from .models import JobOffer, JobOfferComment
 
 
 ACTION_BUTTONS = {
+    CODE_HISTORY: {
+        "target_url": 'joboffers:history',
+        "text": _('Historial'),
+        "css_classes": ["btn-warning"],
+        "icon_class": "glyphicon-time"
+    },
     CODE_EDIT: {
         "target_url": 'joboffers:edit',
         "text": _('Editar'),
-        "css_classes": ["btn-success"],
+        "css_classes": ["btn-default"],
         "icon_class": "glyphicon-pencil"
     },
     CODE_REJECT: {
@@ -39,12 +33,6 @@ ACTION_BUTTONS = {
         "css_classes": ["btn-danger"],
         "icon_class": "glyphicon-thumbs-down"
     },
-    # CODE_COMMENT: {
-    #     "target_url": 'joboffers:edit',
-    #     "text": _('Comentar'),
-    #     "css_classes": ["btn-default"],
-    #     "icon_class": "glyphicon-comment"
-    # },
     CODE_REACTIVATE: {
         "target_url": 'joboffers:reactivate',
         "text": _('Volver a Activar'),
@@ -59,8 +47,8 @@ ACTION_BUTTONS = {
     },
     CODE_REQUEST_MODERATION: {
         "target_url": 'joboffers:request_moderation',
-        "text": _('Solicitar Moderación'),
-        "css_classes": ["btn-secondary"],
+        "text": _('Confirmar'),
+        "css_classes": ["btn-success"],
         "icon_class": "glyphicon-eye-open"
     },
     CODE_APPROVE: {
@@ -72,12 +60,30 @@ ACTION_BUTTONS = {
 }
 
 
+class JobOfferCreateView(CreateView):
+    model = JobOffer
+    form_class = JobOfferForm
+
+    def get(self, request, *args, **kwargs):
+        if not validate_action(CODE_CREATE, request.user):
+            return PermissionDenied()
+
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse("joboffers:view", kwargs={'slug': self.object.slug})
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.modified_by = self.request.user
+        return super().form_valid(form)
+
+
 class JobOfferDetailView(DetailView):
     model = JobOffer
 
     def get_action_buttons(self):
-        # TODO: call get_valid_actions() instead
-        valid_actions = [CODE_EDIT, CODE_REJECT]
+        valid_actions = get_valid_actions(self.object, self.request.user)
 
         return [ACTION_BUTTONS[action_name] for action_name in valid_actions]
 
@@ -136,3 +142,8 @@ class JobOfferDeactivateView(RedirectView):
 
 class JobOfferRequestModerationView(RedirectView):
     pattern_name = 'joboffers:view'
+
+
+class JobOfferHistoryView(ListView):
+    model = JobOfferComment
+    template_name = "joboffers/history.html"

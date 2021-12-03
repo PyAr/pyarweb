@@ -1,6 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import wraps
+from typing import Literal
 
 from .models import OfferState
 
@@ -10,6 +11,7 @@ ACTIONS_ADMIN = defaultdict(dict)
 PROFILE_PUBLISHER = "publisher"
 PROFILE_ADMIN = "admin"
 
+CODE_CREATE = "create"
 CODE_EDIT = "edit"
 CODE_HISTORY = "history"
 CODE_REJECT = "reject"
@@ -18,6 +20,11 @@ CODE_REACTIVATE = "reactivate"
 CODE_DEACTIVATE = "deactivate"
 CODE_REQUEST_MODERATION = "reqmod"
 CODE_APPROVE = "approve"
+
+ACTION = Literal[
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_COMMENT, CODE_REACTIVATE,
+    CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE
+]
 
 
 def register_action(func, profile):
@@ -133,7 +140,7 @@ def _is_owner(job_offer, user):
     return True
 
 
-def validate_action(job_offer, user, action_code):
+def validate_action(action_code: ACTION, user, job_offer=None):
     return True
 
 

@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import re_path
 from .views import (
-  JobOfferAdminView, JobOfferCreateView, JobOfferDetailView, JobOfferUpdateView, JobOfferRejectView,
-  JobOfferAcceptView, JobOfferReactivateView
+  JobOfferAdminView, JobOfferCreateView, JobOfferDetailView, JobOfferHistoryView,
+  JobOfferUpdateView, JobOfferRejectView, JobOfferAcceptView, JobOfferReactivateView
 )
 
 
@@ -27,7 +27,10 @@ urlpatterns = [
       r'^(?P<slug>[\w-]+)/solicitar-moderacion/$', login_required(JobOfferReactivateView.as_view()),
       name='request_moderation'
     ),
-
+    re_path(
+      r'^(?P<slug>[\w-]+)/historial/$', login_required(JobOfferHistoryView.as_view()),
+      name='history'
+    ),
     re_path(r'^(?P<slug>[\w-]+)/$', JobOfferDetailView.as_view(), name='view'),
     re_path(
       r'^(?P<slug>[\w-]+)/editar$', login_required(JobOfferUpdateView.as_view()),

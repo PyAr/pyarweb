@@ -40,11 +40,6 @@
       </div>
     </div>
     <div class="pull-right">
-      <a href="{% url "joboffers:edit" object.slug %}" class="btn btn-warning" >
-        Historial
-        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-      </a>
-
       {% for button in action_buttons %}
       <a href="{% url button.target_url object.slug %}" class="btn {{ button.css_classes|join:' ' }}" >
         {{ button.text }}
