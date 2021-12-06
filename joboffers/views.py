@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
@@ -60,9 +62,13 @@ ACTION_BUTTONS = {
 }
 
 
-class JobOfferCreateView(CreateView):
+class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = JobOffer
     form_class = JobOfferForm
+    success_message = _(
+        "Oferta creada correctamente. A continuación debe confirmarla para que sea revisada por el"
+        "equipo de moderación y quede activa."
+    )
 
     def get(self, request, *args, **kwargs):
         if not validate_action(CODE_CREATE, request.user):
@@ -79,7 +85,7 @@ class JobOfferCreateView(CreateView):
         return super().form_valid(form)
 
 
-class JobOfferDetailView(DetailView):
+class JobOfferDetailView(LoginRequiredMixin, DetailView):
     model = JobOffer
 
     def get_action_buttons(self):
@@ -93,7 +99,7 @@ class JobOfferDetailView(DetailView):
         return ctx
 
 
-class JobOfferUpdateView(UpdateView):
+class JobOfferUpdateView(LoginRequiredMixin, UpdateView):
     model = JobOffer
     form_class = JobOfferForm
     success_url = "joboffers:view"
@@ -107,7 +113,7 @@ class JobOfferUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class JobOfferAdminView(ListView):
+class JobOfferAdminView(LoginRequiredMixin, ListView):
     template_name = 'joboffers/joboffer_admin.html'
     model = JobOffer
 
@@ -124,26 +130,26 @@ class JobOfferAdminView(ListView):
         return ctx
 
 
-class JobOfferRejectView(RedirectView):
+class JobOfferRejectView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferAcceptView(RedirectView):
+class JobOfferAcceptView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferReactivateView(RedirectView):
+class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferDeactivateView(RedirectView):
+class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferRequestModerationView(RedirectView):
+class JobOfferRequestModerationView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferHistoryView(ListView):
+class JobOfferHistoryView(LoginRequiredMixin, ListView):
     model = JobOfferComment
     template_name = "joboffers/history.html"

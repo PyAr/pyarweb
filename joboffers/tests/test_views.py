@@ -1,6 +1,7 @@
 import factory
 import pytest
 
+from django.contrib.messages import get_messages as contrib_get_messages
 from django.test import Client
 from django.urls import reverse_lazy
 
@@ -8,6 +9,14 @@ from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
 
 from .factories import JobOfferFactory
 from ..models import JobOffer, OfferState
+
+
+def get_plain_messages(request):
+    """
+    Gets a plain text message from a given request/response object. Useful for testing messages
+    """
+    messages = contrib_get_messages(request.wsgi_request)
+    return [m.message for m in messages]
 
 
 @pytest.fixture(name='client')
@@ -59,3 +68,6 @@ def test_joboffer_creation_with_all_fields_ok(logged_client):
 
     # Deactivated should be the first state
     assert OfferState.DEACTIVATED == joboffer.state
+
+    obtained_messages = get_plain_messages(response)
+    assert obtained_messages[0].startswith('Oferta creada correctamente.')
