@@ -11,6 +11,12 @@ from .factories import JobOfferFactory
 from ..models import JobOffer, OfferState
 
 
+ADD_URL = reverse_lazy('joboffers:add')
+ADMIN_URL = reverse_lazy('joboffers:admin')
+APPROVE_URL = reverse_lazy('joboffers:approve')
+REQUEST_MODERATION_URL = 'joboffers:request_moderation'
+
+
 def get_plain_messages(request):
     """
     Gets a plain text message from a given request/response object. Useful for testing messages
@@ -34,10 +40,6 @@ def create_logged_client(user):
     client = Client()
     client.login(username=user.username, password=DEFAULT_USER_PASSWORD)
     return client
-
-
-ADD_URL = reverse_lazy('joboffers:add')
-ADMIN_URL = reverse_lazy('joboffers:admin')
 
 
 @pytest.mark.django_db
@@ -71,3 +73,28 @@ def test_joboffer_creation_with_all_fields_ok(logged_client):
 
     obtained_messages = get_plain_messages(response)
     assert obtained_messages[0].startswith('Oferta creada correctamente.')
+
+
+@pytest.mark.django_db
+def test_joboffer_request_moderation_ok(logged_client):
+    # TODO: Use a moderator user as logged user
+    client = logged_client
+    joboffer = JobOfferFactory.create()
+
+    target_url = reverse_lazy(REQUEST_MODERATION_URL, kwargs={'slug': joboffer.slug})
+
+    assert 1 == JobOffer.objects.count()
+    assert OfferState.DEACTIVATED == joboffer.state
+    # end preconditions
+
+    response = client.get(target_url)
+
+    # Asserts redirection to the joboffer status page
+    assert 302 == response.status_code
+    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+
+    messages = get_plain_messages(response)
+    assert messages[0].startswith("Oferta enviada a moderación")
+
+    joboffer = JobOffer.objects.first()
+    assert OfferState.MODERATION == joboffer.state

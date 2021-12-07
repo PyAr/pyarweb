@@ -1,10 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import ListView, RedirectView
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView, RedirectView, View
+from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
 from pycompanies.models import Company
@@ -13,7 +15,7 @@ from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions, validate_action
 )
-from .models import JobOffer, JobOfferComment
+from .models import JobOffer, JobOfferComment, OfferState
 
 
 ACTION_BUTTONS = {
@@ -146,8 +148,27 @@ class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferRequestModerationView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+class JobOfferRequestModerationView(LoginRequiredMixin, SingleObjectMixin, View):
+    model = JobOffer
+    redirect_to = 'joboffers:view'
+    success_message = _(
+        "Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar"
+        "activa si es correcta. Revise está misma página para ver el estado."
+    )
+
+    def get(self, request, *args, **kwargs):
+        joboffer = self.get_object()
+
+        if not validate_action(CODE_REQUEST_MODERATION, request.user, joboffer):
+            raise PermissionDenied()
+
+        joboffer.state = OfferState.MODERATION
+        joboffer.save()
+
+        messages.success(request, self.success_message)
+
+        target_url = reverse(self.redirect_to, args=args, kwargs=kwargs)
+        return HttpResponseRedirect(target_url)
 
 
 class JobOfferHistoryView(LoginRequiredMixin, ListView):
