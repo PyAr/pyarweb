@@ -22,7 +22,7 @@ ACTION_BUTTONS = {
     CODE_HISTORY: {
         "target_url": 'joboffers:history',
         "text": _('Historial'),
-        "css_classes": ["btn-warning"],
+        "css_classes": ["btn-info"],
         "icon_class": "glyphicon-time"
     },
     CODE_EDIT: {
@@ -107,11 +107,13 @@ class JobOfferUpdateView(LoginRequiredMixin, UpdateView):
     success_url = "joboffers:view"
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('joboffers:view', kwargs=self.kwargs)
+        return reverse(self.success_url, args=args, kwargs=kwargs)
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
+        form.instance.state = OfferState.MODERATION
+        # TODO: Avoid changing the state if no fields changed
         return super().form_valid(form)
 
 
@@ -158,8 +160,9 @@ class JobOfferRejectView(LoginRequiredMixin, RedirectView):
     redirect_to_pattern = 'joboffers:view'
 
 
-class JobOfferAcceptView(LoginRequiredMixin, RedirectView):
+class JobOfferAcceptView(LoginRequiredMixin, TransitionView):
     redirect_to_pattern = 'joboffers:view'
+    success_message = _('Oferta aceptada y activada. En caso de error puede rechazarla.')
 
     def update_object(self, offer):
         offer.state = OfferState.ACTIVE

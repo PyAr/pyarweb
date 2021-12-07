@@ -57,14 +57,14 @@ class Action:
 edit = Action(
     verbose_name="Editar",
     code=CODE_EDIT,
-    valid_prev_states=(OfferState.DEACTIVATED, OfferState.REJECTED, OfferState.EXPIRED),
+    valid_prev_states=(OfferState.ACTIVE, OfferState.DEACTIVATED, OfferState.REJECTED, OfferState.EXPIRED),
 )
 
 
 reject = Action(
     verbose_name="Rechazar",
     code=CODE_REJECT,
-    valid_prev_states=(OfferState.MODERATION,),
+    valid_prev_states=(OfferState.ACTIVE, OfferState.MODERATION,),
 )
 
 
@@ -146,13 +146,18 @@ def validate_action(action_code: ACTION, user, job_offer=None):
 
 def get_valid_actions(job_offer, user):
     """Return valid action for user."""
-    profile = _get_user_profile(user)
     state = job_offer.state
+    # TODO: Implement profile states, now returning all only for testing.
+    return ACTIONS_ADMIN[state] | ACTIONS_PUBLISHER[state]
 
-    if profile == PROFILE_ADMIN:
-        return ACTIONS_ADMIN[state]
-    else:
-        if _is_owner(job_offer, user):
-            return ACTIONS_PUBLISHER[state]
-        else:
-            raise ValueError()
+
+    # profile = _get_user_profile(user)
+    # state = job_offer.state
+
+    # if profile == PROFILE_ADMIN:
+    #     return ACTIONS_ADMIN[state]
+    # else:
+    #     if _is_owner(job_offer, user):
+    #         return ACTIONS_PUBLISHER[state]
+    #     else:
+    #         raise ValueError()
