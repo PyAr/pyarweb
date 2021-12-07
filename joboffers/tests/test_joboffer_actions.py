@@ -1,7 +1,7 @@
 import pytest
 
 from ..joboffer_actions import (
-    ACTIONS, PROFILE_ADMIN, PROFILE_PUBLISHER, approve, comment, deactivate, edit, get_history,
+    ACTIONS, PROFILE_ADMIN, PROFILE_PUBLISHER, approve, deactivate, edit, get_history,
     reactivate, reject, request_moderation
 )
 from ..models import OfferState
@@ -14,7 +14,7 @@ def test_joboffer_actions():
     expected_actions_admin = {
             OfferState.MODERATION: {
                 approve.code: approve,
-                comment.code: comment,
+                # comment.code: comment,
                 reject.code: reject,
             }
         }

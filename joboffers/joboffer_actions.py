@@ -15,14 +15,14 @@ CODE_CREATE = "create"
 CODE_EDIT = "edit"
 CODE_HISTORY = "history"
 CODE_REJECT = "reject"
-CODE_COMMENT = "comment"
+# CODE_COMMENT = "comment"
 CODE_REACTIVATE = "reactivate"
 CODE_DEACTIVATE = "deactivate"
 CODE_REQUEST_MODERATION = "reqmod"
 CODE_APPROVE = "approve"
 
 ACTION = Literal[
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_COMMENT, CODE_REACTIVATE,
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE,
     CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE
 ]
 
@@ -68,11 +68,11 @@ reject = Action(
 )
 
 
-comment = Action(
-    verbose_name="Comentar",
-    code=CODE_COMMENT,
-    valid_prev_states=(OfferState.MODERATION,),
-)
+# comment = Action(
+#     verbose_name="Comentar",
+#     code=CODE_COMMENT,
+#     valid_prev_states=(OfferState.MODERATION,),
+# )
 
 
 reactivate = Action(
@@ -121,7 +121,7 @@ register_action(get_history, PROFILE_PUBLISHER)
 
 register_action(reject, PROFILE_ADMIN)
 register_action(approve, PROFILE_ADMIN)
-register_action(comment, PROFILE_ADMIN)
+# register_action(comment, PROFILE_ADMIN)
 
 
 ACTIONS = {
@@ -132,7 +132,7 @@ ACTIONS = {
 
 def _get_user_profile(user):
     """Get profile from user."""
-    return PROFILE_PUBLISHER
+    return PROFILE_ADMIN
 
 
 def _is_owner(job_offer, user):

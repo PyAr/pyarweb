@@ -132,12 +132,38 @@ class JobOfferAdminView(LoginRequiredMixin, ListView):
         return ctx
 
 
+class TransitionView(SingleObjectMixin, View):
+    model = JobOffer
+    redirect_to_pattern: str
+    success_message: str
+
+    def update_object(self):
+        raise NotImplementedError()
+
+    def get(self, request, *args, **kwargs):
+        offer = self.get_object()
+
+        if not validate_action(CODE_REQUEST_MODERATION, request.user, offer):
+            raise PermissionDenied()
+
+        self.update_object(offer)
+
+        messages.success(request, self.success_message)
+
+        target_url = reverse(self.redirect_to_pattern, args=args, kwargs=kwargs)
+        return HttpResponseRedirect(target_url)
+
+
 class JobOfferRejectView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+    redirect_to_pattern = 'joboffers:view'
 
 
 class JobOfferAcceptView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+    redirect_to_pattern = 'joboffers:view'
+
+    def update_object(self, offer):
+        offer.state = OfferState.ACTIVE
+        offer.save()
 
 
 class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
@@ -148,27 +174,16 @@ class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferRequestModerationView(LoginRequiredMixin, SingleObjectMixin, View):
-    model = JobOffer
-    redirect_to = 'joboffers:view'
+class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
+    redirect_to_pattern = 'joboffers:view'
     success_message = _(
         "Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar"
         "activa si es correcta. Revise está misma página para ver el estado."
     )
 
-    def get(self, request, *args, **kwargs):
-        joboffer = self.get_object()
-
-        if not validate_action(CODE_REQUEST_MODERATION, request.user, joboffer):
-            raise PermissionDenied()
-
-        joboffer.state = OfferState.MODERATION
-        joboffer.save()
-
-        messages.success(request, self.success_message)
-
-        target_url = reverse(self.redirect_to, args=args, kwargs=kwargs)
-        return HttpResponseRedirect(target_url)
+    def update_object(self, offer):
+        offer.state = OfferState.MODERATION
+        offer.save()
 
 
 class JobOfferHistoryView(LoginRequiredMixin, ListView):
