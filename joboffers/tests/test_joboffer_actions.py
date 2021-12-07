@@ -1,14 +1,10 @@
 import pytest
 
-from ..joboffer_actions import (ACTIONS, CODE_APPROVE, CODE_COMMENT,
-                                CODE_DEACTIVATE, CODE_EDIT, CODE_REACTIVATE,
-                                CODE_REJECT, CODE_REQUEST_MODERATION,
-                                PROFILE_ADMIN, PROFILE_PUBLISHER, approve,
-                                comment, deactivate, edit, get_history,
-                                get_valid_actions, reactivate, reject,
-                                request_moderation)
+from ..joboffer_actions import (
+    ACTIONS, PROFILE_ADMIN, PROFILE_PUBLISHER, approve, comment, deactivate, edit, get_history,
+    reactivate, reject, request_moderation
+)
 from ..models import OfferState
-from .factories import JobOfferFactory
 
 
 def test_joboffer_actions():
@@ -16,7 +12,7 @@ def test_joboffer_actions():
     Assert the validity of actions according to previous state.
     """
     expected_actions_admin = {
-            OfferState.MODERATION:{
+            OfferState.MODERATION: {
                 approve.code: approve,
                 comment.code: comment,
                 reject.code: reject,
