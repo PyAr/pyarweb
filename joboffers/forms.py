@@ -87,3 +87,7 @@ class JobOfferCommentForm(forms.ModelForm):
     class Meta:
         model = JobOfferComment
         fields = ('joboffer', 'comment_type', 'text')
+        labels = {
+            'comment_type': _('Motivo de Rechazo'),
+            'text': _('Comentario')
+        }
