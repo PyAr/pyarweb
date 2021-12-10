@@ -7,13 +7,14 @@ from django.urls import reverse
 
 from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
 
-from .factories import JobOfferFactory
+from .factories import JobOfferFactory, JobOfferCommentFactory
 from ..models import JobOffer, OfferState
 
 
 ADD_URL = 'joboffers:add'
 ADMIN_URL = 'joboffers:admin'
 APPROVE_URL = 'joboffers:approve'
+REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
 
 
@@ -124,3 +125,30 @@ def test_joboffer_approve_ok(logged_client):
 
     joboffer = JobOffer.objects.first()
     assert OfferState.ACTIVE == joboffer.state
+
+
+@pytest.mark.django_db
+def test_joboffer_reject_ok(logged_client):
+    # TODO: Use a moderator user as logged user
+    client = logged_client
+    joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
+
+    target_url = reverse(REJECT_URL, kwargs={'slug': joboffer.slug})
+
+    assert 1 == JobOffer.objects.count()
+    assert OfferState.MODERATION == joboffer.state
+    # end preconditions check
+
+    comment_data = factory.build(dict, joboffer=joboffer.id, FACTORY_CLASS=JobOfferCommentFactory)
+
+    response = client.post(target_url, data=comment_data)
+
+    # Asserts redirection to the joboffer status page
+    assert 302 == response.status_code
+    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+
+    messages = get_plain_messages(response)
+    assert messages[0].startswith("Oferta rechazada.")
+
+    joboffer = JobOffer.objects.first()
+    assert OfferState.DEACTIVATED == joboffer.state

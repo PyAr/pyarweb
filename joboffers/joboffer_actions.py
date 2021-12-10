@@ -15,7 +15,6 @@ CODE_CREATE = "create"
 CODE_EDIT = "edit"
 CODE_HISTORY = "history"
 CODE_REJECT = "reject"
-# CODE_COMMENT = "comment"
 CODE_REACTIVATE = "reactivate"
 CODE_DEACTIVATE = "deactivate"
 CODE_REQUEST_MODERATION = "reqmod"
@@ -66,15 +65,8 @@ edit = Action(
 reject = Action(
     verbose_name="Rechazar",
     code=CODE_REJECT,
-    valid_prev_states=(OfferState.ACTIVE, OfferState.MODERATION,),
+    valid_prev_states=(OfferState.DEACTIVATED, OfferState.ACTIVE, OfferState.MODERATION,),
 )
-
-
-# comment = Action(
-#     verbose_name="Comentar",
-#     code=CODE_COMMENT,
-#     valid_prev_states=(OfferState.MODERATION,),
-# )
 
 
 reactivate = Action(
@@ -100,7 +92,7 @@ request_moderation = Action(
 approve = Action(
     verbose_name="Aprobar",
     code=CODE_APPROVE,
-    valid_prev_states=(OfferState.MODERATION,),
+    valid_prev_states=(OfferState.DEACTIVATED, OfferState.MODERATION,),
 )
 
 

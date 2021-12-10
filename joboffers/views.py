@@ -58,7 +58,7 @@ ACTION_BUTTONS = {
     CODE_APPROVE: {
         "target_url": 'joboffers:approve',
         "text": _('Aprobar'),
-        "css_classes": ["btn-default"],
+        "css_classes": ["btn-success"],
         "icon_class": "glyphicon-pencil"
     }
 }
@@ -164,8 +164,7 @@ class JobOfferRejectView(
     form_class = JobOfferCommentForm
     template_name = 'joboffers/joboffer_reject.html'
     success_message = _(
-        "Oferta creada correctamente. A continuación debe confirmarla para que sea revisada por el"
-        "equipo de moderación y quede activa."
+        "Oferta rechazada. Se marca como desactivada para que el publicador la revise. "
     )
 
     def get_object(self, queryset=None):
@@ -182,13 +181,16 @@ class JobOfferRejectView(
         initial['joboffer'] = self.object
         return initial
 
-    def get_form(self, form_class=None):
-        return super().get_form(form_class)
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.modified_by = self.request.user
+        self.object.state = OfferState.DEACTIVATED
+        self.object.save()
+        form.save()
+        return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not validate_action(CODE_CREATE, request.user):
-            return PermissionDenied()
 
         ctx = self.get_context_data()
         return self.render_to_response(ctx)

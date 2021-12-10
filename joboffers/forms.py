@@ -82,6 +82,8 @@ class JobOfferCommentForm(forms.ModelForm):
 
         self.helper.add_input(Submit('submit', _('Guardar')))
 
+    joboffer = forms.ModelChoiceField(queryset=JobOffer.objects.all(), widget=forms.HiddenInput())
+
     class Meta:
         model = JobOfferComment
         fields = ('joboffer', 'comment_type', 'text')
