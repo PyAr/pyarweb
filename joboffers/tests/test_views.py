@@ -3,7 +3,7 @@ import pytest
 
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.test import Client
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 
 from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
 

@@ -5,12 +5,12 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import ListView, RedirectView, View
+from django.views.generic import ListView, RedirectView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
 from pycompanies.models import Company
-from .forms import JobOfferForm
+from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions, validate_action
@@ -156,8 +156,54 @@ class TransitionView(SingleObjectMixin, View):
         return HttpResponseRedirect(target_url)
 
 
-class JobOfferRejectView(LoginRequiredMixin, RedirectView):
-    redirect_to_pattern = 'joboffers:view'
+class JobOfferRejectView(
+        LoginRequiredMixin, SuccessMessageMixin, SingleObjectMixin, FormView
+):
+    action_code = CODE_REQUEST_MODERATION
+    model = JobOffer  # SingleObjectMixin needs this to retrieve the joboffer
+    form_class = JobOfferCommentForm
+    template_name = 'joboffers/joboffer_reject.html'
+    success_message = _(
+        "Oferta creada correctamente. A continuación debe confirmarla para que sea revisada por el"
+        "equipo de moderación y quede activa."
+    )
+
+    def get_object(self, queryset=None):
+        offer = super().get_object(queryset)
+
+        # TODO: Move this to a mixin
+        if not validate_action(self.action_code, self.request.user, offer):
+            raise PermissionDenied()
+
+        return offer
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['joboffer'] = self.object
+        return initial
+
+    def get_form(self, form_class=None):
+        return super().get_form(form_class)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not validate_action(CODE_CREATE, request.user):
+            return PermissionDenied()
+
+        ctx = self.get_context_data()
+        return self.render_to_response(ctx)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("joboffers:view", kwargs={'slug': self.object.slug})
 
 
 class JobOfferAcceptView(LoginRequiredMixin, TransitionView):

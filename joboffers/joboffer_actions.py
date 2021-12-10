@@ -57,7 +57,9 @@ class Action:
 edit = Action(
     verbose_name="Editar",
     code=CODE_EDIT,
-    valid_prev_states=(OfferState.ACTIVE, OfferState.DEACTIVATED, OfferState.REJECTED, OfferState.EXPIRED),
+    valid_prev_states=(
+        OfferState.ACTIVE, OfferState.DEACTIVATED, OfferState.REJECTED, OfferState.EXPIRED
+    ),
 )
 
 
@@ -149,8 +151,6 @@ def get_valid_actions(job_offer, user):
     state = job_offer.state
     # TODO: Implement profile states, now returning all only for testing.
     return ACTIONS_ADMIN[state] | ACTIONS_PUBLISHER[state]
-
-
     # profile = _get_user_profile(user)
     # state = job_offer.state
 

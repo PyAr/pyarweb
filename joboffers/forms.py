@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from .models import JobOffer
+from .models import JobOffer, JobOfferComment
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
@@ -70,3 +70,18 @@ class JobOfferForm(forms.ModelForm):
             'salary': '',
             'description': 'Descripción de la oferta'
         }
+
+
+class JobOfferCommentForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.attrs = {"novalidate": ""}
+
+        self.helper.add_input(Submit('submit', _('Guardar')))
+
+    class Meta:
+        model = JobOfferComment
+        fields = ('joboffer', 'comment_type', 'text')
