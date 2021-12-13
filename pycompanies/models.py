@@ -29,6 +29,19 @@ class Company(TimeStampedModel):
         return u'%s' % self.name
 
 
+class UserCompanyProfile(models.Model):
+    """Company data for a User."""
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                related_name='company',
+                                on_delete=models.CASCADE)
+    company = models.ForeignKey(Company,
+                                related_name='users',
+                                on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.username}: {self.company.name}'
+
+
 #  SIGNALS
 
 @receiver(post_delete, sender=Company)
