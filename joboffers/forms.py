@@ -74,27 +74,39 @@ class JobOfferForm(forms.ModelForm):
 
 
 class TagSearchSelect2(autocomplete.Select2):
+    """
+    Custom version of Select2 autocomplete.
+
+    It adds some js logic to autocomplete with tags and append them to the TagListWidget.
+    It also fixes the .choices to load the current search value.
+    """
     autocomplete_function = 'tag_search_select2'
 
     def get_context(self, name, value, attrs=None):
+        """
+        If there is a value, it add is to the choices list so it can be rendered approietly
+        """
         if value:
             self.choices.append((value, value))
 
         return super().get_context(name, value, attrs)
 
     class Media:
-        js = ('js/joboffers/search-form.js',)
-
-
-class TagListWidget(forms.CheckboxSelectMultiple):
-    template_name = 'joboffers/widgets/tag_list.html'
-
-    class Media:
         css = {'screen': ('css/select2-bootstrap.min.css',)}
         js = ('js/select2-bootstrap-theme.js',)
 
 
+class TagListWidget(forms.CheckboxSelectMultiple):
+    """
+    Renders a list of values as checkboxes with boostrap's label style
+    """
+    template_name = 'joboffers/widgets/tag_list.html'
+
+
 class SearchForm(forms.Form):
+    """
+    Form to validate search by text and tags.
+    """
     q = forms.ChoiceField(
         widget=TagSearchSelect2(url='joboffers:tags-autocomplete')
     )
@@ -103,3 +115,6 @@ class SearchForm(forms.Form):
         required=False,
         widget=TagListWidget()
     )
+
+    class Media:
+        js = ('js/joboffers/search-form.js',)
