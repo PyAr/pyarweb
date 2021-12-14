@@ -5,11 +5,14 @@ from typing import Literal
 
 from .models import OfferState
 
+
 ACTIONS_PUBLISHER = defaultdict(dict)
 ACTIONS_ADMIN = defaultdict(dict)
+ACTIONS_GUEST = defaultdict(dict)
 
-PROFILE_PUBLISHER = "publisher"
-PROFILE_ADMIN = "admin"
+ROLE_PUBLISHER = "publisher"
+ROLE_ADMIN = "admin"
+ROLE_GUEST = "guest"
 
 CODE_CREATE = "create"
 CODE_EDIT = "edit"
@@ -28,7 +31,7 @@ ACTION = Literal[
 
 def register_action(func, profile):
     for state in func.valid_prev_states:
-        if profile == PROFILE_PUBLISHER:
+        if profile == ROLE_PUBLISHER:
             ACTIONS_PUBLISHER[state][func.code] = func
         else:
             ACTIONS_ADMIN[state][func.code] = func
@@ -57,7 +60,7 @@ edit = Action(
     verbose_name="Editar",
     code=CODE_EDIT,
     valid_prev_states=(
-        OfferState.ACTIVE, OfferState.DEACTIVATED, OfferState.REJECTED, OfferState.EXPIRED
+        OfferState.DEACTIVATED, OfferState.REJECTED, OfferState.EXPIRED
     ),
 )
 
@@ -65,7 +68,7 @@ edit = Action(
 reject = Action(
     verbose_name="Rechazar",
     code=CODE_REJECT,
-    valid_prev_states=(OfferState.DEACTIVATED, OfferState.ACTIVE, OfferState.MODERATION,),
+    valid_prev_states=(OfferState.MODERATION,),
 )
 
 
@@ -92,7 +95,7 @@ request_moderation = Action(
 approve = Action(
     verbose_name="Aprobar",
     code=CODE_APPROVE,
-    valid_prev_states=(OfferState.DEACTIVATED, OfferState.MODERATION,),
+    valid_prev_states=(OfferState.MODERATION,),
 )
 
 
@@ -107,49 +110,53 @@ get_history = Action(
     ),
 )
 
-register_action(edit, PROFILE_PUBLISHER)
-register_action(deactivate, PROFILE_PUBLISHER)
-register_action(reactivate, PROFILE_PUBLISHER)
-register_action(request_moderation, PROFILE_PUBLISHER)
-register_action(get_history, PROFILE_PUBLISHER)
+register_action(edit, ROLE_PUBLISHER)
+register_action(deactivate, ROLE_PUBLISHER)
+register_action(reactivate, ROLE_PUBLISHER)
+register_action(request_moderation, ROLE_PUBLISHER)
+register_action(get_history, ROLE_PUBLISHER)
 
-register_action(reject, PROFILE_ADMIN)
-register_action(approve, PROFILE_ADMIN)
-# register_action(comment, PROFILE_ADMIN)
+register_action(reject, ROLE_ADMIN)
+register_action(approve, ROLE_ADMIN)
 
 
 ACTIONS = {
-    PROFILE_PUBLISHER: dict(ACTIONS_PUBLISHER),
-    PROFILE_ADMIN: dict(ACTIONS_ADMIN),
+    ROLE_PUBLISHER: dict(ACTIONS_PUBLISHER),
+    ROLE_ADMIN: dict(ACTIONS_ADMIN),
+    ROLE_GUEST: dict()
 }
 
 
-def _get_user_profile(user):
-    """Get profile from user."""
-    return PROFILE_ADMIN
+def _get_roles(joboffer, user):
+    """
+    Retrieves a list of the
+    """
+    if user.is_anonymous:
+        return [ROLE_GUEST]
 
+    roles = []
 
-def _is_owner(job_offer, user):
-    """Check ownership of a job offfer."""
-    return True
+    if user.is_superuser:
+        roles.append(ROLE_ADMIN)
+
+    return roles
 
 
 def validate_action(action_code: ACTION, user, job_offer=None):
+    """
+    Verifies that an user can trigger an action from a particular joboffer
+    """
     return True
 
 
-def get_valid_actions(job_offer, user):
+def get_valid_actions(joboffer, user):
     """Return valid action for user."""
-    state = job_offer.state
-    # TODO: Implement profile states, now returning all only for testing.
-    return ACTIONS_ADMIN[state] | ACTIONS_PUBLISHER[state]
-    # profile = _get_user_profile(user)
-    # state = job_offer.state
+    roles = _get_roles(joboffer, user)
+    state = joboffer.state
 
-    # if profile == PROFILE_ADMIN:
-    #     return ACTIONS_ADMIN[state]
-    # else:
-    #     if _is_owner(job_offer, user):
-    #         return ACTIONS_PUBLISHER[state]
-    #     else:
-    #         raise ValueError()
+    actions = []
+
+    for role in roles:
+        actions.append(ACTIONS[role][state])
+
+    return actions
