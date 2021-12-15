@@ -1,66 +1,53 @@
 import pytest
-
 from django.contrib.auth.models import AnonymousUser
 
+from ..joboffer_actions import (
+    ACTIONS, ROLE_ADMIN, ROLE_PUBLISHER,
+    _get_roles, approve, deactivate, edit, get_history, get_valid_actions,
+    reactivate, reject, request_moderation
+)
+from ..models import OfferState
+from .factories import JobOfferFactory
 from events.tests.factories import UserFactory
 from pycompanies.tests.factories import UserCompanyProfileFactory
 
-from .factories import JobOfferFactory
-from ..joboffer_actions import (
-    ACTIONS, ROLE_ADMIN, ROLE_PUBLISHER, approve, deactivate, edit, get_history,
-    reactivate, reject, request_moderation, get_valid_actions, _get_roles
-)
-from ..models import OfferState
+
+# Warning: Accessing ACTIONS with an unexistant key creates a new entry the dict and that can make
+# the test to fail. That is the reason to put an empty item (OfferState.DACTIVATED)
+EXPECTED_ACTIONS_ADMIN = {
+    OfferState.MODERATION: set([reject.code, approve.code]),
+    OfferState.DEACTIVATED: set()
+}
+
+EXPECTED_ACTIONS_PUBLISHER = {
+    OfferState.DEACTIVATED: {
+        edit.code,
+        request_moderation.code,
+        get_history.code
+    },
+    OfferState.REJECTED: {
+        edit.code,
+        get_history.code
+    },
+    OfferState.EXPIRED: {
+        edit.code,
+        deactivate.code,
+        reactivate.code,
+        get_history.code
+    },
+    OfferState.ACTIVE: {
+        deactivate.code,
+        get_history.code
+    }
+}
 
 
-# TODO: Reactivate this test
 def test_joboffer_actions():
     """
     Assert the validity of actions according to previous state.
     """
-    expected_actions_admin = {
-            OfferState.MODERATION: {
-                approve.code: approve,
-                reject.code: reject,
-            },
-        }
-
-    expected_actions_publisher = {
-            OfferState.DEACTIVATED: {
-                edit.code: edit,
-                request_moderation.code: request_moderation,
-                get_history.code: get_history
-            },
-            OfferState.REJECTED: {
-                edit.code: edit,
-                get_history.code: get_history
-            },
-            OfferState.EXPIRED: {
-                edit.code: edit,
-                deactivate.code: deactivate,
-                reactivate.code: reactivate,
-                get_history.code: get_history
-            },
-            OfferState.ACTIVE: {
-                deactivate.code: deactivate,
-                get_history.code: get_history
-            },
-        }
-
-    assert ACTIONS[ROLE_ADMIN] == expected_actions_admin
-    assert ACTIONS[ROLE_PUBLISHER] == expected_actions_publisher
-
-
-@pytest.mark.django_db
-def teeeeest_get_valid_actions_for_anonymous_user():
-    """
-    Test that there are no actions for unlogged users
-    """
-    user = AnonymousUser()
-    joboffer = JobOfferFactory.create()
-    actions = get_valid_actions(joboffer, user)
-
-    assert [] == actions
+    assert ACTIONS[ROLE_ADMIN] == EXPECTED_ACTIONS_ADMIN
+    assert ACTIONS[ROLE_PUBLISHER] == EXPECTED_ACTIONS_PUBLISHER
 
 
 @pytest.mark.django_db
@@ -71,7 +58,7 @@ def test_get_role_for_admin():
     user = UserFactory.create(is_superuser=True)
     joboffer = JobOfferFactory.create()
 
-    assert {ROLE_ADMIN} == _get_roles(joboffer, user)
+    assert _get_roles(joboffer, user) == {ROLE_ADMIN}
 
 
 @pytest.mark.django_db
@@ -82,7 +69,7 @@ def test_get_role_for_anonymous():
     user = AnonymousUser()
     joboffer = JobOfferFactory.create()
 
-    assert set() == _get_roles(joboffer, user)
+    assert _get_roles(joboffer, user) == set()
 
 
 @pytest.mark.django_db
@@ -94,7 +81,7 @@ def test_get_role_for_publisher_only():
     company_profile = UserCompanyProfileFactory.create(user=user)
     joboffer = JobOfferFactory.create(company=company_profile.company)
 
-    assert {ROLE_PUBLISHER} == _get_roles(joboffer, user)
+    assert _get_roles(joboffer, user) == {ROLE_PUBLISHER}
 
 
 @pytest.mark.django_db
@@ -107,13 +94,45 @@ def test_get_role_for_publisher_and_admin():
     company_profile = UserCompanyProfileFactory.create(user=user)
     joboffer = JobOfferFactory.create(company=company_profile.company)
 
-    assert {ROLE_PUBLISHER, ROLE_ADMIN} == _get_roles(joboffer, user)
+    assert _get_roles(joboffer, user) == {ROLE_PUBLISHER, ROLE_ADMIN}
 
 
 @pytest.mark.django_db
-def test_get_valid_actions_user_invalid_owner():
-    """Assert that when a user tries to get actions for an offer of a company they is not part of,
-    raises ValueError."""
-    # TODO: assert this after the programming of the relationship between company and
-    # user is completed.
-    ...
+def test_get_valid_actions_for_unlogged_user():
+    """
+    Test get_valid_actions return no actions for unlogged user
+    """
+    user = AnonymousUser()
+    joboffer = JobOfferFactory.create()
+
+    assert get_valid_actions(joboffer, user, []) == set()
+
+
+@pytest.mark.django_db
+def test_get_valid_actions_publisher_joboffer_deactivated():
+    """
+    Test get_valid_actions() returns the actions for a publisher.
+    This serves only as integration test, the rest of the cases are covered with the
+    test_joboffer_actions test
+    """
+    user = AnonymousUser()
+    joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
+
+    expected_actions = EXPECTED_ACTIONS_PUBLISHER[OfferState.DEACTIVATED]
+
+    assert get_valid_actions(joboffer, user, {ROLE_PUBLISHER}) == expected_actions
+
+
+@pytest.mark.django_db
+def test_get_valid_actions_publisher_and_admin_joboffer_deactivated():
+    """
+    Test get_valid_actions() returns the actions for a publisher.
+    This is only to test the integration, the rest of the cases are covered with the
+    test_joboffer_actions test
+    """
+    user = AnonymousUser()
+    joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
+
+    expected_actions = EXPECTED_ACTIONS_PUBLISHER[OfferState.DEACTIVATED]
+
+    assert get_valid_actions(joboffer, user, {ROLE_PUBLISHER, ROLE_ADMIN}) == expected_actions

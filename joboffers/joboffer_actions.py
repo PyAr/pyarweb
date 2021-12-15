@@ -7,8 +7,9 @@ from .models import OfferState
 from pycompanies.models import UserCompanyProfile
 
 
-ACTIONS_PUBLISHER = defaultdict(dict)
-ACTIONS_ADMIN = defaultdict(dict)
+ACTIONS_PUBLISHER = defaultdict(set)
+
+ACTIONS_ADMIN = defaultdict(set)
 
 ROLE_PUBLISHER = "publisher"
 ROLE_ADMIN = "admin"
@@ -31,9 +32,9 @@ ACTION = Literal[
 def register_action(func, profile):
     for state in func.valid_prev_states:
         if profile == ROLE_PUBLISHER:
-            ACTIONS_PUBLISHER[state][func.code] = func
+            ACTIONS_PUBLISHER[state].add(func.code)
         else:
-            ACTIONS_ADMIN[state][func.code] = func
+            ACTIONS_ADMIN[state].add(func.code)
 
 
 def check_state(func):
@@ -120,12 +121,13 @@ register_action(approve, ROLE_ADMIN)
 
 
 ACTIONS = {
-    ROLE_PUBLISHER: defaultdict(dict),
-    ROLE_ADMIN: defaultdict(dict)
+    ROLE_PUBLISHER: ACTIONS_PUBLISHER,
+    ROLE_ADMIN: ACTIONS_ADMIN
 }
 
-ACTIONS[ROLE_PUBLISHER] = ACTIONS_PUBLISHER
-ACTIONS[ROLE_ADMIN] = ACTIONS_ADMIN
+print("== ACTIONS ==")
+print(ACTIONS)
+print("== ==")
 
 
 def _get_roles(joboffer, user):
@@ -155,14 +157,18 @@ def validate_action(action_code: ACTION, user, job_offer=None):
     return True
 
 
-def get_valid_actions(joboffer, user):
-    """Return valid action for user."""
-    roles = _get_roles(joboffer, user)
+def get_valid_actions(joboffer, user, roles=None):
+    """Return a list of valid actions for an user within a job"""
+    if roles is None:
+        roles_ = _get_roles(joboffer, user)
+    else:
+        roles_ = roles
+
     state = joboffer.state
 
-    actions = []
+    actions = set()
 
-    for role in roles:
-        actions.extend(ACTIONS[role][state].keys())
+    for role in roles_:
+        actions = actions | ACTIONS[role][state]
 
     return actions
