@@ -3,10 +3,11 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 
 from events.tests.factories import UserFactory
+from pycompanies.tests.factories import UserCompanyProfileFactory
 
 from .factories import JobOfferFactory
 from ..joboffer_actions import (
-    ACTIONS, ROLE_ADMIN, ROLE_GUEST, ROLE_PUBLISHER, approve, deactivate, edit, get_history,
+    ACTIONS, ROLE_ADMIN, ROLE_PUBLISHER, approve, deactivate, edit, get_history,
     reactivate, reject, request_moderation, get_valid_actions, _get_roles
 )
 from ..models import OfferState
@@ -63,25 +64,50 @@ def teeeeest_get_valid_actions_for_anonymous_user():
 
 
 @pytest.mark.django_db
-def test_get_user_role_for_admin():
+def test_get_role_for_admin():
     """
-    Check that _get_user_role() returns PROFILE_ADMIN for a given superuser
+    Check that _get_user_role() returns[PROFILE_ADMIN only for a given superuser
     """
     user = UserFactory.create(is_superuser=True)
     joboffer = JobOfferFactory.create()
 
-    assert [ROLE_ADMIN] == _get_roles(joboffer, user)
+    assert {ROLE_ADMIN} == _get_roles(joboffer, user)
 
 
 @pytest.mark.django_db
-def test_get_user_role_for_anonymous():
+def test_get_role_for_anonymous():
     """
-    Check that _get_user_role() returns ROLE_GUEST for a given anonymous user
+    Check that _get_user_role() returns empty set for a given anonymous user
     """
     user = AnonymousUser()
     joboffer = JobOfferFactory.create()
 
-    assert [ROLE_GUEST] == _get_roles(joboffer, user)
+    assert set() == _get_roles(joboffer, user)
+
+
+@pytest.mark.django_db
+def test_get_role_for_publisher_only():
+    """
+    Check that _get_user_role() returns [ROLE_PUBLISHER] for a given publisher user
+    """
+    user = UserFactory.create()
+    company_profile = UserCompanyProfileFactory.create(user=user)
+    joboffer = JobOfferFactory.create(company=company_profile.company)
+
+    assert {ROLE_PUBLISHER} == _get_roles(joboffer, user)
+
+
+@pytest.mark.django_db
+def test_get_role_for_publisher_and_admin():
+    """
+    Check that _get_user_role() returns [ROLE_PUBLISHER, ROLE_ADMIN] for a given publisher and
+    admin user
+    """
+    user = UserFactory.create(is_superuser=True)
+    company_profile = UserCompanyProfileFactory.create(user=user)
+    joboffer = JobOfferFactory.create(company=company_profile.company)
+
+    assert {ROLE_PUBLISHER, ROLE_ADMIN} == _get_roles(joboffer, user)
 
 
 @pytest.mark.django_db

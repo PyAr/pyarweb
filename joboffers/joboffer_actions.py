@@ -4,15 +4,14 @@ from functools import wraps
 from typing import Literal
 
 from .models import OfferState
+from pycompanies.models import UserCompanyProfile
 
 
 ACTIONS_PUBLISHER = defaultdict(dict)
 ACTIONS_ADMIN = defaultdict(dict)
-ACTIONS_GUEST = defaultdict(dict)
 
 ROLE_PUBLISHER = "publisher"
 ROLE_ADMIN = "admin"
-ROLE_GUEST = "guest"
 
 CODE_CREATE = "create"
 CODE_EDIT = "edit"
@@ -121,23 +120,30 @@ register_action(approve, ROLE_ADMIN)
 
 
 ACTIONS = {
-    ROLE_PUBLISHER: dict(ACTIONS_PUBLISHER),
-    ROLE_ADMIN: dict(ACTIONS_ADMIN),
-    ROLE_GUEST: dict()
+    ROLE_PUBLISHER: defaultdict(dict),
+    ROLE_ADMIN: defaultdict(dict)
 }
+
+ACTIONS[ROLE_PUBLISHER] = ACTIONS_PUBLISHER
+ACTIONS[ROLE_ADMIN] = ACTIONS_ADMIN
 
 
 def _get_roles(joboffer, user):
     """
     Retrieves a list of the
     """
-    if user.is_anonymous:
-        return [ROLE_GUEST]
+    roles = set([])
 
-    roles = []
+    if user.is_anonymous:
+        return roles
 
     if user.is_superuser:
-        roles.append(ROLE_ADMIN)
+        roles.add(ROLE_ADMIN)
+
+    company_profile_qs = UserCompanyProfile.objects.filter(user=user, company=joboffer.company)
+
+    if company_profile_qs.exists():
+        roles.add(ROLE_PUBLISHER)
 
     return roles
 
@@ -157,6 +163,6 @@ def get_valid_actions(joboffer, user):
     actions = []
 
     for role in roles:
-        actions.append(ACTIONS[role][state])
+        actions.extend(ACTIONS[role][state].keys())
 
     return actions
