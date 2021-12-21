@@ -56,6 +56,12 @@ class Action:
     valid_prev_states: tuple
 
 
+create = Action(
+    verbose_name="Crear",
+    code=CODE_CREATE,
+    valid_prev_states=(OfferState.NEW,)
+)
+
 edit = Action(
     verbose_name="Editar",
     code=CODE_EDIT,
@@ -64,13 +70,11 @@ edit = Action(
     ),
 )
 
-
 reject = Action(
     verbose_name="Rechazar",
     code=CODE_REJECT,
     valid_prev_states=(OfferState.MODERATION,),
 )
-
 
 reactivate = Action(
     verbose_name="Reactivar",
@@ -78,13 +82,11 @@ reactivate = Action(
     valid_prev_states=(OfferState.EXPIRED,),
 )
 
-
 deactivate = Action(
     verbose_name="Desactivar",
     code=CODE_DEACTIVATE,
     valid_prev_states=(OfferState.EXPIRED, OfferState.ACTIVE),
 )
-
 
 request_moderation = Action(
     verbose_name="Enviar a moderación",
@@ -98,7 +100,6 @@ approve = Action(
     valid_prev_states=(OfferState.MODERATION,),
 )
 
-
 get_history = Action(
     verbose_name="Historial",
     code=CODE_HISTORY,
@@ -110,6 +111,7 @@ get_history = Action(
     ),
 )
 
+# register_action(create, ROLE_PUBLISHER)
 register_action(edit, ROLE_PUBLISHER)
 register_action(deactivate, ROLE_PUBLISHER)
 register_action(reactivate, ROLE_PUBLISHER)
@@ -125,14 +127,10 @@ ACTIONS = {
     ROLE_ADMIN: ACTIONS_ADMIN
 }
 
-print("== ACTIONS ==")
-print(ACTIONS)
-print("== ==")
 
-
-def _get_roles(joboffer, user):
+def _get_roles(company, user):
     """
-    Retrieves a list of the
+    Retrieves a list of the roles marching the giben user and company
     """
     roles = set([])
 
@@ -142,7 +140,7 @@ def _get_roles(joboffer, user):
     if user.is_superuser:
         roles.add(ROLE_ADMIN)
 
-    company_profile_qs = UserCompanyProfile.objects.filter(user=user, company=joboffer.company)
+    company_profile_qs = UserCompanyProfile.objects.filter(company=company, user=user)
 
     if company_profile_qs.exists():
         roles.add(ROLE_PUBLISHER)
@@ -150,25 +148,19 @@ def _get_roles(joboffer, user):
     return roles
 
 
-def validate_action(action_code: ACTION, user, job_offer=None):
+def get_valid_actions(user, company, offer_state: OfferState, roles=None):
     """
-    Verifies that an user can trigger an action from a particular joboffer
+    Return a list of valid actions for an user within a job
     """
-    return True
 
-
-def get_valid_actions(joboffer, user, roles=None):
-    """Return a list of valid actions for an user within a job"""
     if roles is None:
-        roles_ = _get_roles(joboffer, user)
+        roles_ = _get_roles(company, user)
     else:
         roles_ = roles
-
-    state = joboffer.state
 
     actions = set()
 
     for role in roles_:
-        actions = actions | ACTIONS[role][state]
+        actions = actions | ACTIONS[role][offer_state]
 
     return actions

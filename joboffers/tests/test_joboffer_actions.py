@@ -53,12 +53,12 @@ def test_joboffer_actions():
 @pytest.mark.django_db
 def test_get_role_for_admin():
     """
-    Check that _get_user_role() returns[PROFILE_ADMIN only for a given superuser
+    Check that _get_user_role() returns[PROFILE_ADMIN] only for a given superuser
     """
     user = UserFactory.create(is_superuser=True)
     joboffer = JobOfferFactory.create()
 
-    assert _get_roles(joboffer, user) == {ROLE_ADMIN}
+    assert _get_roles(joboffer.company, user) == {ROLE_ADMIN}
 
 
 @pytest.mark.django_db
@@ -69,7 +69,7 @@ def test_get_role_for_anonymous():
     user = AnonymousUser()
     joboffer = JobOfferFactory.create()
 
-    assert _get_roles(joboffer, user) == set()
+    assert _get_roles(joboffer.company, user) == set()
 
 
 @pytest.mark.django_db
@@ -79,9 +79,8 @@ def test_get_role_for_publisher_only():
     """
     user = UserFactory.create()
     company_profile = UserCompanyProfileFactory.create(user=user)
-    joboffer = JobOfferFactory.create(company=company_profile.company)
 
-    assert _get_roles(joboffer, user) == {ROLE_PUBLISHER}
+    assert _get_roles(company_profile.company, user) == {ROLE_PUBLISHER}
 
 
 @pytest.mark.django_db
@@ -92,9 +91,8 @@ def test_get_role_for_publisher_and_admin():
     """
     user = UserFactory.create(is_superuser=True)
     company_profile = UserCompanyProfileFactory.create(user=user)
-    joboffer = JobOfferFactory.create(company=company_profile.company)
 
-    assert _get_roles(joboffer, user) == {ROLE_PUBLISHER, ROLE_ADMIN}
+    assert _get_roles(company_profile.company, user) == {ROLE_PUBLISHER, ROLE_ADMIN}
 
 
 @pytest.mark.django_db
@@ -105,34 +103,36 @@ def test_get_valid_actions_for_unlogged_user():
     user = AnonymousUser()
     joboffer = JobOfferFactory.create()
 
-    assert get_valid_actions(joboffer, user, []) == set()
+    assert get_valid_actions(user, joboffer.company, joboffer.state, set()) == set()
 
 
 @pytest.mark.django_db
 def test_get_valid_actions_publisher_joboffer_deactivated():
     """
     Test get_valid_actions() returns the actions for a publisher.
-    This serves only as integration test, the rest of the cases are covered with the
-    test_joboffer_actions test
+    It mockes the role
     """
     user = AnonymousUser()
     joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
 
     expected_actions = EXPECTED_ACTIONS_PUBLISHER[OfferState.DEACTIVATED]
+    actions = get_valid_actions(user, joboffer.company, joboffer.state, {ROLE_PUBLISHER})
 
-    assert get_valid_actions(joboffer, user, {ROLE_PUBLISHER}) == expected_actions
+    assert actions == expected_actions
 
 
 @pytest.mark.django_db
 def test_get_valid_actions_publisher_and_admin_joboffer_deactivated():
     """
     Test get_valid_actions() returns the actions for a publisher.
-    This is only to test the integration, the rest of the cases are covered with the
-    test_joboffer_actions test
+    It mockes the role.
     """
     user = AnonymousUser()
     joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
 
     expected_actions = EXPECTED_ACTIONS_PUBLISHER[OfferState.DEACTIVATED]
+    actions = get_valid_actions(
+        user, joboffer.company, joboffer.state, {ROLE_PUBLISHER, ROLE_ADMIN}
+    )
 
-    assert get_valid_actions(joboffer, user, {ROLE_PUBLISHER, ROLE_ADMIN}) == expected_actions
+    assert actions == expected_actions

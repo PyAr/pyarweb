@@ -1,14 +1,15 @@
 import factory
 import pytest
-
-from django.contrib.messages import get_messages as contrib_get_messages
-from django.test import Client
-from django.urls import reverse
-
-from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
-
-from .factories import JobOfferFactory, JobOfferCommentFactory
 from ..models import JobOffer, OfferState
+from .factories import JobOfferCommentFactory, JobOfferFactory
+# Fixtures
+from .fixtures import ( # noqa
+    create_client, create_user_company_profile, create_logged_client,
+    create_publisher_client, create_user
+)
+#
+from django.contrib.messages import get_messages as contrib_get_messages
+from django.urls import reverse
 
 
 ADD_URL = 'joboffers:add'
@@ -26,23 +27,6 @@ def get_plain_messages(request):
     return [m.message for m in messages]
 
 
-@pytest.fixture(name='client')
-def create_client():
-    return Client()
-
-
-@pytest.fixture(name='user')
-def create_user():
-    return UserFactory()
-
-
-@pytest.fixture(name='logged_client')
-def create_logged_client(user):
-    client = Client()
-    client.login(username=user.username, password=DEFAULT_USER_PASSWORD)
-    return client
-
-
 @pytest.mark.django_db
 def test_joboffer_creation_redirects_unlogged(client):
     target_url = reverse(ADD_URL)
@@ -53,11 +37,12 @@ def test_joboffer_creation_redirects_unlogged(client):
 
 
 @pytest.mark.django_db
-def test_joboffer_creation_with_all_fields_ok(logged_client):
-    client = logged_client
+def test_joboffer_creation_with_all_fields_ok(publisher_client, user_company_profile):
+    client = publisher_client
     target_url = reverse(ADD_URL)
+    company = user_company_profile.company
 
-    job_data = factory.build(dict, FACTORY_CLASS=JobOfferFactory)
+    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
 
     assert 0 == JobOffer.objects.count()
 
@@ -79,9 +64,10 @@ def test_joboffer_creation_with_all_fields_ok(logged_client):
 
 
 @pytest.mark.django_db
-def test_joboffer_request_moderation_ok(logged_client):
-    client = logged_client
-    joboffer = JobOfferFactory.create()
+def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
+    client = publisher_client
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(company=company)
 
     target_url = reverse(REQUEST_MODERATION_URL, kwargs={'slug': joboffer.slug})
 
@@ -103,9 +89,8 @@ def test_joboffer_request_moderation_ok(logged_client):
 
 
 @pytest.mark.django_db
-def test_joboffer_approve_ok(logged_client):
-    # TODO: Use a moderator user as logged user
-    client = logged_client
+def test_joboffer_approve_ok(admin_client):
+    client = admin_client
     joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
 
     target_url = reverse(APPROVE_URL, kwargs={'slug': joboffer.slug})
@@ -128,9 +113,8 @@ def test_joboffer_approve_ok(logged_client):
 
 
 @pytest.mark.django_db
-def test_joboffer_reject_ok(logged_client):
-    # TODO: Use a moderator user as logged user
-    client = logged_client
+def test_joboffer_reject_ok(admin_client):
+    client = admin_client
     joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
 
     target_url = reverse(REJECT_URL, kwargs={'slug': joboffer.slug})

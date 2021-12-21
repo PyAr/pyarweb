@@ -9,11 +9,11 @@ from django.views.generic import ListView, RedirectView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
-from pycompanies.models import Company
+from pycompanies.models import Company, UserCompanyProfile
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
-    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions, validate_action
+    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
 from .models import JobOffer, JobOfferComment, OfferState
 
@@ -64,7 +64,38 @@ ACTION_BUTTONS = {
 }
 
 
+class JobOfferObjectMixin(SingleObjectMixin):
+    """
+    Adds permission checking to the matching joboffer
+    """
+
+    action_code: str
+
+    def get_object(self, queryset=None):
+        offer = super().get_object(queryset)
+
+        if not self.action_code:
+            raise ValueError("Missing 'action_code' for the current class")
+
+        valid_actions = get_valid_actions(self.request.user, offer.company, offer.state)
+
+        if self.action_code not in valid_actions:
+            raise PermissionDenied()
+
+        return offer
+
+
+def get_user_company(user):
+    if user.is_anonymous:
+        None
+    else:
+        company_profile_qs = UserCompanyProfile.objects.filter(user=user)
+        if company_profile_qs.exists():
+            return company_profile_qs.first().company
+
+
 class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    action_code = CODE_CREATE
     model = JobOffer
     form_class = JobOfferForm
     success_message = _(
@@ -73,10 +104,24 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     )
 
     def get(self, request, *args, **kwargs):
-        if not validate_action(CODE_CREATE, request.user):
-            return PermissionDenied()
+        # company = get_user_company(request.user)
+
+        # valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
+
+        # if self.action_code not in valid_actions:
+        #     raise PermissionDenied()
 
         return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # company = get_user_company(request.user)
+
+        # valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
+
+        # if self.action_code not in valid_actions:
+        #     raise PermissionDenied()
+
+        return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse("joboffers:view", kwargs={'slug': self.object.slug})
@@ -101,7 +146,8 @@ class JobOfferDetailView(LoginRequiredMixin, DetailView):
         return ctx
 
 
-class JobOfferUpdateView(LoginRequiredMixin, UpdateView):
+class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
+    action_code = CODE_EDIT
     model = JobOffer
     form_class = JobOfferForm
     success_url = "joboffers:view"
@@ -134,7 +180,7 @@ class JobOfferAdminView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class TransitionView(SingleObjectMixin, View):
+class TransitionView(JobOfferObjectMixin, View):
     model = JobOffer
     redirect_to_pattern: str
     success_message: str
@@ -145,9 +191,6 @@ class TransitionView(SingleObjectMixin, View):
     def get(self, request, *args, **kwargs):
         offer = self.get_object()
 
-        if not validate_action(CODE_REQUEST_MODERATION, request.user, offer):
-            raise PermissionDenied()
-
         self.update_object(offer)
 
         messages.success(request, self.success_message)
@@ -157,24 +200,15 @@ class TransitionView(SingleObjectMixin, View):
 
 
 class JobOfferRejectView(
-        LoginRequiredMixin, SuccessMessageMixin, SingleObjectMixin, FormView
+        LoginRequiredMixin, SuccessMessageMixin, JobOfferObjectMixin, FormView
 ):
-    action_code = CODE_REQUEST_MODERATION
+    action_code = CODE_REJECT
     model = JobOffer  # SingleObjectMixin needs this to retrieve the joboffer
     form_class = JobOfferCommentForm
     template_name = 'joboffers/joboffer_reject.html'
     success_message = _(
         "Oferta rechazada. Se marca como desactivada para que el publicador la revise. "
     )
-
-    def get_object(self, queryset=None):
-        offer = super().get_object(queryset)
-
-        # TODO: Move this to a mixin
-        if not validate_action(self.action_code, self.request.user, offer):
-            raise PermissionDenied()
-
-        return offer
 
     def get_initial(self):
         initial = super().get_initial()
@@ -208,7 +242,8 @@ class JobOfferRejectView(
         return reverse("joboffers:view", kwargs={'slug': self.object.slug})
 
 
-class JobOfferAcceptView(LoginRequiredMixin, TransitionView):
+class JobOfferApproveView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_APPROVE
     redirect_to_pattern = 'joboffers:view'
     success_message = _('Oferta aceptada y activada. En caso de error puede rechazarla.')
 
@@ -226,6 +261,7 @@ class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
 
 
 class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_REQUEST_MODERATION
     redirect_to_pattern = 'joboffers:view'
     success_message = _(
         "Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar"
