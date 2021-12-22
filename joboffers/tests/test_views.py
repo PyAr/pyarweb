@@ -41,6 +41,10 @@ def test_joboffer_creation_redirects_unlogged(client):
 def test_joboffer_create_form_render_should_fail_for_an_user_from_a_different_company(
         logged_client
 ):
+    """
+    Test that the get request to the joboffer's create view fails for not allowed user
+    """
+
     client = logged_client
     target_url = reverse(ADD_URL)
 
@@ -55,6 +59,9 @@ def test_joboffer_create_form_render_should_fail_for_an_user_from_a_different_co
 def test_joboffer_creation_should_fail_for_an_user_from_a_different_company(
         logged_client, user_company_profile
 ):
+    """
+    Test that the post request to the joboffer's create view fails for not allowed user
+    """
     client = logged_client
     target_url = reverse(ADD_URL)
     company = user_company_profile.company
@@ -71,6 +78,9 @@ def test_joboffer_creation_should_fail_for_an_user_from_a_different_company(
 
 @pytest.mark.django_db
 def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, user_company_profile):
+    """
+    Test creation of joboffer as publisher with data ok
+    """
     client = publisher_client
     target_url = reverse(ADD_URL)
     company = user_company_profile.company
@@ -98,6 +108,9 @@ def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, use
 
 @pytest.mark.django_db
 def test_joboffer_creation_as_admin_should_fail(admin_client, user_company_profile):
+    """
+    Test joboffer creation is not allowed as admin user
+    """
     client = admin_client
     target_url = reverse(ADD_URL)
     company = user_company_profile.company
@@ -115,6 +128,9 @@ def test_joboffer_creation_as_admin_should_fail(admin_client, user_company_profi
 
 @pytest.mark.django_db
 def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
+    """
+    Test request for moderation for a publisher user
+    """
     client = publisher_client
     company = user_company_profile.company
     joboffer = JobOfferFactory.create(company=company)
@@ -139,7 +155,33 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
 
 
 @pytest.mark.django_db
+def test_joboffer_approve_without_permission(publisher_client, user_company_profile):
+    """
+    Test approval of a joboffer with a publisher should fail and keep the same state in the offer
+    """
+    client = publisher_client
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(company=company, state=OfferState.MODERATION)
+
+    target_url = reverse(APPROVE_URL, kwargs={'slug': joboffer.slug})
+
+    assert 1 == JobOffer.objects.count()
+    assert OfferState.MODERATION == joboffer.state
+    # end preconditions
+
+    response = client.get(target_url)
+
+    # Asserts redirection to the joboffer status page
+    assert 403 == response.status_code
+    joboffer = JobOffer.objects.first()
+    assert joboffer.state == OfferState.MODERATION
+
+
+@pytest.mark.django_db
 def test_joboffer_approve_ok(admin_client):
+    """
+    Test approval of a joboffer with an admin user
+    """
     client = admin_client
     joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
 
@@ -164,6 +206,9 @@ def test_joboffer_approve_ok(admin_client):
 
 @pytest.mark.django_db
 def test_joboffer_reject_ok(admin_client):
+    """
+    Test rejection of the joboffer by the admin user
+    """
     client = admin_client
     joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
 

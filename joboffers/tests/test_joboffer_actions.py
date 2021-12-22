@@ -42,7 +42,8 @@ EXPECTED_ACTIONS_PUBLISHER = {
     OfferState.ACTIVE: {
         deactivate.code,
         get_history.code
-    }
+    },
+    OfferState.MODERATION: set()
 }
 
 
