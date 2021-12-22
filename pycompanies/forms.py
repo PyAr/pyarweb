@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, ButtonHolder, Layout, Submit
 
-from .models import Company
+from .models import Company, UserCompanyProfile
 
 
 class CompanyForm(forms.ModelForm):
@@ -31,3 +31,24 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         fields = ['name', 'photo', 'link', 'description']
         model = Company
+
+class UserCompanyForm(forms.ModelForm):
+    """A PyAr user companies form."""
+
+    description = forms.CharField(widget=SummernoteInplaceWidget())
+
+    def __init__(self, *args, **kwargs):
+        super(UserCompanyForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.layout = Layout(
+            Div(
+                'user'
+            ),
+            ButtonHolder(
+                Submit(_('Guardar'), _('Guardar'), css_class='btn btn-default')
+            )
+        )
+
+    class Meta:
+        fields = ['user']
+        model = UserCompanyProfile

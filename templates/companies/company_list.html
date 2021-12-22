@@ -5,18 +5,29 @@
 {% block left-column %}
   <!-- Empresas que utilizan python -->
   <section>
+    <section class="list-group" style="margin-bottom: 0px;">
+    </section>
       <div class="col-md-12">
           <div class="page-header">
               <h2>{% trans 'Empresas que utilizan Python' %}
-                  <span class="section-button-group pull-right">
-                      <a href="{% url 'companies:add' %}" class="btn btn-info">{% trans 'Agregar Empresa' %}</a>
-                  </span>
+                <span class="section-button-group">
+                  {% if not own_company %}
+                  <a href="{% url 'companies:add' %}" class="btn btn-info">{% trans 'Agregar Empresa' %}</a>
+                  {% endif %}
+                  <a href="{% url 'companies:admin' %}" class="btn btn-default btn-md">
+                    {% if own_company %}
+                      {% trans 'Administrar ' %} {{own_company}}
+                    {% else %}
+                      {% trans 'Asociar empresa' %}
+                    {% endif %}
+                    </a>
+                </span>
               </h2>
           </div>
           {% if object_list %}
               {% for object in object_list %}
                 <h3>
-                    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
+                    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
                 </h3>
                 <p>{{ object.description|striptags|truncatewords:"20" }}</p>
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Más información...' %}</a></p>
