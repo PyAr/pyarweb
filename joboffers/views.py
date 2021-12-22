@@ -132,11 +132,12 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 
-class JobOfferDetailView(LoginRequiredMixin, DetailView):
+class JobOfferDetailView(DetailView):
     model = JobOffer
 
     def get_action_buttons(self):
-        valid_actions = get_valid_actions(self.object, self.request.user)
+        joboffer = self.object
+        valid_actions = get_valid_actions(self.request.user, joboffer.company, joboffer.state)
 
         return [ACTION_BUTTONS[action_name] for action_name in valid_actions]
 

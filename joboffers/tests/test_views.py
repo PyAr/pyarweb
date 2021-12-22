@@ -14,6 +14,7 @@ from django.urls import reverse
 
 ADD_URL = 'joboffers:add'
 ADMIN_URL = 'joboffers:admin'
+VIEW_URL = 'joboffers:view'
 APPROVE_URL = 'joboffers:approve'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
@@ -136,3 +137,18 @@ def test_joboffer_reject_ok(admin_client):
 
     joboffer = JobOffer.objects.first()
     assert OfferState.DEACTIVATED == joboffer.state
+
+
+@pytest.mark.django_db
+def test_joboffer_view_as_anonymous(client):
+    """
+    Test that the joboffer detail view renders without error as anonymous user
+    """
+    joboffer = JobOfferFactory.create()
+
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+    assert response.context_data['action_buttons'] == []
