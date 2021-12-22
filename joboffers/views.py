@@ -104,22 +104,22 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     )
 
     def get(self, request, *args, **kwargs):
-        # company = get_user_company(request.user)
+        company = get_user_company(request.user)
 
-        # valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
+        valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
 
-        # if self.action_code not in valid_actions:
-        #     raise PermissionDenied()
+        if self.action_code not in valid_actions:
+            raise PermissionDenied()
 
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # company = get_user_company(request.user)
+        company = get_user_company(request.user)
 
-        # valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
+        valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
 
-        # if self.action_code not in valid_actions:
-        #     raise PermissionDenied()
+        if self.action_code not in valid_actions:
+            raise PermissionDenied()
 
         return super().post(request, *args, **kwargs)
 

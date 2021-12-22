@@ -3,7 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 
 from ..joboffer_actions import (
     ACTIONS, ROLE_ADMIN, ROLE_PUBLISHER,
-    _get_roles, approve, deactivate, edit, get_history, get_valid_actions,
+    _get_roles, approve, create, deactivate, edit, get_history, get_valid_actions,
     reactivate, reject, request_moderation
 )
 from ..models import OfferState
@@ -16,10 +16,14 @@ from pycompanies.tests.factories import UserCompanyProfileFactory
 # the test to fail. That is the reason to put an empty item (OfferState.DACTIVATED)
 EXPECTED_ACTIONS_ADMIN = {
     OfferState.MODERATION: set([reject.code, approve.code]),
-    OfferState.DEACTIVATED: set()
+    OfferState.DEACTIVATED: set(),
+    OfferState.NEW:  set()
 }
 
 EXPECTED_ACTIONS_PUBLISHER = {
+    OfferState.NEW: {
+        create.code
+    },
     OfferState.DEACTIVATED: {
         edit.code,
         request_moderation.code,

@@ -38,8 +38,67 @@ def test_joboffer_creation_redirects_unlogged(client):
 
 
 @pytest.mark.django_db
-def test_joboffer_creation_with_all_fields_ok(publisher_client, user_company_profile):
+def test_joboffer_create_form_render_should_fail_for_an_user_from_a_different_company(
+        logged_client
+):
+    client = logged_client
+    target_url = reverse(ADD_URL)
+
+    assert JobOffer.objects.count() == 0
+
+    response = client.get(target_url)
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_joboffer_creation_should_fail_for_an_user_from_a_different_company(
+        logged_client, user_company_profile
+):
+    client = logged_client
+    target_url = reverse(ADD_URL)
+    company = user_company_profile.company
+
+    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+
+    assert JobOffer.objects.count() == 0
+
+    response = client.post(target_url, job_data)
+
+    assert response.status_code == 403
+    assert JobOffer.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, user_company_profile):
     client = publisher_client
+    target_url = reverse(ADD_URL)
+    company = user_company_profile.company
+
+    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+
+    assert JobOffer.objects.count() == 0
+
+    response = client.post(target_url, job_data)
+
+    assert JobOffer.objects.count() == 1
+
+    joboffer = JobOffer.objects.first()
+
+    # Asserts redirection to the joboffer status page
+    assert response.status_code == 302
+    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+
+    # Deactivated should be the first state
+    assert OfferState.DEACTIVATED == joboffer.state
+
+    obtained_messages = get_plain_messages(response)
+    assert obtained_messages[0].startswith('Oferta creada correctamente.')
+
+
+@pytest.mark.django_db
+def test_joboffer_creation_as_admin_should_fail(admin_client, user_company_profile):
+    client = admin_client
     target_url = reverse(ADD_URL)
     company = user_company_profile.company
 
@@ -49,19 +108,9 @@ def test_joboffer_creation_with_all_fields_ok(publisher_client, user_company_pro
 
     response = client.post(target_url, job_data)
 
-    assert 1 == JobOffer.objects.count()
-
-    joboffer = JobOffer.objects.first()
-
+    assert JobOffer.objects.count() == 0
     # Asserts redirection to the joboffer status page
-    assert 302 == response.status_code
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
-
-    # Deactivated should be the first state
-    assert OfferState.DEACTIVATED == joboffer.state
-
-    obtained_messages = get_plain_messages(response)
-    assert obtained_messages[0].startswith('Oferta creada correctamente.')
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db

@@ -111,7 +111,7 @@ get_history = Action(
     ),
 )
 
-# register_action(create, ROLE_PUBLISHER)
+register_action(create, ROLE_PUBLISHER)
 register_action(edit, ROLE_PUBLISHER)
 register_action(deactivate, ROLE_PUBLISHER)
 register_action(reactivate, ROLE_PUBLISHER)
@@ -158,7 +158,7 @@ def get_valid_actions(user, company, offer_state: OfferState, roles=None):
     else:
         roles_ = roles
 
-    actions = set()
+    actions: ACTION = set()
 
     for role in roles_:
         actions = actions | ACTIONS[role][offer_state]
