@@ -152,3 +152,17 @@ def test_joboffer_view_as_anonymous(client):
 
     assert response.status_code == 200
     assert response.context_data['action_buttons'] == []
+
+
+@pytest.mark.django_db
+def test_joboffer_create_view_as_publusher(publisher_client):
+    """
+    Test that the joboffer detail view renders without error as anonymous user
+    """
+    client = publisher_client
+
+    target_url = reverse(ADD_URL)
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
