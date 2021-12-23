@@ -36,8 +36,8 @@ class JobOfferAdminView(ListView):
 
     def get_queryset(self):
         # TODO: Implement queryset filtering for the company
-        # TODO: Implement reverse ordering by date
-        return super().get_queryset()
+        qs = super().get_queryset()
+        return qs.order_by('-created_at')
 
     def get_context_data(self, *args, **kwargs):
         # TODO: Implement fetching the company
