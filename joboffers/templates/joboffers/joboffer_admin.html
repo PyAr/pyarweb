@@ -1,51 +1,54 @@
 {% extends "base.html" %}
 {% load devtags %}
-{% load i18n static pagination_tags %}
+{% load i18n static %}
 {% block title %}Ofertas laborales con Python{% endblock %}
 
 {% block content %}
 <!-- Lista de trabajos -->
-<main id="main" class="joboffers container" role="main"
-  <section>
+<main id="main" class="joboffers container" role="main" <section>
     <div class="page-header">
-      <div class="input-group">
-        <input type="text" class="form-control form-control " placeholder="{% trans 'Buscar...' %}">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button">{% trans 'Filtrar' %}</button>
-        </span>
-      </div><!-- /input-group -->
+        <div class="input-group">
+            <input type="text" class="form-control form-control " placeholder="{% trans 'Buscar...' %}">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">{% trans 'Filtrar' %}</button>
+            </span>
+        </div><!-- /input-group -->
 
-      <h2>{% trans 'Ofertas de trabajo de ' %} {{ company.name }}</h2>
+        <h2>{% trans 'Ofertas de trabajo de ' %} {{ company.name }}</h2>
     </div>
 
     {% if object_list %}
     <div class="list-group">
-      {% for object in object_list %}
-      <a href="{{ object.get_absolute_url }}" class="list-group-item">
-        <h4 class="text-primary">
-          {{ object.title }}<span class="job-date">({{ object.modified_at|date:"SHORT_DATE_FORMAT" }}, {{ object.location }})</span>
-        </h4>
-        <p>{{ object.description|html2text|truncatewords:50 }}</p>
-        <div class="text-right">
-          {% include "joboffers/_tags.html" %}
-        </div>
-      </a>
-      {% endfor %}
-    </div>
+        {% for object in object_list %}
+        <a href="{{ object.get_absolute_url }}" class="list-group-item">
+            <h4 class="text-primary">
+                {{ object.title }}<span class="job-date">({{ object.modified_at|date:"SHORT_DATE_FORMAT" }}, {{ object.location }})</span>
+            </h4>
+            <p>{{ object.description|html2text|truncatewords:50 }}</p>
+            <div class="text-right">
+                {% include "joboffers/_tags.html" %}
+            </div>
+        </a>
+        {% endfor %}
 
-    {% paginate %}
+        {% include 'joboffers/_paginator.html' with page_obj=page_obj %}
+
+    </div>
     {% else %}
     <div class="col-md-12">
-      <p>{% trans 'No hay ofertas cargadas actualmente.' %}</p>
+        <p>{% trans 'No hay ofertas cargadas actualmente.' %}</p>
     </div>
     {% endif %}
+
+    <hr />
+
     <div class="section-button-group pull-right">
-      <a href="{% url 'joboffers:add' %}" class="btn btn-info">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        {% trans 'Nueva Oferta' %}
-      </a>
-      </div>
-  </section>
+        <a href="{% url 'joboffers:add' %}" class="btn btn-info">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            {% trans 'Nueva Oferta' %}
+        </a>
+    </div>
+    </section>
 
 </main>
 {% endblock %}

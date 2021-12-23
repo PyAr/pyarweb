@@ -32,6 +32,7 @@ class JobOfferUpdateView(UpdateView):
 class JobOfferAdminView(ListView):
     template_name = 'joboffers/joboffer_admin.html'
     model = JobOffer
+    paginate_by = 10
 
     def get_queryset(self):
         # TODO: Implement queryset filtering for the company
