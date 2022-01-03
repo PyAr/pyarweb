@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -36,8 +37,17 @@ class JobOfferAdminView(ListView):
 
     def get_queryset(self):
         # TODO: Implement queryset filtering for the company
+        query = self.request.GET.get('q')
+
         qs = super().get_queryset()
-        return qs.order_by('-created_at')
+
+        return (
+            qs
+            .order_by('-created_at')
+            .filter(
+                Q(title__contains=query) | Q(tags__name=query)
+            )
+        )
 
     def get_context_data(self, *args, **kwargs):
         # TODO: Implement fetching the company
