@@ -1,7 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from functools import wraps
-from typing import Literal
+from typing import Set
 
 from .models import OfferState
 from pycompanies.models import UserCompanyProfile
@@ -23,31 +22,6 @@ CODE_DEACTIVATE = "deactivate"
 CODE_REQUEST_MODERATION = "reqmod"
 CODE_APPROVE = "approve"
 
-ACTION = Literal[
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE,
-    CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE
-]
-
-
-def register_action(func, profile):
-    for state in func.valid_prev_states:
-        if profile == ROLE_PUBLISHER:
-            ACTIONS_PUBLISHER[state].add(func.code)
-        else:
-            ACTIONS_ADMIN[state].add(func.code)
-
-
-def check_state(func):
-    @wraps(func)
-    def wrapped(job_offer):
-        if job_offer.state not in func.valid_prev_states:
-            raise ValueError("Inconsistent state")
-        else:
-            result = func(job_offer)
-            return result
-
-    return wrapped
-
 
 @dataclass
 class Action:
@@ -55,6 +29,21 @@ class Action:
     code: str
     valid_prev_states: tuple
 
+
+def register_action(action: Action, role):
+    """
+    Populates the actions structure with the given action and role.
+    The actions structure contains the actions allowed for every role
+    for every joboffer state.
+    """
+    for state in action.valid_prev_states:
+        if role == ROLE_PUBLISHER:
+            ACTIONS_PUBLISHER[state].add(action.code)
+        else:
+            ACTIONS_ADMIN[state].add(action.code)
+
+
+# Actions #
 
 create = Action(
     verbose_name="Crear",
@@ -111,6 +100,8 @@ get_history = Action(
     ),
 )
 
+# end actions #
+
 register_action(create, ROLE_PUBLISHER)
 register_action(edit, ROLE_PUBLISHER)
 register_action(deactivate, ROLE_PUBLISHER)
@@ -158,9 +149,10 @@ def get_valid_actions(user, company, offer_state: OfferState, roles=None):
     else:
         roles_ = roles
 
-    actions: ACTION = set()
+    actions: Set[str] = set()
 
     for role in roles_:
+        # Appends the actions for every role
         actions = actions | ACTIONS[role][offer_state]
 
     return actions
