@@ -123,7 +123,7 @@ def _get_roles(company, user):
     """
     Retrieves a list of the roles marching the giben user and company
     """
-    roles = set([])
+    roles = set()
 
     if user.is_anonymous:
         return roles
