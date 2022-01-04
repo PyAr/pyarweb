@@ -1,7 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-from django.db.models import query
-from django.http import request
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView, TemplateView
@@ -10,10 +8,9 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 
 from braces.views import LoginRequiredMixin
 
-from pycompanies.forms import CompanyForm, UserCompanyForm
+from pycompanies.forms import CompanyForm
 from pycompanies.models import Company, UserCompanyProfile
 from community.views import OwnedObject
-from pycompanies.tests.factories import UserCompanyProfileFactory
 
 
 class CompanyDetail(DetailView):
@@ -73,26 +70,51 @@ class CompanyAdmin(LoginRequiredMixin, TemplateView):
     template_name = 'companies/company_admin.html'
 
     def get_context_data(self, **kwargs):
+        """
+        If user is associated to a company, add to context the company and users information.
+        """
         context = super(CompanyAdmin, self).get_context_data(**kwargs)
         context['page_title'] = _('Administrar Empresa')
 
         if self.request.user.is_anonymous is False:
             context['user'] = self.request.user
-            if self.request.GET.get('empresa'):
-                context['companies'] = Company.objects.filter(
-                    name__icontains=self.request.GET['empresa'])
+            try:
+                user_company = UserCompanyProfile.objects.get(user=self.request.user)
+                if user_company:
+                    context['user_company_id'] = user_company.id
+                    context['own_company'] = user_company.company
+                    context['company_users'] = UserCompanyProfile.objects.filter(
+                        company=context['own_company'])
                 return context
-            else:
-                try:
-                    user_company = UserCompanyProfile.objects.get(user=self.request.user)
-                    if user_company:
-                        context['user_company_id'] = user_company.id
-                        context['own_company'] = user_company.company
-                        context['company_users'] = UserCompanyProfile.objects.filter(
-                            company=context['own_company'])
-                    return context
-                except UserCompanyProfile.DoesNotExist:
-                    return context
+            except UserCompanyProfile.DoesNotExist:
+                return context
+
+
+class CompanyAssociationList(LoginRequiredMixin, ListView):
+    model = Company
+    template_name = 'companies/company_association_list.html'
+    queryset = Company.objects.all()
+    context_object_name = 'companies'
+
+    def get_queryset(self):
+        """
+        Filter companies if 'empresa' is passed as query param with the search value
+        """
+        queryset = super().get_queryset()
+        if self.request.GET.get('empresa'):
+            queryset = queryset.filter(
+                name__icontains=self.request.GET['empresa'])
+            return queryset
+
+    def get_context_data(self, **kwargs):
+        """
+        Add 'busqueda' to context if 'empresa' is passed as query param,
+        in order to set the search input previous value.
+        """
+        context = super(CompanyAssociationList, self).get_context_data(**kwargs)
+        if self.request.GET.get('empresa'):
+            context['busqueda'] = self.request.GET.get('empresa')
+        return context
 
 
 class CompanyDisassociate(LoginRequiredMixin, DeleteView):
@@ -105,20 +127,18 @@ class CompanyDisassociate(LoginRequiredMixin, DeleteView):
         context['company'] = context['object'].company
         users_quantity = context['object'].company.users.count()
         if (users_quantity == 1):
-            context['message'] = '''Esta es la última persona vinculada a esta empresa
-                ¿Estás seguro que deseas desvincularla?'''
+            context['message'] = "Esta es la última persona vinculada a esta empresa "\
+                "¿Estás seguro que deseas desvincularla?"
         else:
-            context['message'] = f'''¿Estás seguro que desea desvincular a
-                {context['object'].user} de {context['object'].company.name}?'''
+            context['message'] = "¿Estás seguro que desea desvincular a "\
+                f"{context['object'].user} de {context['object'].company.name}?"
         return context
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        logged_user_company_profile = UserCompanyProfile.objects.get(user=self.request.user)
-        return queryset.filter(company=logged_user_company_profile.company)
 
 
 def user_already_in_company(user):
+    """
+    Returns the user company profile if exists. If it doesn't, returns False.
+    """
     try:
         user_company = UserCompanyProfile.objects.get(user=user)
         return user_company

@@ -32,6 +32,7 @@ class CompanyForm(forms.ModelForm):
         fields = ['name', 'photo', 'link', 'description']
         model = Company
 
+
 class UserCompanyForm(forms.ModelForm):
     """A PyAr user companies form."""
 

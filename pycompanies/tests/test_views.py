@@ -1,4 +1,3 @@
-import factory
 import pytest
 
 from django.test import Client
@@ -8,7 +7,6 @@ from django.contrib.messages import get_messages as contrib_get_messages
 from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
 
 from .factories import CompanyFactory, UserCompanyProfileFactory
-from ..models import Company
 
 
 ERROR_USER_DOES_NOT_EXIST = 'Le usuarie que ingresó no existe.'
@@ -52,7 +50,9 @@ def create_user_company_profile():
 
 @pytest.mark.django_db
 def test_associate_unexisting_user(logged_client):
-
+    """
+    Should fail to associate an unexistant user
+    """
     company = CompanyFactory.create()
     ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
 
@@ -66,7 +66,9 @@ def test_associate_unexisting_user(logged_client):
 
 @pytest.mark.django_db
 def test_associate_user_in_company(logged_client):
-
+    """
+    Should redirect
+    """
     company = CompanyFactory.create()
     user = UserFactory.create()
 
@@ -87,7 +89,8 @@ def test_associate_user_already_in_company(logged_client):
     user = UserFactory.create()
     user_company = UserCompanyProfileFactory.create(company=company, user=user)
 
-    ERROR_USER_ALREADY_IN_COMPANY = f'Le usuarie que desea vincular ya pertenece a {user_company.company}'
+    ERROR_USER_ALREADY_IN_COMPANY = "Le usuarie que desea vincular ya "\
+        f"pertenece a {user_company.company}"
 
     ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
 
@@ -140,9 +143,9 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
 
     company_1 = CompanyFactory.create(name='company_1')
     company_2 = CompanyFactory.create(name='company_2')
-    COMPANY_ADMIN_URL = reverse_lazy('companies:admin')
+    COMPANY_LIST_URL = reverse_lazy('companies:association_list')
 
-    response = logged_client.get(COMPANY_ADMIN_URL, data={'empresa': 'company'})
+    response = logged_client.get(COMPANY_LIST_URL, data={'empresa': 'company'})
 
     assert 200 == response.status_code
     assert 2 == len(response.context['companies'])
@@ -151,13 +154,49 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
 
 
 @pytest.mark.django_db
-def test_company_admin_should_have_one_company_in_context(logged_client):
+def test_company_admin_should_have_no__matching_company_in_context(logged_client):
 
-    company_1 = CompanyFactory.create(name='company_1')
-    COMPANY_ADMIN_URL = reverse_lazy('companies:admin')
+    CompanyFactory.create(name='company_1')
+    COMPANY_LIST_URL = reverse_lazy('companies:association_list')
 
-    response = logged_client.get(COMPANY_ADMIN_URL, data={'empresa': 'company'})
+    response = logged_client.get(COMPANY_LIST_URL, data={'empresa': 'not_matching_search'})
 
     assert 200 == response.status_code
-    assert 1 == len(response.context['companies'])
-    assert company_1 == response.context['companies'][0]
+    assert 0 == len(response.context['companies'])
+
+
+@pytest.mark.django_db
+def test_company_disassociate_last_user_from_company(logged_client, user):
+
+    DISASSOCIATE_MESSAGE = "Esta es la última persona vinculada a esta empresa "\
+                "¿Estás seguro que deseas desvincularla?"
+
+    company_1 = CompanyFactory.create(name='company_1')
+    user_company_profile = UserCompanyProfileFactory.create(company=company_1, user=user)
+
+    COMPANY_DISSASOCIATE_URL = reverse_lazy('companies:disassociate',
+                                            kwargs={'pk': user_company_profile.id})
+
+    response = logged_client.get(COMPANY_DISSASOCIATE_URL, data={'empresa': company_1})
+
+    assert 200 == response.status_code
+    assert DISASSOCIATE_MESSAGE == response.context_data['message']
+
+
+@pytest.mark.django_db
+def test_company_disassociate_one_user_from_company(logged_client, user):
+
+    user_2 = UserFactory.create()
+    company = CompanyFactory.create(name='company_1')
+    user_company_profile = UserCompanyProfileFactory.create(company=company, user=user)
+    UserCompanyProfileFactory.create(company=company, user=user_2)
+
+    DISASSOCIATE_MESSAGE = f"¿Estás seguro que desea desvincular a {user} de {company.name}?"
+
+    COMPANY_DISSASOCIATE_URL = reverse_lazy('companies:disassociate',
+                                            kwargs={'pk': user_company_profile.id})
+
+    response = logged_client.get(COMPANY_DISSASOCIATE_URL, data={'empresa': company})
+
+    assert 200 == response.status_code
+    assert DISASSOCIATE_MESSAGE == response.context_data['message']
