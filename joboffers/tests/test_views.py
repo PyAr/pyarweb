@@ -55,6 +55,8 @@ def test_joboffer_creation_with_all_fields_ok(logged_client):
 
     job_data = factory.build(dict, FACTORY_CLASS=JobOfferFactory)
 
+    del job_data['company']
+
     assert 0 == JobOffer.objects.count()
 
     response = client.post(ADD_URL, job_data)
