@@ -39,13 +39,18 @@ class JobOfferAdminView(ListView):
         # TODO: Implement queryset filtering for the company
         query = self.request.GET.get('q')
 
+        if query:
+            filtering_q = Q(title__icontains=query) | Q(tags__name__iexact=query)
+        else:
+            filtering_q = Q()
+
         qs = super().get_queryset()
 
         return (
             qs
             .order_by('-created_at')
             .filter(
-                Q(title__contains=query) | Q(tags__name=query)
+                filtering_q
             )
         )
 

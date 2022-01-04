@@ -136,6 +136,25 @@ def test_joboffer_admin_works_with_empty_query_search(logged_client, joboffers_l
 
 
 @pytest.mark.django_db
+def test_joboffer_admin_works_without_query(logged_client, joboffers_list):
+    """
+    Test that an empty queryset returns the joboffers reversed
+    """
+    client = logged_client
+
+    target_url = reverse_lazy('joboffers:admin')
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+    actual_joboffers = response.context_data['object_list'].values_list('id', flat=True)
+
+    joboffers_list.reverse()
+    expected_joboffers = [joboffer.id for joboffer in joboffers_list]
+    assert list(actual_joboffers) == expected_joboffers
+
+
+@pytest.mark.django_db
 def test_joboffer_admin_filters_by_company_name(logged_client, joboffers_list):
     """
     Test that searching by title2 retrieves only title2 joboffer
