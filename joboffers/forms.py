@@ -35,7 +35,8 @@ class JobOfferForm(forms.ModelForm):
             'tags',
             'hiring_type',
             'salary',
-            'description',
+            'short_description',
+            'description'
         )
         self.helper.add_input(Submit('submit', _('Guardar')))
         self.helper.add_input(
