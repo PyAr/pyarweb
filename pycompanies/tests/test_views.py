@@ -67,7 +67,7 @@ def test_associate_unexisting_user(logged_client):
 @pytest.mark.django_db
 def test_associate_user_in_company(logged_client):
     """
-    Should redirect
+    Should redirect and send a success message after associating the user
     """
     company = CompanyFactory.create()
     user = UserFactory.create()
@@ -84,7 +84,9 @@ def test_associate_user_in_company(logged_client):
 
 @pytest.mark.django_db
 def test_associate_user_already_in_company(logged_client):
-
+    """
+    Should fail, redirect and send a warning message if the user is already in the company
+    """
     company = CompanyFactory.create()
     user = UserFactory.create()
     user_company = UserCompanyProfileFactory.create(company=company, user=user)
@@ -104,7 +106,9 @@ def test_associate_user_already_in_company(logged_client):
 
 @pytest.mark.django_db
 def test_associate_user_in_other_company(logged_client):
-
+    """
+    Should fail, redirect and send a warning message if the user is associated in other company
+    """
     user = UserFactory.create()
     company = CompanyFactory.create(name='company_1')
     other_company = CompanyFactory.create(name='company_2')
@@ -124,7 +128,9 @@ def test_associate_user_in_other_company(logged_client):
 
 @pytest.mark.django_db
 def test_company_admin_with_no_logged_user_should_redirect(client):
-
+    """
+    Should redirect if the user is not logged
+    """
     response = client.get(ADMIN_URL)
 
     assert 302 == response.status_code
@@ -132,7 +138,9 @@ def test_company_admin_with_no_logged_user_should_redirect(client):
 
 @pytest.mark.django_db
 def test_company_admin_with_logged_user_should_not_redirect(logged_client):
-
+    """
+    Should not redirect if the user is logged
+    """
     response = logged_client.get(ADMIN_URL)
 
     assert 200 == response.status_code
@@ -140,7 +148,9 @@ def test_company_admin_with_logged_user_should_not_redirect(logged_client):
 
 @pytest.mark.django_db
 def test_company_admin_should_have_two_companies_in_context(logged_client):
-
+    """
+    Context should have two companies if the search matches with both company names
+    """
     company_1 = CompanyFactory.create(name='company_1')
     company_2 = CompanyFactory.create(name='company_2')
     COMPANY_LIST_URL = reverse_lazy('companies:association_list')
@@ -155,7 +165,9 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
 
 @pytest.mark.django_db
 def test_company_admin_should_have_no__matching_company_in_context(logged_client):
-
+    """
+    Context should have an empty companies if the search doesn't match any company name
+    """
     CompanyFactory.create(name='company_1')
     COMPANY_LIST_URL = reverse_lazy('companies:association_list')
 
@@ -167,7 +179,9 @@ def test_company_admin_should_have_no__matching_company_in_context(logged_client
 
 @pytest.mark.django_db
 def test_company_disassociate_last_user_from_company(logged_client, user):
-
+    """
+    Message in context should notice if is the last user associated to the company
+    """
     DISASSOCIATE_MESSAGE = "Esta es la última persona vinculada a esta empresa "\
                 "¿Estás seguro que deseas desvincularla?"
 
@@ -185,7 +199,9 @@ def test_company_disassociate_last_user_from_company(logged_client, user):
 
 @pytest.mark.django_db
 def test_company_disassociate_one_user_from_company(logged_client, user):
-
+    """
+    Message in context should show the user and company if it's not the last user associated
+    """
     user_2 = UserFactory.create()
     company = CompanyFactory.create(name='company_1')
     user_company_profile = UserCompanyProfileFactory.create(company=company, user=user)

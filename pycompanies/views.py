@@ -13,12 +13,12 @@ from pycompanies.models import Company, UserCompanyProfile
 from community.views import OwnedObject
 
 
-class CompanyDetail(DetailView):
+class CompanyDetailView(DetailView):
     model = Company
     template_name = 'companies/company_detail.html'
 
 
-class CompanyList(ListView):
+class CompanyListView(ListView):
     template_name = 'companies/company_list.html'
     context_object_name = 'companies'
 
@@ -26,7 +26,7 @@ class CompanyList(ListView):
         return Company.objects.all().order_by('?')
 
     def get_context_data(self, **kwargs):
-        context = super(CompanyList, self).get_context_data(**kwargs)
+        context = super(CompanyListView, self).get_context_data(**kwargs)
         if self.request.user.is_anonymous is False:
             try:
                 context['own_company'] = UserCompanyProfile.objects.get(
@@ -37,7 +37,7 @@ class CompanyList(ListView):
                 return context
 
 
-class CompanyCreate(LoginRequiredMixin, CreateView):
+class CompanyCreateView(LoginRequiredMixin, CreateView):
     form_class = CompanyForm
     model = Company
     success_url = '/empresas/'
@@ -45,27 +45,27 @@ class CompanyCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(CompanyCreate, self).form_valid(form)
+        return super(CompanyCreateView, self).form_valid(form)
 
 
-class CompanyUpdate(LoginRequiredMixin, OwnedObject, UpdateView):
+class CompanyUpdateView(LoginRequiredMixin, OwnedObject, UpdateView):
     form_class = CompanyForm
     model = Company
     template_name = 'companies/company_form.html'
 
     def get_context_data(self, **kwargs):
-        context = super(CompanyUpdate, self).get_context_data(**kwargs)
+        context = super(CompanyUpdateView, self).get_context_data(**kwargs)
         context['page_title'] = _('Editar Empresa')
         return context
 
 
-class CompanyDelete(LoginRequiredMixin, OwnedObject, DeleteView):
+class CompanyDeleteView(LoginRequiredMixin, OwnedObject, DeleteView):
     model = Company
     success_url = '/empresas/'
     template_name = 'companies/company_confirm_delete.html'
 
 
-class CompanyAdmin(LoginRequiredMixin, TemplateView):
+class CompanyAdminView(LoginRequiredMixin, TemplateView):
     model = Company
     template_name = 'companies/company_admin.html'
 
@@ -73,7 +73,7 @@ class CompanyAdmin(LoginRequiredMixin, TemplateView):
         """
         If user is associated to a company, add to context the company and users information.
         """
-        context = super(CompanyAdmin, self).get_context_data(**kwargs)
+        context = super(CompanyAdminView, self).get_context_data(**kwargs)
         context['page_title'] = _('Administrar Empresa')
 
         if self.request.user.is_anonymous is False:
@@ -90,7 +90,7 @@ class CompanyAdmin(LoginRequiredMixin, TemplateView):
                 return context
 
 
-class CompanyAssociationList(LoginRequiredMixin, ListView):
+class CompanyAssociationListView(LoginRequiredMixin, ListView):
     model = Company
     template_name = 'companies/company_association_list.html'
     queryset = Company.objects.all()
@@ -98,7 +98,7 @@ class CompanyAssociationList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """
-        Filter companies if 'empresa' is passed as query param with the search value
+        Filters companies if 'empresa' is passed as query param with the search value
         """
         queryset = super().get_queryset()
         if self.request.GET.get('empresa'):
@@ -108,21 +108,24 @@ class CompanyAssociationList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Add 'busqueda' to context if 'empresa' is passed as query param,
+        Adds 'busqueda' to context if 'empresa' is passed as query param,
         in order to set the search input previous value.
         """
-        context = super(CompanyAssociationList, self).get_context_data(**kwargs)
+        context = super(CompanyAssociationListView, self).get_context_data(**kwargs)
         if self.request.GET.get('empresa'):
             context['busqueda'] = self.request.GET.get('empresa')
         return context
 
 
-class CompanyDisassociate(LoginRequiredMixin, DeleteView):
+class CompanyDisassociateView(LoginRequiredMixin, DeleteView):
     model = UserCompanyProfile
     success_url = '/empresas/admin'
     template_name = 'companies/company_confirm_disassociate.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Adds different messages to context, informing if it's the last associated.
+        """
         context = super().get_context_data(**kwargs)
         context['company'] = context['object'].company
         users_quantity = context['object'].company.users.count()
@@ -146,10 +149,13 @@ def user_already_in_company(user):
         return False
 
 
-class CompanyAssociate(LoginRequiredMixin, View):
+class CompanyAssociateView(LoginRequiredMixin, View):
     success_url = '/empresas/'
 
     def post(self, request, company):
+        """
+        Associates an user to the company if exists and is able to.
+        """
         User = get_user_model()
         try:
             user = User.objects.get(username=request.POST['username'])
