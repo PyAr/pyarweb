@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 
-from pycompanies.models import Company
+from pycompanies.models import Company, UserCompanyProfile
 from .forms import JobOfferForm
 from .models import JobOffer
 
@@ -16,6 +16,14 @@ class JobOfferCreateView(CreateView):
         form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
         return super().form_valid(form)
+
+    def get_initial(self):
+        try:
+            user_company = UserCompanyProfile.objects.get(user=self.request.user)
+            self.initial.update({'company': user_company.company})
+            return self.initial
+        except UserCompanyProfile.DoesNotExist:
+            return self.initial
 
 
 class JobOfferUpdateView(UpdateView):
