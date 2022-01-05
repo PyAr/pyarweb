@@ -67,5 +67,11 @@ class JobOfferForm(forms.ModelForm):
                     'Django, Python, MySQL, Linux',
             'hiring_type': '',
             'salary': '',
-            'description': 'Descripción de la oferta'
+            'description': 'Descripción de la oferta',
+            'short_description': 'Descripción corta de la oferta'
+        }
+        widgets = {
+            'short_description': forms.Textarea(attrs={
+                'maxlength': '200',
+            })
         }
