@@ -183,7 +183,7 @@ def test_company_disassociate_last_user_from_company(logged_client, user):
     Message in context should notice if is the last user associated to the company
     """
     DISASSOCIATE_MESSAGE = "Esta es la última persona vinculada a esta empresa "\
-                "¿Estás seguro que deseas desvincularla?"
+        "¿Estás seguro que deseas desvincularla?"
 
     company_1 = CompanyFactory.create(name='company_1')
     user_company_profile = UserCompanyProfileFactory.create(company=company_1, user=user)
