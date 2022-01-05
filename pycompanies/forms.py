@@ -36,8 +36,6 @@ class CompanyForm(forms.ModelForm):
 class UserCompanyForm(forms.ModelForm):
     """A PyAr user companies form."""
 
-    description = forms.CharField(widget=SummernoteInplaceWidget())
-
     def __init__(self, *args, **kwargs):
         super(UserCompanyForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
