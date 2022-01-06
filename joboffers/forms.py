@@ -66,8 +66,8 @@ class JobOfferForm(forms.ModelForm):
                     'que esten relacionadas con el puesto de trabajo. '
                     'Los tags deben estar separados por comas, por ejemplo: '
                     'Django, Python, MySQL, Linux',
-            'hiring_type': '',
-            'salary': '',
+            'hiring_type': 'Relación contractual con la empresa contratante.',
+            'salary': 'Ej: 2000-3000 USD mensuales.',
             'description': 'Descripción de la oferta'
         }
 
