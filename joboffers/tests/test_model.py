@@ -1,6 +1,7 @@
 import pytest
 
 from django.db.utils import IntegrityError
+from django.utils.text import slugify
 from factory import Faker
 
 from joboffers.models import Remoteness
@@ -98,3 +99,25 @@ def test_assert_joboffer_ok_when_just_one_contact_info_is_present():
     )
 
     assert JobOffer.objects.all().count() == 3
+
+
+@pytest.mark.django_db
+def test_assert_slug_is_updated_on_title_change():
+    """
+    Assert that a joboffer updates the slug after title update.
+    """
+    UPDATED_TITLE = 'Job Offer Updated'
+
+    joboffer = JobOfferFactory.create(
+        remoteness=Remoteness.REMOTE,
+        title='Job Offer',
+        location=None,
+        contact_mail=Faker('email'),
+        contact_phone=None,
+        contact_url=None
+    )
+
+    joboffer.title = UPDATED_TITLE
+    joboffer.save()
+
+    assert slugify(UPDATED_TITLE) == joboffer.slug
