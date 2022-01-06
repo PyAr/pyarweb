@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 
 from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
 
+from pycompanies.tests.factories import UserCompanyProfileFactory
 from .factories import JobOfferFactory
 from ..models import JobOffer
 
@@ -25,6 +26,14 @@ def create_logged_client(user):
     client = Client()
     client.login(username=user.username, password=DEFAULT_USER_PASSWORD)
     return client
+
+
+@pytest.fixture(name='user_company_profile')
+def create_user_company_profile(user):
+    """
+    Fixture with a dummy UserCompanyProfileFactory
+    """
+    return UserCompanyProfileFactory.create(user=user)
 
 
 ADD_URL = reverse_lazy('joboffers:add')
@@ -53,3 +62,18 @@ def test_joboffer_creation_with_all_fields_ok(logged_client):
     assert ADMIN_URL == response.url
     assert 1 == JobOffer.objects.count()
     # TODO: Test for deactivated state
+
+
+@pytest.mark.django_db
+def test_joboffer_form_with_initial_user_company(user, logged_client, user_company_profile):
+    """
+    Assert that the form inits with the associated user company
+    """
+    client = logged_client
+    target_url = ADD_URL
+    company = user_company_profile.company
+    factory.build(dict, user=user.id, company=company.id, FACTORY_CLASS=JobOfferFactory)
+
+    response = client.get(target_url)
+
+    assert company == response.context['form'].initial['company']
