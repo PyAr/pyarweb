@@ -1,35 +1,37 @@
 
-                <dl>
-                  <dt>Última Modificación</dt>
-                  <dd>
-                    <time class="published" datetime="{{ obj.modified_at.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ obj.modified_at|date:"d/m/Y" }}</time>
-                  </dd>
-                  {% if obj.location %}
-                    <dt>Lugar de trabajo</dt>
-                    <dd>{{ obj.location|title }}</dd>
-                    {% endif %}
+<dl>
+  <dt>Estado</dt>
+  <dd>{{ obj.get_state_display }}</dd>
+  <dt>Última Modificación</dt>
+  <dd>
+    <time class="published" datetime="{{ obj.modified_at.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ obj.modified_at|date:"d/m/Y" }}</time>
+  </dd>
+  {% if obj.location %}
+  <dt>Lugar de trabajo</dt>
+  <dd>{{ obj.location|title }}</dd>
+  {% endif %}
 
-                  {% if obj.company %}
-                    <dt>Empresa</dt>
-                    <dd>
-                    <a href="{{ obj.company.get_absolute_url }}">{{ obj.company.name }}</a>
-                    </dd>
-                  {% endif %}
+  {% if obj.company %}
+    <dt>Empresa</dt>
+    <dd>
+      <a href="{{ obj.company.get_absolute_url }}">{{ obj.company.name }}</a>
+    </dd>
+  {% endif %}
 
-                  <dt>Permite trabajar remoto</dt>
-                  <dd>{% if obj.remote_work %}Si{% else %}No{% endif %}</dd>
+  <dt>Permite trabajar remoto</dt>
+  <dd>{% if obj.remote_work %}Si{% else %}No{% endif %}</dd>
 
-                  <dt>Experiencia Requerida</dt>
-                  <dd>{{ obj.get_experience_display }}</dd>
+  <dt>Experiencia Requerida</dt>
+  <dd>{{ obj.get_experience_display }}</dd>
 
-                  <dt>Modalidad de Trabajo</dt>
-                  <dd>{{ obj.get_remoteness_display }}</dd>
+  <dt>Modalidad de Trabajo</dt>
+  <dd>{{ obj.get_remoteness_display }}</dd>
 
-                  <dt>Tipo de Contratación</dt>
-                  <dd>{{ obj.get_hiring_type_display }}</dd>
+  <dt>Tipo de Contratación</dt>
+  <dd>{{ obj.get_hiring_type_display }}</dd>
 
-                  <dt>Rango Salarial</dt>
-                  <dd>{{ obj.salary }}</dd>
+  <dt>Rango Salarial</dt>
+  <dd>{{ obj.salary }}</dd>
 
-                  <!-- Agregar informacion de contacto que se despliegue con un botón -->
-                </dl>
+  <!-- Agregar informacion de contacto que se despliegue con un botón -->
+</dl>
