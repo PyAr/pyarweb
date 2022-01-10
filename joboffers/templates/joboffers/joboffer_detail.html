@@ -18,11 +18,9 @@
 
       <div class="row">
         <div class="col-md-8">
-
-          {% autoescape off %}
-            {{ object.description }}
-          {% endautoescape %}
-
+          <div>
+              {{ object.description|safe }}
+          </div>
           <div class="text-right">
             {% include "joboffers/_tags.html" %}
           </div>
@@ -42,16 +40,12 @@
       </div>
     </div>
     <div class="pull-right">
-      {% if object.created_by == user %}
-      <a href="{% url 'joboffers:edit' object.slug %}" class="btn btn-lg btn-info">
-        {% trans 'Editar' %}
-        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+      {% for button in action_buttons %}
+      <a href="{% url button.target_url object.slug %}" class="btn {{ button.css_classes|join:' ' }}" >
+        {{ button.text }}
+        <span class="glyphicon {{ button.icon_class }}" aria-hidden="true"></span>
       </a>
-      {% endif %}
-
-      {% if request.user|has_group:"job_moderator" == True %}
-      <a href="{% url 'jobs_inactivate' object.id %}" class="btn btn-danger">{% trans 'Inactivar' %}</a>
-      {% endif %}
+      {% endfor %}
     </div>
   </div>
 </main>

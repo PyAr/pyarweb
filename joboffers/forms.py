@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from .models import JobOffer
+from .models import JobOffer, JobOfferComment
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
@@ -37,6 +37,8 @@ class JobOfferForm(forms.ModelForm):
             'salary',
             'description',
         )
+        self.helper.attrs = {"novalidate": ""}
+
         self.helper.add_input(Submit('submit', _('Guardar')))
         self.helper.add_input(
             Reset('reset', _('Limpiar'), css_class='btn-default')
@@ -64,7 +66,28 @@ class JobOfferForm(forms.ModelForm):
                     'que esten relacionadas con el puesto de trabajo. '
                     'Los tags deben estar separados por comas, por ejemplo: '
                     'Django, Python, MySQL, Linux',
-            'hiring_type': '',
-            'salary': '',
+            'hiring_type': 'Relación contractual con la empresa contratante.',
+            'salary': 'Ej: 2000-3000 USD mensuales.',
             'description': 'Descripción de la oferta'
+        }
+
+
+class JobOfferCommentForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.attrs = {"novalidate": ""}
+
+        self.helper.add_input(Submit('submit', _('Guardar')))
+
+    joboffer = forms.ModelChoiceField(queryset=JobOffer.objects.all(), widget=forms.HiddenInput())
+
+    class Meta:
+        model = JobOfferComment
+        fields = ('joboffer', 'comment_type', 'text')
+        labels = {
+            'comment_type': _('Motivo de Rechazo'),
+            'text': _('Comentario')
         }
