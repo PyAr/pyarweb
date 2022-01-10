@@ -2,7 +2,8 @@ from factory import Faker, SubFactory, fuzzy, post_generation
 from factory.django import DjangoModelFactory
 
 from events.tests.factories import UserFactory
-from joboffers.models import Experience, HiringType, JobOffer, Remoteness
+from joboffers.models import (CommentType, Experience, HiringType, JobOffer,
+                              JobOfferComment, Remoteness)
 from pycompanies.tests.factories import CompanyFactory
 
 
@@ -38,3 +39,11 @@ class JobOfferFactory(DjangoModelFactory):
         if extracted:
             obj.created = extracted
             obj.save()
+
+
+class JobOfferCommentFactory(DjangoModelFactory):
+    class Meta:
+        model = JobOfferComment
+
+    comment_type = fuzzy.FuzzyChoice(CommentType.values)
+    text = Faker('sentence')

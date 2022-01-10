@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<main id="main" class="joboffer container" role="main">
+  <div class="col-lg-12">
+	  <div class="page-header">
+	    <h2>{% trans 'Motivo de Rechazo' %}
+	    </h2>
+	  </div>
+	  {% crispy form %}
+	</div>
+</main>
+{% endblock %}
