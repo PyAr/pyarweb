@@ -1,5 +1,7 @@
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
+
 from django.utils.translation import ugettext_lazy as _
 from .models import JobOffer, JobOfferComment
 from crispy_forms.layout import Submit, Reset, Layout
@@ -48,6 +50,20 @@ class JobOfferForm(forms.ModelForm):
         tags = self.cleaned_data.get('tags')
         self.cleaned_data['tags'] = utils.normalize_tags(tags)
         return self.cleaned_data['tags']
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        contact_mail = cleaned_data.get('contact_mail')
+        contact_phone = cleaned_data.get('contact_phone')
+        contact_url = cleaned_data.get('contact_url')
+
+        if not any([contact_mail, contact_phone, contact_url]):
+            raise ValidationError(_('Debe ingresar al menos un dato de contacto.'))
+            # Highlight all involved the fields
+            self.add_error('contact_mail', '')
+            self.add_error('contact_phone', '')
+            self.add_error('contact_url', '')
 
     class Meta:
         model = JobOffer
