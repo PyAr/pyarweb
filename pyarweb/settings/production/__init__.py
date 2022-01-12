@@ -50,3 +50,6 @@ if not TEST_RUNNING:
             'dsn': os.environ.get("SENTRY_DSN", "NOT_CONFIGURED"),
             'release': raven.fetch_git_sha(BASE_DIR),  # NOQA
     }
+
+# Prefix for telegram messages
+TELEGRAM_MESSAGE_PREFIX = ''

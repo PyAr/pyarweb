@@ -6,3 +6,6 @@ from pyarweb.settings.base import *  # NOQA
 # By default, the console backend writes to stdout
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEBUG = True
+
+# Prefix for telegram messages
+TELEGRAM_MESSAGE_PREFIX = '[DEV]'
