@@ -1,4 +1,4 @@
-from factory import SubFactory, Faker
+from factory import Faker, SubFactory
 from factory.django import DjangoModelFactory
 
 from pycompanies.models import Company, UserCompanyProfile
