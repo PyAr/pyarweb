@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from django.utils.translation import ugettext_lazy as _
-from .models import JobOffer, JobOfferComment
+from .models import JobOffer, JobOfferComment, Remoteness
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
@@ -64,6 +64,12 @@ class JobOfferForm(forms.ModelForm):
             self.add_error('contact_mail', '')
             self.add_error('contact_phone', '')
             self.add_error('contact_url', '')
+
+        remoteness = cleaned_data.get('remoteness')
+        location = cleaned_data.get('location')
+
+        if remoteness == Remoteness.OFFICE and not location:
+            raise ValidationError(_('Debe especificar un lugar para modalidad prescencial.'))
 
     class Meta:
         model = JobOffer
