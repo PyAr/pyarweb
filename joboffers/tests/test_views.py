@@ -64,7 +64,8 @@ def test_joboffer_create_form_render_should_not_redirect_for_an_user_with_compan
         logged_client, user
 ):
     """
-    Test that the get request to the joboffer's create view doesn't redirect for an user with company
+    Test that the get request to the joboffer's create view doesn't redirect for
+    an user with company
     """
 
     client = logged_client
