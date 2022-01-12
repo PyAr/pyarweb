@@ -2,6 +2,8 @@ import factory
 import pytest
 from ..models import JobOffer, OfferState
 from .factories import JobOfferCommentFactory, JobOfferFactory
+from pycompanies.tests.factories import UserCompanyProfileFactory
+
 # Fixtures
 from .fixtures import ( # noqa
     create_publisher_client
@@ -39,42 +41,40 @@ def test_joboffer_creation_redirects_unlogged(client):
 
 
 @pytest.mark.django_db
-def test_joboffer_create_form_render_should_fail_for_an_user_from_a_different_company(
+def test_joboffer_create_form_render_should_redirect_for_an_user_without_company(
         logged_client
 ):
     """
-    Test that the get request to the joboffer's create view fails for not allowed user
+    Test that the get request to the joboffer's create view redirects for an user without company
     """
 
     client = logged_client
     target_url = reverse(ADD_URL)
 
-    assert JobOffer.objects.count() == 0
-
     response = client.get(target_url)
+    message = "No estas relacionade a ninguna empresa. Asociate a una para poder "\
+              "crear una oferta de trabajo."
 
-    assert response.status_code == 403
+    assert message == get_plain_messages(response)[0]
+    assert response.status_code == 302
 
 
 @pytest.mark.django_db
-def test_joboffer_creation_should_fail_for_an_user_from_a_different_company(
-        logged_client, user_company_profile
+def test_joboffer_create_form_render_should_not_redirect_for_an_user_with_company(
+        logged_client, user
 ):
     """
-    Test that the post request to the joboffer's create view fails for not allowed user
+    Test that the get request to the joboffer's create view redirects for an user without company
     """
+
     client = logged_client
     target_url = reverse(ADD_URL)
-    company = user_company_profile.company
 
-    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+    UserCompanyProfileFactory.create(user=user)
 
-    assert JobOffer.objects.count() == 0
+    response = client.get(target_url)
 
-    response = client.post(target_url, job_data)
-
-    assert response.status_code == 403
-    assert JobOffer.objects.count() == 0
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db

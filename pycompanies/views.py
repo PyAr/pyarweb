@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 
 from braces.views import LoginRequiredMixin
@@ -55,3 +55,7 @@ class CompanyDelete(LoginRequiredMixin, OwnedObject, DeleteView):
     model = Company
     success_url = '/empresas/'
     template_name = 'companies/company_confirm_delete.html'
+
+
+class CompanyAssociationListView(View):
+    pass

@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
-from django.shortcuts import reverse
+from django.shortcuts import redirect, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, RedirectView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
@@ -106,10 +106,12 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def get(self, request, *args, **kwargs):
         company = get_user_company(request.user)
 
-        valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
-
-        if self.action_code not in valid_actions:
-            raise PermissionDenied()
+        if not company:
+            message = "No estas relacionade a ninguna empresa. Asociate a una para poder "\
+                "crear una oferta de trabajo."
+            messages.warning(request, message)
+            target_url = reverse('companies:association_list')
+            return HttpResponseRedirect(target_url)
 
         return super().get(request, *args, **kwargs)
 
