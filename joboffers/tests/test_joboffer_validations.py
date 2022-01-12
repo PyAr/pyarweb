@@ -17,6 +17,7 @@ from .test_views import get_plain_messages
 
 
 ADD_URL = 'joboffers:add'
+EDIT_URL = 'joboffers:edit'
 
 
 @pytest.mark.django_db
@@ -108,7 +109,7 @@ def test_joboffer_creation_without_contact_info(publisher_client, user_company_p
 
 
 @pytest.mark.django_db
-def test_joboffer_in_office_without_location(publisher_client, user_company_profile):
+def test_joboffer_creation_in_office_without_location(publisher_client, user_company_profile):
     """
     Test the validation of an in office offer without location
     """
@@ -134,3 +135,60 @@ def test_joboffer_in_office_without_location(publisher_client, user_company_prof
     errors = response.context_data['form'].non_field_errors()
 
     assert errors == ['Debe especificar un lugar para modalidad prescencial.']
+
+
+@pytest.mark.django_db
+def test_joboffer_edit_with_all_fields_empty(publisher_client, user_company_profile):
+    """
+    Test the validation of empty fields
+    """
+    client = publisher_client
+    company = user_company_profile.company
+
+    offer = JobOfferFactory.create(company=company)
+
+    target_url = reverse(EDIT_URL, kwargs={'slug': offer.slug})
+
+    assert JobOffer.objects.count() == 1
+
+    response = client.post(target_url, {'company': company.id})
+
+    assert response.status_code == 200
+
+    found_errors = response.context_data['form'].errors
+
+    MANDATORY_FIELD_ERROR = 'Este campo es obligatorio.'
+
+    expected_mandatory_fields = [
+        'title', 'experience', 'remoteness', 'hiring_type', 'salary', 'description'
+    ]
+
+    for field_name in expected_mandatory_fields:
+        assert found_errors[field_name][0] == MANDATORY_FIELD_ERROR
+
+
+@pytest.mark.django_db
+def test_joboffer_edit_with_all_fields_ok(publisher_client, user_company_profile):
+    """
+    Test the validation of empty fields
+    """
+    client = publisher_client
+    company = user_company_profile.company
+
+    offer = JobOfferFactory.create(company=company)
+    update_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+
+    assert JobOffer.objects.count() == 1
+
+    target_url = reverse(EDIT_URL, kwargs={'slug': offer.slug})
+
+    response = client.post(target_url, update_data)
+
+    assert response.status_code == 302
+
+    updated_offer = JobOffer.objects.first()
+
+    assert update_data['title'] == updated_offer.title
+    assert update_data['location'] == updated_offer.location
+    assert update_data['contact_mail'] == updated_offer.contact_mail
+    assert update_data['contact_phone'] == updated_offer.contact_phone
