@@ -9,7 +9,7 @@ from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
 from sanitizer.forms import SanitizedCharField
 
-from jobs import utils
+from . import utils
 
 
 class JobOfferForm(forms.ModelForm):
@@ -47,6 +47,9 @@ class JobOfferForm(forms.ModelForm):
         )
 
     def clean_tags(self):
+        """
+        Normalizes repeated tags and special characters
+        """
         tags = self.cleaned_data.get('tags')
         self.cleaned_data['tags'] = utils.normalize_tags(tags)
         return self.cleaned_data['tags']
@@ -59,11 +62,12 @@ class JobOfferForm(forms.ModelForm):
         contact_url = cleaned_data.get('contact_url')
 
         if not any([contact_mail, contact_phone, contact_url]):
-            raise ValidationError(_('Debe ingresar al menos un dato de contacto.'))
             # Highlight all involved the fields
             self.add_error('contact_mail', '')
             self.add_error('contact_phone', '')
             self.add_error('contact_url', '')
+
+            raise ValidationError(_('Debe ingresar al menos un dato de contacto.'))
 
         remoteness = cleaned_data.get('remoteness')
         location = cleaned_data.get('location')
