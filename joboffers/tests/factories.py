@@ -40,6 +40,17 @@ class JobOfferFactory(DjangoModelFactory):
             obj.created = extracted
             obj.save()
 
+    @post_generation
+    def tags(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for group in extracted:
+                self.tags.add(group)
+
 
 class JobOfferCommentFactory(DjangoModelFactory):
     class Meta:
