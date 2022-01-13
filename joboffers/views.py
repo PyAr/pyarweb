@@ -157,7 +157,6 @@ class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
         return reverse(self.success_url, kwargs={'slug': self.object.slug})
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
         form.instance.state = OfferState.DEACTIVATED
         return super().form_valid(form)

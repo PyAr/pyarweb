@@ -192,3 +192,4 @@ def test_joboffer_edit_with_all_fields_ok(publisher_client, user_company_profile
     assert update_data['location'] == updated_offer.location
     assert update_data['contact_mail'] == updated_offer.contact_mail
     assert update_data['contact_phone'] == updated_offer.contact_phone
+    assert updated_offer.modified_by == user_company_profile.user

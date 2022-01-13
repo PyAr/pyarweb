@@ -220,7 +220,7 @@ def test_joboffer_view_as_anonymous(client):
 
 
 @pytest.mark.django_db
-def test_joboffer_create_view_as_publusher(publisher_client):
+def test_joboffer_create_view_as_publisher(publisher_client):
     """
     Test that the joboffer detail view renders without error as a publisher
     """
