@@ -79,6 +79,27 @@ def test_joboffer_create_form_render_should_not_redirect_for_an_user_with_compan
 
 
 @pytest.mark.django_db
+def test_joboffer_creation_should_fail_for_an_user_from_a_different_company(
+        logged_client, user_company_profile
+):
+    """
+    Test that the post request to the joboffer's create view fails for not allowed user
+    """
+    client = logged_client
+    target_url = reverse(ADD_URL)
+    company = user_company_profile.company
+
+    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+
+    assert JobOffer.objects.count() == 0
+
+    response = client.post(target_url, job_data)
+
+    assert response.status_code == 403
+    assert JobOffer.objects.count() == 0
+
+
+@pytest.mark.django_db
 def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, user_company_profile):
     """
     Test creation of joboffer as publisher with data ok
