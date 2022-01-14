@@ -1,16 +1,20 @@
 import factory
 import pytest
+
+from datetime import datetime
+
+from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
+from pycompanies.tests.fixtures import create_user_company_profile # noqa
+#
+from django.contrib.messages import get_messages as contrib_get_messages
+from django.urls import reverse
+
 from ..models import JobOffer, OfferState
 from .factories import JobOfferCommentFactory, JobOfferFactory
 # Fixtures
 from .fixtures import ( # noqa
     create_publisher_client
 )
-from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
-from pycompanies.tests.fixtures import create_user_company_profile # noqa
-#
-from django.contrib.messages import get_messages as contrib_get_messages
-from django.urls import reverse
 
 
 ADD_URL = 'joboffers:add'
@@ -19,6 +23,13 @@ VIEW_URL = 'joboffers:view'
 APPROVE_URL = 'joboffers:approve'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
+
+JOBOFFER_TITLE1 = 'title1'
+JOBOFFER_TITLE2 = 'title2'
+JOBOFFER_TITLE3 = 'title3'
+
+JOBOFFER_TAG_1 = 'tag1'
+JOBOFFER_TAG_2 = 'tag2'
 
 
 def get_plain_messages(request):
@@ -118,6 +129,8 @@ def test_joboffer_creation_as_admin_should_fail(admin_client, user_company_profi
 
     job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
 
+    del job_data['company']
+
     assert 0 == JobOffer.objects.count()
 
     response = client.post(target_url, job_data)
@@ -153,6 +166,87 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
 
     joboffer = JobOffer.objects.first()
     assert OfferState.MODERATION == joboffer.state
+
+
+@pytest.fixture(name="joboffers_list")
+def create_joboffers_list(user_company_profile):
+    company = user_company_profile.company
+
+    return [
+        JobOfferFactory.create(
+            company=company,
+            title=JOBOFFER_TITLE1,
+            tags=[JOBOFFER_TAG_1],
+            created_at=datetime(2021, 12, 20)
+        ),
+        JobOfferFactory.create(
+            company=company,
+            title=JOBOFFER_TITLE2,
+            tags=[JOBOFFER_TAG_1],
+            created_at=datetime(2021, 12, 21)
+        ),
+        JobOfferFactory.create(
+            company=company,
+            title=JOBOFFER_TITLE3,
+            tags=[JOBOFFER_TAG_2],
+            created_at=datetime(2021, 12, 22)
+        )
+    ]
+
+
+@pytest.mark.django_db
+def test_joboffer_admin_works_with_random_query_search(logged_client, joboffers_list):
+    """
+    Test that an empty queryset is returned for random search
+    """
+    client = logged_client
+
+    target_url = reverse('joboffers:admin')
+
+    response = client.get(target_url, {'q': 'unexistant thing Ç '})
+
+    assert response.status_code == 200
+    actual_joboffers = response.context_data['object_list'].values_list('id', flat=True)
+
+    assert list(actual_joboffers) == []
+
+
+@pytest.mark.django_db
+def test_joboffer_admin_works_with_empty_query_search(logged_client, joboffers_list):
+    """
+    Test that an empty queryset returns the joboffers reversed
+    """
+    client = logged_client
+
+    target_url = reverse('joboffers:admin')
+
+    response = client.get(target_url, {'q': ''})
+
+    assert response.status_code == 200
+    actual_joboffers = response.context_data['object_list'].values_list('id', flat=True)
+
+    joboffers_list.reverse()
+    expected_joboffers = [joboffer.id for joboffer in joboffers_list]
+    assert list(actual_joboffers) == expected_joboffers
+
+
+@pytest.mark.django_db
+def test_joboffer_admin_works_without_query(logged_client, joboffers_list):
+    """
+    Test that an empty queryset returns the joboffers reversed
+    """
+    client = logged_client
+
+    target_url = reverse('joboffers:admin')
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+    actual_joboffers = response.context_data['object_list'].values_list('id', flat=True)
+
+    joboffers_list.reverse()
+    expected_joboffers = [joboffer.id for joboffer in joboffers_list]
+    assert list(actual_joboffers) == expected_joboffers
 
 
 @pytest.mark.django_db
@@ -247,6 +341,40 @@ def test_joboffer_view_as_anonymous(client):
 
     assert response.status_code == 200
     assert response.context_data['action_buttons'] == []
+
+
+@pytest.mark.django_db
+def test_joboffer_admin_filters_by_company_name(logged_client, joboffers_list):
+    """
+    Test that searching by title2 retrieves only title2 joboffer
+    """
+    client = logged_client
+
+    target_url = reverse('joboffers:admin')
+
+    response = client.get(target_url, {'q': JOBOFFER_TITLE2})
+
+    assert response.status_code == 200
+    actual_joboffers = response.context_data['object_list'].values_list('title', flat=True)
+
+    assert list(actual_joboffers) == [JOBOFFER_TITLE2]
+
+
+@pytest.mark.django_db
+def test_joboffer_admin_filters_by_exactly_by_tagname(logged_client, joboffers_list):
+    """
+    Test that searching by tag retrieves only the offers that match exactly with the tag name
+    """
+    client = logged_client
+
+    target_url = reverse('joboffers:admin')
+
+    response = client.get(target_url, {'q': 'tag1'})
+
+    assert response.status_code == 200
+    actual_joboffers = response.context_data['object_list'].values_list('title', flat=True)
+
+    assert list(actual_joboffers) == [JOBOFFER_TITLE2, JOBOFFER_TITLE1]
 
 
 @pytest.mark.django_db

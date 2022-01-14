@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
@@ -171,8 +172,22 @@ class JobOfferAdminView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # TODO: Implement queryset filtering for the company
-        # TODO: Implement reverse ordering by date
-        return super().get_queryset()
+        query = self.request.GET.get('q')
+
+        if query:
+            filtering_q = Q(title__icontains=query) | Q(tags__name__iexact=query)
+        else:
+            filtering_q = Q()
+
+        qs = super().get_queryset()
+
+        return (
+            qs
+            .order_by('-created_at')
+            .filter(
+                filtering_q
+            )
+        )
 
     def get_context_data(self, *args, **kwargs):
         # TODO: Implement fetching the company
