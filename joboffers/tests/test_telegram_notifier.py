@@ -44,3 +44,9 @@ def test_send_message(requests_mock: Mocker):
         _send_message(message, chat_id)
     except NoMockAddress:
         assert False, 'Send Message raised an exception, wich means that the url is malformed.'
+
+
+def test_send_notification_to_moderators():
+    """Test that message has been crafted correctly."""
+
+    ...

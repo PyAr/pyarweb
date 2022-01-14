@@ -15,6 +15,7 @@ import requests
 from django.conf import settings
 
 TELEGRAM_API_URL = 'https://api.telegram.org/bot'
+MODERATION_MESSAGE = 'La oferta {} necesita ser moderada.'
 
 
 def _compose_message(message :str):
@@ -42,7 +43,7 @@ def _send_message(message :str, chat_id :int):
 def send_notification_to_moderators(job_slug :str):
     """Send a notification of a slug thats needs to be moderated to moderator's group."""
     complete_offer_slug_url = f'https://www.python.org.ar/trabajo-nueva/admin/{job_slug}'
-    moderation_message = f'La oferta {complete_offer_slug_url} necesita ser moderada.'
+    moderation_message = MODERATION_MESSAGE.format(complete_offer_slug_url)
     status = _send_message(moderation_message, settings.TELEGRAM_MODERATORS_CHAT_ID)
     return status
 
