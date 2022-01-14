@@ -2,10 +2,12 @@ import urllib.parse
 
 import pytest
 from django.conf import settings
+from django.urls import reverse
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
 
 from ..telegram_notifier import (TELEGRAM_API_URL, _compose_message,
+                                 _get_absolute_joboffer_url,
                                  _get_request_url, _send_message,
                                  send_notification_to_moderators)
 
@@ -44,6 +46,17 @@ def test_send_message(requests_mock: Mocker):
         _send_message(message, chat_id)
     except NoMockAddress:
         assert False, 'Send Message raised an exception, wich means that the url is malformed.'
+
+
+def test_get_absolute_joboffer_url(settings):
+    """Test that the url being crafted has the correct BASE_URL and the right format."""
+    dummy_url = 'http://example.com'
+    dummy_job_slug = 'python-job'
+    settings.BASE_URL = dummy_url
+    joboffer_url =  reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
+    expected_url = "".join((dummy_url, joboffer_url))
+    result = _get_absolute_joboffer_url(dummy_job_slug)
+    assert expected_url == result
 
 
 def test_send_notification_to_moderators():

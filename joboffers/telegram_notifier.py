@@ -13,6 +13,7 @@ import urllib.parse
 
 import requests
 from django.conf import settings
+from django.urls import reverse
 
 TELEGRAM_API_URL = 'https://api.telegram.org/bot'
 MODERATION_MESSAGE = 'La oferta {} necesita ser moderada.'
@@ -40,9 +41,16 @@ def _send_message(message :str, chat_id :int):
     return status
 
 
+def _get_absolute_joboffer_url(job_slug :str):
+    """Get the complete offer URL including the domain."""
+    job_url = reverse('joboffers:view', kwargs={'slug': job_slug})
+    complete_url = "".join((settings.BASE_URL, job_url))
+    return complete_url
+
+
 def send_notification_to_moderators(job_slug :str):
     """Send a notification of a slug thats needs to be moderated to moderator's group."""
-    complete_offer_slug_url = f'https://www.python.org.ar/trabajo-nueva/admin/{job_slug}'
+    complete_offer_slug_url = _get_absolute_joboffer_url(job_slug)
     moderation_message = MODERATION_MESSAGE.format(complete_offer_slug_url)
     status = _send_message(moderation_message, settings.TELEGRAM_MODERATORS_CHAT_ID)
     return status
