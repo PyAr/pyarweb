@@ -54,4 +54,3 @@ def send_notification_to_moderators(job_slug: str):
     moderation_message = MODERATION_MESSAGE.format(complete_offer_slug_url)
     status = _send_message(moderation_message, settings.TELEGRAM_MODERATORS_CHAT_ID)
     return status
-

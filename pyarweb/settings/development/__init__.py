@@ -1,6 +1,5 @@
 from pyarweb.settings.base import *  # NOQA
 
-
 # Instead of sending out real emails the console backend just writes
 # the emails that would be sent to the standard output.
 # By default, the console backend writes to stdout
@@ -12,4 +11,3 @@ TELEGRAM_MESSAGE_PREFIX = '[DEV]'
 
 # BASE_URL to use in any notification that might require them
 BASE_URL = 'https://localhost:8000'
-

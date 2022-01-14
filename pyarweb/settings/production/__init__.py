@@ -1,7 +1,6 @@
 import os
 import sys
 
-
 from pyarweb.settings.base import *  # NOQA
 
 CACHES = {
@@ -56,4 +55,3 @@ TELEGRAM_MESSAGE_PREFIX = ''
 
 # BASE_URL to use in any notification that might require them
 BASE_URL = 'https://www.python.org.ar'
-

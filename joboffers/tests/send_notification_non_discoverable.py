@@ -2,9 +2,6 @@
 This is not a discoverable test file. Its purpose is to test the actual
 notification to a telegram group. This test can only be run by hand.
 """
-import pytest
-import requests
-
 from ..telegram_notifier import send_notification_to_moderators
 
 

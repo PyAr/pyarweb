@@ -1,8 +1,6 @@
 import urllib.parse
 from unittest.mock import patch
 
-import pytest
-from django.conf import settings
 from django.urls import reverse
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
@@ -54,7 +52,7 @@ def test_get_absolute_joboffer_url(settings):
     dummy_url = 'http://example.com'
     dummy_job_slug = 'python-job'
     settings.BASE_URL = dummy_url
-    joboffer_url =  reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
+    joboffer_url = reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
     expected_url = "".join((dummy_url, joboffer_url))
     result = _get_absolute_joboffer_url(dummy_job_slug)
     assert expected_url == result
@@ -70,7 +68,7 @@ def test_send_notification_to_moderators(settings):
     settings.BASE_URL = dummy_url
     settings.TELEGRAM_MODERATORS_CHAT_ID = dummy_chat_id
 
-    joboffer_url =  reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
+    joboffer_url = reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
     expected_url = "".join((dummy_url, joboffer_url))
     expected_message = MODERATION_MESSAGE.format(expected_url)
 
