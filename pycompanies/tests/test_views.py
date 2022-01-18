@@ -137,10 +137,23 @@ def test_company_admin_with_no_logged_user_should_redirect(client):
 
 
 @pytest.mark.django_db
-def test_company_admin_with_logged_user_should_not_redirect(logged_client):
+def test_company_admin_with_no_company_logged_user_should_redirect(logged_client):
     """
-    Should not redirect if the user is logged
+    Should redirect if the user is logged but not associated to a company
     """
+    response = logged_client.get(ADMIN_URL)
+
+    assert 302 == response.status_code
+
+
+@pytest.mark.django_db
+def test_company_admin_with_company_logged_user_should_not_redirect(logged_client, user):
+    """
+    Should not redirect if the user is logged and associated to a company
+    """
+    company = CompanyFactory.create(name='company')
+    UserCompanyProfileFactory.create(company=company, user=user)
+
     response = logged_client.get(ADMIN_URL)
 
     assert 200 == response.status_code
@@ -164,7 +177,7 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
 
 
 @pytest.mark.django_db
-def test_company_admin_should_have_no__matching_company_in_context(logged_client):
+def test_company_admin_should_have_no_matching_company_in_context(logged_client):
     """
     Context should have an empty companies if the search doesn't match any company name
     """

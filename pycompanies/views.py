@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.base import View
@@ -11,6 +12,10 @@ from braces.views import LoginRequiredMixin
 from pycompanies.forms import CompanyForm
 from pycompanies.models import Company, UserCompanyProfile
 from community.views import OwnedObject
+
+
+ADMIN_URL = reverse_lazy('companies:admin')
+ASSOCIATION_LIST_URL = reverse_lazy('companies:association_list')
 
 
 class CompanyDetailView(DetailView):
@@ -26,15 +31,11 @@ class CompanyListView(ListView):
         return Company.objects.all().order_by('?')
 
     def get_context_data(self, **kwargs):
-        context = super(CompanyListView, self).get_context_data(**kwargs)
-        if self.request.user.is_anonymous is False:
-            try:
-                context['own_company'] = UserCompanyProfile.objects.get(
-                    user=self.request.user).company
-                context['own_companies_count'] = self.request.user.companies.all().count()
-                return context
-            except UserCompanyProfile.DoesNotExist:
-                return context
+        context = super().get_context_data(**kwargs)
+        user_company_queryset = UserCompanyProfile.objects.filter(user=self.request.user)
+        if self.request.user.is_anonymous is False and user_company_queryset:
+            context['own_company'] = user_company_queryset[0].company
+        return context
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):
@@ -78,16 +79,22 @@ class CompanyAdminView(LoginRequiredMixin, TemplateView):
 
         if self.request.user.is_anonymous is False:
             context['user'] = self.request.user
-            try:
-                user_company = UserCompanyProfile.objects.get(user=self.request.user)
-                if user_company:
-                    context['user_company_id'] = user_company.id
-                    context['own_company'] = user_company.company
-                    context['company_users'] = UserCompanyProfile.objects.filter(
-                        company=context['own_company'])
-                return context
-            except UserCompanyProfile.DoesNotExist:
-                return context
+            user_company_queryset = UserCompanyProfile.objects.filter(user=self.request.user)
+            if user_company_queryset:
+                user_company = user_company_queryset[0]
+                context['user_company_id'] = user_company.id
+                context['own_company'] = user_company.company
+                context['company_users'] = UserCompanyProfile.objects.filter(
+                    company=context['own_company'])
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_anonymous is False:
+            user_company_queryset = UserCompanyProfile.objects.filter(user=self.request.user)
+            if not user_company_queryset:
+                return redirect(ASSOCIATION_LIST_URL)
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class CompanyAssociationListView(LoginRequiredMixin, ListView):
@@ -129,7 +136,7 @@ class CompanyDisassociateView(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context['company'] = context['object'].company
         users_quantity = context['object'].company.users.count()
-        if (users_quantity == 1):
+        if users_quantity == 1:
             context['message'] = "Esta es la última persona vinculada a esta empresa "\
                 "¿Estás seguro que deseas desvincularla?"
         else:
@@ -142,11 +149,9 @@ def user_already_in_company(user):
     """
     Returns the user company profile if exists. If it doesn't, returns False.
     """
-    try:
-        user_company = UserCompanyProfile.objects.get(user=user)
-        return user_company
-    except UserCompanyProfile.DoesNotExist:
-        return False
+    user_company_queryset = UserCompanyProfile.objects.filter(user=user)
+    if user_company_queryset:
+        return user_company_queryset[0]
 
 
 class CompanyAssociateView(LoginRequiredMixin, View):
@@ -157,25 +162,23 @@ class CompanyAssociateView(LoginRequiredMixin, View):
         Associates an user to the company if exists and is able to.
         """
         User = get_user_model()
-        try:
-            user = User.objects.get(username=request.POST['username'])
+        user_queryset = User.objects.filter(username=request.POST['username'])
+        if user_queryset:
+            user = user_queryset[0]
             user_company = user_already_in_company(user)
             company_to_associate = Company.objects.get(id=company)
             if user_company and company_to_associate == user_company.company:
                 message = f'Le usuarie que desea vincular ya pertenece a {user_company.company}'
                 messages.warning(request, message)
-                return redirect('/empresas/admin/')
             elif user_company and company_to_associate != user_company.company:
                 message = f'Le usuarie que ingresó esta vinculade a {user_company.company}.'
                 messages.warning(request, message)
-                return redirect('/empresas/admin/')
             else:
                 association = UserCompanyProfile.objects.create(
                     user=user, company=company_to_associate)
                 association.save()
                 message = 'Le usuarie fue asociade correctamente.'
                 messages.success(request, message)
-                return redirect('/empresas/admin/')
-        except User.DoesNotExist:
+        else:
             messages.warning(request, 'Le usuarie que ingresó no existe.')
-            return redirect('/empresas/admin/')
+        return redirect(ADMIN_URL)
