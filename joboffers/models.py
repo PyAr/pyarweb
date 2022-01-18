@@ -44,6 +44,7 @@ class OfferState(models.TextChoices):
     """
     Choices for JobOfferStates.
     """
+    NEW = 'NEW', _('Nuevo')  # Used only for actions
     DEACTIVATED = 'DEACTIVATED', _('Desactivada')
     MODERATION = 'MODERATION', _('En moderación')
     ACTIVE = 'ACTIVE', _('Activa')
