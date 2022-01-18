@@ -1,11 +1,9 @@
 import pytest
-
+from django.contrib.messages import get_messages as contrib_get_messages
 from django.test import Client
 from django.urls import reverse_lazy
-from django.contrib.messages import get_messages as contrib_get_messages
 
 from events.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
-
 from .factories import CompanyFactory, UserCompanyProfileFactory
 
 
@@ -17,7 +15,7 @@ ADMIN_URL = reverse_lazy('companies:admin')
 
 def get_plain_messages(request):
     """
-    Gets a plain text message from a given request/response object. Useful for testing messages
+    Get a plain text message from a given request/response object. Useful for testing messages
     """
     messages = contrib_get_messages(request.wsgi_request)
     return [m.message for m in messages]
@@ -49,9 +47,9 @@ def create_user_company_profile():
 
 
 @pytest.mark.django_db
-def test_associate_unexisting_user(logged_client):
+def test_associate_nonexistent_user(logged_client):
     """
-    Should fail to associate an unexistant user
+    Should fail to associate an nonexistent user
     """
     company = CompanyFactory.create()
     ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
@@ -61,7 +59,7 @@ def test_associate_unexisting_user(logged_client):
 
     assert 302 == response.status_code
     assert ADMIN_URL == response.url
-    assert message == ERROR_USER_DOES_NOT_EXIST
+    assert ERROR_USER_DOES_NOT_EXIST == message
 
 
 @pytest.mark.django_db
@@ -79,7 +77,7 @@ def test_associate_user_in_company(logged_client):
 
     assert 302 == response.status_code
     assert ADMIN_URL == response.url
-    assert message == USER_ASSOCIATED_CORRECTLY
+    assert USER_ASSOCIATED_CORRECTLY == message
 
 
 @pytest.mark.django_db
@@ -91,8 +89,8 @@ def test_associate_user_already_in_company(logged_client):
     user = UserFactory.create()
     user_company = UserCompanyProfileFactory.create(company=company, user=user)
 
-    ERROR_USER_ALREADY_IN_COMPANY = "Le usuarie que desea vincular ya "\
-        f"pertenece a {user_company.company}"
+    ERROR_USER_ALREADY_IN_COMPANY = ('Le usuarie que desea vincular ya '
+                                     f'pertenece a {user_company.company}')
 
     ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
 
@@ -101,7 +99,7 @@ def test_associate_user_already_in_company(logged_client):
 
     assert 302 == response.status_code
     assert ADMIN_URL == response.url
-    assert message == ERROR_USER_ALREADY_IN_COMPANY
+    assert ERROR_USER_ALREADY_IN_COMPANY == message
 
 
 @pytest.mark.django_db

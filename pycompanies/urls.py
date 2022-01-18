@@ -1,15 +1,8 @@
 from django.urls import re_path
 
-from .views import (
-    CompanyAdminView,
-    CompanyAssociateView,
-    CompanyAssociationListView,
-    CompanyDetailView,
-    CompanyListView,
-    CompanyCreateView,
-    CompanyUpdateView,
-    CompanyDeleteView,
-    CompanyDisassociateView)
+from .views import (CompanyAdminView, CompanyAssociationListView, CompanyAssociateView,
+                    CompanyCreateView, CompanyDeleteView, CompanyDetailView,
+                    CompanyDisassociateView, CompanyListView, CompanyUpdateView)
 
 app_name = 'pycompanies'
 urlpatterns = [

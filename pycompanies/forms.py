@@ -37,7 +37,7 @@ class UserCompanyForm(forms.ModelForm):
     """A PyAr user companies form."""
 
     def __init__(self, *args, **kwargs):
-        super(UserCompanyForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.layout = Layout(
             Div(
