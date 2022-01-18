@@ -8,7 +8,7 @@ from pycompanies.tests.fixtures import (create_client, create_logged_client, cre
                                         create_user_company_profile)
 
 
-ERROR_USER_DOES_NOT_EXIST = 'Le usuarie que ingresó no existe.'
+ERROR_USER_DOES_NOT_EXIST = 'Le usuarie que ingresaste no existe.'
 USER_ASSOCIATED_CORRECTLY = 'Le usuarie fue asociade correctamente.'
 
 ADMIN_URL = reverse_lazy('companies:admin')
