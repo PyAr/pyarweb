@@ -7,14 +7,18 @@
 <!-- Lista de trabajos -->
 <main id="main" class="joboffers container" role="main" <section>
     <div class="page-header">
-        <div class="input-group">
-            <input type="text" class="form-control form-control " placeholder="{% trans 'Buscar...' %}">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button">{% trans 'Filtrar' %}</button>
-            </span>
-        </div><!-- /input-group -->
+      <form id="search-form" class="input-group" role="form" action="{% url 'joboffers:admin' %}" method="get" novalidate>
+        <input
+          type="search" name="q" class="form-control input-lg"
+          placeholder="{% trans 'Buscar ofertas...' %}" value="{{ buscar }}" required>
+        <span class="input-group-btn">
+          <button class="btn btn-default btn-lg" type="submit">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </form>
 
-        <h2>{% trans 'Ofertas de trabajo de ' %} {{ company.name }}</h2>
+      <h2>{% trans 'Ofertas de trabajo de ' %} {{ company.name }}</h2>
     </div>
 
     {% if object_list %}

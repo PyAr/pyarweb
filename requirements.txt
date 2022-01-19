@@ -1,4 +1,4 @@
-Django==3.2.9
+Django==3.2.10
 django-allauth==0.45.0
 django-autoslug==1.9.8
 django-bootstrap3==21.1
