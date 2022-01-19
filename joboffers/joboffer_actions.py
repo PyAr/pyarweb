@@ -93,6 +93,7 @@ get_history = Action(
     verbose_name="Historial",
     code=CODE_HISTORY,
     valid_prev_states=(
+        OfferState.MODERATION,
         OfferState.DEACTIVATED,
         OfferState.ACTIVE,
         OfferState.EXPIRED,
@@ -111,6 +112,7 @@ register_action(get_history, ROLE_PUBLISHER)
 
 register_action(reject, ROLE_ADMIN)
 register_action(approve, ROLE_ADMIN)
+register_action(get_history, ROLE_ADMIN)
 
 
 ACTIONS = {
