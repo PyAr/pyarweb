@@ -12,8 +12,6 @@ from events.tests.factories import UserFactory
 from pycompanies.tests.factories import UserCompanyProfileFactory
 
 
-# Warning: Accessing ACTIONS with an unexistant key creates a new entry the dict and that can make
-# the test to fail. That is the reason to put an empty item (OfferState.DACTIVATED)
 EXPECTED_ACTIONS_ADMIN = {
     OfferState.ACTIVE: {get_history.code},
     OfferState.DEACTIVATED: {get_history.code},

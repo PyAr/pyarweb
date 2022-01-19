@@ -1,4 +1,3 @@
-from collections import defaultdict
 from dataclasses import dataclass
 from typing import Set
 
@@ -6,9 +5,8 @@ from .models import OfferState
 from pycompanies.models import UserCompanyProfile
 
 
-ACTIONS_PUBLISHER = defaultdict(set)
-
-ACTIONS_ADMIN = defaultdict(set)
+ACTIONS_PUBLISHER = {}
+ACTIONS_ADMIN = {}
 
 ROLE_PUBLISHER = "publisher"
 ROLE_ADMIN = "admin"
@@ -44,6 +42,12 @@ def register_action(action: Action, role):
 
 
 # Actions #
+
+
+for state in OfferState.values:
+    ACTIONS_PUBLISHER[state] = set()
+    ACTIONS_ADMIN[state] = set()
+
 
 create = Action(
     verbose_name="Crear",
