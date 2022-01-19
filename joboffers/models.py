@@ -87,6 +87,10 @@ class JobOffer(models.Model):
         max_length=255, null=True, verbose_name=_('Rango salarial')
     )
     description = models.TextField(verbose_name=_('Descripción'))
+    short_description = models.TextField(
+        max_length=200,
+        verbose_name=_('Descripción corta')
+    )
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_('Rango salarial')
     )

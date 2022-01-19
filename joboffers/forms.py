@@ -35,7 +35,8 @@ class JobOfferForm(forms.ModelForm):
             'tags',
             'hiring_type',
             'salary',
-            'description',
+            'short_description',
+            'description'
         )
         self.helper.attrs = {"novalidate": ""}
 
@@ -68,7 +69,13 @@ class JobOfferForm(forms.ModelForm):
                     'Django, Python, MySQL, Linux',
             'hiring_type': 'Relación contractual con la empresa contratante.',
             'salary': 'Ej: 2000-3000 USD mensuales.',
+            'short_description': 'Descripción corta de la oferta',
             'description': 'Descripción de la oferta'
+        }
+        widgets = {
+            'short_description': forms.Textarea(attrs={
+                'maxlength': '200',
+            })
         }
 
 
