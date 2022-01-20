@@ -133,12 +133,11 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
     def get_initial(self):
-        try:
-            user_company = UserCompanyProfile.objects.get(user=self.request.user)
+        user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
+        if user_company:
             self.initial.update({'company': user_company.company})
-            return self.initial
-        except UserCompanyProfile.DoesNotExist:
-            return self.initial
+
+        return self.initial
 
 
 class JobOfferDetailView(DetailView):
