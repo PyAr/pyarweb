@@ -145,11 +145,9 @@ class CompanyDisassociateView(LoginRequiredMixin, DeleteView):
 
 def user_already_in_company(user):
     """
-    Return the user company profile if exists. If it doesn't, return None.
+    Return the user company profile if exists.
     """
-    user_company = UserCompanyProfile.objects.filter(user=user).first()
-
-    return user_company or None
+    return UserCompanyProfile.objects.filter(user=user).first()
 
 
 class CompanyAssociateView(LoginRequiredMixin, View):
@@ -160,9 +158,8 @@ class CompanyAssociateView(LoginRequiredMixin, View):
         Associate an user to the company if exists and is able to.
         """
         User = get_user_model()
-        user_queryset = User.objects.filter(username=request.POST['username'])
-        if user_queryset:
-            user = user_queryset.first()
+        user = User.objects.filter(username=request.POST['username']).first()
+        if user:
             user_company = user_already_in_company(user)
             company_to_associate = Company.objects.get(id=company)
             if user_company and company_to_associate == user_company.company:
