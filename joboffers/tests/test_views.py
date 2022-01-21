@@ -1,21 +1,16 @@
-import factory
-import pytest
-
 from datetime import datetime
 
-from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
-from pycompanies.tests.fixtures import create_user_company_profile # noqa
-#
+import factory
+import pytest
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
+from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
+from pycompanies.tests.fixtures import create_user_company_profile # noqa
+from .factories import JobOfferCommentFactory, JobOfferFactory
+from .fixtures import create_publisher_client # noqa
 from ..models import JobOffer, OfferState
 from ..views import STATE_LABEL_CLASSES
-from .factories import JobOfferCommentFactory, JobOfferFactory
-# Fixtures
-from .fixtures import ( # noqa
-    create_publisher_client
-)
 
 
 ADD_URL = 'joboffers:add'
