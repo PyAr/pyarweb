@@ -23,17 +23,18 @@
 
     {% if object_list %}
     <div class="list-group">
-        {% for object in object_list %}
-        <a href="{{ object.get_absolute_url }}" class="list-group-item">
-            <h4 class="text-primary">
-                {{ object.title }}<span class="job-date">({{ object.modified_at|date:"SHORT_DATE_FORMAT" }}, {{ object.location }})</span>
-            </h4>
-            <p>{{ object.description|html2text|truncatewords:50 }}</p>
-            <div class="text-right">
-                {% include "joboffers/_tags.html" %}
-            </div>
-        </a>
-        {% endfor %}
+      {% for object in object_list %}
+      <a href="{{ object.get_absolute_url }}" class="list-group-item">
+        <h4 class="text-primary">
+          {{ object.title }}<span class="job-date">({{ object.modified_at|date:"SHORT_DATE_FORMAT" }}, {{ object.location }})</span>
+        </h4>
+        <p>{{ object.short_description}}</p>
+        <div class="text-right">
+          {% include "joboffers/_tags.html" %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
 
         {% include 'joboffers/_paginator.html' with page_obj=page_obj %}
 
