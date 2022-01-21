@@ -588,3 +588,7 @@ div.sponsored_jobs {
 .joboffers .btn {
   text-transform: uppercase;
 }
+
+.mt-0{
+    margin-top:0px;
+}

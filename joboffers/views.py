@@ -64,6 +64,15 @@ ACTION_BUTTONS = {
     }
 }
 
+STATE_LABEL_CLASSES = {
+    "ACTIVE": "label-success",
+    "DEACTIVATED": "label-danger",
+    "EXPIRED": "label-warning",
+    "MODERATION": "label-primary",
+    "NEW": "label-info",
+    "REJECTED": "label-danger",
+}
+
 
 class JobOfferObjectMixin(SingleObjectMixin):
     """
@@ -145,6 +154,7 @@ class JobOfferDetailView(DetailView):
     def get_context_data(self, object):
         ctx = super().get_context_data()
         ctx['action_buttons'] = self.get_action_buttons()
+        ctx['state_label_class'] = STATE_LABEL_CLASSES[object.state]
         return ctx
 
 

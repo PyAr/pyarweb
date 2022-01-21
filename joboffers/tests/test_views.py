@@ -10,6 +10,7 @@ from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
 from ..models import JobOffer, OfferState
+from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
 # Fixtures
 from .fixtures import ( # noqa
@@ -380,7 +381,7 @@ def test_joboffer_admin_filters_by_exactly_by_tagname(logged_client, joboffers_l
 @pytest.mark.django_db
 def test_joboffer_create_view_as_publusher(publisher_client):
     """
-    Test that the joboffer detail view renders without error as anonymous user
+    Test that the joboffer create view renders without error as anonymous user
     """
     client = publisher_client
 
@@ -389,3 +390,93 @@ def test_joboffer_create_view_as_publusher(publisher_client):
     response = client.get(target_url)
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_joboffer_detail_view_render_state_with_active_label(publisher_client):
+    """
+    Test that the joboffer detail view renders the state with active label class
+    """
+    client = publisher_client
+    joboffer = JobOfferFactory.create(state=OfferState.ACTIVE)
+
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['ACTIVE']
+
+
+@pytest.mark.django_db
+def test_joboffer_detail_view_render_state_with_deactivated_label(publisher_client):
+    """
+    Test that the joboffer detail view renders the state with deactivated label class
+    """
+    client = publisher_client
+    joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
+
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['DEACTIVATED']
+
+
+@pytest.mark.django_db
+def test_joboffer_detail_view_render_state_with_expired_label(publisher_client):
+    """
+    Test that the joboffer detail view renders the state with expired label class
+    """
+    client = publisher_client
+    joboffer = JobOfferFactory.create(state=OfferState.EXPIRED)
+
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['EXPIRED']
+
+
+@pytest.mark.django_db
+def test_joboffer_detail_view_render_state_with_moderation_label(publisher_client):
+    """
+    Test that the joboffer detail view renders the state with moderation label class
+    """
+    client = publisher_client
+    joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
+
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['MODERATION']
+
+
+@pytest.mark.django_db
+def test_joboffer_detail_view_render_state_with_new_label(publisher_client):
+    """
+    Test that the joboffer detail view renders the state with new label class
+    """
+    client = publisher_client
+    joboffer = JobOfferFactory.create(state=OfferState.NEW)
+
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['NEW']
+
+
+@pytest.mark.django_db
+def test_joboffer_detail_view_render_state_with_rejected_label(publisher_client):
+    """
+    Test that the joboffer detail view renders the state with rejected label class
+    """
+    client = publisher_client
+    joboffer = JobOfferFactory.create(state=OfferState.REJECTED)
+
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['REJECTED']
