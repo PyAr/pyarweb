@@ -162,13 +162,11 @@ class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
     success_url = "joboffers:view"
 
     def get_success_url(self, *args, **kwargs):
-        return reverse(self.success_url, args=args, kwargs=kwargs)
+        return reverse(self.success_url, kwargs={'slug': self.object.slug})
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
-        form.instance.state = OfferState.MODERATION
-        # TODO: Avoid changing the state if no fields changed
+        form.instance.state = OfferState.DEACTIVATED
         return super().form_valid(form)
 
 

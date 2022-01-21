@@ -1,13 +1,15 @@
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
+
 from django.utils.translation import ugettext_lazy as _
-from .models import JobOffer, JobOfferComment
+from .models import JobOffer, JobOfferComment, Remoteness
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
 from sanitizer.forms import SanitizedCharField
 
-from jobs import utils
+from . import utils
 
 
 class JobOfferForm(forms.ModelForm):
@@ -46,9 +48,33 @@ class JobOfferForm(forms.ModelForm):
         )
 
     def clean_tags(self):
+        """
+        Normalizes repeated tags and special characters
+        """
         tags = self.cleaned_data.get('tags')
         self.cleaned_data['tags'] = utils.normalize_tags(tags)
         return self.cleaned_data['tags']
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        contact_mail = cleaned_data.get('contact_mail')
+        contact_phone = cleaned_data.get('contact_phone')
+        contact_url = cleaned_data.get('contact_url')
+
+        if not any([contact_mail, contact_phone, contact_url]):
+            # Highlight all involved the fields
+            self.add_error('contact_mail', '')
+            self.add_error('contact_phone', '')
+            self.add_error('contact_url', '')
+
+            raise ValidationError(_('Debe ingresar al menos un dato de contacto.'))
+
+        remoteness = cleaned_data.get('remoteness')
+        location = cleaned_data.get('location')
+
+        if remoteness == Remoteness.OFFICE and not location:
+            raise ValidationError(_('Debe especificar un lugar para modalidad prescencial.'))
 
     class Meta:
         model = JobOffer

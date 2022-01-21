@@ -83,36 +83,6 @@ def test_joboffer_creation_should_fail_for_an_user_from_a_different_company(
 
 
 @pytest.mark.django_db
-def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, user_company_profile):
-    """
-    Test creation of joboffer as publisher with data ok
-    """
-    client = publisher_client
-    target_url = reverse(ADD_URL)
-    company = user_company_profile.company
-
-    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
-
-    assert JobOffer.objects.count() == 0
-
-    response = client.post(target_url, job_data)
-
-    assert JobOffer.objects.count() == 1
-
-    joboffer = JobOffer.objects.first()
-
-    # Asserts redirection to the joboffer status page
-    assert response.status_code == 302
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
-
-    # Deactivated should be the first state
-    assert OfferState.DEACTIVATED == joboffer.state
-
-    obtained_messages = get_plain_messages(response)
-    assert obtained_messages[0].startswith('Oferta creada correctamente.')
-
-
-@pytest.mark.django_db
 def test_joboffer_creation_as_admin_should_fail(admin_client, user_company_profile):
     """
     Test joboffer creation is not allowed as admin user
@@ -355,6 +325,20 @@ def test_joboffer_view_as_anonymous(client):
 
 
 @pytest.mark.django_db
+def test_joboffer_create_view_as_publisher(publisher_client):
+    """
+    Test that the joboffer detail view renders without error as a publisher
+    """
+    client = publisher_client
+
+    target_url = reverse(ADD_URL)
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
 def test_joboffer_admin_filters_by_company_name(logged_client, joboffers_list):
     """
     Test that searching by title2 retrieves only title2 joboffer
@@ -386,17 +370,3 @@ def test_joboffer_admin_filters_by_exactly_by_tagname(logged_client, joboffers_l
     actual_joboffers = response.context_data['object_list'].values_list('title', flat=True)
 
     assert list(actual_joboffers) == [JOBOFFER_TITLE2, JOBOFFER_TITLE1]
-
-
-@pytest.mark.django_db
-def test_joboffer_create_view_as_publusher(publisher_client):
-    """
-    Test that the joboffer detail view renders without error as anonymous user
-    """
-    client = publisher_client
-
-    target_url = reverse(ADD_URL)
-
-    response = client.get(target_url)
-
-    assert response.status_code == 200

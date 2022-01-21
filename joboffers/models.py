@@ -59,20 +59,18 @@ class JobOffer(models.Model):
     title = models.CharField(max_length=255, verbose_name=_('Título'))
     company = models.ForeignKey(
         'pycompanies.Company',
-        null=True,
-        blank=True,
         verbose_name=_('Empresa'),
         on_delete=models.CASCADE,
     )
     location = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Lugar'))
-    contact_mail = models.CharField(
+    contact_mail = models.EmailField(
         max_length=255, blank=True, null=True, verbose_name=_('E-mail')
     )
     contact_phone = models.CharField(
         max_length=255, null=True, blank=True, verbose_name=_('Teléfono')
     )
     contact_url = models.CharField(
-        max_length=255, null=True, blank=True, verbose_name=_('Sitio web')
+        max_length=255, null=True, blank=True, verbose_name=_('URL Contacto')
     )
     experience = models.CharField(
         max_length=3, choices=Experience.choices, verbose_name=_('Experiencia')
