@@ -132,6 +132,13 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         form.instance.modified_by = self.request.user
         return super().form_valid(form)
 
+    def get_initial(self):
+        user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
+        if user_company:
+            self.initial.update({'company': user_company.company})
+
+        return self.initial
+
 
 class JobOfferDetailView(DetailView):
     model = JobOffer

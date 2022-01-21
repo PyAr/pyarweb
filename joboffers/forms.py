@@ -21,7 +21,7 @@ class JobOfferForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.fields['company'].widget.attrs['disabled'] = True
         self.helper = FormHelper()
         self.helper.layout = Layout(
             'company',

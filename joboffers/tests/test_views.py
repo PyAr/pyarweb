@@ -1,20 +1,15 @@
-import factory
-import pytest
-
 from datetime import datetime
 
-from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
-from pycompanies.tests.fixtures import create_user_company_profile # noqa
-#
+import factory
+import pytest
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
-from ..models import JobOffer, OfferState
+from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
+from pycompanies.tests.fixtures import create_user_company_profile # noqa
 from .factories import JobOfferCommentFactory, JobOfferFactory
-# Fixtures
-from .fixtures import ( # noqa
-    create_publisher_client
-)
+from .fixtures import create_publisher_client # noqa
+from ..models import JobOffer, OfferState
 
 
 ADD_URL = 'joboffers:add'
@@ -63,7 +58,6 @@ def test_joboffer_create_form_render_should_fail_for_an_user_from_a_different_co
     assert JobOffer.objects.count() == 0
 
     response = client.get(target_url)
-
     assert response.status_code == 403
 
 
@@ -311,6 +305,8 @@ def test_joboffer_reject_ok(admin_client):
 
     assert 1 == JobOffer.objects.count()
     assert OfferState.MODERATION == joboffer.state
+
+    # TODO: Test for deactivated state
     # end preconditions check
 
     comment_data = factory.build(dict, joboffer=joboffer.id, FACTORY_CLASS=JobOfferCommentFactory)
@@ -326,6 +322,21 @@ def test_joboffer_reject_ok(admin_client):
 
     joboffer = JobOffer.objects.first()
     assert OfferState.DEACTIVATED == joboffer.state
+
+
+@pytest.mark.django_db
+def test_joboffer_form_with_initial_user_company(user, publisher_client, user_company_profile):
+    """
+    Assert that the form inits with the associated user company
+    """
+    client = publisher_client
+    target_url = reverse(ADD_URL)
+    company = user_company_profile.company
+    factory.build(dict, user=user.id, company=company.id, FACTORY_CLASS=JobOfferFactory)
+
+    response = client.get(target_url)
+
+    assert company == response.context['form'].initial['company']
 
 
 @pytest.mark.django_db

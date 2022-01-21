@@ -1,6 +1,7 @@
 from autoslug import AutoSlugField
 from django.conf import settings
 from django.db import models
+from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.urls import reverse
 from taggit_autosuggest.managers import TaggableManager
@@ -121,6 +122,10 @@ class JobOffer(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     class Meta:
         constraints = [
