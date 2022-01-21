@@ -23,14 +23,6 @@
       <a href="{{ obj.company.get_absolute_url }}">{{ obj.company.name }}</a>
     </dd>
   {% endif %}
-  <dt>Estado</dt>
-  <dd>
-    <h4 class="mt-0">
-      <label class="label {{label_class}}">
-        {{ obj.get_state_display }}
-      </label>
-    </h4>
-  </dd>
   <dt>Permite trabajar remoto</dt>
   <dd>{% if obj.remote_work %}Si{% else %}No{% endif %}</dd>
 
