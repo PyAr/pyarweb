@@ -10,6 +10,12 @@ from ..models import JobOffer
 
 
 @pytest.mark.django_db
+def test_crash():
+    """Crash."""
+    raise ValueError("crash")
+
+
+@pytest.mark.django_db
 def test_assert_joboffer_when_remoteness_is_remote_location_can_be_null():
     """
     Assert that a joboffer can be created with a null location when remoteness is Remote.
