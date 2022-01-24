@@ -1,0 +1,56 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+{% load i18n static pagination_tags devtags %}
+{% block title %}Administrar Empresa{% endblock %}
+{% block left-column %}
+  <!-- Administrar Empresa -->
+  <section>
+    <div class="page-header">
+      <h2>
+        {{own_company}}
+      </h2>
+    </div>
+    <div>
+
+        <section class="list-group col-md-8">
+          <header class="list-group-item">
+              <h3 style="margin:0;">
+                {% trans 'Usuaries vinculades'%}
+              </h3>
+          </header>
+          <article class="list-group-item">
+            {% if company_users %}
+              {% for company_user in company_users %}
+                  <h4>
+                  {{company_user.user.username}}
+                  <a href="{% url 'companies:disassociate' company_user.id%}" class="btn btn-danger btn-xs ">
+                    {% if user == company_user.user %}
+                      {% trans 'Desvincularme' %}
+                    {% else %}
+                      {% trans 'Desvincular' %}
+                    {% endif %}
+                  </a>
+                </h4>
+              {% endfor %}
+          {% else %}
+              <div class="col-md-12">
+                  <p>{% trans 'No hay usuaries vinculades.' %}</p>
+              </div>
+          {% endif %}
+          </article>
+        </section>
+      <div class="col-md-4">
+        <h3>{% trans 'Vincular usuarie'%}</h3>
+        <form method="POST" action="{% url 'companies:associate' own_company.id %}"  class="input-group">
+          {% csrf_token %}
+          <input type="search" name="username" class="form-control input-md" placeholder="Usuarie..." value="" required="">
+          <span class="input-group-btn">
+            <button class="btn btn-success btn-md" type="submit">
+                Vincular
+            </button>
+          </span>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}
