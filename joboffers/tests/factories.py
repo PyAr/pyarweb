@@ -22,6 +22,7 @@ class JobOfferFactory(DjangoModelFactory):
     # tags
     hiring_type = fuzzy.FuzzyChoice(HiringType.values)
     salary = Faker('pricetag')
+    short_description = Faker('paragraph')
     description = Faker('paragraph')
 
     created_by = SubFactory(UserFactory)
