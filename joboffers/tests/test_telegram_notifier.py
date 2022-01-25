@@ -70,7 +70,7 @@ def test_send_notification_to_moderators(settings):
 
     joboffer_url = reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
     expected_url = "".join((dummy_url, joboffer_url))
-    expected_message = MODERATION_MESSAGE.format(expected_url)
+    expected_message = MODERATION_MESSAGE.format(offer_url=expected_url)
 
     with patch('joboffers.telegram_notifier._send_message') as mock_send_message:
         send_notification_to_moderators(dummy_job_slug)
