@@ -399,7 +399,9 @@ def test_joboffer_detail_view_render_state_with_active_label(publisher_client):
 
     response = client.get(target_url)
 
-    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['ACTIVE']
+    label_class = STATE_LABEL_CLASSES[OfferState.ACTIVE]
+
+    assert response.context_data['state_label_class'] == label_class
 
 
 @pytest.mark.django_db
@@ -414,7 +416,9 @@ def test_joboffer_detail_view_render_state_with_deactivated_label(publisher_clie
 
     response = client.get(target_url)
 
-    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['DEACTIVATED']
+    state_label_class = STATE_LABEL_CLASSES[OfferState.DEACTIVATED]
+
+    assert response.context_data['state_label_class'] == state_label_class
 
 
 @pytest.mark.django_db
@@ -429,7 +433,9 @@ def test_joboffer_detail_view_render_state_with_expired_label(publisher_client):
 
     response = client.get(target_url)
 
-    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['EXPIRED']
+    state_label_class = STATE_LABEL_CLASSES[OfferState.EXPIRED]
+
+    assert response.context_data['state_label_class'] == state_label_class
 
 
 @pytest.mark.django_db
@@ -444,7 +450,9 @@ def test_joboffer_detail_view_render_state_with_moderation_label(publisher_clien
 
     response = client.get(target_url)
 
-    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['MODERATION']
+    state_label_class = STATE_LABEL_CLASSES[OfferState.MODERATION]
+
+    assert response.context_data['state_label_class'] == state_label_class
 
 
 @pytest.mark.django_db
@@ -459,7 +467,9 @@ def test_joboffer_detail_view_render_state_with_new_label(publisher_client):
 
     response = client.get(target_url)
 
-    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['NEW']
+    state_label_class = STATE_LABEL_CLASSES[OfferState.NEW]
+
+    assert response.context_data['state_label_class'] == state_label_class
 
 
 @pytest.mark.django_db
@@ -474,4 +484,6 @@ def test_joboffer_detail_view_render_state_with_rejected_label(publisher_client)
 
     response = client.get(target_url)
 
-    assert response.context_data['state_label_class'] == STATE_LABEL_CLASSES['REJECTED']
+    state_label_class = STATE_LABEL_CLASSES[OfferState.REJECTED]
+
+    assert response.context_data['state_label_class'] == state_label_class
