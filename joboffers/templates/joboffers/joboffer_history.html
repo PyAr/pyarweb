@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load email_obfuscator %}
+{% load devtags %}
+
+{% block title %}
+{{ object.title }}
+{% endblock %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+
+    <div class="col-lg-12">
+
+      <div class="page-header">
+        <h2>Historial de «{{ object.title }}» </h2>
+      </div>
+
+      <div class="row">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          {% for event, changes, fields in events_and_changes %}
+          <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                  <div role="button" data-toggle="collapse" data-parent="#accordion" href="#change-{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne">
+                    <span class="glyphicon glyphicon-user"></span> <strong>{{ event.user }}</strong> --
+                    {% if event.content_type.model == "joboffer" %}
+                    <span>{{ event.get_event_type_display | upper }}</span>
+                    {% else %}
+                    COMMENT
+                    {% endif %}
+                     -- <small>{{ event.datetime | date:"DATETIME_FORMAT" }}</small>
+                  </div>
+                </h4>
+              </div>
+              <div id="change-{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                  <div class="list-group">
+                    {% if event.content_type.model == "joboffer" %}
+                      {% for field_name, update in changes.items %}
+                      <div class="list-group-item">
+                        {{ field_name }}: <span class="label label-default">{{ update.0 }}</span> -> <span class="label label-default">{{ update.1 }}</span>
+                      </div>
+                      {% endfor %}
+                    {% else %}
+                      <div class="list-group-item">
+                        comment_type: <span class="label label-default">{{ fields.0.fields.comment_type }}</span>
+                      </div>
+                      <div class="list-group-item">
+                        text: <span class="label label-default">{{ fields.0.fields.text }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+</main>
+{% endblock %}
