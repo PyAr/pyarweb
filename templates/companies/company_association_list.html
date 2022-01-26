@@ -1,0 +1,50 @@
+{% extends "base_site.html" %}
+{% load devtags %}
+{% load i18n static pagination_tags devtags %}
+{% block title %}Administrar Empresa{% endblock %}
+{% block left-column %}
+  <!-- Administrar Empresa -->
+    <section>
+      <h3>
+        {% trans 'Busca la empresa a la que querés asociarte' %}
+      </h3>
+      <form type="GET" class="input-group">
+        <input type="search" name="empresa" class="form-control input-lg" placeholder="Nombre de la empresa..." value="{{busqueda}}">
+        <span class="input-group-btn">
+          <button class="btn btn-default btn-lg" type="submit">
+              <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </form>
+      <div>
+      {% if companies %}
+      <div class="accordion" id="companiesAccordion">
+        {% for company in companies %}
+          <div>
+            <a data-toggle="collapse" href="#collapse-{{company.id}}" role="button" aria-expanded="false" aria-controls="collapse-{{company.id}}">
+              <h3 style="color: #666;" >{{company.name}}</h3>
+            </a>
+            <div class="collapse" id="collapse-{{company.id}}" data-parent="#companiesAccordion">
+            {% if company.users.all %}
+              <h4>Para asociarte a la empresa, por favor comunicate con alguna de estas personas:</h4>
+            {% endif %}
+            {% for company_user in company.users.all %}
+              <h4 style="color:#428bca;">
+                {{company_user.user.username}}
+              </h4>
+            {% empty %}
+              <h4>{% trans 'No hay ninguna persona asociada a esta empresa.' %}</h4>
+              <h4>{% trans 'Por favor, enviá un email a admin@python.org.ar para solicitar que te asocien.' %}</h4>
+            {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      {% elif busqueda  %}
+        <div class="col-md-12">
+          <p>{% trans 'No existen empresas para esta busqueda.' %}</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

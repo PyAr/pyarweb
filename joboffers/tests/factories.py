@@ -22,6 +22,7 @@ class JobOfferFactory(DjangoModelFactory):
     # tags
     hiring_type = fuzzy.FuzzyChoice(HiringType.values)
     salary = Faker('pricetag')
+    short_description = Faker('paragraph')
     description = Faker('paragraph')
 
     created_by = SubFactory(UserFactory)
@@ -39,6 +40,17 @@ class JobOfferFactory(DjangoModelFactory):
         if extracted:
             obj.created = extracted
             obj.save()
+
+    @post_generation
+    def tags(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for group in extracted:
+                self.tags.add(group)
 
 
 class JobOfferCommentFactory(DjangoModelFactory):

@@ -5,18 +5,22 @@
 {% block left-column %}
   <!-- Empresas que utilizan python -->
   <section>
+    <section class="list-group" style="margin-bottom: 0px;">
+    </section>
       <div class="col-md-12">
           <div class="page-header">
               <h2>{% trans 'Empresas que utilizan Python' %}
-                  <span class="section-button-group pull-right">
-                      <a href="{% url 'companies:add' %}" class="btn btn-info">{% trans 'Agregar Empresa' %}</a>
-                  </span>
+                <span class="section-button-group">
+                  {% if not own_company %}
+                  <a href="{% url 'companies:add' %}" class="btn btn-info">{% trans 'Agregar Empresa' %}</a>
+                  {% endif %}
+                </span>
               </h2>
           </div>
           {% if object_list %}
               {% for object in object_list %}
                 <h3>
-                    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
+                    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
                 </h3>
                 <p>{{ object.description|striptags|truncatewords:"20" }}</p>
                 <p><a href="{{ object.get_absolute_url }}">{% trans 'Más información...' %}</a></p>
@@ -33,6 +37,30 @@
 {% endblock %}
 
 {% block right-column %}
+  <section class="list-group">
+    <header class="list-group-item">
+        <h4 class="list-group-item-heading" style="color: #35679a;">
+          {% if own_company %}
+            {% trans 'Estás asociade a la empresa' %}
+            <span style="color:#428bca;">{{own_company}}</span>
+          {% else %}
+            {% trans 'No estás asociade a ninguna empresa' %}
+          {% endif %}
+        </h4>
+    </header>
+    <article class="list-group-item">
+          {% if own_company %}
+            <a href="{% url 'companies:admin' %}" class="btn btn-default btn-md">
+              {% trans 'Administrar ' %}
+            </a>
+            {% else %}
+            <a href="{% url 'companies:association_list' %}" class="btn btn-default btn-md">
+              {% trans 'Administrar' %}
+            </a>
+          {% endif %}
+        <div class="clearfix"></div>
+    </article>
+  </section>
   {{ block.super }}
   {% include "_tags_filtering_form.html" %}
 {% endblock %}
