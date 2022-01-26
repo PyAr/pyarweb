@@ -31,3 +31,7 @@ services:
         - DB_PASS=secret
         - DB_SERVICE=postgres
         - DJANGO_SETTINGS_MODULE=pyarweb.settings.development
+        # These environment variables must be defined in a .env file or
+        # from the shell before starting the containers
+        - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+        - TELEGRAM_MODERATORS_CHAT_ID=${TELEGRAM_MODERATORS_CHAT_ID}
