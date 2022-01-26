@@ -136,6 +136,13 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         form.instance.modified_by = self.request.user
         return super().form_valid(form)
 
+    def get_initial(self):
+        user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
+        if user_company:
+            self.initial.update({'company': user_company.company})
+
+        return self.initial
+
 
 class JobOfferDetailView(DetailView):
     model = JobOffer
@@ -159,13 +166,11 @@ class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
     success_url = "joboffers:view"
 
     def get_success_url(self, *args, **kwargs):
-        return reverse(self.success_url, args=args, kwargs=kwargs)
+        return reverse(self.success_url, kwargs={'slug': self.object.slug})
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
-        form.instance.state = OfferState.MODERATION
-        # TODO: Avoid changing the state if no fields changed
+        form.instance.state = OfferState.DEACTIVATED
         return super().form_valid(form)
 
 

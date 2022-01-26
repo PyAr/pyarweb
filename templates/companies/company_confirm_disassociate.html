@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load devtags %}
+
+{% block content %}
+
+    <main id="main" class="container" role="main">
+        <div class="row">
+            <div class="col-md-12">
+                <form method="post">{% csrf_token %}
+                    <h3>{{message}}</h3>
+                    <input type="submit" value="Si" class="btn btn-danger">
+                    <a href="{% url 'companies:admin' %}" class="btn btn-default">No</a>
+                </form>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
