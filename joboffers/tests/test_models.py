@@ -1,13 +1,17 @@
 import pytest
+import factory
 
+from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
-from django.utils.text import slugify
+
+from easyaudit.models import CRUDEvent
 from factory import Faker
 
 from joboffers.models import Remoteness
+from pycompanies.tests.fixtures import create_user_company_profile # noqa
 
 from .factories import JobOfferFactory
-from ..models import JobOffer
+from ..models import JobOffer, JobOfferHistory
 
 
 @pytest.mark.django_db
@@ -102,22 +106,41 @@ def test_assert_joboffer_ok_when_just_one_contact_info_is_present():
 
 
 @pytest.mark.django_db
-def test_assert_slug_is_updated_on_title_change():
+def test_get_joboffer_history_for_given_joboffer(user_company_profile, settings):
     """
-    Assert that a joboffer updates the slug after title update.
+    Test that the manager retrieves only the changes of the specified jobofffer
     """
-    UPDATED_TITLE = 'Job Offer Updated'
 
-    joboffer = JobOfferFactory.create(
-        remoteness=Remoteness.REMOTE,
-        title='Job Offer',
-        location=None,
-        contact_mail=Faker('email'),
-        contact_phone=None,
-        contact_url=None
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    data = factory.build(
+        dict,
+        company=user_company_profile.company,
+        created_by=user_company_profile.user,
+        modified_by=user_company_profile.user,
+        FACTORY_CLASS=JobOfferFactory
     )
 
-    joboffer.title = UPDATED_TITLE
+    joboffer = JobOffer(**data)
     joboffer.save()
 
-    assert slugify(UPDATED_TITLE) == joboffer.slug
+    changes = JobOfferHistory.objects.for_offer(joboffer)
+
+    actual_history = list(changes.values('event_type', 'content_type', 'object_id'))
+
+    offer_ctype = ContentType.objects.get(app_label='joboffers', model='joboffer')
+    # offer_comment_ctype = ContentType.objects.get(
+    #     app_label='joboffers', model='joboffercomment'
+    # )
+
+    expected_history = [
+        {
+            'event_type': CRUDEvent.CREATE,
+            'content_type': offer_ctype.id,
+            'object_id': str(joboffer.id)
+        }
+    ]
+
+    assert actual_history == expected_history

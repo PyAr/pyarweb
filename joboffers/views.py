@@ -344,8 +344,6 @@ class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
 
         ctx['events_and_changes'] = zip(ctx['object_list'], changes, fields)
 
-        breakpoint()
-
         return ctx
 
     def get(self, request, *args, **kwargs):

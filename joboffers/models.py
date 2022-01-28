@@ -1,9 +1,12 @@
 from autoslug import AutoSlugField
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
-from django.urls import reverse
+
+from easyaudit.models import CRUDEvent
 from taggit_autosuggest.managers import TaggableManager
 
 
@@ -185,3 +188,41 @@ class JobOfferComment(models.Model):
 
     def __str__(self):
         return f"{self.joboffer.title}: {self.get_comment_type_display()}"
+
+
+class JobOfferHistoryManager(models.Manager):
+    def for_offer(self, job_offer):
+        """
+        Get all the history objects for a given joboffer. It can be JobOffer and JobOfferComment
+        """
+        qs = super().get_queryset()
+
+        offer_ctype = ContentType.objects.get(app_label='joboffers', model='joboffer')
+        offer_comment_ctype = ContentType.objects.get(
+            app_label='joboffers', model='joboffercomment'
+        )
+
+        offer_q = models.Q(event_type__lt=4, object_id=job_offer.id, content_type=offer_ctype)
+
+        offer_comment_ids = [
+            offer_comment.id for offer_comment in job_offer.joboffercomment_set.all()
+        ]
+
+        offer_comment_q = models.Q(
+            object_id__in=offer_comment_ids, content_type=offer_comment_ctype
+        )
+
+        qs = CRUDEvent.objects.filter(offer_q | offer_comment_q)
+
+        return qs
+
+
+class JobOfferHistory(CRUDEvent):
+    """
+    This is a proxy model used to take away all the logic from the controller
+    """
+
+    objects = JobOfferHistoryManager()
+
+    class Meta:
+        proxy = True
