@@ -1,3 +1,6 @@
+import html
+import re
+
 from autoslug import AutoSlugField
 from django.conf import settings
 from django.db import models
@@ -121,8 +124,17 @@ class JobOffer(models.Model):
     def __str__(self):
         return self.title
 
+    def get_short_description(self):
+        description_stripped_tags = re.sub(r'<[^>]*>', ' ', self.description)
+        description_without_spaces = re.sub(r'\s+', ' ', description_stripped_tags).strip()
+        description_unescaped = html.unescape(description_without_spaces)
+        return description_unescaped[:200]
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+        if not self.short_description:
+            self.short_description = self.get_short_description()
+
         super().save(*args, **kwargs)
 
     class Meta:
