@@ -49,3 +49,9 @@ if not TEST_RUNNING:
             'dsn': os.environ.get("SENTRY_DSN", "NOT_CONFIGURED"),
             'release': raven.fetch_git_sha(BASE_DIR),  # NOQA
     }
+
+# Prefix for telegram messages
+TELEGRAM_MESSAGE_PREFIX = '[STAGING]'
+
+# BASE_URL to use in any notification that might require them
+BASE_URL = 'https://web.staging.python.org.ar'
