@@ -108,8 +108,8 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         company = get_user_company(request.user)
 
         if not company:
-            message = "No estas relacionade a ninguna empresa. Asociate a una para poder "\
-                "crear una oferta de trabajo."
+            message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
+                       "crear una oferta de trabajo.")
             messages.warning(request, message)
             target_url = reverse('companies:association_list')
             return HttpResponseRedirect(target_url)

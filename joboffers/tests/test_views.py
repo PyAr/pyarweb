@@ -57,8 +57,8 @@ def test_joboffer_create_form_render_should_redirect_for_an_user_without_company
     target_url = reverse(ADD_URL)
 
     response = client.get(target_url)
-    message = "No estas relacionade a ninguna empresa. Asociate a una para poder "\
-              "crear una oferta de trabajo."
+    message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
+               "crear una oferta de trabajo.")
 
     assert message == get_plain_messages(response)[0]
     assert response.status_code == 302
