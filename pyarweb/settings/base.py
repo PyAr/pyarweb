@@ -35,11 +35,6 @@ DEFAULT_FROM_EMAIL = 'webmaster@python.org.ar'
 LOGIN_REDIRECT_URL = '/'
 
 
-# Disqus
-DISQUS_API_KEY = '3t6eKCbxRGuIG3SmdHb8malOf1h2WxSYEfXbBjWyNBaFLMyD1GOIfWYFciqJqo69'
-DISQUS_WEBSITE_SHORTNAME = 'PyAr'
-
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -56,15 +51,14 @@ INSTALLED_APPS = (
     'pycompanies',
     'jobs',
     'events',
+    'joboffers',
     # 3rd party apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'django_extensions',
-    'disqus',
     'taggit',
     'taggit_autosuggest',
-    'bootstrap3_datetime',
     'pagination',
     'tagging',
     'bootstrap3',
@@ -226,3 +220,8 @@ AZURE_ACCOUNT_NAME = os.environ.get("AZURE_ACCOUNT_NAME")
 AZURE_CONTAINER = os.environ.get("AZURE_CONTAINER")
 AZURE_SSL = os.environ.get("AZURE_SSL", True)
 AZURE_QUERYSTRING_AUTH = os.environ.get("AZURE_QUERYSTRING_AUTH", False)
+
+
+# Telegram constants
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
+TELEGRAM_MODERATORS_CHAT_ID = os.environ.get('TELEGRAM_MODERATORS_CHAT_ID')

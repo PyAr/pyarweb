@@ -1,0 +1,4 @@
+{% load i18n %}
+{% for tag in object.tags.all %}
+      <span class="label label-primary" href="{% url 'jobs_list_all' %}?tag_{{ tag.slug }}=1" >{{ tag.name }}</span>
+{% endfor %}

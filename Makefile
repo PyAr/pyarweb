@@ -23,7 +23,7 @@ clean: stop
 	docker-compose rm --force -v
 
 only_test:
-	docker-compose run --rm web python3 ./manage.py test  -v2 --noinput
+	docker-compose run --rm web /usr/local/bin/pytest -v
 
 pep8:
 	docker-compose run --rm web flake8

@@ -1,7 +1,6 @@
 import os
 import sys
 
-
 from pyarweb.settings.base import *  # NOQA
 
 DEBUG = False
@@ -27,11 +26,8 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
 EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '10'))
 EMAIL_FROM = os.environ.get('EMAIL_FROM', 'do_not_reply@python.org.ar')
 
-# Disqus
-DISQUS_API_KEY = os.environ.get("DISQUS_API_KEY", 'not_configured')
-DISQUS_WEBSITE_SHORTNAME = 'PyAr'
+PYAR_WIKI_URL = 'https://wiki.python.org.ar/'
 
-PYAR_WIKI_URL = 'https://wiki.python.org.ar'
 
 SENDFILE_BACKEND = "sendfile.backends.nginx"
 SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
@@ -54,3 +50,9 @@ if not TEST_RUNNING:
             'dsn': os.environ.get("SENTRY_DSN", "NOT_CONFIGURED"),
             'release': raven.fetch_git_sha(BASE_DIR),  # NOQA
     }
+
+# Prefix for telegram messages
+TELEGRAM_MESSAGE_PREFIX = ''
+
+# BASE_URL to use in any notification that might require them
+BASE_URL = 'https://www.python.org.ar'

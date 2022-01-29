@@ -1,9 +1,7 @@
-bootstrap3-datetime==2.4
-Django==3.2.9
+Django==3.2.11
 django-allauth==0.45.0
 django-autoslug==1.9.8
 django-bootstrap3==21.1
-django-bootstrap3-datetimepicker-2==2.8.2
 django-braces==1.15.0
 django-crispy-forms==1.13.0
 django-dbbackup==3.3.0
@@ -18,8 +16,7 @@ django-summernote==0.8.20.0
 django-tagging==0.5.0
 django-taggit==1.5.1
 django-taggit-autosuggest==0.3.8
-lxml==4.6.4
+lxml==4.6.5
 psycopg2-binary==2.9.1
 
-git+https://github.com/She110ck/django-disqus@7164a8ce0dc54c1dd6be3d94534dee6fbcd5d8c0
 git+https://github.com/matagus/django-pagination-py3@2fab61163e31685cf8b23b1c768a5263ca03d699
