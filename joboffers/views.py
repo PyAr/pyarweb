@@ -107,10 +107,12 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def get(self, request, *args, **kwargs):
         company = get_user_company(request.user)
 
-        valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
-
-        if self.action_code not in valid_actions:
-            raise PermissionDenied()
+        if not company:
+            message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
+                       "crear una oferta de trabajo.")
+            messages.warning(request, message)
+            target_url = reverse('companies:association_list')
+            return HttpResponseRedirect(target_url)
 
         return super().get(request, *args, **kwargs)
 
