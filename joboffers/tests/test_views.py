@@ -59,7 +59,6 @@ def test_joboffer_create_form_render_should_fail_for_an_user_from_a_different_co
     assert JobOffer.objects.count() == 0
 
     response = client.get(target_url)
-
     assert response.status_code == 403
 
 
@@ -82,36 +81,6 @@ def test_joboffer_creation_should_fail_for_an_user_from_a_different_company(
 
     assert response.status_code == 403
     assert JobOffer.objects.count() == 0
-
-
-@pytest.mark.django_db
-def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, user_company_profile):
-    """
-    Test creation of joboffer as publisher with data ok
-    """
-    client = publisher_client
-    target_url = reverse(ADD_URL)
-    company = user_company_profile.company
-
-    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
-
-    assert JobOffer.objects.count() == 0
-
-    response = client.post(target_url, job_data)
-
-    assert JobOffer.objects.count() == 1
-
-    joboffer = JobOffer.objects.first()
-
-    # Asserts redirection to the joboffer status page
-    assert response.status_code == 302
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
-
-    # Deactivated should be the first state
-    assert OfferState.DEACTIVATED == joboffer.state
-
-    obtained_messages = get_plain_messages(response)
-    assert obtained_messages[0].startswith('Oferta creada correctamente.')
 
 
 @pytest.mark.django_db
@@ -307,6 +276,8 @@ def test_joboffer_reject_ok(admin_client):
 
     assert 1 == JobOffer.objects.count()
     assert OfferState.MODERATION == joboffer.state
+
+    # TODO: Test for deactivated state
     # end preconditions check
 
     comment_data = factory.build(dict, joboffer=joboffer.id, FACTORY_CLASS=JobOfferCommentFactory)
@@ -325,6 +296,21 @@ def test_joboffer_reject_ok(admin_client):
 
 
 @pytest.mark.django_db
+def test_joboffer_form_with_initial_user_company(user, publisher_client, user_company_profile):
+    """
+    Assert that the form inits with the associated user company
+    """
+    client = publisher_client
+    target_url = reverse(ADD_URL)
+    company = user_company_profile.company
+    factory.build(dict, user=user.id, company=company.id, FACTORY_CLASS=JobOfferFactory)
+
+    response = client.get(target_url)
+
+    assert company == response.context['form'].initial['company']
+
+
+@pytest.mark.django_db
 def test_joboffer_view_as_anonymous(client):
     """
     Test that the joboffer detail view renders without error as anonymous user
@@ -337,6 +323,20 @@ def test_joboffer_view_as_anonymous(client):
 
     assert response.status_code == 200
     assert response.context_data['action_buttons'] == []
+
+
+@pytest.mark.django_db
+def test_joboffer_create_view_as_publisher(publisher_client):
+    """
+    Test that the joboffer detail view renders without error as a publisher
+    """
+    client = publisher_client
+
+    target_url = reverse(ADD_URL)
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db

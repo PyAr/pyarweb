@@ -1,0 +1,66 @@
+name: Informe de errores
+description: Crea un informe de errores para ayudarnos a mejorar.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por tomarse el tiempo de rellenar un informe de error. Recuerde rellenar todos los campos, incluido el título.
+  - type: textarea
+    id: current
+    attributes:
+      label: Comportamiento actual
+      description: |
+        Describa aquí el problema o la cuestión.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+      description: |
+        Díganos qué debería pasar en su lugar.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Pasos para reproducir el problema
+      description: |
+        ¿Qué tiene que hacer alguien más para encontrarse con el mismo fallo?
+      placeholder: |
+        1. Paso 1
+        2. Paso 2
+        3. Paso 3
+        4. ...
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Notas adicionales
+      description: |
+        ¿Tiene alguna nota extra que pueda ayudar a resolver el problema y que no encaje en ningún otro campo?
+      placeholder: |
+        No
+    validations:
+      required: false
+  - type: textarea
+    id: commit
+    attributes:
+      label: pyAr rev. hash/commit
+      description: |
+        ¿Qué commit estaba utilizando cuando obtuvo el problema? (en caso de no ser el ultimo)
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Sistema operativo
+      description: |
+        Sistema operativo, es decir, Windows 10 x64, Debian 10 x64, etc.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por su contribución.

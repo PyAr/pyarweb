@@ -220,3 +220,8 @@ AZURE_ACCOUNT_NAME = os.environ.get("AZURE_ACCOUNT_NAME")
 AZURE_CONTAINER = os.environ.get("AZURE_CONTAINER")
 AZURE_SSL = os.environ.get("AZURE_SSL", True)
 AZURE_QUERYSTRING_AUTH = os.environ.get("AZURE_QUERYSTRING_AUTH", False)
+
+
+# Telegram constants
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
+TELEGRAM_MODERATORS_CHAT_ID = os.environ.get('TELEGRAM_MODERATORS_CHAT_ID')
