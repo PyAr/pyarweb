@@ -7,10 +7,10 @@ from django.db.utils import IntegrityError
 from easyaudit.models import CRUDEvent
 from factory import Faker
 
-from joboffers.models import Remoteness
+from joboffers.models import Remoteness, OfferState
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
 
-from .factories import JobOfferFactory
+from .factories import JobOfferFactory, JobOfferCommentFactory
 from ..models import JobOffer, JobOfferHistory
 
 
@@ -125,17 +125,34 @@ def test_get_joboffer_history_for_given_joboffer(user_company_profile, settings)
 
     joboffer = JobOffer(**data)
     joboffer.save()
+    joboffer.state = OfferState.MODERATION
+    joboffer.save()
+
+    comment = JobOfferCommentFactory.create(
+        joboffer=joboffer, created_by=user_company_profile.user
+    )
+    JobOfferCommentFactory(created_by=user_company_profile.user)
 
     changes = JobOfferHistory.objects.for_offer(joboffer)
 
     actual_history = list(changes.values('event_type', 'content_type', 'object_id'))
 
     offer_ctype = ContentType.objects.get(app_label='joboffers', model='joboffer')
-    # offer_comment_ctype = ContentType.objects.get(
-    #     app_label='joboffers', model='joboffercomment'
-    # )
+    offer_comment_ctype = ContentType.objects.get(
+         app_label='joboffers', model='joboffercomment'
+    )
 
     expected_history = [
+        {
+            'event_type': CRUDEvent.CREATE,
+            'content_type': offer_comment_ctype.id,
+            'object_id': str(comment.id)
+        },
+        {
+            'event_type': CRUDEvent.UPDATE,
+            'content_type': offer_ctype.id,
+            'object_id': str(joboffer.id)
+        },
         {
             'event_type': CRUDEvent.CREATE,
             'content_type': offer_ctype.id,
