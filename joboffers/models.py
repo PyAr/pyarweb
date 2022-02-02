@@ -90,7 +90,7 @@ class JobOffer(models.Model):
     )
     description = models.TextField(verbose_name=_('Descripción'))
     short_description = models.TextField(
-        max_length=200,
+        max_length=512,
         verbose_name=_('Descripción corta')
     )
     created_at = models.DateTimeField(
@@ -124,16 +124,20 @@ class JobOffer(models.Model):
     def __str__(self):
         return self.title
 
-    def get_short_description(self):
-        description_stripped_tags = re.sub(r'<[^>]*>', ' ', self.description)
+    @classmethod
+    def get_short_description(cls, description):
+        """
+        Deduce the short_description from a given html description string
+        """
+        description_stripped_tags = re.sub(r'<[^>]*>', ' ', description)
         description_without_spaces = re.sub(r'\s+', ' ', description_stripped_tags).strip()
         description_unescaped = html.unescape(description_without_spaces)
-        return description_unescaped[:200]
+        return description_unescaped[:512]
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         if not self.short_description:
-            self.short_description = self.get_short_description()
+            self.short_description = self.get_short_description(self.description)
 
         super().save(*args, **kwargs)
 
