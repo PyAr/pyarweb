@@ -6,6 +6,7 @@ from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
+from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
 from .factories import JobOfferCommentFactory, JobOfferFactory
 from .fixtures import create_publisher_client # noqa
@@ -45,20 +46,40 @@ def test_joboffer_creation_redirects_unlogged(client):
 
 
 @pytest.mark.django_db
-def test_joboffer_create_form_render_should_fail_for_an_user_from_a_different_company(
+def test_joboffer_create_form_render_should_redirect_for_an_user_without_company(
         logged_client
 ):
     """
-    Test that the get request to the joboffer's create view fails for not allowed user
+    Test that the get request to the joboffer's create view redirects for an user without company
     """
 
     client = logged_client
     target_url = reverse(ADD_URL)
 
-    assert JobOffer.objects.count() == 0
+    response = client.get(target_url)
+    message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
+               "crear una oferta de trabajo.")
+
+    assert message == get_plain_messages(response)[0]
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_joboffer_create_form_render_should_not_redirect_for_an_user_with_company(
+        logged_client, user
+):
+    """
+    Test that the get request to the joboffer's create view doesn't redirect for
+    an user with company
+    """
+
+    client = logged_client
+    target_url = reverse(ADD_URL)
+
+    UserCompanyProfileFactory.create(user=user)
 
     response = client.get(target_url)
-    assert response.status_code == 403
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
