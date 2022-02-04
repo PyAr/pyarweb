@@ -1,3 +1,5 @@
+import json
+
 from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -128,6 +130,10 @@ class JobOffer(models.Model):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+    @classmethod
+    def get_options(cls):
+        return cls._meta
+
     class Meta:
         constraints = [
             models.CheckConstraint(
@@ -191,7 +197,7 @@ class JobOfferComment(models.Model):
 
 
 class JobOfferHistoryManager(models.Manager):
-    def for_offer(self, job_offer):
+    def for_offer(self, joboffer):
         """
         Get all the history objects for a given joboffer. It can be JobOffer and JobOfferComment
         """
@@ -202,27 +208,40 @@ class JobOfferHistoryManager(models.Manager):
             app_label='joboffers', model='joboffercomment'
         )
 
-        offer_q = models.Q(event_type__lt=4, object_id=job_offer.id, content_type=offer_ctype)
+        offer_q = models.Q(event_type__lt=4, object_id=joboffer.id, content_type=offer_ctype)
 
         offer_comment_ids = [
-            offer_comment.id for offer_comment in job_offer.joboffercomment_set.all()
+            offer_comment.id for offer_comment in joboffer.joboffercomment_set.all()
         ]
 
         offer_comment_q = models.Q(
             object_id__in=offer_comment_ids, content_type=offer_comment_ctype
         )
 
-        qs = CRUDEvent.objects.filter(offer_q | offer_comment_q)
+        qs = qs.filter(offer_q | offer_comment_q)
 
         return qs
 
 
 class JobOfferHistory(CRUDEvent):
     """
-    This is a proxy model used to take away all the logic from the controller
+    This is a proxy model used to simplify the code take away all the logic from the controller
     """
 
     objects = JobOfferHistoryManager()
+
+    @property
+    def fields(self):
+        obj_repr = json.loads(self.object_json_repr)
+        fields = obj_repr[0]['fields']
+        return fields
+
+    @property
+    def changes(self):
+        if self.changed_fields:
+            return json.loads(self.changed_fields)
+        else:
+            return None
 
     class Meta:
         proxy = True

@@ -2,7 +2,6 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -20,7 +19,7 @@ from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import JobOffer, JobOfferComment, OfferState
+from .models import JobOffer, JobOfferComment, JobOfferHistory, OfferState
 
 
 ACTION_BUTTONS = {
@@ -301,48 +300,15 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
 
 class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
     action_code = CODE_HISTORY
-    model = JobOfferComment
     paginate_by = 2
     template_name = "joboffers/joboffer_history.html"
 
     def get_queryset(self):
-        offer_ctype = ContentType.objects.get(app_label='joboffers', model='joboffer')
-        offer_comment_ctype = ContentType.objects.get(
-            app_label='joboffers', model='joboffercomment'
-        )
-
-        offer_q = Q(event_type__lt=4, object_id=self.object.id, content_type=offer_ctype)
-
-        offer_comment_ids = [
-            offer_comment.id for offer_comment in self.object.joboffercomment_set.all()
-        ]
-
-        offer_comment_q = Q(
-            object_id__in=offer_comment_ids, content_type=offer_comment_ctype
-        )
-
-        qs = CRUDEvent.objects.filter(offer_q | offer_comment_q)
-
-        return qs
+        return JobOfferHistory.objects.for_offer(joboffer=self.object)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data()
-
-        changes = []
-        for crud_event in ctx['object_list']:
-            if crud_event.changed_fields:
-                changes.append(json.loads(crud_event.changed_fields))
-            else:
-                changes.append(None)
-
-        fields = []
-        for crud_event in ctx['object_list']:
-            if crud_event.object_json_repr:
-                fields.append(json.loads(crud_event.object_json_repr))
-            else:
-                fields.append(None)
-
-        ctx['events_and_changes'] = zip(ctx['object_list'], changes, fields)
+        ctx['JobOfferHistory'] = JobOfferHistory
 
         return ctx
 
