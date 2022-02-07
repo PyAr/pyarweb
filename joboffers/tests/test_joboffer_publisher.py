@@ -4,7 +4,7 @@ from django.template import Template, Context
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
 
-from ..publisher import FacebookPublisher, Publisher, publish_offer
+from ..publisher import Publisher, publish_offer
 from ..models import OfferState
 from .factories import JobOfferFactory
 
@@ -52,9 +52,4 @@ def test_publish_offer(requests_mock: Mocker):
         DummyPublisher.published_count == 0
 
 
-@pytest.mark.django_db
-def test_facebook_publisher():
-    """Test that the offer is send to the facebook publishers."""
-    joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
 
-    publish_offer(joboffer, (FacebookPublisher,))
