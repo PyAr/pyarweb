@@ -1,5 +1,3 @@
-import json
-
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -11,7 +9,6 @@ from django.utils.translation import gettext as _
 from django.views.generic import ListView, RedirectView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
-from easyaudit.models import CRUDEvent
 
 from pycompanies.models import Company, UserCompanyProfile
 from .forms import JobOfferForm, JobOfferCommentForm
@@ -19,7 +16,7 @@ from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import JobOffer, JobOfferComment, JobOfferHistory, OfferState
+from .models import JobOffer, JobOfferHistory, OfferState
 
 
 ACTION_BUTTONS = {
@@ -302,6 +299,7 @@ class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
     action_code = CODE_HISTORY
     paginate_by = 2
     template_name = "joboffers/joboffer_history.html"
+    HIDDEN_JOBOFFER_FIELDS = ['slug', 'fields_hash']
 
     def get_queryset(self):
         return JobOfferHistory.objects.for_offer(joboffer=self.object)
@@ -309,6 +307,7 @@ class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data()
         ctx['JobOfferHistory'] = JobOfferHistory
+        ctx['HIDDEN_JOBOFFER_FIELDS'] = self.HIDDEN_JOBOFFER_FIELDS
 
         return ctx
 
