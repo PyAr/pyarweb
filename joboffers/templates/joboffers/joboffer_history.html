@@ -16,7 +16,6 @@
         <h2>Historial de «{{ object.title }}» </h2>
       </div>
 
-      <div class="row">
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
           {% for history_entry in object_list %}
           <div class="panel panel-default">
@@ -52,25 +51,31 @@
               </div>
               <div id="change-{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel">
                 <div class="panel-body">
-                  <div class="list-group">
                     {% if history_entry.content_type.model == "joboffer" %}
                       {% if history_entry.event_type == JobOfferHistory.CREATE %}
-                        <dl class="row">
+                        <div class="row field-definitions">
                           {% for field_item in history_entry.fields.items %}
-                            <dt class="col-xs-2">{{ field_item | verbose_name }}</dt>
-                            {% if field_item.0 == 'description' %}
-                              <dd class="col-xs-10">{{ field_item | value | safe }}</dd>
-                            {% else %}
-                              <dd class="col-xs-10">{{ field_item | value | default:"-" }}</dd>
+                            {% if field_item.0 not in HIDDEN_JOBOFFER_FIELDS %}
+                              {% if field_item.0 == 'description' %}
+                                <div class="col-xs-12">
+                                  <div class="field-name">{{ field_item | verbose_name }}</div>
+                                  <div>{{ field_item | value | safe }}</div>
+                                </div>
+                              {% else %}
+                                <div class="field col-xs-12 col-sm-4 col-md-3">
+                                  <div class="field-name">{{ field_item | verbose_name }}</div>
+                                  <div>{{ field_item | value | default:"-" }}</div>
+                                </div>
+                              {% endif %}
                             {% endif %}
                           {% endfor %}
-                        </dl>
+                        </div>
                       {% endif %}
 
                       {% for field_name, update in history_entry.changes.items %}
-                      <div class="list-group-item">
-                        {{ field_name }}: <span class="label label-default">{{ update.0 }}</span> -> <span class="label label-default">{{ update.1 }}</span>
-                      </div>
+                        <div class="list-group-item">
+                          {{ field_name }}: <span class="label label-default">{{ update.0 }}</span> -> <span class="label label-default">{{ update.1 }}</span>
+                        </div>
                       {% endfor %}
                     {% else %}
                       <div class="list-group-item">
@@ -81,12 +86,10 @@
                       </div>
                     {% endif %}
                   </div>
-                </div>
               </div>
           </div>
           {% endfor %}
         </div>
-      </div>
 
     </div>
 </main>

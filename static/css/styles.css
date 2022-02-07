@@ -588,3 +588,11 @@ div.sponsored_jobs {
 .joboffers .btn {
   text-transform: uppercase;
 }
+
+.field-definitions .field-name {
+  font-weight: bold;
+}
+
+.field-definitions .field {
+  margin-bottom: 15px;
+}
