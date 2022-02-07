@@ -9,7 +9,7 @@ from joboffers.models import Remoteness
 from ..models import JobOffer
 from .factories import JobOfferFactory
 from .joboffers_descriptions import (LONG_JOBOFFER_DESCRIPTION, SHORT_JOBOFFER_DESCRIPTION,
-                                     STRIPPED_JOBOFFER_SHORT_DESCRIPTION,
+                                     STRIPPED_SHORT_JOBOFFER_DESCRIPTION,
                                      STRIPPED_LONG_JOBOFFER_DESCRIPTION)
 
 
@@ -129,11 +129,11 @@ def test_assert_slug_is_updated_on_title_change():
 @pytest.mark.django_db
 def test_assert_short_description_is_set_with_stripped_description():
     """
-    Assert that a joboffer short description is created with the splitted description
+    Assert that a joboffer short description is created with the stripped description
     if there is no short description given.
     """
     description = SHORT_JOBOFFER_DESCRIPTION
-    short_description = STRIPPED_JOBOFFER_SHORT_DESCRIPTION
+    short_description = STRIPPED_SHORT_JOBOFFER_DESCRIPTION
 
     joboffer = JobOfferFactory.create(
         remoteness=Remoteness.REMOTE,
@@ -152,10 +152,9 @@ def test_assert_short_description_is_set_with_stripped_description():
 @pytest.mark.django_db
 def test_assert_short_description_is_set_with_the_given_short_description():
     """
-    Assert that a joboffer is created with the short description given.
+    Assert that the joboffer doesn't update the short_description if it is provided in the model.
     """
     description = SHORT_JOBOFFER_DESCRIPTION
-    stripped_description = STRIPPED_JOBOFFER_SHORT_DESCRIPTION
 
     SHORT_DESCRIPTION = 'short description'
 
@@ -170,7 +169,6 @@ def test_assert_short_description_is_set_with_the_given_short_description():
         short_description=SHORT_DESCRIPTION,
     )
 
-    assert stripped_description != joboffer.short_description
     assert SHORT_DESCRIPTION == joboffer.short_description
 
 
@@ -180,7 +178,7 @@ def test_assert_get_short_description_strip_the_description():
     Assert that get_short_description method strip the description correctly.
     """
     description = SHORT_JOBOFFER_DESCRIPTION
-    short_description = STRIPPED_JOBOFFER_SHORT_DESCRIPTION
+    short_description = STRIPPED_SHORT_JOBOFFER_DESCRIPTION
 
     assert short_description == JobOffer.get_short_description(description)
 
