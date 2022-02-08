@@ -3,7 +3,6 @@ import logging
 import requests
 from django.conf import settings
 
-from joboffers.models import JobOffer
 from joboffers.publishers import Publisher
 
 

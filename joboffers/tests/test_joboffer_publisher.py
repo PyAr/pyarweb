@@ -73,4 +73,3 @@ def test_publisher_publish_error():
         result = Publisher.publish(job_offer)
 
     assert result == Publisher.RESULT_BAD
-
