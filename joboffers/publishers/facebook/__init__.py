@@ -1,8 +1,8 @@
 import requests
 from django.conf import settings
 
-from ..models import JobOffer
-from ..publishers import Publisher
+from joboffers.models import JobOffer
+from joboffers.publishers import Publisher
 
 
 def publish(message):
@@ -28,7 +28,3 @@ class FacebookPublisher(Publisher):
         publish(message)
         # TODO: Add error management
         return cls.RESULT_OK
-
-    @classmethod
-    def _render_offer(cls, job_offer: 'JobOffer'):
-        raise NotImplementedError

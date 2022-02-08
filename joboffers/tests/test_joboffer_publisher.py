@@ -1,6 +1,5 @@
 import pytest
 import requests
-from django.template import Template, Context
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
 
@@ -9,7 +8,6 @@ from ..models import OfferState
 from .factories import JobOfferFactory
 
 
-DUMMY_TEMPLATE = "<h1>{job_offer.slug}</h1> <p>{job_offer.company.name}</p>"
 DUMMY_PUBLISHER_NAME = 'DUMMY_PUBLISHER'
 DUMMY_PUBLISHER_URL = 'http://examplepublsih.com'
 
@@ -21,7 +19,6 @@ class DummyPublisher(Publisher):
 
     @classmethod
     def publish(cls, job_offer):
-        cls._render_offer(job_offer)
         # A real publisher should call an external API
         # and the publsh method should return either success or not
         # And show the error or success message if possible
@@ -29,12 +26,6 @@ class DummyPublisher(Publisher):
         cls.published_count += 1
         return {'status': cls.RESULT_OK,
                 'text': f'The publication was successfull at {DUMMY_PUBLISHER_URL}'}
-
-    @classmethod
-    def _render_offer(cls, job_offer):
-        template = Template(DUMMY_TEMPLATE)
-        context = Context({'job_offer': job_offer})
-        return template.render(context)
 
 
 @pytest.mark.django_db
@@ -50,3 +41,11 @@ def test_publish_offer(requests_mock: Mocker):
         assert False, 'publish_offer raised an exception, wich means that the url is malformed.'
     finally:
         DummyPublisher.published_count == 0
+
+
+@pytest.mark.django_db
+def test_rendering():
+    """Test template_rendering."""
+    job_offer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
+    result = Publisher._render_offer(job_offer)
+    assert result == f'<h1>New job!: { job_offer.slug }</h1>\n'
