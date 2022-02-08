@@ -1,4 +1,5 @@
 import os
+import inspect
 
 from django.template import Context, Template
 
@@ -17,7 +18,10 @@ class Publisher:
 
     @classmethod
     def _render_offer(cls, job_offer: 'JobOffer'):
-        path = os.path.dirname(__file__)
+        # First, we need to get the file path for the class
+        # inheriting from the baseclass (not the current __file__)
+        class_file = inspect.getfile(cls)
+        path = os.path.dirname(class_file)
         template_path = os.path.join(path, 'template.html')
         with open(template_path) as template_file:
             template_content = template_file.read()
