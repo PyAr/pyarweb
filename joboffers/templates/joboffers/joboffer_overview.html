@@ -1,7 +1,13 @@
 
 <dl>
   <dt>Estado</dt>
-  <dd>{{ obj.get_state_display }}</dd>
+  <dd>
+    <h4 class="mt-0">
+      <label class="label {{label_class}}">
+        {{ obj.get_state_display }}
+      </label>
+    </h4>
+  </dd>
   <dt>Última Modificación</dt>
   <dd>
     <time class="published" datetime="{{ obj.modified_at.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ obj.modified_at|date:"d/m/Y" }}</time>
@@ -17,7 +23,6 @@
       <a href="{{ obj.company.get_absolute_url }}">{{ obj.company.name }}</a>
     </dd>
   {% endif %}
-
   <dt>Permite trabajar remoto</dt>
   <dd>{% if obj.remote_work %}Si{% else %}No{% endif %}</dd>
 
