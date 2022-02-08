@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 import requests
 from requests_mock.exceptions import NoMockAddress
@@ -49,3 +51,26 @@ def test_rendering():
     job_offer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
     result = Publisher._render_offer(job_offer)
     assert result == f'<h1>New job!: { job_offer.slug }</h1>\n'
+
+
+@pytest.mark.django_db
+def test_publisher_publish_ok():
+    """Test calling to publisher method without errors."""
+    job_offer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
+    with patch('joboffers.publishers.Publisher.publish_method') as mocked_publish:
+        mocked_publish.return_value = 200
+        result = Publisher.publish(job_offer)
+
+    assert result == Publisher.RESULT_OK
+
+
+@pytest.mark.django_db
+def test_publisher_publish_error():
+    """Test calling to publisher method and handling of errors."""
+    job_offer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
+    with patch('joboffers.publishers.Publisher.publish_method') as mocked_publish:
+        mocked_publish.return_value = 400
+        result = Publisher.publish(job_offer)
+
+    assert result == Publisher.RESULT_BAD
+

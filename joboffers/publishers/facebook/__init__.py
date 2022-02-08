@@ -20,12 +20,12 @@ def publish(message):
         result = requests.post(post_url, data=payload)
     except Exception as err:
         status = requests.codes.server_error
-        logging.error(f'Falló al querer publicar a facebook url={post_url} data={payload}: {err}')
+        logging.error(f'Falló al querer publicar a facebook, url={post_url} data={payload}: {err}')
     else:
         status = result.status_code
 
     if status != requests.codes.ok:
-        logging.error(f'Falló al querer publicar a facebook url={post_url} data={payload}:'
+        logging.error(f'Falló al querer publicar a facebook, url={post_url} data={payload}:'
                       f'{result.text}')
     return status
 
@@ -33,12 +33,4 @@ def publish(message):
 class FacebookPublisher(Publisher):
     """Facebook Publisher."""
     name = 'Facebook'
-
-    @classmethod
-    def publish(cls, job_offer: 'JobOffer'):
-        message = cls._render_offer(job_offer)
-        status = publish(message)
-        if status == requests.codes.ok:
-            return cls.RESULT_OK
-        else:
-            return cls.RESULT_BAD
+    publish_method = publish

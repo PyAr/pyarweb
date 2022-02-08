@@ -11,10 +11,16 @@ class Publisher:
     name = None
     RESULT_OK = 'ok'
     RESULT_BAD = 'bad'
+    publish_method = None
 
     @classmethod
     def publish(cls, job_offer: 'JobOffer'):
-        raise NotImplementedError
+        message = cls._render_offer(job_offer)
+        status = cls.publish_method(message)
+        if status == 200:
+            return cls.RESULT_OK
+        else:
+            return cls.RESULT_BAD
 
     @classmethod
     def _render_offer(cls, job_offer: 'JobOffer'):
