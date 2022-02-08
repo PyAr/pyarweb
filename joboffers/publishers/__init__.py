@@ -6,7 +6,7 @@ from ..models import JobOffer
 
 
 class Publisher:
-    """Abstract class for Publishing classes like Twitter, Facebook, etc."""
+    """Base class for Publishing classes like Twitter, Facebook, etc."""
     name = None
     RESULT_OK = 'ok'
     RESULT_BAD = 'bad'
