@@ -23,7 +23,8 @@ class JobOfferForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['company'].widget.attrs['disabled'] = True
+        self.fields['company'].disabled = True
+        self.fields['company'].required = False
         self.helper = FormHelper()
         self.helper.layout = Layout(
             'company',
@@ -54,6 +55,14 @@ class JobOfferForm(forms.ModelForm):
         tags = self.cleaned_data.get('tags')
         self.cleaned_data['tags'] = utils.normalize_tags(tags)
         return self.cleaned_data['tags']
+
+    '''
+    def clean_company(self):
+        """
+        Set default company
+        """
+        return self.initial['company']
+    '''
 
     def clean(self):
         cleaned_data = super().clean()

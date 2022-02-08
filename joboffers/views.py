@@ -10,13 +10,13 @@ from django.views.generic import ListView, RedirectView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
-from pycompanies.models import Company, UserCompanyProfile
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
 from .models import JobOffer, JobOfferComment, OfferState
+from pycompanies.models import Company, UserCompanyProfile
 
 
 ACTION_BUTTONS = {
@@ -86,15 +86,6 @@ class JobOfferObjectMixin(SingleObjectMixin):
         return offer
 
 
-def get_user_company(user):
-    if user.is_anonymous:
-        None
-    else:
-        company_profile_qs = UserCompanyProfile.objects.filter(user=user)
-        if company_profile_qs.exists():
-            return company_profile_qs.first().company
-
-
 class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     action_code = CODE_CREATE
     model = JobOffer
@@ -105,9 +96,9 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     )
 
     def get(self, request, *args, **kwargs):
-        company = get_user_company(request.user)
+        user_company = UserCompanyProfile.objects.for_user(request.user)
 
-        if not company:
+        if not user_company:
             message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
                        "crear una oferta de trabajo.")
             messages.warning(request, message)
@@ -117,7 +108,9 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        company = get_user_company(request.user)
+        user_company = UserCompanyProfile.objects.for_user(request.user)
+
+        company = user_company.company if user_company else None
 
         valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
 
@@ -135,7 +128,7 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
     def get_initial(self):
-        user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
+        user_company = UserCompanyProfile.objects.for_user(self.request.user)
         if user_company:
             self.initial.update({'company': user_company.company})
 
@@ -170,6 +163,13 @@ class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
         form.instance.modified_by = self.request.user
         form.instance.state = OfferState.DEACTIVATED
         return super().form_valid(form)
+
+    def get_initial(self):
+        user_company = UserCompanyProfile.objects.for_user(self.request.user)
+        if user_company:
+            self.initial.update({'company': user_company.company})
+
+        return self.initial
 
 
 class JobOfferAdminView(LoginRequiredMixin, ListView):
