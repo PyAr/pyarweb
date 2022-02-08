@@ -2,7 +2,7 @@ import requests
 from django.conf import settings
 
 from ..models import JobOffer
-from ..publisher import Publisher
+from ..publishers import Publisher
 
 
 def publish(message):

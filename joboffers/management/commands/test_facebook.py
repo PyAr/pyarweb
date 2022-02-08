@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from joboffers.publisher.facebook import publish
+from joboffers.publishers.facebook import publish
 
 
 class Command(BaseCommand):

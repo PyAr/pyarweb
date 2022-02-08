@@ -4,7 +4,7 @@ from django.template import Template, Context
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
 
-from ..publisher import Publisher, publish_offer
+from ..publishers import Publisher, publish_offer
 from ..models import OfferState
 from .factories import JobOfferFactory
 
