@@ -297,7 +297,7 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
 
 class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
     action_code = CODE_HISTORY
-    paginate_by = 2
+    paginate_by = 20
     template_name = "joboffers/joboffer_history.html"
     HIDDEN_JOBOFFER_FIELDS = ['slug', 'fields_hash']
 

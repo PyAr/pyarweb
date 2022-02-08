@@ -39,8 +39,8 @@
                           {% endif %}
                         </div>
                         <div class="col-xs-3 text-right">
-                        <small>{{ history_entry.datetime | date:"SHORT_DATE_FORMAT" }}</small>
-                        <small>{{ history_entry.datetime | date:"H:m:s" }}</small>
+                          <small>{{ history_entry.datetime | date:"SHORT_DATE_FORMAT" }}</small>
+                          <small>{{ history_entry.datetime | date:"H:m:s" }}</small>
                       </div>
                       </div>
                     </div>
@@ -57,12 +57,12 @@
                           {% for field_item in history_entry.fields.items %}
                             {% if field_item.0 not in HIDDEN_JOBOFFER_FIELDS %}
                               {% if field_item.0 == 'description' %}
-                                <div class="col-xs-12">
+                                <div class="field col-xs-12">
                                   <div class="field-name">{{ field_item | verbose_name }}</div>
                                   <div>{{ field_item | value | safe }}</div>
                                 </div>
                               {% else %}
-                                <div class="field col-xs-12 col-sm-4 col-md-3">
+                                <div class="field col-xs-12 col-sm-4">
                                   <div class="field-name">{{ field_item | verbose_name }}</div>
                                   <div>{{ field_item | value | default:"-" }}</div>
                                 </div>
@@ -72,10 +72,32 @@
                         </div>
                       {% endif %}
 
-                      {% for field_name, update in history_entry.changes.items %}
-                        <div class="list-group-item">
-                          {{ field_name }}: <span class="label label-default">{{ update.0 }}</span> -> <span class="label label-default">{{ update.1 }}</span>
-                        </div>
+                      {% for field_update in history_entry.changes.items %}
+                          <div class="row field-definitions equal-height">
+                            {% with field_item=field_update|get_old_field_item %}
+                            <div class="field col-xs-5">
+                              <div class="field-name">{{ field_item | verbose_name }}</div>
+                                {% if field_item.0 == 'description' %}
+                                  <div class="field-update bg-danger">{{ field_item | value | safe }}</div>
+                                {% else %}
+                                  <div class="field-update bg-danger">{{ field_item | value | default:"-" }}</div>
+                                {% endif %}
+                            </div>
+                            {% endwith %}
+                            <div class="col-xs-2 text-center v-center">
+                              <span class="glyphicon glyphicon-arrow-right"></span>
+                            </div>
+                            {% with field_item=field_update|get_new_field_item %}
+                              <div class="field col-xs-5">
+                                <div class="field-name">{{ field_item | verbose_name }}</div>
+                                {% if field_item.0 == 'description' %}
+                                  <div class="field-update bg-success">{{ field_item | value | safe }}</div>
+                                {% else %}
+                                  <div class="field-update bg-success">{{ field_item | value | default:"-" }}</div>
+                                {% endif %}
+                              </div>
+                            {% endwith %}
+                          </div>
                       {% endfor %}
                     {% else %}
                       <div class="list-group-item">

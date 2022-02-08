@@ -9,7 +9,7 @@ register = template.Library()
 @register.filter
 def verbose_name(field_item):
     field_name, _ = field_item
-    meta = JobOffer.get_options()  # Poner público desde joboffer
+    meta = JobOffer.get_options()
     field = meta.get_field(field_name)
     return field.verbose_name
 
@@ -17,7 +17,7 @@ def verbose_name(field_item):
 @register.filter
 def value(field_item):
     field_name, field_value = field_item
-    meta = JobOffer.get_options()  # Poner público desde joboffer
+    meta = JobOffer.get_options()
     field = meta.get_field(field_name)
 
     attr_name = field.attname  # Foreign keys use a different attribute name
@@ -29,3 +29,13 @@ def value(field_item):
         return display_function()
     else:
         return getattr(joboffer, field_name)
+
+
+@register.filter
+def get_old_field_item(field_update):
+    return (field_update[0], field_update[1][0])
+
+
+@register.filter
+def get_new_field_item(field_update):
+    return (field_update[0], field_update[1][1])
