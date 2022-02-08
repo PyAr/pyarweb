@@ -1,8 +1,8 @@
 import requests
 from django.conf import settings
 
-from .models import JobOffer
-from .publisher import Publisher
+from ..models import JobOffer
+from ..publisher import Publisher
 
 
 def publish(message):
@@ -20,19 +20,15 @@ def publish(message):
 class FacebookPublisher(Publisher):
     """Facebook Publisher."""
     name = 'Facebook'
-    RESULT_OK = 'ok'
-    RESULT_BAD = 'bad'
 
     @classmethod
     def publish(cls, job_offer: 'JobOffer'):
         # TODO: Create template from offer
-        message = 'This is a test message'
+        message = cls._render_offer(job_offer)
         publish(message)
-        ...
+        # TODO: Add error management
+        return cls.RESULT_OK
 
     @classmethod
     def _render_offer(cls, job_offer: 'JobOffer'):
         raise NotImplementedError
-
-
-

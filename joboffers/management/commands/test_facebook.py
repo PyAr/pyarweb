@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand
 
-from joboffers.facebook_publisher import publish
+from joboffers.publisher.facebook import publish
 
 
 class Command(BaseCommand):
-    help = 'Test sending a post to telegram.'
+    help = 'Test sending a post to facebook.'
 
     def handle(self, *args, **options):
         """Test that the offer is send to the facebook publishers."""

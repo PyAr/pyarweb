@@ -50,6 +50,3 @@ def test_publish_offer(requests_mock: Mocker):
         assert False, 'publish_offer raised an exception, wich means that the url is malformed.'
     finally:
         DummyPublisher.published_count == 0
-
-
-

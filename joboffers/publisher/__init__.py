@@ -1,3 +1,6 @@
+from ..models import JobOffer
+
+
 class Publisher:
     """Abstract class for Publishing classes like Twitter, Facebook, etc."""
     name = None
