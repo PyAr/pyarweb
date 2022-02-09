@@ -232,12 +232,29 @@ class JobOfferHistory(CRUDEvent):
 
     @property
     def fields(self):
+        """
+        Return the representation of the joboffer after this particular change is applied.
+        It returns a python dict that can contain different fields that the current model.
+        """
         obj_repr = json.loads(self.object_json_repr)
         fields = obj_repr[0]['fields']
         return fields
 
     @property
+    def joboffer_comment(self):
+        """
+        Return the JobOfferComment instance for the matching JobOfferHistory
+        """
+        if self.content_type.model != 'joboffercomment':
+            raise ValueError("Unexpected model. Expected a JobOfferComment object.")
+
+        return JobOfferComment.objects.get(id=self.object_id)
+
+    @property
     def changes(self):
+        """
+        Get a dict with the changes made to the object.
+        """
         if self.changed_fields:
             return json.loads(self.changed_fields)
         else:

@@ -161,3 +161,40 @@ def test_get_joboffer_history_for_given_joboffer(user_company_profile, settings)
     ]
 
     assert actual_history == expected_history
+
+
+@pytest.mark.django_db
+def test_JobOfferHistory_joboffer_comment_with_wrong_model_object(settings):
+    """
+    Test that calling comment_fields on JobOfferHistory object raises exceptions when it is called
+    with an object different that JobOfferComment
+    """
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    JobOfferFactory.create()
+
+    history = JobOfferHistory.objects.first()
+
+    assert history.content_type.model == 'joboffer'
+
+    with pytest.raises(ValueError):
+        history.joboffer_comment
+
+
+@pytest.mark.django_db
+def test_JobOfferHistory_works_with_a_JobOfferComment_model(settings):
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    comment = JobOfferCommentFactory.create()
+
+    history = JobOfferHistory.objects.first()
+
+    assert history.content_type.model == 'joboffercomment'
+
+    obtained_comment = history.joboffer_comment
+
+    assert comment == obtained_comment
