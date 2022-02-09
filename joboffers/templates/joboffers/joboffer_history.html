@@ -58,13 +58,13 @@
                             {% if field_item.0 not in HIDDEN_JOBOFFER_FIELDS %}
                               {% if field_item.0 == 'description' %}
                                 <div class="field col-xs-12">
-                                  <div class="field-name">{{ field_item | verbose_name }}</div>
-                                  <div>{{ field_item | value | safe }}</div>
+                                  <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
+                                  <div>{{ field_item | joboffer_value | safe }}</div>
                                 </div>
                               {% else %}
                                 <div class="field col-xs-12 col-sm-4">
-                                  <div class="field-name">{{ field_item | verbose_name }}</div>
-                                  <div>{{ field_item | value | default:"-" }}</div>
+                                  <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
+                                  <div>{{ field_item | joboffer_value | default:"-" }}</div>
                                 </div>
                               {% endif %}
                             {% endif %}
@@ -76,11 +76,13 @@
                           <div class="row field-definitions equal-height">
                             {% with field_item=field_update|get_old_field_item %}
                             <div class="field col-xs-5">
-                              <div class="field-name">{{ field_item | verbose_name }}</div>
+                              <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
                                 {% if field_item.0 == 'description' %}
-                                  <div class="field-update bg-danger">{{ field_item | value | safe }}</div>
+                              <div class="field-update bg-danger">{{ field_item | joboffer_value | safe }}</div>
                                 {% else %}
-                                  <div class="field-update bg-danger">{{ field_item | value | default:"-" }}</div>
+                                  <div class="field-update bg-danger">
+                                    {{ field_item | joboffer_value | default:"-" }}
+                                  </div>
                                 {% endif %}
                             </div>
                             {% endwith %}
@@ -89,23 +91,18 @@
                             </div>
                             {% with field_item=field_update|get_new_field_item %}
                               <div class="field col-xs-5">
-                                <div class="field-name">{{ field_item | verbose_name }}</div>
+                                <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
                                 {% if field_item.0 == 'description' %}
-                                  <div class="field-update bg-success">{{ field_item | value | safe }}</div>
+                                  <div class="field-update bg-success">{{ field_item | joboffer_value | safe }}</div>
                                 {% else %}
-                                  <div class="field-update bg-success">{{ field_item | value | default:"-" }}</div>
+                                  <div class="field-update bg-success">{{ field_item | joboffer_value | default:"-" }}</div>
                                 {% endif %}
                               </div>
                             {% endwith %}
                           </div>
-                      {% endfor %}
+                          {% endfor %}
                     {% else %}
-                      <div class="list-group-item">
-                        comment_type: <span class="label label-default">{{ history_entry.fields.0.fields.comment_type }}</span>
-                      </div>
-                      <div class="list-group-item">
-                        text: <span class="label label-default">{{ fields.0.fields.text }}</span>
-                      </div>
+                        {% include 'joboffers/history/_comment.html' with comment=history_entry.joboffer_comment %}
                     {% endif %}
                   </div>
               </div>

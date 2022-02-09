@@ -132,6 +132,9 @@ class JobOffer(models.Model):
 
     @classmethod
     def get_options(cls):
+        """
+        Make the _meta API pubkic https://docs.djangoproject.com/en/4.0/ref/models/meta/
+        """
         return cls._meta
 
     class Meta:
@@ -191,6 +194,13 @@ class JobOfferComment(models.Model):
         related_name='created_joboffer_comments',
     )
     joboffer = models.ForeignKey(JobOffer, on_delete=models.CASCADE)
+
+    @classmethod
+    def get_options(cls):
+        """
+        Make the _meta API pubkic https://docs.djangoproject.com/en/4.0/ref/models/meta/
+        """
+        return cls._meta
 
     def __str__(self):
         return f"{self.joboffer.title}: {self.get_comment_type_display()}"

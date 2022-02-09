@@ -7,7 +7,15 @@ register = template.Library()
 
 
 @register.filter
-def verbose_name(field_item):
+def verbose_name(model, field_name):
+    meta = model.get_options()
+
+    field = meta.get_field(field_name)
+    return field.verbose_name
+
+
+@register.filter
+def joboffer_verbose_name(field_item):
     field_name, _ = field_item
     meta = JobOffer.get_options()
     field = meta.get_field(field_name)
@@ -15,7 +23,7 @@ def verbose_name(field_item):
 
 
 @register.filter
-def value(field_item):
+def joboffer_value(field_item):
     field_name, field_value = field_item
     meta = JobOffer.get_options()
     field = meta.get_field(field_name)
