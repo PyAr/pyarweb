@@ -21,47 +21,56 @@ from .models import JobOffer, JobOfferComment, OfferState
 
 ACTION_BUTTONS = {
     CODE_HISTORY: {
-        "target_url": 'joboffers:history',
-        "text": _('Historial'),
-        "css_classes": ["btn-info"],
-        "icon_class": "glyphicon-time"
+        'target_url': 'joboffers:history',
+        'text': _('Historial'),
+        'css_classes': ['btn-info'],
+        'icon_class': 'glyphicon-time'
     },
     CODE_EDIT: {
-        "target_url": 'joboffers:edit',
-        "text": _('Editar'),
-        "css_classes": ["btn-default"],
-        "icon_class": "glyphicon-pencil"
+        'target_url': 'joboffers:edit',
+        'text': _('Editar'),
+        'css_classes': ['btn-default'],
+        'icon_class': 'glyphicon-pencil'
     },
     CODE_REJECT: {
-        "target_url": 'joboffers:reject',
-        "text": _('Rechazar'),
-        "css_classes": ["btn-danger"],
-        "icon_class": "glyphicon-thumbs-down"
+        'target_url': 'joboffers:reject',
+        'text': _('Rechazar'),
+        'css_classes': ['btn-danger'],
+        'icon_class': 'glyphicon-thumbs-down'
     },
     CODE_REACTIVATE: {
-        "target_url": 'joboffers:reactivate',
-        "text": _('Volver a Activar'),
-        "css_classes": ["btn-default"],
-        "icon_class": "glyphicon-arrow-up"
+        'target_url': 'joboffers:reactivate',
+        'text': _('Volver a Activar'),
+        'css_classes': ['btn-default'],
+        'icon_class': 'glyphicon-arrow-up'
     },
     CODE_DEACTIVATE: {
-        "target_url": 'joboffers:deactivate',
-        "text": _('Desactivar'),
-        "css_classes": ["btn-warning"],
-        "icon_class": "glyphicon-minus-sign"
+        'target_url': 'joboffers:deactivate',
+        'text': _('Desactivar'),
+        'css_classes': ['btn-warning'],
+        'icon_class': 'glyphicon-minus-sign'
     },
     CODE_REQUEST_MODERATION: {
-        "target_url": 'joboffers:request_moderation',
-        "text": _('Confirmar'),
-        "css_classes": ["btn-success"],
-        "icon_class": "glyphicon-eye-open"
+        'target_url': 'joboffers:request_moderation',
+        'text': _('Confirmar'),
+        'css_classes': ['btn-success'],
+        'icon_class': 'glyphicon-eye-open'
     },
     CODE_APPROVE: {
-        "target_url": 'joboffers:approve',
-        "text": _('Aprobar'),
-        "css_classes": ["btn-success"],
-        "icon_class": "glyphicon-pencil"
+        'target_url': 'joboffers:approve',
+        'text': _('Aprobar'),
+        'css_classes': ['btn-success'],
+        'icon_class': 'glyphicon-pencil'
     }
+}
+
+STATE_LABEL_CLASSES = {
+    'ACTIVE': 'label-success',
+    'DEACTIVATED': 'label-danger',
+    'EXPIRED': 'label-warning',
+    'MODERATION': 'label-primary',
+    'NEW': 'label-info',
+    'REJECTED': 'label-danger',
 }
 
 
@@ -100,8 +109,8 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = JobOffer
     form_class = JobOfferForm
     success_message = _(
-        "Oferta creada correctamente. A continuación debe confirmarla para que sea revisada por el"
-        "equipo de moderación y quede activa."
+        'Oferta creada correctamente. A continuación debe confirmarla para que sea revisada por el'
+        'equipo de moderación y quede activa.'
     )
 
     def get(self, request, *args, **kwargs):
@@ -127,7 +136,7 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse("joboffers:view", kwargs={'slug': self.object.slug})
+        return reverse('joboffers:view', kwargs={'slug': self.object.slug})
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -154,6 +163,7 @@ class JobOfferDetailView(DetailView):
     def get_context_data(self, object):
         ctx = super().get_context_data()
         ctx['action_buttons'] = self.get_action_buttons()
+        ctx['state_label_class'] = STATE_LABEL_CLASSES[object.state]
         return ctx
 
 
@@ -161,7 +171,7 @@ class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
     action_code = CODE_EDIT
     model = JobOffer
     form_class = JobOfferForm
-    success_url = "joboffers:view"
+    success_url = 'joboffers:view'
 
     def get_success_url(self, *args, **kwargs):
         return reverse(self.success_url, kwargs={'slug': self.object.slug})
@@ -231,7 +241,7 @@ class JobOfferRejectView(
     form_class = JobOfferCommentForm
     template_name = 'joboffers/joboffer_reject.html'
     success_message = _(
-        "Oferta rechazada. Se marca como desactivada para que el publicador la revise. "
+        'Oferta rechazada. Se marca como desactivada para que el publicador la revise. '
     )
 
     def get_initial(self):
@@ -263,7 +273,7 @@ class JobOfferRejectView(
             return self.form_invalid(form)
 
     def get_success_url(self):
-        return reverse("joboffers:view", kwargs={'slug': self.object.slug})
+        return reverse('joboffers:view', kwargs={'slug': self.object.slug})
 
 
 class JobOfferApproveView(LoginRequiredMixin, TransitionView):
@@ -288,8 +298,8 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
     action_code = CODE_REQUEST_MODERATION
     redirect_to_pattern = 'joboffers:view'
     success_message = _(
-        "Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar"
-        "activa si es correcta. Revise está misma página para ver el estado."
+        'Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar'
+        'activa si es correcta. Revise está misma página para ver el estado.'
     )
 
     def update_object(self, offer):
@@ -299,4 +309,4 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
 
 class JobOfferHistoryView(LoginRequiredMixin, ListView):
     model = JobOfferComment
-    template_name = "joboffers/history.html"
+    template_name = 'joboffers/history.html'
