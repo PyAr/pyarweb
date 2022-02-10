@@ -6,9 +6,13 @@ from django.conf import settings
 from joboffers.publishers import Publisher
 
 
+FACEBOOK_POST_URL = f'https://graph.facebook.com/{settings.FACEBOOK_PAGE_ID}/feed'
+
+ERROR_LOG_MESSAGE = 'Falló al querer publicar a facebook, url={} data={}: {}'
+
+
 def publish(message):
     """Publish a message to the configured facebook page."""
-    post_url = f'https://graph.facebook.com/{settings.FACEBOOK_PAGE_ID}/feed'
     payload = {
         'message': message,
         'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
@@ -16,16 +20,16 @@ def publish(message):
     status = None
 
     try:
-        result = requests.post(post_url, data=payload)
+        result = requests.post(FACEBOOK_POST_URL, data=payload)
     except Exception as err:
         status = requests.codes.server_error
-        logging.error(f'Falló al querer publicar a facebook, url={post_url} data={payload}: {err}')
+        result_info = err
     else:
         status = result.status_code
+        result_info = result.text
 
     if status != requests.codes.ok:
-        logging.error(f'Falló al querer publicar a facebook, url={post_url} data={payload}:'
-                      f'{result.text}')
+        logging.error(ERROR_LOG_MESSAGE.format(FACEBOOK_POST_URL,payload,result_info))
     return status
 
 
