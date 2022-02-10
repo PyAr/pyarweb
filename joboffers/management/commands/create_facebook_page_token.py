@@ -26,8 +26,8 @@ What does this command do?
 The token generated from the facebook console, is a Short lived User Token. It last only 60 minutes
 and is not usefull to post to pages. To do that, you will need a Page Token. The one that can be
 generated on the console is also a short lived token, so in order tu have a token that does not
-expire, you need a Short Lived User Token that using the api is swapped with a Long lived user token
-(valid for 60 days) and you can use that token later to obtain the Long Lived page token.
+expire, you need a Short Lived User Token that using the api is swapped with a Long lived user
+token (valid for 60 days) and you can use that token later to obtain the Long Lived page token.
 
 To test the validity of the token, you can past it here:
 
