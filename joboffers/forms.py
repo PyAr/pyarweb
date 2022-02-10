@@ -56,14 +56,6 @@ class JobOfferForm(forms.ModelForm):
         self.cleaned_data['tags'] = utils.normalize_tags(tags)
         return self.cleaned_data['tags']
 
-    '''
-    def clean_company(self):
-        """
-        Set default company
-        """
-        return self.initial['company']
-    '''
-
     def clean(self):
         cleaned_data = super().clean()
 
