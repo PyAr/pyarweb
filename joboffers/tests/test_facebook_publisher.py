@@ -8,6 +8,12 @@ from ..publishers.facebook import FACEBOOK_POST_URL, ERROR_LOG_MESSAGE, publish
 
 DUMMY_MESSAGE = 'message'
 DUMMY_EXCEPTION_MESSAGE= 'Oops'
+DUMMY_BAD_REQUEST_TEXT = 'This is bad'
+
+
+class DummyRequest:
+    status_code = 400
+    text = DUMMY_BAD_REQUEST_TEXT
 
 
 def test_publish_message_ok(requests_mock: Mocker):
@@ -37,4 +43,25 @@ def test_publish_message_urlerror(mocked_object, caplog):
 
     assert expected_error_message in caplog.text
     assert status == 500
+
+
+
+def test_publish_message_urlerror(caplog):
+    """Test error handling of requests made to the facebook api when some parameter is wrong."""
+
+    with patch('joboffers.publishers.facebook.requests.post') as mocked_object:
+
+        mocked_object.return_value = DummyRequest
+        status = publish('message')
+
+    payload = {
+        'message': DUMMY_MESSAGE,
+        'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
+    }
+
+    expected_error_message = ERROR_LOG_MESSAGE.format(FACEBOOK_POST_URL,
+                                                      payload, DUMMY_BAD_REQUEST_TEXT)
+
+    assert expected_error_message in caplog.text
+    assert status == 400
 
