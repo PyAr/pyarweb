@@ -21,9 +21,6 @@ class DummyPublisher(Publisher):
 
     @classmethod
     def publish(cls, job_offer):
-        # A real publisher should call an external API
-        # and the publsh method should return either success or not
-        # And show the error or success message if possible
         requests.post(DUMMY_PUBLISHER_URL)
         cls.published_count += 1
         return {'status': cls.RESULT_OK,
@@ -32,7 +29,7 @@ class DummyPublisher(Publisher):
 
 @pytest.mark.django_db
 def test_publish_offer(requests_mock: Mocker):
-    """Test that the offer is send to the different publishers."""
+    """Test that the offer is sent to the different publishers."""
     requests_mock.post(DUMMY_PUBLISHER_URL, json='', status_code=201)
     joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
 
