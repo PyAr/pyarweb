@@ -1,0 +1,30 @@
+<div class="panel-heading" role="tab">
+  <div class="row" role="button" data-toggle="collapse" href="#change-{{ forloop.counter }}" aria-expanded="false" aria-controls="change-{{ forloop.counter }}">
+    <div class="col-xs-11">
+      <div class="row">
+        <div class="col-xs-3">
+          <span class="glyphicon glyphicon-user"></span> <strong>{{ history_entry.user }}</strong>
+        </div>
+        <div class="col-xs-3">
+          <small>
+            Cambió <strong>5</strong> campos
+          </small>
+        </div>
+        <div class="col-xs-3">
+          {% if history_entry.content_type.model == "joboffer" %}
+          <span>{{ history_entry.get_event_type_display | upper }}</span>
+          {% else %}
+          COMMENT
+          {% endif %}
+        </div>
+        <div class="col-xs-3 text-right">
+          <small>{{ history_entry.datetime | date:"SHORT_DATE_FORMAT" }}</small>
+          <small>{{ history_entry.datetime | date:"H:m:s" }}</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-1 text-right">
+      <span class="glyphicon glyphicon-chevron-down"></span>
+    </div>
+  </div>
+</div>
