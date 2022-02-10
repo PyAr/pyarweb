@@ -11,7 +11,7 @@ FACEBOOK_POST_URL = f'https://graph.facebook.com/{settings.FACEBOOK_PAGE_ID}/fee
 ERROR_LOG_MESSAGE = 'Falló al querer publicar a facebook, url={} data={}: {}'
 
 
-def publish(message):
+def publish(message: str):
     """Publish a message to the configured facebook page."""
     payload = {
         'message': message,
@@ -29,7 +29,7 @@ def publish(message):
         result_info = result.text
 
     if status != requests.codes.ok:
-        logging.error(ERROR_LOG_MESSAGE.format(FACEBOOK_POST_URL,payload,result_info))
+        logging.error(ERROR_LOG_MESSAGE.format(FACEBOOK_POST_URL, payload, result_info))
     return status
 
 

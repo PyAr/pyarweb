@@ -7,7 +7,7 @@ from requests_mock.mocker import Mocker
 from ..publishers.facebook import FACEBOOK_POST_URL, ERROR_LOG_MESSAGE, publish
 
 DUMMY_MESSAGE = 'message'
-DUMMY_EXCEPTION_MESSAGE= 'Oops'
+DUMMY_EXCEPTION_MESSAGE = 'Oops'
 DUMMY_BAD_REQUEST_TEXT = 'This is bad'
 
 
@@ -28,8 +28,10 @@ def test_publish_message_ok(requests_mock: Mocker):
     assert status == 200
 
 
-@patch('joboffers.publishers.facebook.requests.post',
-           side_effect=Exception(DUMMY_EXCEPTION_MESSAGE))
+@patch(
+        'joboffers.publishers.facebook.requests.post',
+        side_effect=Exception(DUMMY_EXCEPTION_MESSAGE)
+    )
 def test_publish_message_urlerror(mocked_object, caplog):
     """Test error handling of requests made to the facebook api when url does not exists."""
     status = publish('message')
@@ -45,8 +47,7 @@ def test_publish_message_urlerror(mocked_object, caplog):
     assert status == 500
 
 
-
-def test_publish_message_urlerror(caplog):
+def test_publish_message_parameters_error(caplog):
     """Test error handling of requests made to the facebook api when some parameter is wrong."""
 
     with patch('joboffers.publishers.facebook.requests.post') as mocked_object:
@@ -64,4 +65,3 @@ def test_publish_message_urlerror(caplog):
 
     assert expected_error_message in caplog.text
     assert status == 400
-
