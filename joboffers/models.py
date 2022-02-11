@@ -256,7 +256,7 @@ class JobOfferHistory(CRUDEvent):
         Return the JobOfferComment instance for the matching JobOfferHistory
         """
         if self.content_type.model != 'joboffercomment':
-            raise ValueError("Unexpected model. Expected a JobOfferComment object.")
+            raise ValueError("Unexpected model. Expected a JobOfferComment instance.")
 
         return JobOfferComment.objects.get(id=self.object_id)
 
@@ -269,6 +269,22 @@ class JobOfferHistory(CRUDEvent):
             return json.loads(self.changed_fields)
         else:
             return None
+
+    @property
+    def state(self):
+        """
+        Get the state of the
+        """
+        if self.content_type.model != 'joboffer':
+            raise ValueError("Unexpected model. Expected a JobOffer instance.")
+
+        fields = self.fields
+        joboffer = JobOffer(state=fields['state'])
+        return joboffer.get_state_display()
+
+    @property
+    def state_class(self):
+        return ''
 
     class Meta:
         proxy = True

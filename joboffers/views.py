@@ -307,6 +307,7 @@ class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data()
         ctx['JobOfferHistory'] = JobOfferHistory
+        ctx['OfferState'] = OfferState
         ctx['HIDDEN_JOBOFFER_FIELDS'] = self.HIDDEN_JOBOFFER_FIELDS
 
         return ctx

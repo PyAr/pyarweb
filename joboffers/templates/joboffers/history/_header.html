@@ -1,20 +1,41 @@
-<div class="panel-heading" role="tab">
+{% load i18n %}
+{% load history %}
+<div class="panel-heading history-header" role="tab">
   <div class="row" role="button" data-toggle="collapse" href="#change-{{ forloop.counter }}" aria-expanded="false" aria-controls="change-{{ forloop.counter }}">
     <div class="col-xs-11">
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-xs-2">
           <span class="glyphicon glyphicon-user"></span> <strong>{{ history_entry.user }}</strong>
         </div>
-        <div class="col-xs-3">
-          <small>
-            Cambió <strong>5</strong> campos
-          </small>
+        <div class="col-xs-2">
+          {% if history_entry.content_type.model == "joboffer" %}
+            {% if history_entry.event_type == JobOfferHistory.CREATE %}
+              <span class="label label-primary">{% translate 'creó' %}</span>
+            {% else %}
+              <span class="label label-info">{% translate 'actualizó' %}</span>
+            {% endif %}
+          {% else %}
+            <span class="label label-danger">{% translate 'rechazó' %}</span>
+          {% endif %}
         </div>
         <div class="col-xs-3">
-          {% if history_entry.content_type.model == "joboffer" %}
-          <span>{{ history_entry.get_event_type_display | upper }}</span>
+          {% if history_entry.content_type.model == "joboffercomment" %}
+            <strong>Motivo:</strong> {{ history_entry.joboffer_comment.get_comment_type_display }}
           {% else %}
-          COMMENT
+            {% if history_entry.event_type == JobOfferHistory.CREATE %}
+              {{ history_entry.fields.title }}
+            {% else %}
+              {% translate 'Modificó' %}
+              <strong>{{ history_entry.changes.items | length }}</strong>
+              {% translate 'campos' %}
+            {% endif %}
+          {% endif %}
+        </div>
+        <div class="col-xs-2">
+          {% if history_entry.content_type.model == "joboffercomment" %}
+            <span class="label label-primary">{{ OfferState.MODERATION.label }}</span>
+          {% else %}
+            <span class="label label-success">{{ history_entry.state }}</span>
           {% endif %}
         </div>
         <div class="col-xs-3 text-right">
