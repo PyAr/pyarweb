@@ -17,7 +17,6 @@ def publish(message: str):
         'message': message,
         'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
     }
-    status = None
 
     try:
         result = requests.post(FACEBOOK_POST_URL, data=payload)

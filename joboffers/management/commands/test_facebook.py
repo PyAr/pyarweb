@@ -11,7 +11,7 @@ class Command(BaseCommand):
         parser.add_argument("--offer-id", type=int, required=False)
 
     def handle(self, *args, **options):
-        """Test that the offer is send to the facebook publishers."""
+        """Posted a message to facebook."""
         offer_id = options.get('offer_id')
         status = None
         raw_status = None
