@@ -45,7 +45,7 @@ def test_publish_message_urlerror(mocked_object, caplog):
                                                       payload, DUMMY_EXCEPTION_MESSAGE)
 
     assert expected_error_message in caplog.text
-    assert status == 500
+    assert status == None
 
 
 def test_publish_message_parameters_error(caplog):

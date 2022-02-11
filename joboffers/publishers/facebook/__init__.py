@@ -24,7 +24,7 @@ class FacebookPublisher(Publisher):
         try:
             result = requests.post(FACEBOOK_POST_URL, data=payload)
         except Exception as err:
-            status = requests.codes.server_error
+            status = None
             result_info = err
         else:
             status = result.status_code
