@@ -4,7 +4,8 @@ from django.conf import settings
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
 
-from ..publishers.facebook import FACEBOOK_POST_URL, ERROR_LOG_MESSAGE, publish
+from ..publishers.facebook import (ERROR_LOG_MESSAGE, FACEBOOK_POST_URL,
+                                   FacebookPublisher)
 
 DUMMY_MESSAGE = 'message'
 DUMMY_EXCEPTION_MESSAGE = 'Oops'
@@ -21,7 +22,7 @@ def test_publish_message_ok(requests_mock: Mocker):
     requests_mock.post(FACEBOOK_POST_URL, json='', status_code=200)
 
     try:
-        status = publish('message')
+        status = FacebookPublisher()._push_to_api('message')
     except NoMockAddress:
         assert False, 'publish_offer raised an exception, wich means that the url is malformed.'
 
@@ -34,7 +35,7 @@ def test_publish_message_ok(requests_mock: Mocker):
     )
 def test_publish_message_urlerror(mocked_object, caplog):
     """Test error handling of requests made to the facebook api when url does not exists."""
-    status = publish('message')
+    status = FacebookPublisher()._push_to_api('message')
     payload = {
         'message': DUMMY_MESSAGE,
         'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
@@ -53,7 +54,7 @@ def test_publish_message_parameters_error(caplog):
     with patch('joboffers.publishers.facebook.requests.post') as mocked_object:
 
         mocked_object.return_value = DummyRequest
-        status = publish('message')
+        status = FacebookPublisher()._push_to_api('message')
 
     payload = {
         'message': DUMMY_MESSAGE,

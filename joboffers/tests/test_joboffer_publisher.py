@@ -19,11 +19,10 @@ class DummyPublisher(Publisher):
     name = DUMMY_PUBLISHER_NAME
     published_count = 0
 
-    @classmethod
-    def publish(cls, job_offer):
+    def publish(self, job_offer):
         requests.post(DUMMY_PUBLISHER_URL)
-        cls.published_count += 1
-        return {'status': cls.RESULT_OK,
+        DummyPublisher.published_count += 1
+        return {'status': self.RESULT_OK,
                 'text': f'The publication was successfull at {DUMMY_PUBLISHER_URL}'}
 
 
@@ -46,7 +45,7 @@ def test_publish_offer(requests_mock: Mocker):
 def test_rendering():
     """Test template_rendering."""
     job_offer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
-    result = Publisher._render_offer(job_offer)
+    result = Publisher()._render_offer(job_offer)
     assert result == f'<h1>New job!: { job_offer.slug }</h1>\n'
 
 
@@ -54,9 +53,9 @@ def test_rendering():
 def test_publisher_publish_ok():
     """Test calling to publisher method without errors."""
     job_offer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
-    with patch('joboffers.publishers.Publisher.publish_method') as mocked_publish:
+    with patch('joboffers.publishers.Publisher._push_to_api') as mocked_publish:
         mocked_publish.return_value = 200
-        result = Publisher.publish(job_offer)
+        result = Publisher().publish(job_offer)
 
     assert result == Publisher.RESULT_OK
 
@@ -65,8 +64,8 @@ def test_publisher_publish_ok():
 def test_publisher_publish_error():
     """Test calling to publisher method and handling of errors."""
     job_offer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
-    with patch('joboffers.publishers.Publisher.publish_method') as mocked_publish:
+    with patch('joboffers.publishers.Publisher._push_to_api') as mocked_publish:
         mocked_publish.return_value = 400
-        result = Publisher.publish(job_offer)
+        result = Publisher().publish(job_offer)
 
     assert result == Publisher.RESULT_BAD
