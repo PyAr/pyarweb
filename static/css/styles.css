@@ -629,3 +629,8 @@ div.sponsored_jobs {
 .history-header .label {
   font-size: 1em;
 }
+
+.mt-0 {
+    margin-top:0px;
+
+}
