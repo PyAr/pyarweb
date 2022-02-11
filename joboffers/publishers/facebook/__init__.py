@@ -14,6 +14,7 @@ ERROR_LOG_MESSAGE = 'Falló al querer publicar a facebook, url=%s data=%s: %s'
 class FacebookPublisher(Publisher):
     """Facebook Publisher."""
     name = 'Facebook'
+
     def _push_to_api(self, message: str):
         """Publish a message to the configured facebook page."""
         payload = {
@@ -33,4 +34,3 @@ class FacebookPublisher(Publisher):
         if status != requests.codes.ok:
             logging.error(ERROR_LOG_MESSAGE, FACEBOOK_POST_URL, payload, result_info)
         return status
-
