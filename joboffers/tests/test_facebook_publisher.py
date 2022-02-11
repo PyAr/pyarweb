@@ -41,7 +41,7 @@ def test_publish_message_urlerror(mocked_object, caplog):
         'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
     }
 
-    expected_error_message = ERROR_LOG_MESSAGE.format(FACEBOOK_POST_URL,
+    expected_error_message = ERROR_LOG_MESSAGE % (FACEBOOK_POST_URL,
                                                       payload, DUMMY_EXCEPTION_MESSAGE)
 
     assert expected_error_message in caplog.text
@@ -61,7 +61,7 @@ def test_publish_message_parameters_error(caplog):
         'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
     }
 
-    expected_error_message = ERROR_LOG_MESSAGE.format(FACEBOOK_POST_URL,
+    expected_error_message = ERROR_LOG_MESSAGE % (FACEBOOK_POST_URL,
                                                       payload, DUMMY_BAD_REQUEST_TEXT)
 
     assert expected_error_message in caplog.text

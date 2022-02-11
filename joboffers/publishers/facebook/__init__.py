@@ -8,13 +8,12 @@ from joboffers.publishers import Publisher
 
 FACEBOOK_POST_URL = f'https://graph.facebook.com/{settings.FACEBOOK_PAGE_ID}/feed'
 
-ERROR_LOG_MESSAGE = 'Falló al querer publicar a facebook, url={} data={}: {}'
+ERROR_LOG_MESSAGE = 'Falló al querer publicar a facebook, url=%s data=%s: %s'
 
 
 class FacebookPublisher(Publisher):
     """Facebook Publisher."""
     name = 'Facebook'
-
     def _push_to_api(self, message: str):
         """Publish a message to the configured facebook page."""
         payload = {
@@ -32,6 +31,6 @@ class FacebookPublisher(Publisher):
             result_info = result.text
 
         if status != requests.codes.ok:
-            logging.error(ERROR_LOG_MESSAGE.format(FACEBOOK_POST_URL, payload, result_info))
+            logging.error(ERROR_LOG_MESSAGE, FACEBOOK_POST_URL, payload, result_info)
         return status
 
