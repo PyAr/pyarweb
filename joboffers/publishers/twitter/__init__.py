@@ -1,22 +1,28 @@
 import tweepy
-
-# Variables that contains the credentials to access Twitter API
-
-# Setup access to API
-def connect_to_twitter_OAuth():
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-
-    api = tweepy.API(auth)
-    return api
+from django.conf import settings
 
 
-# Create API object
-api = connect_to_twitter_OAuth()
+ERROR_LOG_MESSAGE = 'Falló al querer publicar a twitter, data={}: {}'
 
-#public_tweets = api.home_timeline()
-#for tweet in public_tweets:
-#    print(tweet.text)
 
-api.update_status("Test tweet from Tweepy")
+def publish(message: str):
+    """Publish a message to the configured facebook page."""
 
+    try:
+        auth = tweepy.OAuthHandler(settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET)
+        auth.set_access_token(settings.TWITTER_ACCESS_TOKEN, settings.TWITTER_ACCESS_SECRET)
+        api = tweepy.API(auth)
+        api.update_status(message)
+    except Exception as err:
+        status=500
+        logging.error(ERROR_LOG_MESSAGE.format(ERROR_LOG_MESSAGE, message, err))
+    else:
+        status=200
+
+    return status
+
+
+class TwitterPublisher(Publisher):
+    """Twitter Publisher."""
+    name = 'Twitter'
+    publish_method = publish
