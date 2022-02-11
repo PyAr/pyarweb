@@ -7,11 +7,11 @@ from django.db.utils import IntegrityError
 from easyaudit.models import CRUDEvent
 from factory import Faker
 
-from joboffers.models import Remoteness, OfferState
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
 
 from .factories import JobOfferFactory, JobOfferCommentFactory
-from ..models import JobOffer, JobOfferHistory
+from ..constants import STATE_LABEL_CLASSES
+from ..models import JobOffer, JobOfferHistory, OfferState, Remoteness
 
 
 @pytest.mark.django_db
@@ -185,6 +185,9 @@ def test_JobOfferHistory_joboffer_comment_with_wrong_model_object(settings):
 
 @pytest.mark.django_db
 def test_JobOfferHistory_works_with_a_JobOfferComment_model(settings):
+    """
+    Test that a JobOfferHistory returns the related JobOfferComment correctly
+    """
     settings.TEST = True
     # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
     # same trasnaction and then we can test for it.
@@ -198,3 +201,85 @@ def test_JobOfferHistory_works_with_a_JobOfferComment_model(settings):
     obtained_comment = history.joboffer_comment
 
     assert comment == obtained_comment
+
+
+@pytest.mark.django_db
+def test_JobOfferHistory_changes(settings):
+    """
+    Test that JobOfferHistory.fields returns the serialized fields for a joboffer
+    """
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    joboffer = JobOfferFactory.create(state=OfferState.DEACTIVATED)
+    joboffer.state = OfferState.ACTIVE
+    joboffer.save()
+
+    history = JobOfferHistory.objects.filter(event_type=JobOfferHistory.UPDATE).first()
+
+    assert history.content_type.model == 'joboffer'
+
+    changes = history.changes
+
+    assert changes['state'] == [OfferState.DEACTIVATED, OfferState.ACTIVE]
+
+
+@pytest.mark.django_db
+def test_JobOfferHistory_fields(settings):
+    """
+    Test that JobOfferHistory.fields returns the serialized fields for a joboffer
+    """
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    joboffer = JobOfferFactory.create()
+
+    history = JobOfferHistory.objects.first()
+
+    assert history.content_type.model == 'joboffer'
+
+    fields = history.fields
+
+    assert joboffer.title == fields['title']
+
+
+@pytest.mark.django_db
+def test_JobOfferHistory_state_label(settings):
+    """
+    Test that JobOfferHistory.state return a state correctly.
+    """
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    joboffer = JobOfferFactory.create()
+
+    history = JobOfferHistory.objects.first()
+
+    assert history.content_type.model == 'joboffer'
+
+    state_label = history.state_label
+
+    assert joboffer.state.label == state_label
+
+
+@pytest.mark.django_db
+def test_JobOfferHistory_state_label_class(settings):
+    """
+    Test that state_class return a class for a joboffer JobOfferHistory
+    """
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    JobOfferFactory.create(state=OfferState.MODERATION)
+
+    history = JobOfferHistory.objects.first()
+
+    assert history.content_type.model == 'joboffer'
+
+    state_label_class = history.state_label_class
+
+    assert state_label_class == STATE_LABEL_CLASSES[OfferState.MODERATION]

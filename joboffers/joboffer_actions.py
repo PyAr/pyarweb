@@ -1,24 +1,18 @@
 from dataclasses import dataclass
 from typing import Set
 
-from .models import OfferState
 from pycompanies.models import UserCompanyProfile
-
+from .models import OfferState
+from .constants import (
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
+    CODE_REQUEST_MODERATION, CODE_APPROVE
+)
 
 ACTIONS_PUBLISHER = {}
 ACTIONS_ADMIN = {}
 
 ROLE_PUBLISHER = "publisher"
 ROLE_ADMIN = "admin"
-
-CODE_CREATE = "create"
-CODE_EDIT = "edit"
-CODE_HISTORY = "history"
-CODE_REJECT = "reject"
-CODE_REACTIVATE = "reactivate"
-CODE_DEACTIVATE = "deactivate"
-CODE_REQUEST_MODERATION = "reqmod"
-CODE_APPROVE = "approve"
 
 
 @dataclass

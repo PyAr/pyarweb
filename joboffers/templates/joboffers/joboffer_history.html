@@ -37,7 +37,7 @@
           </div>
           {% endfor %}
         </div>
-
+        {% include 'joboffers/_paginator.html' with page_obj=page_obj %}
     </div>
 </main>
 {% endblock %}

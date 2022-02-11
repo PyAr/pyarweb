@@ -11,6 +11,8 @@ from django.utils.translation import gettext as _
 from easyaudit.models import CRUDEvent
 from taggit_autosuggest.managers import TaggableManager
 
+from .constants import STATE_LABEL_CLASSES
+
 
 class Experience(models.TextChoices):
     """
@@ -271,9 +273,9 @@ class JobOfferHistory(CRUDEvent):
             return None
 
     @property
-    def state(self):
+    def state_label(self):
         """
-        Get the state of the
+        Get the state of the joboffer at the time of the change
         """
         if self.content_type.model != 'joboffer':
             raise ValueError("Unexpected model. Expected a JobOffer instance.")
@@ -283,8 +285,17 @@ class JobOfferHistory(CRUDEvent):
         return joboffer.get_state_display()
 
     @property
-    def state_class(self):
-        return ''
+    def state_label_class(self):
+        """
+        Get the bootstrap label class for the matching joboffer state. Returns a default if the
+        'state' field is not present. Maybe because a name update in the model.
+        """
+        if self.content_type.model != 'joboffer':
+            raise ValueError("Unexpected model. Expected a JobOffer instance.")
+
+        state = self.fields['state']
+
+        return STATE_LABEL_CLASSES[state]
 
     class Meta:
         proxy = True

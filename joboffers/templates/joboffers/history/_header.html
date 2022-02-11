@@ -35,7 +35,7 @@
           {% if history_entry.content_type.model == "joboffercomment" %}
             <span class="label label-primary">{{ OfferState.MODERATION.label }}</span>
           {% else %}
-            <span class="label label-success">{{ history_entry.state }}</span>
+            <span class="label {{ history_entry.state_label_class }}">{{ history_entry.state_label }}</span>
           {% endif %}
         </div>
         <div class="col-xs-3 text-right">
