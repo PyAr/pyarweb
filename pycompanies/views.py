@@ -153,7 +153,7 @@ class CompanyAssociateView(LoginRequiredMixin, View):
         User = get_user_model()
         user = User.objects.filter(username=request.POST['username']).first()
         if user:
-            user_company = user_company = UserCompanyProfile.objects.for_user(user)
+            user_company = UserCompanyProfile.objects.for_user(user)
             company_to_associate = Company.objects.get(id=company)
             if user_company and company_to_associate == user_company.company:
                 message = f'Le usuarie que desea vincular ya pertenece a {user_company.company}'
