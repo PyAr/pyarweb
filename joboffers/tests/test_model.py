@@ -109,7 +109,7 @@ def test_assert_slug_is_updated_on_title_change():
     """
     Assert that a joboffer updates the slug after title update.
     """
-    UPDATED_TITLE = 'Job Offer Updated'
+    updated_title = 'Job Offer Updated'
 
     joboffer = JobOfferFactory.create(
         remoteness=Remoteness.REMOTE,
@@ -120,10 +120,10 @@ def test_assert_slug_is_updated_on_title_change():
         contact_url=None
     )
 
-    joboffer.title = UPDATED_TITLE
+    joboffer.title = updated_title
     joboffer.save()
 
-    assert slugify(UPDATED_TITLE) == joboffer.slug
+    assert slugify(updated_title) == joboffer.slug
 
 
 @pytest.mark.django_db
@@ -132,8 +132,6 @@ def test_assert_short_description_is_set_with_stripped_description():
     Assert that a joboffer short description is created with the stripped description
     if there is no short description given.
     """
-    description = SHORT_JOBOFFER_DESCRIPTION
-    short_description = STRIPPED_SHORT_JOBOFFER_DESCRIPTION
 
     joboffer = JobOfferFactory.create(
         remoteness=Remoteness.REMOTE,
@@ -142,11 +140,11 @@ def test_assert_short_description_is_set_with_stripped_description():
         contact_mail=Faker('email'),
         contact_phone=None,
         contact_url=None,
-        description=description,
+        description=SHORT_JOBOFFER_DESCRIPTION,
         short_description='',
     )
 
-    assert short_description == joboffer.short_description
+    assert STRIPPED_SHORT_JOBOFFER_DESCRIPTION == joboffer.short_description
 
 
 @pytest.mark.django_db
@@ -154,9 +152,7 @@ def test_assert_short_description_is_set_with_the_given_short_description():
     """
     Assert that the joboffer doesn't update the short_description if it is provided in the model.
     """
-    description = SHORT_JOBOFFER_DESCRIPTION
-
-    SHORT_DESCRIPTION = 'short description'
+    short_description = 'short description'
 
     joboffer = JobOfferFactory.create(
         remoteness=Remoteness.REMOTE,
@@ -165,11 +161,11 @@ def test_assert_short_description_is_set_with_the_given_short_description():
         contact_mail=Faker('email'),
         contact_phone=None,
         contact_url=None,
-        description=description,
-        short_description=SHORT_DESCRIPTION,
+        description=SHORT_JOBOFFER_DESCRIPTION,
+        short_description=short_description,
     )
 
-    assert SHORT_DESCRIPTION == joboffer.short_description
+    assert short_description == joboffer.short_description
 
 
 @pytest.mark.django_db
@@ -177,10 +173,8 @@ def test_assert_get_short_description_strip_the_description():
     """
     Assert that get_short_description method strip the description correctly.
     """
-    description = SHORT_JOBOFFER_DESCRIPTION
-    short_description = STRIPPED_SHORT_JOBOFFER_DESCRIPTION
-
-    assert short_description == JobOffer.get_short_description(description)
+    short_description = JobOffer.get_short_description(SHORT_JOBOFFER_DESCRIPTION)
+    assert STRIPPED_SHORT_JOBOFFER_DESCRIPTION == short_description
 
 
 @pytest.mark.django_db
@@ -188,10 +182,7 @@ def test_assert_get_short_description_strip_the_long_description():
     """
     Assert that get_short_description method strip the description and limit to 512 chars.
     """
-    description = LONG_JOBOFFER_DESCRIPTION
-    short_description = STRIPPED_LONG_JOBOFFER_DESCRIPTION
+    short_description = JobOffer.get_short_description(LONG_JOBOFFER_DESCRIPTION)
 
-    joboffer_short_description = JobOffer.get_short_description(description)
-
-    assert 512 == len(joboffer_short_description)
-    assert short_description == joboffer_short_description
+    assert 512 == len(short_description)
+    assert STRIPPED_LONG_JOBOFFER_DESCRIPTION == short_description
