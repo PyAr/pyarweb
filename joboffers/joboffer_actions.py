@@ -111,6 +111,7 @@ register_action(get_history, ROLE_PUBLISHER)
 
 register_action(reject, ROLE_ADMIN)
 register_action(approve, ROLE_ADMIN)
+register_action(deactivate, ROLE_ADMIN)
 
 
 ACTIONS = {

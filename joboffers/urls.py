@@ -1,8 +1,8 @@
 from django.urls import re_path
 from .views import (
-  JobOfferAdminView, JobOfferCreateView, JobOfferDetailView, JobOfferHistoryView,
-  JobOfferUpdateView, JobOfferRejectView, JobOfferApproveView, JobOfferReactivateView,
-  JobOfferRequestModerationView
+  JobOfferAdminView, JobOfferCreateView, JobOfferDeactivateView, JobOfferDetailView,
+  JobOfferHistoryView,  JobOfferUpdateView, JobOfferRejectView, JobOfferApproveView,
+  JobOfferReactivateView, JobOfferRequestModerationView
 )
 
 
@@ -16,7 +16,7 @@ urlpatterns = [
       r'^(?P<slug>[\w-]+)/aceptar/$', JobOfferApproveView.as_view(), name='approve'
     ),
     re_path(
-      r'^(?P<slug>[\w-]+)/desactivar/$', JobOfferApproveView.as_view(),
+      r'^(?P<slug>[\w-]+)/desactivar/$', JobOfferDeactivateView.as_view(),
       name='deactivate'
     ),
     re_path(

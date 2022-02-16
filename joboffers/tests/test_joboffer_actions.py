@@ -1,3 +1,4 @@
+
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
@@ -15,8 +16,10 @@ from pycompanies.tests.factories import UserCompanyProfileFactory
 # Warning: Accessing ACTIONS with an unexistant key creates a new entry the dict and that can make
 # the test to fail. That is the reason to put an empty item (OfferState.DACTIVATED)
 EXPECTED_ACTIONS_ADMIN = {
-    OfferState.MODERATION: set([reject.code, approve.code]),
+    OfferState.ACTIVE: {deactivate.code},
+    OfferState.MODERATION: {reject.code, approve.code},
     OfferState.DEACTIVATED: set(),
+    OfferState.EXPIRED: {deactivate.code},
     OfferState.NEW:  set()
 }
 

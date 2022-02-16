@@ -223,6 +223,7 @@ class TransitionView(JobOfferObjectMixin, View):
         raise NotImplementedError()
 
     def get(self, request, *args, **kwargs):
+
         offer = self.get_object()
 
         self.update_object(offer)
@@ -290,8 +291,14 @@ class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_DEACTIVATE
+    redirect_to_pattern = 'joboffers:view'
+    success_message = _('Oferta desactivada.')
+
+    def update_object(self, offer):
+        offer.state = OfferState.DEACTIVATED
+        offer.save()
 
 
 class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
