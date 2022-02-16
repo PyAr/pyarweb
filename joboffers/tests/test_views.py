@@ -313,7 +313,7 @@ def test_joboffer_reject_ok(admin_client):
     assert messages[0].startswith("Oferta rechazada.")
 
     joboffer = JobOffer.objects.first()
-    assert OfferState.DEACTIVATED == joboffer.state
+    assert joboffer.state == OfferState.REJECTED
 
 
 @pytest.mark.django_db

@@ -121,6 +121,13 @@ class JobOffer(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def last_comment(self):
+        """
+        Return the last rejection JobOfferComment
+        """
+        return self.joboffercomment_set.last()
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)

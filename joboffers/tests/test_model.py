@@ -6,8 +6,8 @@ from factory import Faker
 
 from joboffers.models import Remoteness
 
-from .factories import JobOfferFactory
-from ..models import JobOffer
+from .factories import JobOfferFactory, JobOfferCommentFactory
+from ..models import JobOffer, OfferState
 
 
 @pytest.mark.django_db
@@ -121,3 +121,15 @@ def test_assert_slug_is_updated_on_title_change():
     joboffer.save()
 
     assert slugify(UPDATED_TITLE) == joboffer.slug
+
+
+@pytest.mark.django_db
+def test_joboffer_last_comment():
+    """
+    Test the joboffer.last_comment property
+    """
+    joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
+    JobOfferCommentFactory.create(joboffer=joboffer)
+    expected_comment = JobOfferCommentFactory.create(joboffer=joboffer)
+
+    assert joboffer.last_comment.text == expected_comment.text
