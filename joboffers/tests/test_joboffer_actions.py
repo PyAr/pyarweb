@@ -16,11 +16,12 @@ from pycompanies.tests.factories import UserCompanyProfileFactory
 # Warning: Accessing ACTIONS with an unexistant key creates a new entry the dict and that can make
 # the test to fail. That is the reason to put an empty item (OfferState.DACTIVATED)
 EXPECTED_ACTIONS_ADMIN = {
-    OfferState.ACTIVE: {deactivate.code},
-    OfferState.MODERATION: {reject.code, approve.code},
-    OfferState.DEACTIVATED: set(),
-    OfferState.EXPIRED: {deactivate.code},
-    OfferState.NEW:  set()
+    OfferState.ACTIVE: {deactivate.code, get_history.code},
+    OfferState.MODERATION: {reject.code, approve.code, get_history.code},
+    OfferState.DEACTIVATED: {get_history.code},
+    OfferState.EXPIRED: {deactivate.code, get_history.code},
+    OfferState.REJECTED: {get_history.code},
+    OfferState.NEW: set()
 }
 
 EXPECTED_ACTIONS_PUBLISHER = {
@@ -46,7 +47,7 @@ EXPECTED_ACTIONS_PUBLISHER = {
         deactivate.code,
         get_history.code
     },
-    OfferState.MODERATION: set()
+    OfferState.MODERATION: {get_history.code}
 }
 
 
