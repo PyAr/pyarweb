@@ -48,7 +48,8 @@ ACTION_BUTTONS = {
         'target_url': 'joboffers:deactivate',
         'text': _('Desactivar'),
         'css_classes': ['btn-warning'],
-        'icon_class': 'glyphicon-minus-sign'
+        'icon_class': 'glyphicon-minus-sign',
+        'title': _('Es necesario desactivar la publicación para poder editarla.')
     },
     CODE_REQUEST_MODERATION: {
         'target_url': 'joboffers:request_moderation',
