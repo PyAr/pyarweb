@@ -10,7 +10,14 @@
   </dd>
   <dt>Última Modificación</dt>
   <dd>
-    <time class="published" datetime="{{ obj.modified_at.isoformat }}" itemprop="datePublished" title="{{ "Fecha de publicación" }}">{{ obj.modified_at|date:"d/m/Y" }}</time>
+    <time
+      class="published"
+      datetime="{{ obj.modified_at.isoformat }}"
+      itemprop="datePublished"
+      title="{{ "Fecha de publicación" }}"
+    >
+      {{ obj.modified_at|date:"d/m/Y" }}
+    </time>
   </dd>
   {% if obj.location %}
   <dt>Lugar de trabajo</dt>
@@ -38,5 +45,6 @@
   <dt>Rango Salarial</dt>
   <dd>{{ obj.salary }}</dd>
 
-  <!-- Agregar informacion de contacto que se despliegue con un botón -->
+  <!-- Agregar informacion de contacto que se despliegue con un botón y que no se muestre si esta inactiva la oferta -->
+
 </dl>
