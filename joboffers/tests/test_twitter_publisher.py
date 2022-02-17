@@ -1,8 +1,6 @@
 from unittest.mock import patch
 
 import tweepy
-from requests_mock.exceptions import NoMockAddress
-from requests_mock.mocker import Mocker
 
 from ..publishers.twitter import ERROR_LOG_MESSAGE_AUTH, ERROR_LOG_MESSAGE_POST, TwitterPublisher
 
@@ -19,12 +17,16 @@ class JsonError:
         return {}
 
 
-class DummyAPI:
-
+class DummyAPIBad:
     def update_status(*args, **kwargs):
         raise tweepy.errors.Unauthorized(JsonError)
 
-#def requests_mock: Mocker):
+
+class DummyAPIOK:
+    def update_status(*args, **kwargs):
+        return
+
+
 def test_push_to_api_wrong_credential_format(settings, caplog):
     """Test exception when the credentials are in the wrong format."""
     settings.TWITTER_CONSUMER_KEY = 123
@@ -40,7 +42,7 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
                                                         '')
 
     assert expected_error_message in caplog.text
-    assert status == None
+    assert status is None
 
 
 @patch(
@@ -48,7 +50,7 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
     )
 def test_push_to_api_bad_credentials(mock_api, settings, caplog):
     """Test exception when the credentials are in the wrong format."""
-    mock_api.return_value = DummyAPI
+    mock_api.return_value = DummyAPIBad
     status = TwitterPublisher()._push_to_api('message')
     expected_error_message = ERROR_LOG_MESSAGE_POST % (
                                                         settings.TWITTER_CONSUMER_KEY,
@@ -59,3 +61,14 @@ def test_push_to_api_bad_credentials(mock_api, settings, caplog):
 
     assert expected_error_message in caplog.text
     assert status == 401
+
+
+@patch(
+        'joboffers.publishers.twitter.tweepy.API',
+    )
+def test_push_to_api_ok(mock_api):
+    mock_api.return_value = DummyAPIOK
+
+    status = TwitterPublisher()._push_to_api('message')
+
+    assert status == 200
