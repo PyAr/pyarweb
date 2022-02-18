@@ -20,11 +20,11 @@ def _repr_credentials():
 
 
 ERROR_LOG_MESSAGE_AUTH = (
-    'Falló al querer generar las siguientes credenciales para twitter' '%s Error: %s'
+    'Falló al querer generar las siguientes credenciales para twitter %s Error: %s'
 )
 
 ERROR_LOG_MESSAGE_POST = (
-    'Falló al querer twitear con las siguientes credenciales.' '%s Error: %s'
+    'Falló al querer twitear con las siguientes credenciales. %s Error: %s'
 )
 
 ERROR_LOG_MESSAGE_GENERIC = 'Falló al querer publicar a twitter, data=%s: %s'
