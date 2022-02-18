@@ -27,5 +27,5 @@ class TestPublishCommand(BaseCommand):
                                                  f'{publisher.name}.'))
         else:
             self.stderr.write(self.style.ERROR(
-                                                'Hubo un error al querer publicar la oferta en'
+                                                'Hubo un error al querer publicar la oferta en: '
                                                 f'{publisher.name}.'))

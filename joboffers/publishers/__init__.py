@@ -36,7 +36,7 @@ class Publisher:
         message = self._render_offer(job_offer)
         status = self._push_to_api(message)
 
-        if status == 200:
+        if status in (200, 201):
             return self.RESULT_OK
         else:
             return self.RESULT_BAD

@@ -4,9 +4,6 @@ from joboffers.publishers import Publisher
 from joboffers.telegram_api import send_message
 
 
-ERROR_LOG_MESSAGE = 'Falló al querer publicar a telegram, url=%s data=%s: %s'
-
-
 class TelegramPublisher(Publisher):
     """Telegram Publisher."""
     name = 'Telegram'
