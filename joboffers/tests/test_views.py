@@ -500,6 +500,7 @@ def test_joboffer_detail_view_render_state_with_rejected_label(publisher_client)
     """
     client = publisher_client
     joboffer = JobOfferFactory.create(state=OfferState.REJECTED)
+    JobOfferCommentFactory.create(joboffer=joboffer)
 
     target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
 

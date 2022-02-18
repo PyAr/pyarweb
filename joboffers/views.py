@@ -87,7 +87,7 @@ class JobOfferObjectMixin(SingleObjectMixin):
         if not self.action_code:
             raise ValueError("Missing 'action_code' for the current class")
 
-        valid_actions = get_valid_actions(self.request.user, offer.company, offer.state)
+        valid_actions = get_valid_actions(self.request.user, offer)
 
         if self.action_code not in valid_actions:
             raise PermissionDenied()
@@ -126,9 +126,7 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        company = get_user_company(request.user)
-
-        valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
+        valid_actions = get_valid_actions(self.request.user, None)
 
         if self.action_code not in valid_actions:
             raise PermissionDenied()
@@ -156,7 +154,7 @@ class JobOfferDetailView(DetailView):
 
     def get_action_buttons(self):
         joboffer = self.object
-        valid_actions = get_valid_actions(self.request.user, joboffer.company, joboffer.state)
+        valid_actions = get_valid_actions(self.request.user, joboffer)
 
         return [ACTION_BUTTONS[action_name] for action_name in valid_actions]
 

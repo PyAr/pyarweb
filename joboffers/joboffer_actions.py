@@ -2,6 +2,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Set
 
+from django.db.models import Q
 from .models import OfferState
 from pycompanies.models import UserCompanyProfile
 
@@ -96,7 +97,8 @@ get_history = Action(
         OfferState.DEACTIVATED,
         OfferState.ACTIVE,
         OfferState.EXPIRED,
-        OfferState.REJECTED
+        OfferState.REJECTED,
+        OfferState.MODERATION
     ),
 )
 
@@ -111,7 +113,9 @@ register_action(get_history, ROLE_PUBLISHER)
 
 register_action(reject, ROLE_ADMIN)
 register_action(approve, ROLE_ADMIN)
-
+register_action(get_history, ROLE_ADMIN)
+register_action(deactivate, ROLE_ADMIN)
+register_action(reactivate, ROLE_ADMIN)
 
 ACTIONS = {
     ROLE_PUBLISHER: ACTIONS_PUBLISHER,
@@ -119,9 +123,10 @@ ACTIONS = {
 }
 
 
-def _get_roles(company, user):
+def _get_roles(user, company=None):
     """
-    Retrieves a list of the roles marching the giben user and company
+    Retrieves a list of the roles marching the given user and company.
+    If company is None that means that the company
     """
     roles = set()
 
@@ -131,7 +136,14 @@ def _get_roles(company, user):
     if user.is_superuser:
         roles.add(ROLE_ADMIN)
 
-    company_profile_qs = UserCompanyProfile.objects.filter(company=company, user=user)
+    if company:
+        filtering = Q(company=company, user=user)
+        # ^ Checks that the user is publisher in the given company
+    else:
+        filtering = Q(user=user)
+        # ^ Checks that the user is publisher on any company
+
+    company_profile_qs = UserCompanyProfile.objects.filter(filtering)
 
     if company_profile_qs.exists():
         roles.add(ROLE_PUBLISHER)
@@ -139,13 +151,21 @@ def _get_roles(company, user):
     return roles
 
 
-def get_valid_actions(user, company, offer_state: OfferState, roles=None):
+def get_valid_actions(user, joboffer=None, roles=None):
     """
-    Return a list of valid actions for an user within a job
+    Return a list of valid actions for an user within a job.
+    If joboffer is None it doesn't check for company ownership. That will be the case of a new
+    offer.
     """
+    if joboffer is None:
+        state = OfferState.NEW
+        company = None
+    else:
+        state = joboffer.state
+        company = joboffer.company
 
     if roles is None:
-        roles_ = _get_roles(company, user)
+        roles_ = _get_roles(user, company)
     else:
         roles_ = roles
 
@@ -153,6 +173,15 @@ def get_valid_actions(user, company, offer_state: OfferState, roles=None):
 
     for role in roles_:
         # Appends the actions for every role
-        actions = actions | ACTIONS[role][offer_state]
+        actions = actions | ACTIONS[role][state]
+
+    if joboffer:
+        if joboffer.state == OfferState.ACTIVE:
+            if joboffer.modified_by == user:
+                actions = actions | {approve.code, reject.code}
+
+        elif joboffer.state == OfferState.REJECTED:
+            if joboffer.last_comment.created_by == user:
+                actions = actions | {approve.code, reject.code}
 
     return actions

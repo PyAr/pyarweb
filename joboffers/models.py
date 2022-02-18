@@ -115,6 +115,13 @@ class JobOffer(models.Model):
         max_length=255, null=True, verbose_name=_('Hash de la oferta')
     )
 
+    @property
+    def last_comment(self):
+        """
+        Return the last rejection JobOfferComment
+        """
+        return self.joboffercomment_set.last()
+
     def get_absolute_url(self):
         return reverse('joboffers:view', kwargs={'slug': self.slug})
 
