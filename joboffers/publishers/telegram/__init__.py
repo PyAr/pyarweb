@@ -1,5 +1,3 @@
-import logging
-
 from django.conf import settings
 
 from joboffers.publishers import Publisher
@@ -15,6 +13,5 @@ class TelegramPublisher(Publisher):
 
     def _push_to_api(self, message: str):
         """Publish a message to the configured chat group."""
-        chat_id = settings.TELEGRAM_MODERATORS_CHAT_ID
-        send_message(message, chat_id)
-
+        chat_id = settings.TELEGRAM_PUBLIC_CHAT_ID
+        return send_message(message, chat_id)
