@@ -40,6 +40,66 @@
                 gtag('config', '{{ GOOGLE_TRACKING_ID }}');
             </script>
         {% endif %}
+        <style>
+            #footer li.pyar {
+                padding-left: 100px;
+                background-position: 0 center;
+                background-repeat: no-repeat;
+                background-image: url({% static "img/pyar-footer.png" %});
+            }
+
+            #footer li.usla {
+                background-image: url({% static "img/usla-footer.png" %});
+                padding-right: 80px;
+            }
+
+            #footer li.python {
+                background-image: url({% static "img/python-footer.png" %});
+                margin-left: 25px;
+                padding-right: 52px;
+            }
+
+            #main > div.row > div.col-md-8 div.row > article.col-sm-4 > div.img {
+                background-image: url({% static "img/icons/icons.png" %});
+                height: 62px;
+                width: 62px;
+                margin: 0 auto;
+            }
+
+            .banner {
+                padding: 0px 20px;
+                background: 0 0 repeat #35679A url({% static "img/banner.png" %});
+            }
+
+            .banner h1 {
+                text-shadow: 0px 0px 4px #777;
+                font-size: 30px;
+                font-weight: bold;
+                padding-top: 7px;
+                padding-left: 95px;
+                background: url({% static "img/python-banner.png" %}) 0 0 no-repeat transparent;
+                height: 96px;
+            }
+
+            #header .navbar-brand {
+                width: 195px;
+                height: 75px;
+                display: block;
+                text-indent: -9999px;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-image: url({% static "img/logo-header.png" %});
+            }
+
+            #header ul.navbar-nav > li:not(.active) > a > span {
+                background-image: url({% static "img/icons/icons.png" %});
+            }
+
+            #header ul.navbar-nav > li.active > a > span,
+            #header ul.navbar-nav > li:hover > a > span {
+                background-image: url({% static "img/icons/icons_active.png" %});
+            }
+        </style>
     </head>
     <body>
 
