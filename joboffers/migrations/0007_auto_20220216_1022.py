@@ -25,4 +25,9 @@ class Migration(migrations.Migration):
             name='modified_at',
             field=models.DateTimeField(auto_now=True, verbose_name='Hora de Modificación'),
         ),
+        migrations.AlterField(
+            model_name='joboffer',
+            name='short_description',
+            field=models.TextField(max_length=512, verbose_name='Descripción corta'),
+        ),
     ]

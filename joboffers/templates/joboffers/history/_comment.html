@@ -1,0 +1,11 @@
+{% load history %}
+<div class="row field-definitions">
+    <div class="field col-xs-12 col-sm-3">
+        <div class="field-name">{{ comment|verbose_name:"comment_type" }}</div>
+        <div> {{ comment.get_comment_type_display }}</div>
+    </div>
+    <div class="field col-xs-12 col-sm-9">
+      <div class="field-name">{{ comment|verbose_name:"text" }}</div>
+      <div> {{ comment.text }}</div>
+    </div>
+</div>

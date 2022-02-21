@@ -1,0 +1,19 @@
+{% load history %}
+
+<div class="row field-definitions">
+  {% for field_item in history_entry.fields.items %}
+    {% if field_item.0 not in HIDDEN_JOBOFFER_FIELDS %}
+      {% if field_item.0 == 'description' %}
+        <div class="field col-xs-12">
+          <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
+          <div>{{ field_item | joboffer_value | safe }}</div>
+        </div>
+      {% else %}
+        <div class="field col-xs-12 col-sm-4">
+          <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
+          <div>{{ field_item | joboffer_value | default:"-" }}</div>
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>

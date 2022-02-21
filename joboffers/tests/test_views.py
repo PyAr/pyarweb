@@ -8,10 +8,10 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
-from ..models import JobOffer, OfferState
+from ..models import JobOffer, JobOfferHistory, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
-from .fixtures import create_publisher_client # noqa
+from .fixtures import create_publisher_client, create_admin_user # noqa
 
 
 ADD_URL = 'joboffers:add'
@@ -21,6 +21,7 @@ DEACTIVATE_URL = 'joboffers:deactivate'
 VIEW_URL = 'joboffers:view'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
+HISTORY_URL = 'joboffers:history'
 
 JOBOFFER_TITLE1 = 'title1'
 JOBOFFER_TITLE2 = 'title2'
@@ -218,7 +219,7 @@ def test_joboffer_admin_works_with_random_query_search(logged_client, joboffers_
 
     target_url = reverse('joboffers:admin')
 
-    response = client.get(target_url, {'q': 'unexistant thing Ç '})
+    response = client.get(target_url, {'q': 'thing Ç '})
 
     assert response.status_code == 200
     actual_joboffers = response.context_data['object_list'].values_list('id', flat=True)
@@ -234,7 +235,6 @@ def test_joboffer_admin_works_with_empty_query_search(logged_client, joboffers_l
     client = logged_client
 
     target_url = reverse('joboffers:admin')
-
     response = client.get(target_url, {'q': ''})
 
     assert response.status_code == 200
@@ -537,3 +537,42 @@ def test_joboffer_detail_view_render_state_with_rejected_label(publisher_client)
     state_label_class = STATE_LABEL_CLASSES[OfferState.REJECTED]
 
     assert response.context_data['state_label_class'] == state_label_class
+
+
+@pytest.mark.django_db
+def test_JobOfferHistoryView_renders_with_context(
+        publisher_client, settings, user_company_profile, admin_user
+):
+    """
+    Test that JobOfferHistoryView renders correctly
+    """
+    settings.TEST = True
+    # ^ This is needed so django-easyaudit creates the CRUDEvent objects in the
+    # same trasnaction and then we can test for it.
+
+    client = publisher_client
+    user = user_company_profile.user
+    company = user_company_profile.company
+
+    joboffer = JobOfferFactory.build(company=company, created_by=user, modified_by=user)
+    joboffer.save()
+    joboffer.state = OfferState.MODERATION
+    joboffer.save()
+    comment = JobOfferCommentFactory.build(joboffer=joboffer, created_by=admin_user)
+    comment.save()
+    joboffer.state = OfferState.ACTIVE
+    joboffer.save()
+
+    target_url = reverse(HISTORY_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    object_list = response.context_data['object_list'].values('event_type', 'content_type__model')
+    object_list = list(object_list)
+
+    assert object_list == [
+        {'event_type': JobOfferHistory.UPDATE, 'content_type__model': 'joboffer'},
+        {'event_type': JobOfferHistory.CREATE, 'content_type__model': 'joboffercomment'},
+        {'event_type': JobOfferHistory.UPDATE, 'content_type__model': 'joboffer'},
+        {'event_type': JobOfferHistory.CREATE, 'content_type__model': 'joboffer'}
+    ]

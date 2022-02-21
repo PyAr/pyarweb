@@ -28,7 +28,7 @@
         <h4 class="text-primary">
           {{ object.title }}<span class="job-date">({{ object.modified_at|date:"SHORT_DATE_FORMAT" }}, {{ object.location }})</span>
         </h4>
-        <p>{{ object.short_description}}</p>
+        <p>{{ object.short_description }}</p>
         <div class="text-right">
           {% include "joboffers/_tags.html" %}
         </div>

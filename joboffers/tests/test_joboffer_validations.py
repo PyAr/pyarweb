@@ -30,7 +30,7 @@ def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, use
     client = publisher_client
     company = user_company_profile.company
 
-    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+    job_data = factory.build(dict, company=company, FACTORY_CLASS=JobOfferFactory)
 
     assert JobOffer.objects.count() == 0
 
@@ -63,7 +63,7 @@ def test_joboffer_creation_invalid_email(publisher_client, user_company_profile)
 
     job_data = factory.build(
         dict,
-        company=company.id,
+        company=company,
         contact_mail="invalid_email",
         FACTORY_CLASS=JobOfferFactory
     )
@@ -89,7 +89,7 @@ def test_joboffer_creation_without_contact_info(publisher_client, user_company_p
     client = publisher_client
     company = user_company_profile.company
 
-    job_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+    job_data = factory.build(dict, company=company, FACTORY_CLASS=JobOfferFactory)
 
     del job_data['contact_mail']
     del job_data['contact_phone']
@@ -119,7 +119,7 @@ def test_joboffer_creation_in_office_without_location(publisher_client, user_com
     company = user_company_profile.company
 
     job_data = factory.build(
-        dict, company=company.id, remoteness=Remoteness.OFFICE, FACTORY_CLASS=JobOfferFactory
+        dict, company=company, remoteness=Remoteness.OFFICE, FACTORY_CLASS=JobOfferFactory
     )
 
     del job_data['location']
@@ -176,14 +176,14 @@ def test_joboffer_edit_with_all_fields_ok(publisher_client, user_company_profile
     company = user_company_profile.company
 
     offer = JobOfferFactory.create(company=company)
-    update_data = factory.build(dict, company=company.id, FACTORY_CLASS=JobOfferFactory)
+    update_data = factory.build(dict, FACTORY_CLASS=JobOfferFactory)
+    del update_data['company']
 
     assert JobOffer.objects.count() == 1
 
     target_url = reverse(EDIT_URL, kwargs={'slug': offer.slug})
 
     response = client.post(target_url, update_data)
-
     assert response.status_code == 302
 
     updated_offer = JobOffer.objects.first()
