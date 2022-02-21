@@ -100,7 +100,7 @@ class JobOffer(models.Model):
         verbose_name=_('Descripción corta')
     )
     created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('Rango salarial')
+        auto_now_add=True, verbose_name=_('Hora de creación')
     )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -108,7 +108,7 @@ class JobOffer(models.Model):
         verbose_name=_('Creado por'),
         related_name='created_offers',
     )
-    modified_at = models.DateTimeField(auto_now=True)
+    modified_at = models.DateTimeField(auto_now=True, verbose_name=_('Hora de Modificación'))
     modified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

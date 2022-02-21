@@ -93,6 +93,7 @@ get_history = Action(
     valid_prev_states=(
         OfferState.MODERATION,
         OfferState.DEACTIVATED,
+        OfferState.MODERATION,
         OfferState.ACTIVE,
         OfferState.EXPIRED,
         OfferState.REJECTED

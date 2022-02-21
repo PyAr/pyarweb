@@ -16,8 +16,9 @@ from .fixtures import create_publisher_client, create_admin_user # noqa
 
 ADD_URL = 'joboffers:add'
 ADMIN_URL = 'joboffers:admin'
-VIEW_URL = 'joboffers:view'
 APPROVE_URL = 'joboffers:approve'
+DEACTIVATE_URL = 'joboffers:deactivate'
+VIEW_URL = 'joboffers:view'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
 HISTORY_URL = 'joboffers:history'
@@ -153,6 +154,34 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
 
     joboffer = JobOffer.objects.first()
     assert OfferState.MODERATION == joboffer.state
+
+
+@pytest.mark.django_db
+def test_joboffer_deactivate_ok(publisher_client, user_company_profile):
+    """
+    Test deactivate a joboffer by a publisher
+    """
+    client = publisher_client
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
+
+    target_url = reverse(DEACTIVATE_URL, kwargs={'slug': joboffer.slug})
+
+    assert 1 == JobOffer.objects.count()
+    assert joboffer.state == OfferState.ACTIVE
+    # end preconditions
+
+    response = client.get(target_url)
+
+    # Asserts redirection to the joboffer status page
+    assert 302 == response.status_code
+    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+
+    messages = get_plain_messages(response)
+    assert messages[0].startswith("Oferta desactiva")
+
+    joboffer = JobOffer.objects.get(id=joboffer.id)
+    assert OfferState.DEACTIVATED == joboffer.state
 
 
 @pytest.fixture(name="joboffers_list")

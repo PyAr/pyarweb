@@ -14,8 +14,8 @@ from pycompanies.models import Company, UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REQUEST_MODERATION, CODE_APPROVE,
-    get_valid_actions
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_DEACTIVATE,
+    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
 from .models import JobOffer, JobOfferHistory, OfferState
 
@@ -169,6 +169,7 @@ class TransitionView(JobOfferObjectMixin, View):
         raise NotImplementedError()
 
     def get(self, request, *args, **kwargs):
+
         offer = self.get_object()
 
         self.update_object(offer)
@@ -236,8 +237,14 @@ class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_DEACTIVATE
+    redirect_to_pattern = 'joboffers:view'
+    success_message = _('Oferta desactivada.')
+
+    def update_object(self, offer):
+        offer.state = OfferState.DEACTIVATED
+        offer.save()
 
 
 class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
