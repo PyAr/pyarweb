@@ -143,13 +143,6 @@ class CompanyDisassociateView(LoginRequiredMixin, DeleteView):
         return context
 
 
-def user_already_in_company(user):
-    """
-    Return the user company profile if exists.
-    """
-    return UserCompanyProfile.objects.filter(user=user).first()
-
-
 class CompanyAssociateView(LoginRequiredMixin, View):
     success_url = '/empresas/'
 
@@ -160,7 +153,7 @@ class CompanyAssociateView(LoginRequiredMixin, View):
         User = get_user_model()
         user = User.objects.filter(username=request.POST['username']).first()
         if user:
-            user_company = user_already_in_company(user)
+            user_company = UserCompanyProfile.objects.for_user(user)
             company_to_associate = Company.objects.get(id=company)
             if user_company and company_to_associate == user_company.company:
                 message = f'Le usuarie que desea vincular ya pertenece a {user_company.company}'
