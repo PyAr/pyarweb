@@ -29,8 +29,22 @@ class Company(TimeStampedModel):
         return u'%s' % self.name
 
 
+class UserCompanyProfileManager(models.Manager):
+    """User company profile manager."""
+
+    def for_user(self, user):
+        """
+        Get the company object for a given user.
+        """
+        qs = super().get_queryset()
+
+        return qs.filter(user=user).first()
+
+
 class UserCompanyProfile(models.Model):
     """Company data for a User."""
+    objects = UserCompanyProfileManager()
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 related_name='company',
                                 on_delete=models.CASCADE)
