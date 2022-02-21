@@ -57,5 +57,7 @@ class JobOfferCommentFactory(DjangoModelFactory):
     class Meta:
         model = JobOfferComment
 
+    created_by = SubFactory(UserFactory)
     comment_type = fuzzy.FuzzyChoice(CommentType.values)
     text = Faker('sentence')
+    joboffer = SubFactory(JobOfferFactory)

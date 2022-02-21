@@ -1,0 +1,32 @@
+{% load history %}
+
+{% for field_update in history_entry.changes.items %}
+  <div class="row field-definitions equal-height">
+    {% with field_item=field_update|get_old_field_item %}
+      <div class="field col-xs-5">
+        <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
+        {% if field_item.0 == 'description' %}
+        <div class="field-update bg-danger">{{ field_item | joboffer_value | safe }}</div>
+        {% else %}
+        <div class="field-update bg-danger">
+            {{ field_item | joboffer_value | default:"-" }}
+        </div>
+        {% endif %}
+      </div>
+    {% endwith %}
+
+    <div class="col-xs-2 text-center v-center">
+        <span class="glyphicon glyphicon-arrow-right"></span>
+    </div>
+    {% with field_item=field_update|get_new_field_item %}
+      <div class="field col-xs-5">
+        <div class="field-name">{{ field_item | joboffer_verbose_name }}</div>
+        {% if field_item.0 == 'description' %}
+          <div class="field-update bg-success">{{ field_item | joboffer_value | safe }}</div>
+        {% else %}
+          <div class="field-update bg-success">{{ field_item | joboffer_value | default:"-" }}</div>
+        {% endif %}
+      </div>
+    {% endwith %}
+  </div>
+{% endfor %}

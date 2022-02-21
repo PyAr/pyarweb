@@ -69,6 +69,7 @@ INSTALLED_APPS = (
     'dbbackup',
     'captcha',
     'sanitizer',
+    'easyaudit'
 )
 
 MIDDLEWARE = (
@@ -80,6 +81,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware'
 )
 
 ROOT_URLCONF = 'pyarweb.urls'
@@ -213,6 +215,10 @@ ACCOUNT_FORMS = {
     'signup': 'pyarweb.forms.SingupFormWithCaptcha'
 }
 
+DJANGO_EASY_AUDIT_WATCH_AUTH_EVENTS = False
+DJANGO_EASY_AUDIT_WATCH_REQUEST_EVENTS = False
+
+DJANGO_EASY_AUDIT_REGISTERED_CLASSES = ['joboffers.JobOffer', 'joboffers.JobofferComment']
 
 # Azure blob-storage
 AZURE_ACCOUNT_KEY = os.environ.get("AZURE_ACCOUNT_KEY")

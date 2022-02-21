@@ -1,10 +1,17 @@
+import json
+
 from autoslug import AutoSlugField
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
-from django.urls import reverse
+
+from easyaudit.models import CRUDEvent
 from taggit_autosuggest.managers import TaggableManager
+
+from .constants import STATE_LABEL_CLASSES
 
 
 class Experience(models.TextChoices):
@@ -127,6 +134,13 @@ class JobOffer(models.Model):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+    @classmethod
+    def get_options(cls):
+        """
+        Make the _meta API pubkic https://docs.djangoproject.com/en/4.0/ref/models/meta/
+        """
+        return cls._meta
+
     class Meta:
         constraints = [
             models.CheckConstraint(
@@ -185,5 +199,105 @@ class JobOfferComment(models.Model):
     )
     joboffer = models.ForeignKey(JobOffer, on_delete=models.CASCADE)
 
+    @classmethod
+    def get_options(cls):
+        """
+        Make the _meta API pubkic https://docs.djangoproject.com/en/4.0/ref/models/meta/
+        """
+        return cls._meta
+
     def __str__(self):
         return f"{self.joboffer.title}: {self.get_comment_type_display()}"
+
+
+class JobOfferHistoryManager(models.Manager):
+    def for_offer(self, joboffer):
+        """
+        Get all the history objects for a given joboffer. It can be JobOffer and JobOfferComment
+        """
+        qs = super().get_queryset()
+
+        offer_ctype = ContentType.objects.get(app_label='joboffers', model='joboffer')
+        offer_comment_ctype = ContentType.objects.get(
+            app_label='joboffers', model='joboffercomment'
+        )
+
+        offer_q = models.Q(event_type__lt=4, object_id=joboffer.id, content_type=offer_ctype)
+
+        offer_comment_ids = [
+            offer_comment.id for offer_comment in joboffer.joboffercomment_set.all()
+        ]
+
+        offer_comment_q = models.Q(
+            object_id__in=offer_comment_ids, content_type=offer_comment_ctype
+        )
+
+        qs = qs.filter(offer_q | offer_comment_q)
+
+        return qs
+
+
+class JobOfferHistory(CRUDEvent):
+    """
+    This is a proxy model used to simplify the code take away all the logic from the controller
+    """
+
+    objects = JobOfferHistoryManager()
+
+    @property
+    def fields(self):
+        """
+        Return the representation of the joboffer after this particular change is applied.
+        It returns a python dict that can contain different fields that the current model.
+        """
+        obj_repr = json.loads(self.object_json_repr)
+        fields = obj_repr[0]['fields']
+        return fields
+
+    @property
+    def joboffer_comment(self):
+        """
+        Return the JobOfferComment instance for the matching JobOfferHistory
+        """
+        if self.content_type.model != 'joboffercomment':
+            raise ValueError("Unexpected model. Expected a JobOfferComment instance.")
+
+        return JobOfferComment.objects.get(id=self.object_id)
+
+    @property
+    def changes(self):
+        """
+        Get a dict with the changes made to the object.
+        """
+        if self.changed_fields:
+            return json.loads(self.changed_fields)
+        else:
+            return None
+
+    @property
+    def state_label(self):
+        """
+        Get the state of the joboffer at the time of the change
+        """
+        if self.content_type.model != 'joboffer':
+            raise ValueError("Unexpected model. Expected a JobOffer instance.")
+
+        fields = self.fields
+        joboffer = JobOffer(state=fields['state'])
+        return joboffer.get_state_display()
+
+    @property
+    def state_label_class(self):
+        """
+        Get the bootstrap label class for the matching joboffer state. Returns a default if the
+        'state' field is not present. Maybe because a name update in the model.
+        """
+        if self.content_type.model != 'joboffer':
+            raise ValueError("Unexpected model. Expected a JobOffer instance.")
+
+        state = self.fields['state']
+
+        return STATE_LABEL_CLASSES[state]
+
+    class Meta:
+        proxy = True
