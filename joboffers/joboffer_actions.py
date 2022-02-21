@@ -1,26 +1,18 @@
-from collections import defaultdict
 from dataclasses import dataclass
 from typing import Set
 
-from .models import OfferState
 from pycompanies.models import UserCompanyProfile
+from .models import OfferState
+from .constants import (
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
+    CODE_REQUEST_MODERATION, CODE_APPROVE
+)
 
-
-ACTIONS_PUBLISHER = defaultdict(set)
-
-ACTIONS_ADMIN = defaultdict(set)
+ACTIONS_PUBLISHER = {}
+ACTIONS_ADMIN = {}
 
 ROLE_PUBLISHER = "publisher"
 ROLE_ADMIN = "admin"
-
-CODE_CREATE = "create"
-CODE_EDIT = "edit"
-CODE_HISTORY = "history"
-CODE_REJECT = "reject"
-CODE_REACTIVATE = "reactivate"
-CODE_DEACTIVATE = "deactivate"
-CODE_REQUEST_MODERATION = "reqmod"
-CODE_APPROVE = "approve"
 
 
 @dataclass
@@ -44,6 +36,12 @@ def register_action(action: Action, role):
 
 
 # Actions #
+
+
+for state in OfferState.values:
+    ACTIONS_PUBLISHER[state] = set()
+    ACTIONS_ADMIN[state] = set()
+
 
 create = Action(
     verbose_name="Crear",
@@ -93,6 +91,7 @@ get_history = Action(
     verbose_name="Historial",
     code=CODE_HISTORY,
     valid_prev_states=(
+        OfferState.MODERATION,
         OfferState.DEACTIVATED,
         OfferState.ACTIVE,
         OfferState.EXPIRED,
@@ -111,6 +110,7 @@ register_action(get_history, ROLE_PUBLISHER)
 
 register_action(reject, ROLE_ADMIN)
 register_action(approve, ROLE_ADMIN)
+register_action(get_history, ROLE_ADMIN)
 
 
 ACTIONS = {

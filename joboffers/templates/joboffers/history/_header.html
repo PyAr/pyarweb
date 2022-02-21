@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load history %}
+<div class="panel-heading history-header" role="tab">
+  <div class="row" role="button" data-toggle="collapse" href="#change-{{ forloop.counter }}" aria-expanded="false" aria-controls="change-{{ forloop.counter }}">
+    <div class="col-xs-11">
+      <div class="row">
+        <div class="col-xs-2">
+          <span class="glyphicon glyphicon-user"></span> <strong>{{ history_entry.user }}</strong>
+        </div>
+        <div class="col-xs-1">
+          {% if history_entry.content_type.model == "joboffer" %}
+            {% if history_entry.event_type == JobOfferHistory.CREATE %}
+              <span class="label label-primary">{% translate 'creó' %}</span>
+            {% else %}
+              <span class="label label-info">{% translate 'actualizó' %}</span>
+            {% endif %}
+          {% else %}
+            <span class="label label-danger">{% translate 'rechazó' %}</span>
+          {% endif %}
+        </div>
+        <div class="col-xs-6">
+          {% if history_entry.content_type.model == "joboffercomment" %}
+            <strong>Motivo:</strong> {{ history_entry.joboffer_comment.get_comment_type_display }}
+          {% else %}
+            {% if history_entry.event_type == JobOfferHistory.CREATE %}
+              {{ history_entry.fields.title }}
+            {% else %}
+              {% translate 'Modificó' %}
+              {% for change in history_entry.changes.items %}{% if not forloop.first %}{% if forloop.last %}y{% else %},{% endif %}{% endif %}
+                <em>{{ change | joboffer_verbose_name }}</em>
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+        </div>
+        <div class="col-xs-1">
+          {% if history_entry.content_type.model == "joboffercomment" %}
+            <span class="label label-primary">{{ OfferState.MODERATION.label }}</span>
+          {% else %}
+            <span class="label {{ history_entry.state_label_class }}">{{ history_entry.state_label }}</span>
+          {% endif %}
+        </div>
+        <div class="col-xs-2 text-right">
+          <small>{{ history_entry.datetime | date:"SHORT_DATE_FORMAT" }}</small>
+          <small>{{ history_entry.datetime | date:"H:m:s" }}</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-1 text-right">
+      <span class="glyphicon glyphicon-chevron-down"></span>
+    </div>
+  </div>
+</div>
