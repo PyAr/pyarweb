@@ -48,14 +48,16 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="pull-right">
-    {% for button in action_buttons %}
-    <a href="{% url button.target_url object.slug %}" class="btn {{ button.css_classes|join:' ' }}" >
-      {{ button.text }}
-      <span class="glyphicon {{ button.icon_class }}" aria-hidden="true"></span>
-    </a>
-    {% endfor %}
+    <div class="pull-right">
+      {% for button in action_buttons %}
+      <a href="{% url button.target_url object.slug %}" class="btn {{ button.css_classes|join:' ' }}"
+        title="{% if button.title %}{{ button.title }}{% else %}{{ button.text }}{% endif %}"
+      >
+        {{ button.text }}
+        <span class="glyphicon {{ button.icon_class }}" aria-hidden="true"></span>
+      </a>
+      {% endfor %}
+    </div>
   </div>
 </main>
 {% endblock %}
