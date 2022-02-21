@@ -292,7 +292,7 @@ def test_assert_slug_is_updated_on_title_change():
     """
     Assert that a joboffer updates the slug after title update.
     """
-    updated_title = 'Job Offer Updated'
+    UPDATED_TITLE = 'Job Offer Updated'
 
     joboffer = JobOfferFactory.create(
         remoteness=Remoteness.REMOTE,
@@ -303,10 +303,10 @@ def test_assert_slug_is_updated_on_title_change():
         contact_url=None
     )
 
-    joboffer.title = updated_title
+    joboffer.title = UPDATED_TITLE
     joboffer.save()
 
-    assert slugify(updated_title) == joboffer.slug
+    assert slugify(UPDATED_TITLE) == joboffer.slug
 
 
 @pytest.mark.django_db
@@ -369,3 +369,15 @@ def test_assert_get_short_description_strip_the_long_description():
 
     assert 512 == len(short_description)
     assert STRIPPED_LONG_JOBOFFER_DESCRIPTION == short_description
+
+
+@pytest.mark.django_db
+def test_joboffer_last_comment():
+    """
+    Test the joboffer.last_comment property
+    """
+    joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
+    JobOfferCommentFactory.create(joboffer=joboffer)
+    expected_comment = JobOfferCommentFactory.create(joboffer=joboffer)
+
+    assert joboffer.last_comment.text == expected_comment.text

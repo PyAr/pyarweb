@@ -103,6 +103,7 @@ class JobOfferDetailView(DetailView):
         ctx = super().get_context_data()
         ctx['action_buttons'] = self.get_action_buttons()
         ctx['state_label_class'] = STATE_LABEL_CLASSES[object.state]
+        ctx['OfferState'] = OfferState
         return ctx
 
 
@@ -199,7 +200,7 @@ class JobOfferRejectView(
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
-        self.object.state = OfferState.DEACTIVATED
+        self.object.state = OfferState.REJECTED
         self.object.save()
         form.save()
         return super().form_valid(form)
@@ -251,7 +252,7 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
     action_code = CODE_REQUEST_MODERATION
     redirect_to_pattern = 'joboffers:view'
     success_message = _(
-        'Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar'
+        'Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar '
         'activa si es correcta. Revise está misma página para ver el estado.'
     )
 

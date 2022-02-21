@@ -9,34 +9,43 @@
 
 {% block content %}
 <main id="main" class="joboffers container" role="main">
+  <div class="col-lg-12">
+    <div class="page-header">
+      <h2>{{ object.title }}</h2>
+    </div>
 
-    <div class="col-lg-12">
-
-      <div class="page-header">
-        <h2>{{ object.title }}</h2>
+    <div class="row">
+      <div class="col-md-8">
+        {% if object.state == OfferState.REJECTED %}
+          <div class="alert alert-danger" role="alert">
+            <h4>La oferta fue rechazada por el equipo de moderación</h4>
+            <hr />
+            <p>
+              {% translate 'El motivo fué' %} <strong>{{ object.last_comment.get_comment_type_display | lower }}</strong>
+              {% translate 'y la observación fué:' %} <strong>{{ object.last_comment.text }}</strong>.
+            </p>
+            <p>
+              {% translate 'Verifique si es posible corregirla para que se adapte a los requerimientos.' %}
+            </p>
+          </div>
+        {% endif %}
+        <div>
+          {{ object.description|safe }}
+        </div>
+        <div class="text-right">
+          {% include "joboffers/_tags.html" %}
+        </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-8">
-          <div>
-              {{ object.description|safe }}
-          </div>
-          <div class="text-right">
-            {% include "joboffers/_tags.html" %}
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="panel panel-default panel-primary">
-            <div class="panel-heading"><strong>Datos de la oferta laboral</strong></div>
-            <div class="panel-body">
-               <article class="list-group-item">
-                {% include 'joboffers/joboffer_overview.html' with obj=object label_class=state_label_class %}
-              </article>
-            </div>
+      <div class="col-md-4">
+        <div class="panel panel-default panel-primary">
+          <div class="panel-heading"><strong>Datos de la oferta laboral</strong></div>
+          <div class="panel-body">
+            <article class="list-group-item">
+              {% include 'joboffers/joboffer_overview.html' with obj=object label_class=state_label_class %}
+            </article>
           </div>
         </div>
-
       </div>
     </div>
     <div class="pull-right">
