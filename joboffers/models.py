@@ -116,7 +116,9 @@ class JobOffer(models.Model):
     )
 
     def get_absolute_url(self):
-        return reverse('joboffers:view', kwargs={'slug': self.slug})
+        url = reverse('joboffers:view', kwargs={'slug': self.slug})
+        absolute_url = "".join((settings.BASE_URL, url))
+        return absolute_url
 
     def __str__(self):
         return self.title

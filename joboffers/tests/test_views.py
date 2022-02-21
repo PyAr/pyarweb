@@ -189,7 +189,7 @@ def test_joboffer_admin_works_with_random_query_search(logged_client, joboffers_
 
     target_url = reverse('joboffers:admin')
 
-    response = client.get(target_url, {'q': 'unexistant thing Ç '})
+    response = client.get(target_url, {'q': 'thing Ç '})
 
     assert response.status_code == 200
     actual_joboffers = response.context_data['object_list'].values_list('id', flat=True)
@@ -205,7 +205,6 @@ def test_joboffer_admin_works_with_empty_query_search(logged_client, joboffers_l
     client = logged_client
 
     target_url = reverse('joboffers:admin')
-
     response = client.get(target_url, {'q': ''})
 
     assert response.status_code == 200
