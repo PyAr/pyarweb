@@ -370,7 +370,7 @@ def test_assert_get_short_description_strip_the_long_description():
     assert 512 == len(short_description)
     assert STRIPPED_LONG_JOBOFFER_DESCRIPTION == short_description
 
-
+    
 @pytest.mark.django_db
 def test_joboffer_last_comment():
     """
