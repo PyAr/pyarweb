@@ -1,17 +1,19 @@
-import pytest
 import factory
-
+import pytest
 from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
-
+from django.utils.text import slugify
 from easyaudit.models import CRUDEvent
 from factory import Faker
 
-from pycompanies.tests.fixtures import create_user_company_profile # noqa
-
-from .factories import JobOfferFactory, JobOfferCommentFactory
+from pycompanies.tests.fixtures import create_user_company_profile  # noqa
 from ..constants import STATE_LABEL_CLASSES
 from ..models import JobOffer, JobOfferHistory, OfferState, Remoteness
+from .factories import JobOfferCommentFactory, JobOfferFactory
+from .joboffers_descriptions import (LONG_JOBOFFER_DESCRIPTION,
+                                     SHORT_JOBOFFER_DESCRIPTION,
+                                     STRIPPED_LONG_JOBOFFER_DESCRIPTION,
+                                     STRIPPED_SHORT_JOBOFFER_DESCRIPTION)
 
 
 @pytest.mark.django_db
@@ -283,3 +285,87 @@ def test_JobOfferHistory_state_label_class(settings):
     state_label_class = history.state_label_class
 
     assert state_label_class == STATE_LABEL_CLASSES[OfferState.MODERATION]
+
+
+@pytest.mark.django_db
+def test_assert_slug_is_updated_on_title_change():
+    """
+    Assert that a joboffer updates the slug after title update.
+    """
+    updated_title = 'Job Offer Updated'
+
+    joboffer = JobOfferFactory.create(
+        remoteness=Remoteness.REMOTE,
+        title='Job Offer',
+        location=None,
+        contact_mail=Faker('email'),
+        contact_phone=None,
+        contact_url=None
+    )
+
+    joboffer.title = updated_title
+    joboffer.save()
+
+    assert slugify(updated_title) == joboffer.slug
+
+
+@pytest.mark.django_db
+def test_assert_short_description_is_set_with_stripped_description():
+    """
+    Assert that a joboffer short description is created with the stripped description
+    if there is no short description given.
+    """
+
+    joboffer = JobOfferFactory.create(
+        remoteness=Remoteness.REMOTE,
+        title='Job Offer',
+        location=None,
+        contact_mail=Faker('email'),
+        contact_phone=None,
+        contact_url=None,
+        description=SHORT_JOBOFFER_DESCRIPTION,
+        short_description='',
+    )
+
+    assert STRIPPED_SHORT_JOBOFFER_DESCRIPTION == joboffer.short_description
+
+
+@pytest.mark.django_db
+def test_assert_short_description_is_set_with_the_given_short_description():
+    """
+    Assert that the joboffer doesn't update the short_description if it is provided in the model.
+    """
+    short_description = 'short description'
+
+    joboffer = JobOfferFactory.create(
+        remoteness=Remoteness.REMOTE,
+        title='Job Offer',
+        location=None,
+        contact_mail=Faker('email'),
+        contact_phone=None,
+        contact_url=None,
+        description=SHORT_JOBOFFER_DESCRIPTION,
+        short_description=short_description,
+    )
+
+    assert short_description == joboffer.short_description
+
+
+@pytest.mark.django_db
+def test_assert_get_short_description_strip_the_description():
+    """
+    Assert that get_short_description method strip the description correctly.
+    """
+    short_description = JobOffer.get_short_description(SHORT_JOBOFFER_DESCRIPTION)
+    assert STRIPPED_SHORT_JOBOFFER_DESCRIPTION == short_description
+
+
+@pytest.mark.django_db
+def test_assert_get_short_description_strip_the_long_description():
+    """
+    Assert that get_short_description method strip the description and limit to 512 chars.
+    """
+    short_description = JobOffer.get_short_description(LONG_JOBOFFER_DESCRIPTION)
+
+    assert 512 == len(short_description)
+    assert STRIPPED_LONG_JOBOFFER_DESCRIPTION == short_description
