@@ -60,4 +60,5 @@ class JobOfferCommentFactory(DjangoModelFactory):
     created_by = SubFactory(UserFactory)
     comment_type = fuzzy.FuzzyChoice(CommentType.values)
     text = Faker('sentence')
+    created_by = SubFactory(UserFactory)
     joboffer = SubFactory(JobOfferFactory)

@@ -14,8 +14,8 @@ from pycompanies.models import Company, UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REQUEST_MODERATION, CODE_APPROVE,
-    get_valid_actions
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_DEACTIVATE,
+    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
 from .models import JobOffer, JobOfferHistory, OfferState
 
@@ -103,6 +103,7 @@ class JobOfferDetailView(DetailView):
         ctx = super().get_context_data()
         ctx['action_buttons'] = self.get_action_buttons()
         ctx['state_label_class'] = STATE_LABEL_CLASSES[object.state]
+        ctx['OfferState'] = OfferState
         return ctx
 
 
@@ -169,6 +170,7 @@ class TransitionView(JobOfferObjectMixin, View):
         raise NotImplementedError()
 
     def get(self, request, *args, **kwargs):
+
         offer = self.get_object()
 
         self.update_object(offer)
@@ -198,7 +200,7 @@ class JobOfferRejectView(
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
-        self.object.state = OfferState.DEACTIVATED
+        self.object.state = OfferState.REJECTED
         self.object.save()
         form.save()
         return super().form_valid(form)
@@ -236,15 +238,21 @@ class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_DEACTIVATE
+    redirect_to_pattern = 'joboffers:view'
+    success_message = _('Oferta desactivada.')
+
+    def update_object(self, offer):
+        offer.state = OfferState.DEACTIVATED
+        offer.save()
 
 
 class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
     action_code = CODE_REQUEST_MODERATION
     redirect_to_pattern = 'joboffers:view'
     success_message = _(
-        'Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar'
+        'Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar '
         'activa si es correcta. Revise está misma página para ver el estado.'
     )
 

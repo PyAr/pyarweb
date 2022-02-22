@@ -1,3 +1,4 @@
+
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
@@ -13,8 +14,10 @@ from pycompanies.tests.factories import UserCompanyProfileFactory
 
 
 EXPECTED_ACTIONS_ADMIN = {
+    # OfferState.ACTIVE: {deactivate.code, get_history.code},
     OfferState.ACTIVE: {get_history.code},
     OfferState.DEACTIVATED: {get_history.code},
+    # OfferState.EXPIRED: {deactivate.code, get_history.code},
     OfferState.EXPIRED: {get_history.code},
     OfferState.MODERATION: {get_history.code, reject.code, approve.code},
     OfferState.NEW: set(),
