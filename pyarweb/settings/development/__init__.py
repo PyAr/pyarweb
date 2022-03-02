@@ -10,4 +10,4 @@ DEBUG = True
 TELEGRAM_MESSAGE_PREFIX = '[DEV]'
 
 # BASE_URL to use in any notification that might require them
-BASE_URL = 'https://localhost:8000'
+BASE_URL = 'http://localhost:8000'
