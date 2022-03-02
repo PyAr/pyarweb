@@ -2,6 +2,12 @@
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
+from events.tests.factories import UserFactory
+# Fixtures
+from pycompanies.tests.fixtures import create_user_company_profile # noqa
+#
+from pycompanies.tests.factories import UserCompanyProfileFactory
+
 from ..joboffer_actions import (
     ACTIONS, ROLE_ADMIN, ROLE_PUBLISHER,
     _get_roles, approve, create, deactivate, edit, get_history, get_valid_actions,
@@ -9,8 +15,6 @@ from ..joboffer_actions import (
 )
 from ..models import OfferState
 from .factories import JobOfferCommentFactory, JobOfferFactory
-from events.tests.factories import UserFactory
-from pycompanies.tests.factories import UserCompanyProfileFactory
 
 
 EXPECTED_ACTIONS_ADMIN = {
@@ -231,6 +235,42 @@ def test_get_valid_actions_admin_that_approved_an_offer():
 
     actions = get_valid_actions(
         user, joboffer, {ROLE_ADMIN}
+    )
+
+    assert actions == expected_actions
+
+
+@pytest.mark.django_db
+def test_get_valid_actions_for_admin_that_didnt_approved_the_offer():
+    """
+    Test get_valid_actions() doesn't have return reject/accept for an active offer accepted by a
+    different user. It mockes the role.
+    """
+    user = UserFactory.create(is_superuser=True)
+    joboffer = JobOfferFactory.create(state=OfferState.ACTIVE)
+
+    expected_actions = {deactivate.code, get_history.code}
+
+    actions = get_valid_actions(
+        user, joboffer, {ROLE_ADMIN}
+    )
+
+    assert actions == expected_actions
+
+
+@pytest.mark.django_db
+def test_get_valid_actions_publisher_with_active_offer(user_company_profile):
+    """
+    Test get_valid_actions() doesn't allow to accept/reject an active offer.
+    It mockes the role.
+    """
+    user = user_company_profile.user
+    joboffer = JobOfferFactory.create(state=OfferState.ACTIVE, modified_by=user)
+
+    expected_actions = {deactivate.code, get_history.code}
+
+    actions = get_valid_actions(
+        user, joboffer, {ROLE_PUBLISHER}
     )
 
     assert actions == expected_actions

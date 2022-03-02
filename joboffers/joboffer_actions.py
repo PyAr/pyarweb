@@ -179,7 +179,7 @@ def get_valid_actions(user, joboffer=None, roles=None):
 
     if joboffer:
         if joboffer.state == OfferState.ACTIVE:
-            if joboffer.modified_by == user:
+            if ROLE_ADMIN in roles_ and joboffer.modified_by == user:
                 actions = actions | {approve.code, reject.code}
 
         elif joboffer.state == OfferState.REJECTED:
