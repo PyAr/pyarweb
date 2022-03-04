@@ -10,7 +10,9 @@ from django.views.generic import ListView, RedirectView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
+from community.views import FilterableList
 from pycompanies.models import Company, UserCompanyProfile
+from taggit.models import Tag
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
@@ -287,7 +289,7 @@ class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
         return response
 
 
-class JobOfferListView(ListView):
+class JobOfferListView(ListView, FilterableList):
     model = JobOffer
     template_name = 'joboffers/joboffer_list.html'
     paginate_by = 20
@@ -309,7 +311,7 @@ class JobOfferListView(ListView):
             joboffer_queryset = JobOffer.objects.filter(search_filter, state=OfferState.ACTIVE)
             ordered_offers = joboffer_queryset.order_by('-company__rank', '-modified_at')
 
-        return ordered_offers
+        return self.filter_queryset_tags(ordered_offers)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

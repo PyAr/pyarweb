@@ -676,3 +676,54 @@ def test_joboffer_list_view_render_with_joboffer_that_matches_the_description(pu
     response = client.get(target_url, {'search': 'first'})
 
     assert response.context_data['object_list'][0] == first_joboffer
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_with_joboffer_that_contain_the_given_tag(publisher_client):
+    """
+    Test that the joboffer list view renders the joboffer that contains the given tag.
+    """
+    client = publisher_client
+    first_joboffer = JobOfferFactory.create(
+        state=OfferState.ACTIVE,
+        description='First Joboffer',
+        tags=['django']
+    )
+
+    JobOfferFactory.create(
+        state=OfferState.ACTIVE,
+        description='Second Joboffer',
+        tags=['javascript']
+    )
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url, {'tag_django': '1'})
+
+    assert len(response.context_data['object_list']) == 1
+    assert response.context_data['object_list'][0] == first_joboffer
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_with_all_joboffers_that_contain_the_given_tags(publisher_client):
+    """
+    Test that the joboffer list view renders the joboffers that contains the given tags.
+    """
+    client = publisher_client
+    JobOfferFactory.create(
+        state=OfferState.ACTIVE,
+        description='First Joboffer',
+        tags=['django']
+    )
+
+    JobOfferFactory.create(
+        state=OfferState.ACTIVE,
+        description='Second Joboffer',
+        tags=['javascript']
+    )
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url, {'tag_django': '1', 'tag_javascript': '1'})
+
+    assert len(response.context_data['object_list']) == 2
