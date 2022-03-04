@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load devtags %}
+{% load history %}
+
+{% block title %}
+{{ object.title }}
+{% endblock %}
+
+{% block content %}
+<main id="main" class="container" role="main">
+
+    <div class="col-lg-12">
+
+      <div class="page-header">
+        <h2>Historial de «{{ object.title }}» </h2>
+      </div>
+
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          {% for history_entry in object_list %}
+          <div class="panel panel-default">
+            {% include 'joboffers/history/_header.html' %}
+            <div id="change-{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel">
+              <div class="panel-body">
+                {% if history_entry.content_type.model == "joboffer" %}
+                  {% if history_entry.event_type == JobOfferHistory.CREATE %}
+                    {% include 'joboffers/history/_create.html' %}
+                  {% else %}
+                    {% include 'joboffers/history/_update.html' %}
+                  {% endif %}
+
+                {% else %}
+                  {% include 'joboffers/history/_comment.html' with comment=history_entry.joboffer_comment %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% include 'joboffers/_paginator.html' with page_obj=page_obj %}
+    </div>
+</main>
+{% endblock %}

@@ -47,9 +47,8 @@ class TwitterPublisher(Publisher):
             )
             api = tweepy.API(auth)
         except Exception as err:
-            status = None
             logging.error(ERROR_LOG_MESSAGE_AUTH, _repr_credentials(), err)
-            return status
+            return
 
         try:
             api.update_status(message)

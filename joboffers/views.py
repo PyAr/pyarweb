@@ -11,67 +11,13 @@ from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
 from pycompanies.models import Company, UserCompanyProfile
+from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import JobOffer, JobOfferComment, OfferState
-
-
-ACTION_BUTTONS = {
-    CODE_HISTORY: {
-        'target_url': 'joboffers:history',
-        'text': _('Historial'),
-        'css_classes': ['btn-info'],
-        'icon_class': 'glyphicon-time'
-    },
-    CODE_EDIT: {
-        'target_url': 'joboffers:edit',
-        'text': _('Editar'),
-        'css_classes': ['btn-default'],
-        'icon_class': 'glyphicon-pencil'
-    },
-    CODE_REJECT: {
-        'target_url': 'joboffers:reject',
-        'text': _('Rechazar'),
-        'css_classes': ['btn-danger'],
-        'icon_class': 'glyphicon-thumbs-down'
-    },
-    CODE_REACTIVATE: {
-        'target_url': 'joboffers:reactivate',
-        'text': _('Volver a Activar'),
-        'css_classes': ['btn-default'],
-        'icon_class': 'glyphicon-arrow-up'
-    },
-    CODE_DEACTIVATE: {
-        'target_url': 'joboffers:deactivate',
-        'text': _('Desactivar'),
-        'css_classes': ['btn-warning'],
-        'icon_class': 'glyphicon-minus-sign'
-    },
-    CODE_REQUEST_MODERATION: {
-        'target_url': 'joboffers:request_moderation',
-        'text': _('Confirmar'),
-        'css_classes': ['btn-success'],
-        'icon_class': 'glyphicon-eye-open'
-    },
-    CODE_APPROVE: {
-        'target_url': 'joboffers:approve',
-        'text': _('Aprobar'),
-        'css_classes': ['btn-success'],
-        'icon_class': 'glyphicon-pencil'
-    }
-}
-
-STATE_LABEL_CLASSES = {
-    'ACTIVE': 'label-success',
-    'DEACTIVATED': 'label-danger',
-    'EXPIRED': 'label-warning',
-    'MODERATION': 'label-primary',
-    'NEW': 'label-info',
-    'REJECTED': 'label-danger',
-}
+from .models import JobOffer, JobOfferHistory, OfferState
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -95,15 +41,6 @@ class JobOfferObjectMixin(SingleObjectMixin):
         return offer
 
 
-def get_user_company(user):
-    if user.is_anonymous:
-        None
-    else:
-        company_profile_qs = UserCompanyProfile.objects.filter(user=user)
-        if company_profile_qs.exists():
-            return company_profile_qs.first().company
-
-
 class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     action_code = CODE_CREATE
     model = JobOffer
@@ -114,9 +51,9 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     )
 
     def get(self, request, *args, **kwargs):
-        company = get_user_company(request.user)
+        user_company = UserCompanyProfile.objects.for_user(request.user)
 
-        if not company:
+        if not user_company:
             message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
                        "crear una oferta de trabajo.")
             messages.warning(request, message)
@@ -126,7 +63,9 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        company = get_user_company(request.user)
+        user_company = UserCompanyProfile.objects.for_user(request.user)
+
+        company = user_company.company if user_company else None
 
         valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
 
@@ -144,7 +83,7 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
     def get_initial(self):
-        user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
+        user_company = UserCompanyProfile.objects.for_user(self.request.user)
         if user_company:
             self.initial.update({'company': user_company.company})
 
@@ -164,6 +103,7 @@ class JobOfferDetailView(DetailView):
         ctx = super().get_context_data()
         ctx['action_buttons'] = self.get_action_buttons()
         ctx['state_label_class'] = STATE_LABEL_CLASSES[object.state]
+        ctx['OfferState'] = OfferState
         return ctx
 
 
@@ -180,6 +120,13 @@ class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
         form.instance.modified_by = self.request.user
         form.instance.state = OfferState.DEACTIVATED
         return super().form_valid(form)
+
+    def get_initial(self):
+        user_company = UserCompanyProfile.objects.for_user(self.request.user)
+        if user_company:
+            self.initial.update({'company': user_company.company})
+
+        return self.initial
 
 
 class JobOfferAdminView(LoginRequiredMixin, ListView):
@@ -223,6 +170,7 @@ class TransitionView(JobOfferObjectMixin, View):
         raise NotImplementedError()
 
     def get(self, request, *args, **kwargs):
+
         offer = self.get_object()
 
         self.update_object(offer)
@@ -252,7 +200,7 @@ class JobOfferRejectView(
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.modified_by = self.request.user
-        self.object.state = OfferState.DEACTIVATED
+        self.object.state = OfferState.REJECTED
         self.object.save()
         form.save()
         return super().form_valid(form)
@@ -290,15 +238,21 @@ class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'joboffers:view'
 
 
-class JobOfferDeactivateView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_DEACTIVATE
+    redirect_to_pattern = 'joboffers:view'
+    success_message = _('Oferta desactivada.')
+
+    def update_object(self, offer):
+        offer.state = OfferState.DEACTIVATED
+        offer.save()
 
 
 class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
     action_code = CODE_REQUEST_MODERATION
     redirect_to_pattern = 'joboffers:view'
     success_message = _(
-        'Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar'
+        'Oferta enviada a moderación. El equipo de moderadores lo revisará y pasará a estar '
         'activa si es correcta. Revise está misma página para ver el estado.'
     )
 
@@ -307,6 +261,27 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
         offer.save()
 
 
-class JobOfferHistoryView(LoginRequiredMixin, ListView):
-    model = JobOfferComment
-    template_name = 'joboffers/history.html'
+class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
+    action_code = CODE_HISTORY
+    paginate_by = 10
+    template_name = "joboffers/joboffer_history.html"
+    HIDDEN_JOBOFFER_FIELDS = ['slug', 'fields_hash']
+
+    def get_queryset(self):
+        """
+        Get the queryset for all the history objects related to an offer
+        """
+        return JobOfferHistory.objects.for_offer(joboffer=self.object)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data()
+        ctx['JobOfferHistory'] = JobOfferHistory
+        ctx['OfferState'] = OfferState
+        ctx['HIDDEN_JOBOFFER_FIELDS'] = self.HIDDEN_JOBOFFER_FIELDS
+
+        return ctx
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(JobOffer.objects.all())
+        response = super().get(request, *args, **kwargs)
+        return response
