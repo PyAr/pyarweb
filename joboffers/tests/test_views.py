@@ -679,7 +679,7 @@ def test_joboffer_list_view_render_with_joboffer_that_matches_the_description(pu
 
 
 @pytest.mark.django_db
-def test_joboffer_list_view_render_with_joboffer_that_contain_the_given_tag(publisher_client):
+def test_joboffer_list_view_render_the_joboffer_that_contains_the_given_tag(publisher_client):
     """
     Test that the joboffer list view renders the joboffer that contains the given tag.
     """
@@ -705,9 +705,9 @@ def test_joboffer_list_view_render_with_joboffer_that_contain_the_given_tag(publ
 
 
 @pytest.mark.django_db
-def test_joboffer_list_view_render_with_all_joboffers_that_contain_the_given_tags(publisher_client):
+def test_joboffer_list_view_render_all_joboffers_that_contains_the_given_tags(publisher_client):
     """
-    Test that the joboffer list view renders the joboffers that contains the given tags.
+    Test that the joboffer list view renders all joboffers that contains the given tags.
     """
     client = publisher_client
     JobOfferFactory.create(
