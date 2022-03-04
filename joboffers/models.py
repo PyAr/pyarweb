@@ -120,9 +120,6 @@ class JobOffer(models.Model):
         verbose_name=_('Estado de la oferta')
     )
     slug = AutoSlugField(populate_from='title', unique=True)
-    fields_hash = models.CharField(
-        max_length=255, null=True, verbose_name=_('Hash de la oferta')
-    )
 
     @property
     def last_comment(self):
