@@ -294,6 +294,7 @@ class JobOfferListView(ListView, FilterableList):
     paginate_by = 20
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         search = self.request.GET.get('search')
 
         if search:
@@ -302,15 +303,15 @@ class JobOfferListView(ListView, FilterableList):
             search_filter = Q()
 
         if self.request.GET.get('active') == 'false':
-            joboffer_queryset = JobOffer.objects.filter(
+            joboffer_queryset = queryset.filter(
                 search_filter,
                 state__in=[OfferState.ACTIVE, OfferState.EXPIRED])
             ordered_offers = joboffer_queryset.order_by('-modified_at')
         else:
-            joboffer_queryset = JobOffer.objects.filter(search_filter, state=OfferState.ACTIVE)
+            joboffer_queryset = queryset.filter(search_filter, state=OfferState.ACTIVE)
             ordered_offers = joboffer_queryset.order_by('-company__rank', '-modified_at')
 
-        return self.filter_queryset_tags(ordered_offers)
+        return ordered_offers
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
