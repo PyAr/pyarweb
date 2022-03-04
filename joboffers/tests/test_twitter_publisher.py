@@ -35,7 +35,7 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
     settings.TWITTER_CONSUMER_SECRET = 123
     settings.TWITTER_ACCESS_TOKEN = 123
     settings.TWITTER_ACCESS_SECRET = 123
-    status = TwitterPublisher()._push_to_api('message')
+    status = TwitterPublisher()._push_to_api('message', 'title')
     expected_error_message = ERROR_LOG_MESSAGE_AUTH % (_repr_credentials(), '')
 
     assert expected_error_message in caplog.text
@@ -48,7 +48,7 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
 def test_push_to_api_bad_credentials(mock_api, settings, caplog):
     """Test exception when the credentials are in the wrong format."""
     mock_api.return_value = DummyAPIBad
-    status = TwitterPublisher()._push_to_api('message')
+    status = TwitterPublisher()._push_to_api('message', 'title')
     expected_error_message = ERROR_LOG_MESSAGE_POST % (_repr_credentials(), '')
 
     assert expected_error_message in caplog.text
@@ -61,6 +61,6 @@ def test_push_to_api_bad_credentials(mock_api, settings, caplog):
 def test_push_to_api_ok(mock_api):
     mock_api.return_value = DummyAPIOK
 
-    status = TwitterPublisher()._push_to_api('message')
+    status = TwitterPublisher()._push_to_api('message', 'title')
 
     assert status == 200

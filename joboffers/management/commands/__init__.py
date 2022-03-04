@@ -20,7 +20,7 @@ class TestPublishCommand(BaseCommand):
             status = publisher.publish(job_offer)
         else:
             self.stdout.write(self.style.SUCCESS('Publicando una prueba.'))
-            raw_status = publisher._push_to_api('Esto es una prueba.')
+            raw_status = publisher._push_to_api('Esto es una prueba.', 'Título de prueba')
 
         if raw_status == 200 or status == publisher.RESULT_OK:
             self.stdout.write(self.style.SUCCESS('Oferta publicada con éxito en: '

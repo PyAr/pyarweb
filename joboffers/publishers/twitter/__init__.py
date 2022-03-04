@@ -35,7 +35,7 @@ class TwitterPublisher(Publisher):
 
     name = 'Twitter'
 
-    def _push_to_api(self, message: str):
+    def _push_to_api(self, message: str, title: str):
         """Publish a message to twitter."""
 
         try:
