@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import ListView, RedirectView, View, FormView
+from django.views.generic import ListView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -14,7 +14,7 @@ from pycompanies.models import Company, UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_DEACTIVATE,
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
 from .models import JobOffer, JobOfferHistory, OfferState
@@ -230,8 +230,14 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         offer.save()
 
 
-class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_REACTIVATE
+    redirect_to_pattern = 'joboffers:view'
+    success_message = _('Oferta reactivada.')
+
+    def update_object(self, offer):
+        offer.state = OfferState.ACTIVE
+        offer.save()
 
 
 class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
