@@ -16,6 +16,8 @@ from .fixtures import create_publisher_client, create_admin_user # noqa
 
 ADD_URL = 'joboffers:add'
 ADMIN_URL = 'joboffers:admin'
+VIEW_URL = 'joboffers:view'
+LIST_URL = 'joboffers:list'
 APPROVE_URL = 'joboffers:approve'
 DEACTIVATE_URL = 'joboffers:deactivate'
 VIEW_URL = 'joboffers:view'
@@ -576,3 +578,101 @@ def test_JobOfferHistoryView_renders_with_context(
         {'event_type': JobOfferHistory.UPDATE, 'content_type__model': 'joboffer'},
         {'event_type': JobOfferHistory.CREATE, 'content_type__model': 'joboffer'}
     ]
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_list_with_an_active_joboffer(publisher_client):
+    """
+    Test that the joboffer list view renders the list with an active joboffer
+    """
+    client = publisher_client
+    JobOfferFactory.create(state=OfferState.ACTIVE)
+    JobOfferFactory.create(state=OfferState.EXPIRED, title="Second Joboffer")
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url)
+
+    assert len(response.context_data['object_list']) == 1
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_empty_list(publisher_client):
+    """
+    Test that the joboffer list view renders an empty list if there is no joboffers
+    """
+    client = publisher_client
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url)
+
+    assert len(response.context_data['object_list']) == 0
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_empty_if_no_active_joboffers(publisher_client):
+    """
+    Test that the joboffer list view renders an empty list if there is no active joboffer
+    """
+    client = publisher_client
+    JobOfferFactory.create(state=OfferState.NEW, title="First Joboffer")
+    JobOfferFactory.create(state=OfferState.EXPIRED, title="Second Joboffer")
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url)
+
+    assert len(response.context_data['object_list']) == 0
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_with_an_active_and_expired_joboffer(publisher_client):
+    """
+    Test that the joboffer list view renders the list with active and expired joboffers if
+    the active checkbox is not checked.
+    """
+    client = publisher_client
+    JobOfferFactory.create(state=OfferState.ACTIVE, title="First Joboffer")
+    JobOfferFactory.create(state=OfferState.EXPIRED, title="Second Joboffer")
+    JobOfferFactory.create(state=OfferState.NEW, title="Third Joboffer")
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url, {'active': 'false'})
+
+    assert len(response.context_data['object_list']) == 2
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_with_the_joboffer_that_matches_the_search(publisher_client):
+    """
+    Test that the joboffer list view renders the joboffers that matches the title content with
+    the given search.
+    """
+    client = publisher_client
+    JobOfferFactory.create(state=OfferState.ACTIVE, title="First Joboffer")
+    second_joboffer = JobOfferFactory.create(state=OfferState.ACTIVE, title="Second Joboffer")
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url, {'search': 'second'})
+
+    assert response.context_data['object_list'][0] == second_joboffer
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_render_with_joboffer_that_matches_the_description(publisher_client):
+    """
+    Test that the joboffer list view renders the joboffers that matches the title content with
+    the given search.
+    """
+    client = publisher_client
+    first_joboffer = JobOfferFactory.create(state=OfferState.ACTIVE, description="First Joboffer")
+    JobOfferFactory.create(state=OfferState.ACTIVE, description="Second Joboffer")
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url, {'search': 'first'})
+
+    assert response.context_data['object_list'][0] == first_joboffer

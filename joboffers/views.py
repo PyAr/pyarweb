@@ -285,3 +285,41 @@ class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
         self.object = self.get_object(JobOffer.objects.all())
         response = super().get(request, *args, **kwargs)
         return response
+
+
+class JobOfferListView(ListView):
+    model = JobOffer
+    template_name = 'joboffers/joboffer_list.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        search = self.request.GET.get('search')
+
+        if search:
+            search_filter = Q(title__icontains=search) | Q(description__icontains=search)
+        else:
+            search_filter = Q()
+
+        if self.request.GET.get('active') == 'false':
+            joboffer_queryset = JobOffer.objects.filter(
+                search_filter,
+                state__in=[OfferState.ACTIVE, OfferState.EXPIRED])
+            ordered_offers = joboffer_queryset.order_by('-modified_at')
+        else:
+            joboffer_queryset = JobOffer.objects.filter(search_filter, state=OfferState.ACTIVE)
+            ordered_offers = joboffer_queryset.order_by('-company__rank', '-modified_at')
+
+        return ordered_offers
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.GET.get('active') == 'false':
+            context['active'] = True
+        else:
+            context['active'] = False
+
+        if self.request.GET.get('search'):
+            context['search'] = self.request.GET.get('search')
+
+        return context
