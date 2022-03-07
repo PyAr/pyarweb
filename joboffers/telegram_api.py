@@ -4,17 +4,20 @@ import urllib.parse
 import requests
 from django.conf import settings
 
+from joboffers.utils import hash_secret
+
+
 TELEGRAM_API_URL = 'https://api.telegram.org/bot'
 ERROR_LOG_MESSAGE = (
-    'Falló al querer publicar a telegram con las siguientes credenciales=%s Error: %s'
+    'Falló al querer publicar a telegram con las siguientes credenciales(hasheadas). %s Error: %s'
 )
 
 
 def _repr_credentials():
     """Show a string representation of telegram credentials."""
     credentials_repr = (
-        f' TELEGRAM_BOT_TOKEN: {settings.TELEGRAM_BOT_TOKEN} '
-        f' TELEGRAM_MODERATORS_CHAT_ID: {settings.TELEGRAM_MODERATORS_CHAT_ID} '
+        f' TELEGRAM_BOT_TOKEN: {hash_secret(settings.TELEGRAM_BOT_TOKEN)} '
+        f' TELEGRAM_MODERATORS_CHAT_ID: {settings.TELEGRAM_MODERATORS_CHAT_ID}'
         f' TELEGRAM_PUBLIC_CHAT_ID: {settings.TELEGRAM_PUBLIC_CHAT_ID} '
     )
 
@@ -40,7 +43,6 @@ def send_message(message: str, chat_id: int):
     safe_message = _compose_message(message)
     url = _get_request_url(safe_message, chat_id)
     status = requests.get(url)
-
     if status.status_code != requests.codes.ok:
         logging.error(ERROR_LOG_MESSAGE, _repr_credentials(), status.text)
 

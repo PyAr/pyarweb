@@ -7,7 +7,7 @@ from ..telegram_api import TELEGRAM_API_URL, _compose_message, _get_request_url,
 
 
 def test_get_request_url(settings):
-    """Test the correct strcture for the API request url."""
+    """Test the correct structure for the API request url."""
     message = 'dummy_message'
     chat_id = 1
     dummy_token = '12345'
@@ -37,7 +37,7 @@ def test_send_message(requests_mock: Mocker):
     safe_message = _compose_message(message)
     chat_id = 1
     url = _get_request_url(safe_message, chat_id)
-    requests_mock.get(url, json='', status_code=201)
+    requests_mock.get(url, json='', status_code=200)
 
     try:
         send_message(message, chat_id)
