@@ -21,7 +21,8 @@ def _repr_credentials():
 
 
 ERROR_LOG_MESSAGE_AUTH = (
-    'Falló al querer generar las siguientes credenciales para twitter %s Error: %s'
+    'Falló al querer autenticar con las siguientes credenciales(hasheadas)'
+    'para twitter %s Error: %s'
 )
 
 ERROR_LOG_MESSAGE_POST = (
