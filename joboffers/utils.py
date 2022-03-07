@@ -1,3 +1,4 @@
+import hashlib
 import unicodedata
 
 UNWANTED_SORROUNDING_CHARS = "@/#*"
@@ -15,3 +16,9 @@ def normalize(tag):
 def normalize_tags(tags):
     """Parse a list of tags and removed duplicated tags and non valid chars."""
     return {normalize(tag) for tag in tags}
+
+
+def hash_secret(credential: str):
+    """Hash a secret string (so it can be logged safely.)"""
+    hashed_string = hashlib.sha256(credential.encode('utf-8'))
+    return hashed_string.hexdigest()
