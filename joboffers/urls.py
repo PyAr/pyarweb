@@ -1,12 +1,13 @@
 from django.urls import re_path
 from .views import (
-  JobOfferAdminView, JobOfferCreateView, JobOfferDeactivateView, JobOfferDetailView,
-  JobOfferHistoryView,  JobOfferUpdateView, JobOfferRejectView, JobOfferApproveView,
-  JobOfferReactivateView, JobOfferRequestModerationView
+  JobOfferAdminView, JobOfferApproveView, JobOfferCreateView, JobOfferDeactivateView,
+  JobOfferDetailView, JobOfferHistoryView, JobOfferListView, JobOfferUpdateView,
+  JobOfferRejectView, JobOfferReactivateView, JobOfferRequestModerationView
 )
 
 
 urlpatterns = [
+    re_path(r'^$', JobOfferListView.as_view(), name='list'),
     re_path(r'^admin/$', JobOfferAdminView.as_view(), name='admin'),
     re_path(r'^nueva/$', JobOfferCreateView.as_view(), name='add'),
     re_path(
