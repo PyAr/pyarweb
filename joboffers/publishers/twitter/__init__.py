@@ -3,6 +3,7 @@ import logging
 import tweepy
 from django.conf import settings
 
+from joboffers.utils import hash_secret
 from joboffers.publishers import Publisher
 
 
@@ -10,10 +11,10 @@ def _repr_credentials():
     """Show a string representation of twitter credentials."""
     # Need to convert to string, in case they are strings or they are not set
     credentials_repr = (
-        f' TWITTER_CONSUMER_KEY: {settings.TWITTER_CONSUMER_KEY} '
-        f' TWITTER_CONSUMER_SECRET: {settings.TWITTER_CONSUMER_SECRET} '
-        f' TWITTER_ACCESS_TOKEN: {settings.TWITTER_ACCESS_TOKEN} '
-        f' TWITTER_ACCESS_SECRET: {settings.TWITTER_ACCESS_SECRET} '
+        f' TWITTER_CONSUMER_KEY: {hash_secret(settings.TWITTER_CONSUMER_KEY)} '
+        f' TWITTER_CONSUMER_SECRET: {hash_secret(settings.TWITTER_CONSUMER_SECRET)} '
+        f' TWITTER_ACCESS_TOKEN: {hash_secret(settings.TWITTER_ACCESS_TOKEN)} '
+        f' TWITTER_ACCESS_SECRET: {hash_secret(settings.TWITTER_ACCESS_SECRET)} '
     )
 
     return credentials_repr
@@ -37,7 +38,6 @@ class TwitterPublisher(Publisher):
 
     def _push_to_api(self, message: str):
         """Publish a message to twitter."""
-
         try:
             auth = tweepy.OAuthHandler(
                 settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET
@@ -46,6 +46,9 @@ class TwitterPublisher(Publisher):
                 settings.TWITTER_ACCESS_TOKEN, settings.TWITTER_ACCESS_SECRET
             )
             api = tweepy.API(auth)
+        except TypeError as err:
+            logging.error(err)
+            return
         except Exception as err:
             logging.error(ERROR_LOG_MESSAGE_AUTH, _repr_credentials(), err)
             return
