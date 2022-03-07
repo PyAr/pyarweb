@@ -2,8 +2,7 @@ from unittest.mock import patch
 
 import tweepy
 
-from ..publishers.twitter import (ERROR_LOG_MESSAGE_AUTH,
-                                  ERROR_LOG_MESSAGE_POST, TwitterPublisher,
+from ..publishers.twitter import (ERROR_LOG_MESSAGE_POST, TwitterPublisher,
                                   _repr_credentials)
 
 DUMMY_MESSAGE = 'message'
@@ -36,7 +35,7 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
     settings.TWITTER_ACCESS_TOKEN = 123
     settings.TWITTER_ACCESS_SECRET = 123
     status = TwitterPublisher()._push_to_api('message')
-    expected_error_message = ERROR_LOG_MESSAGE_AUTH % (_repr_credentials(), '')
+    expected_error_message = 'Consumer key must be string or bytes'
 
     assert expected_error_message in caplog.text
     assert status is None

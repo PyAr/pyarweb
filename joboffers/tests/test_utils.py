@@ -40,4 +40,3 @@ def test_hash_secret():
     expected_result = '787de9491332e7f258aadf90983101d0dfa63973a9ac935deb37cdea76bac1f3'
     result = hashlib.sha256(dummy_secret.encode('utf-8')).hexdigest()
     assert result == expected_result
-
