@@ -679,11 +679,11 @@ def test_joboffer_list_view_render_with_joboffer_that_matches_the_description(pu
 
 
 @pytest.mark.django_db
-def test_joboffer_list_view_render_the_joboffer_that_contains_the_given_tag(publisher_client):
+def test_joboffer_list_view_render_the_joboffer_that_contains_the_given_tag(client):
     """
-    Test that the joboffer list view renders the joboffer that contains the given tag.
+    Test that the joboffer list view renders the joboffer that contains the given tag, with
+    a unlogged user.
     """
-    client = publisher_client
     first_joboffer = JobOfferFactory.create(
         state=OfferState.ACTIVE,
         description='First Joboffer',
