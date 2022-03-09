@@ -10,7 +10,7 @@ from django.views.generic import ListView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
-from pycompanies.models import Company, UserCompanyProfile
+from pycompanies.models import UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
@@ -131,7 +131,6 @@ class JobOfferAdminView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        # TODO: Implement queryset filtering for the company
         query = self.request.GET.get('q')
 
         if query:
@@ -145,15 +144,28 @@ class JobOfferAdminView(LoginRequiredMixin, ListView):
             qs
             .order_by('-created_at')
             .filter(
-                filtering_q
+                Q(company=self.company) & filtering_q
             )
         )
 
+    def get(self, request, *args, **kwargs):
+        user_company = UserCompanyProfile.objects.for_user(request.user)
+
+        if not user_company:
+            message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
+                       "crear una oferta de trabajo.")
+            messages.warning(request, message)
+            target_url = reverse('companies:association_list')
+            return HttpResponseRedirect(target_url)
+
+        self.company = user_company.company
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, *args, **kwargs):
-        # TODO: Implement fetching the company
-        # TODO: Implement redirect when no company associated
         ctx = super().get_context_data()
-        ctx['company'] = Company.objects.first()
+        ctx['company'] = self.company
+        ctx['q'] = self.request.GET.get('q')
+
         return ctx
 
 
