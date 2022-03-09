@@ -50,7 +50,7 @@ ACTION_BUTTONS = {
         'text': _('Confirmar'),
         'css_classes': ['btn-success'],
         'icon_class': 'glyphicon-eye-open',
-        'title': _('Luego de moderarse la oferta se activará automáticamente')
+        'title': _('Al confirmar la oferta se enviará a moderación para que sea revisada.')
     },
     CODE_APPROVE: {
         'target_url': 'joboffers:approve',
