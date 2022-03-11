@@ -320,3 +320,25 @@ class JobOfferHistory(CRUDEvent):
 
     class Meta:
         proxy = True
+
+
+class EventType(models.IntegerChoices):
+    """
+    Types of event visualization
+    """
+    LISTING_VIEW = 0
+    DETAIL_VIEW = 1
+    CONTACT_INFO_VIEW = 2
+
+
+class JobOfferVisualization(models.Model):
+    """
+    Model to track visualization of joboffers
+    """
+    created_at = models.DateTimeField(auto_now_add=True)
+    month_and_year = models.PositiveIntegerField()
+    event_type = models.PositiveSmallIntegerField(
+        choices=EventType.choices, verbose_name=_('Tipo de Evento')
+    )
+    session = models.CharField(max_length=40, verbose_name=_('Identificador de Sesión'))
+    joboffer = models.ForeignKey(JobOffer, on_delete=models.CASCADE)

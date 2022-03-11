@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -17,7 +19,7 @@ from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import JobOffer, JobOfferHistory, OfferState
+from .models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -101,6 +103,24 @@ class JobOfferDetailView(DetailView):
         ctx['state_label_class'] = STATE_LABEL_CLASSES[object.state]
         ctx['OfferState'] = OfferState
         return ctx
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+
+        today = date.today()
+        month_year = today.month * 10000 + today.year
+
+        if request.session.session_key is None:
+            request.session.save()
+
+        JobOfferVisualization.objects.get_or_create(
+            month_and_year=month_year,
+            event_type=EventType.DETAIL_VIEW,
+            session=request.session.session_key,
+            joboffer=self.object
+        )
+
+        return response
 
 
 class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
