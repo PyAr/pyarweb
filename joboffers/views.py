@@ -11,7 +11,7 @@ from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
 from community.views import FilterableList
-from pycompanies.models import Company, UserCompanyProfile
+from pycompanies.models import UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
