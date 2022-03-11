@@ -1,4 +1,5 @@
-var classNames = ['btn-default', 'included btn-success', 'excluded btn-danger'];
+// var classNames = ['btn-default', 'included btn-success', 'excluded btn-danger'];
+var classNames = ['btn-default', 'included btn-success'];
 $('#tags-form .filter_tag').click(function () {
     var $this = $(this),
     $select = $('#' + $this.attr('for'));
@@ -13,6 +14,7 @@ $('#tags-form .filter_tag').click(function () {
         $this.removeClass(classNames.join(' '));
         return classNames[ret_index];
     });
+    $('#tags-form').submit();
 });
 
 $('#tags-form #reset-btn').click(function() {
@@ -21,6 +23,7 @@ $('#tags-form #reset-btn').click(function() {
         $('#tags-form .filter_tag').removeClass(value);
     });
     $('#tags-form .filter_tag').addClass(classNames[0]);
+    $('#tags-form').submit();
 });
 
 $("#tags-form").submit(function() {
