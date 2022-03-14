@@ -77,8 +77,13 @@ def test_push_to_api_bad_credentials(mock_api, settings, caplog):
 @patch(
     'joboffers.publishers.twitter.tweepy.API',
 )
-def test_push_to_api_ok(mock_api):
+def test_push_to_api_ok(mock_api, settings):
     mock_api.return_value = DummyAPIOK
+
+    settings.TWITTER_ACCESS_SECRET = ''
+    settings.TWITTER_ACCESS_TOKEN = ''
+    settings.TWITTER_CONSUMER_SECRET = ''
+    settings.TWITTER_CONSUMER_KEY = ''
 
     status = TwitterPublisher()._push_to_api('message')
 
