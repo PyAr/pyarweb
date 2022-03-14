@@ -44,9 +44,29 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
 @patch(
     'joboffers.publishers.twitter.tweepy.API',
 )
+def test_push_to_api_bad_credentials_None(mock_api, settings, caplog):
+    """Test exception when the credentials are not set."""
+    mock_api.return_value = DummyAPIBad
+    settings.TWITTER_ACCESS_SECRET = None
+    settings.TWITTER_ACCESS_TOKEN = None
+    settings.TWITTER_ACCESS_SECRET = None
+    settings.TWITTER_CONSUMER_KEY = None
+
+    status = TwitterPublisher()._push_to_api('message')
+    assert status == None
+
+
+@patch(
+    'joboffers.publishers.twitter.tweepy.API',
+)
 def test_push_to_api_bad_credentials(mock_api, settings, caplog):
     """Test exception when the credentials are in the wrong format."""
     mock_api.return_value = DummyAPIBad
+    settings.TWITTER_ACCESS_SECRET = ''
+    settings.TWITTER_ACCESS_TOKEN = ''
+    settings.TWITTER_ACCESS_SECRET = ''
+    settings.TWITTER_CONSUMER_KEY = ''
+
     status = TwitterPublisher()._push_to_api('message')
     expected_error_message = ERROR_LOG_MESSAGE_POST % (_repr_credentials(), '')
 
