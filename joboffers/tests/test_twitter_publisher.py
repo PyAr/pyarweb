@@ -64,7 +64,7 @@ def test_push_to_api_bad_credentials(mock_api, settings, caplog):
     mock_api.return_value = DummyAPIBad
     settings.TWITTER_ACCESS_SECRET = ''
     settings.TWITTER_ACCESS_TOKEN = ''
-    settings.TWITTER_ACCESS_SECRET = ''
+    settings.TWITTER_CONSUMER_SECRET = ''
     settings.TWITTER_CONSUMER_KEY = ''
 
     status = TwitterPublisher()._push_to_api('message')
