@@ -1,6 +1,4 @@
-import hashlib
-
-from ..utils import normalize_tags
+from ..utils import hash_secret, normalize_tags
 
 
 def test_normalize_tags_with_repeated():
@@ -38,5 +36,15 @@ def test_hash_secret():
     """
     dummy_secret = 'kl^324523²#¹¹}##'
     expected_result = '787de9491332e7f258aadf90983101d0dfa63973a9ac935deb37cdea76bac1f3'
-    result = hashlib.sha256(dummy_secret.encode('utf-8')).hexdigest()
+    result = hash_secret(dummy_secret)
+    assert result == expected_result
+
+
+def test_hash_secret_None():
+    """
+    Test hash_secret method when recieves None It should return 'None' as a string.
+    """
+    dummy_secret = None
+    expected_result = 'None'
+    result = hash_secret(dummy_secret)
     assert result == expected_result
