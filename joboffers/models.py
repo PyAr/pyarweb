@@ -2,6 +2,8 @@ import html
 import json
 import re
 
+from datetime import date
+
 from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -14,6 +16,15 @@ from easyaudit.models import CRUDEvent
 from taggit_autosuggest.managers import TaggableManager
 
 from .constants import STATE_LABEL_CLASSES
+
+
+class EventType(models.IntegerChoices):
+    """
+    Types of event visualization
+    """
+    LISTING_VIEW = 0
+    DETAIL_VIEW = 1
+    CONTACT_INFO_VIEW = 2
 
 
 class Experience(models.TextChoices):
@@ -146,6 +157,23 @@ class JobOffer(models.Model):
         description_unescaped = html.unescape(description_without_spaces)
         return description_unescaped[:512]
 
+    def track_visualization(self, session, event_type: EventType):
+        """
+        Either get or create the matching JobOfferVisualization instance for the joboffer.
+        """
+        today = date.today()
+        month_year = today.month * 10000 + today.year
+
+        if session.session_key is None:
+            session.save()
+
+        return JobOfferVisualization.objects.get_or_create(
+            month_and_year=month_year,
+            event_type=EventType.DETAIL_VIEW,
+            session=session.session_key,
+            joboffer=self
+        )
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         if not self.short_description:
@@ -156,7 +184,7 @@ class JobOffer(models.Model):
     @classmethod
     def get_options(cls):
         """
-        Make the _meta API pubkic https://docs.djangoproject.com/en/4.0/ref/models/meta/
+        Public _meta API accesor https://docs.djangoproject.com/en/4.0/ref/models/meta/
         """
         return cls._meta
 
@@ -221,7 +249,7 @@ class JobOfferComment(models.Model):
     @classmethod
     def get_options(cls):
         """
-        Make the _meta API pubkic https://docs.djangoproject.com/en/4.0/ref/models/meta/
+        Public _meta API accesor https://docs.djangoproject.com/en/4.0/ref/models/meta/
         """
         return cls._meta
 
@@ -320,15 +348,6 @@ class JobOfferHistory(CRUDEvent):
 
     class Meta:
         proxy = True
-
-
-class EventType(models.IntegerChoices):
-    """
-    Types of event visualization
-    """
-    LISTING_VIEW = 0
-    DETAIL_VIEW = 1
-    CONTACT_INFO_VIEW = 2
 
 
 class JobOfferVisualization(models.Model):

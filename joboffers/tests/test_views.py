@@ -1,7 +1,8 @@
-from datetime import datetime
-
 import factory
 import pytest
+
+from datetime import datetime
+
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
