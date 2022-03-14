@@ -53,7 +53,7 @@ def test_push_to_api_bad_credentials_None(mock_api, settings, caplog):
     settings.TWITTER_CONSUMER_KEY = None
 
     status = TwitterPublisher()._push_to_api('message')
-    assert status == None
+    assert status is None
 
 
 @patch(
