@@ -10,6 +10,7 @@ from django.views.generic import ListView, RedirectView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
+from community.views import FilterableList
 from pycompanies.models import Company, UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
@@ -287,12 +288,13 @@ class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
         return response
 
 
-class JobOfferListView(ListView):
+class JobOfferListView(ListView, FilterableList):
     model = JobOffer
     template_name = 'joboffers/joboffer_list.html'
     paginate_by = 20
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         search = self.request.GET.get('search')
 
         if search:
@@ -301,12 +303,12 @@ class JobOfferListView(ListView):
             search_filter = Q()
 
         if self.request.GET.get('active') == 'false':
-            joboffer_queryset = JobOffer.objects.filter(
+            joboffer_queryset = queryset.filter(
                 search_filter,
                 state__in=[OfferState.ACTIVE, OfferState.EXPIRED])
             ordered_offers = joboffer_queryset.order_by('-modified_at')
         else:
-            joboffer_queryset = JobOffer.objects.filter(search_filter, state=OfferState.ACTIVE)
+            joboffer_queryset = queryset.filter(search_filter, state=OfferState.ACTIVE)
             ordered_offers = joboffer_queryset.order_by('-company__rank', '-modified_at')
 
         return ordered_offers
