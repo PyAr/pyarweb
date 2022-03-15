@@ -169,7 +169,7 @@ class JobOffer(models.Model):
 
         return JobOfferVisualization.objects.get_or_create(
             month_and_year=month_year,
-            event_type=EventType.DETAIL_VIEW,
+            event_type=event_type,
             session=session.session_key,
             joboffer=self
         )

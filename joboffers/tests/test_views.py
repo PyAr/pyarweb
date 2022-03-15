@@ -9,7 +9,7 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
-from ..models import JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
+from ..models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
 from .fixtures import create_publisher_client, create_admin_user # noqa
@@ -223,25 +223,29 @@ def create_joboffers_list(user_company_profile):
             company=company,
             title=JOBOFFER_TITLE1,
             tags=[JOBOFFER_TAG_1],
-            created_at=datetime(2021, 12, 20)
+            created_at=datetime(2021, 12, 20),
+            state=OfferState.ACTIVE
         ),
         JobOfferFactory.create(
             company=company,
             title=JOBOFFER_TITLE2,
             tags=[JOBOFFER_TAG_1],
-            created_at=datetime(2021, 12, 21)
+            created_at=datetime(2021, 12, 21),
+            state=OfferState.ACTIVE
         ),
         JobOfferFactory.create(
             company=company,
             title=JOBOFFER_TITLE3,
             tags=[JOBOFFER_TAG_2],
-            created_at=datetime(2021, 12, 22)
+            created_at=datetime(2021, 12, 22),
+            state=OfferState.ACTIVE
         ),
         JobOfferFactory.create(
             company=company,
             title=JOBOFFER_TITLE3,
             tags=[JOBOFFER_TAG_3],
-            created_at=datetime(2021, 12, 22)
+            created_at=datetime(2021, 12, 22),
+            state=OfferState.ACTIVE
         )
     ]
 
@@ -715,6 +719,9 @@ def test_joboffer_list_view_render_with_joboffer_that_matches_the_description(pu
 
 @pytest.mark.django_db
 def test_joboffer_individual_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's detail page only gives one view
+    """
     target_url = reverse(VIEW_URL, kwargs={'slug': joboffers_list[0]})
 
     response1 = client.get(target_url)
@@ -723,4 +730,22 @@ def test_joboffer_individual_view_count(client, joboffers_list):
     assert response1.status_code == 200
     assert response2.status_code == 200
 
-    assert JobOfferVisualization.objects.all().count() == 1
+    assert JobOfferVisualization.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's list page only gives one view
+    """
+    target_url = reverse(LIST_URL)
+
+    response1 = client.get(target_url)
+    response2 = client.get(target_url)
+
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
+
+    assert views_counted == len(joboffers_list)

@@ -106,7 +106,7 @@ class JobOfferDetailView(DetailView):
         response = super().get(request, *args, **kwargs)
 
         joboffer = self.object
-        joboffer.track_view(request, event_type=EventType.DETAIL_VIEW)
+        joboffer.track_visualization(request.session, event_type=EventType.DETAIL_VIEW)
 
         return response
 
@@ -345,3 +345,13 @@ class JobOfferListView(ListView):
             context['search'] = self.request.GET.get('search')
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+
+        joboffers = self.object_list
+
+        for joboffer in joboffers:
+            joboffer.track_visualization(request.session, event_type=EventType.LISTING_VIEW)
+
+        return response
