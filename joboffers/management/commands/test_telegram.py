@@ -1,14 +1,10 @@
-from django.core.management.base import BaseCommand
+from joboffers.management.commands import TestPublishCommand
+from joboffers.publishers.telegram import TelegramPublisher
 
-from joboffers.telegram_notifier import send_notification_to_moderators
 
-
-class Command(BaseCommand):
-    help = 'Test sending a real notification to telegram.'
+class Command(TestPublishCommand):
+    help = 'Test sending a message to telegram public group.'
 
     def handle(self, *args, **options):
-        response = send_notification_to_moderators('trabajito-python')
-
-        assert response.status_code == 200
-
-        self.stdout.write(self.style.SUCCESS('Mensaje de prueba enviado'))
+        """Post a message to telegram."""
+        self._handle_publish(options, TelegramPublisher)
