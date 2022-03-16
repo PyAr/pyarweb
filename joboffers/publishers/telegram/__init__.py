@@ -6,6 +6,7 @@ from joboffers.telegram_api import send_message
 
 class TelegramPublisher(Publisher):
     """Telegram Publisher."""
+
     name = 'Telegram'
 
     def _push_to_api(self, message: str, title: str):

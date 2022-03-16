@@ -20,5 +20,9 @@ def normalize_tags(tags):
 
 def hash_secret(credential: str):
     """Hash a secret string (so it can be logged safely.)"""
-    hashed_string = hashlib.sha256(credential.encode('utf-8'))
-    return hashed_string.hexdigest()
+    if credential is not None:
+        digest = hashlib.sha256(credential.encode('utf-8')).hexdigest()
+    else:
+        digest = 'None'
+
+    return digest

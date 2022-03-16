@@ -2,8 +2,11 @@ from unittest.mock import patch
 
 import tweepy
 
-from ..publishers.twitter import (ERROR_LOG_MESSAGE_POST, TwitterPublisher,
-                                  _repr_credentials)
+from ..publishers.twitter import (
+    ERROR_LOG_MESSAGE_POST,
+    TwitterPublisher,
+    _repr_credentials,
+)
 
 DUMMY_MESSAGE = 'message'
 DUMMY_EXCEPTION_MESSAGE = 'Oops'
@@ -44,9 +47,29 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
 @patch(
     'joboffers.publishers.twitter.tweepy.API',
 )
+def test_push_to_api_bad_credentials_None(mock_api, settings, caplog):
+    """Test exception when the credentials are not set."""
+    mock_api.return_value = DummyAPIBad
+    settings.TWITTER_ACCESS_SECRET = None
+    settings.TWITTER_ACCESS_TOKEN = None
+    settings.TWITTER_ACCESS_SECRET = None
+    settings.TWITTER_CONSUMER_KEY = None
+
+    status = TwitterPublisher()._push_to_api('message', 'title')
+    assert status is None
+
+
+@patch(
+    'joboffers.publishers.twitter.tweepy.API',
+)
 def test_push_to_api_bad_credentials(mock_api, settings, caplog):
     """Test exception when the credentials are in the wrong format."""
     mock_api.return_value = DummyAPIBad
+    settings.TWITTER_ACCESS_SECRET = ''
+    settings.TWITTER_ACCESS_TOKEN = ''
+    settings.TWITTER_CONSUMER_SECRET = ''
+    settings.TWITTER_CONSUMER_KEY = ''
+
     status = TwitterPublisher()._push_to_api('message', 'title')
     expected_error_message = ERROR_LOG_MESSAGE_POST % (_repr_credentials(), '')
 
@@ -57,8 +80,13 @@ def test_push_to_api_bad_credentials(mock_api, settings, caplog):
 @patch(
     'joboffers.publishers.twitter.tweepy.API',
 )
-def test_push_to_api_ok(mock_api):
+def test_push_to_api_ok(mock_api, settings):
     mock_api.return_value = DummyAPIOK
+
+    settings.TWITTER_ACCESS_SECRET = ''
+    settings.TWITTER_ACCESS_TOKEN = ''
+    settings.TWITTER_CONSUMER_SECRET = ''
+    settings.TWITTER_CONSUMER_KEY = ''
 
     status = TwitterPublisher()._push_to_api('message', 'title')
 
