@@ -28,7 +28,7 @@ jobs:
       matrix:
         python-version: [3.9]
     env:
-      DJANGO: 1.8 
+      DJANGO: 3.0 
       SECRET_KEY: supersecret
       DB_PORT: 5432 
       POSTGRES_HOST: localhost
@@ -54,4 +54,4 @@ jobs:
           flake8
       - name: Run tests
         run: |
-          python3 manage.py test -v2 --noinput
+          pytest -v

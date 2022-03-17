@@ -718,34 +718,26 @@ def test_joboffer_list_view_render_with_joboffer_that_matches_the_description(pu
 
 
 @pytest.mark.django_db
-def test_joboffer_individual_view_count(client, joboffers_list):
+def test_joboffer_list_view_render_the_joboffer_that_contains_the_given_tag(client):
     """
-    Test that accessing the joboffer's detail page only gives one view
+    Test that the joboffer list view renders the joboffer that contains the given tag, with
+    a unlogged user.
     """
-    target_url = reverse(VIEW_URL, kwargs={'slug': joboffers_list[0]})
+    first_joboffer = JobOfferFactory.create(
+        state=OfferState.ACTIVE,
+        description='First Joboffer',
+        tags=['django']
+    )
 
-    response1 = client.get(target_url)
-    response2 = client.get(target_url)
+    JobOfferFactory.create(
+        state=OfferState.ACTIVE,
+        description='Second Joboffer',
+        tags=['javascript']
+    )
 
-    assert response1.status_code == 200
-    assert response2.status_code == 200
-
-    assert JobOfferVisualization.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
-
-
-@pytest.mark.django_db
-def test_joboffer_list_view_count(client, joboffers_list):
-    """
-    Test that accessing the joboffer's list page only gives one view
-    """
     target_url = reverse(LIST_URL)
 
-    response1 = client.get(target_url)
-    response2 = client.get(target_url)
+    response = client.get(target_url, {'tag_django': '1'})
 
-    assert response1.status_code == 200
-    assert response2.status_code == 200
-
-    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
-
-    assert views_counted == len(joboffers_list)
+    assert len(response.context_data['object_list']) == 1
+    assert response.context_data['object_list'][0] == first_joboffer
