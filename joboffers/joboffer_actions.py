@@ -127,7 +127,7 @@ ACTIONS = {
 
 def _get_roles(user, company=None):
     """
-    Retrieves a list of the roles marching the given user and company.
+    Retrieves a list of the roles matching the given user and company.
     If company is None that means that the company
     """
     roles = set()
@@ -139,11 +139,12 @@ def _get_roles(user, company=None):
         roles.add(ROLE_ADMIN)
 
     if company:
+        # Checks that the user is publisher in the given company
         filtering = Q(company=company, user=user)
-        # ^ Checks that the user is publisher in the given company
+
     else:
+        # Checks that the user is publisher on any company
         filtering = Q(user=user)
-        # ^ Checks that the user is publisher on any company
 
     company_profile_qs = UserCompanyProfile.objects.filter(filtering)
 
