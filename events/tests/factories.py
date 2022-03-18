@@ -1,6 +1,6 @@
 from django.utils.timezone import datetime, timedelta, utc
 from django.contrib.auth import get_user_model
-from factory import SubFactory, Faker, PostGenerationMethodCall
+from factory import SubFactory, Faker, PostGenerationMethodCall, Sequence
 from factory.django import DjangoModelFactory
 
 from events.models import Event, EventParticipation
@@ -14,7 +14,7 @@ DEFAULT_USER_PASSWORD = 'secret'
 
 # This factory could be in any app.
 class UserFactory(DjangoModelFactory):
-    username = Faker('user_name')
+    username = Sequence(lambda n: f'user{n}')
     password = PostGenerationMethodCall('set_password', DEFAULT_USER_PASSWORD)
 
     class Meta:

@@ -763,13 +763,13 @@ def test_joboffer_list_view_count(client, joboffers_list):
 
 
 @pytest.mark.django_db
-def test_joboffer_list_first_page_view_count(client, joboffers_list):
+def test_joboffer_list_first_page_view_count(client):
     """
     Test that accessing the joboffer's list page only counts the first 20 joboffers
     """
     target_url = reverse(LIST_URL)
 
-    JobOfferFactory.create_batch(size=100, state=OfferState.ACTIVE)
+    JobOfferFactory.create_batch(size=30, state=OfferState.ACTIVE)
 
     response1 = client.get(target_url)
     response2 = client.get(target_url)
