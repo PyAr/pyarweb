@@ -2,7 +2,8 @@ from django.urls import re_path
 from .views import (
   JobOfferAdminView, JobOfferApproveView, JobOfferCreateView, JobOfferDeactivateView,
   JobOfferDetailView, JobOfferHistoryView, JobOfferListView, JobOfferUpdateView,
-  JobOfferRejectView, JobOfferReactivateView, JobOfferRequestModerationView
+  JobOfferRejectView, JobOfferReactivateView, JobOfferRequestModerationView,
+  TrackContactInfoView
 )
 
 
@@ -36,5 +37,9 @@ urlpatterns = [
     re_path(
       r'^(?P<slug>[\w-]+)/editar$', JobOfferUpdateView.as_view(),
       name='edit'
-    )
+    ),
+    re_path(
+      r'^(?P<slug>[\w-]+)/track-contact-info-view$', TrackContactInfoView.as_view(),
+      name='track-contact-info-view'
+    ),
 ]

@@ -25,6 +25,7 @@ VIEW_URL = 'joboffers:view'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
 HISTORY_URL = 'joboffers:history'
+TRACK_CONTACT_INFO_URL = 'joboffers:track-contact-info-view'
 
 JOBOFFER_TITLE1 = 'title1'
 JOBOFFER_TITLE2 = 'title2'
@@ -794,3 +795,21 @@ def test_joboffer_individual_view_count(client, joboffers_list):
     assert response2.status_code == 200
 
     assert JobOfferVisualization.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
+
+
+@pytest.mark.django_db
+def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's detail page only gives one view
+    """
+    target_url = reverse(TRACK_CONTACT_INFO_URL, kwargs={'slug': joboffers_list[0]})
+
+    response1 = client.post(target_url)
+    response2 = client.post(target_url)
+    assert response1.status_code == 204
+    assert response2.status_code == 204
+
+    views_counted = JobOfferVisualization.objects.filter(
+        event_type=EventType.CONTACT_INFO_VIEW).count()
+
+    assert views_counted == 1

@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, View, FormView
@@ -359,3 +359,14 @@ class JobOfferListView(ListView, FilterableList):
             joboffer.track_visualization(request.session, event_type=EventType.LISTING_VIEW)
 
         return response
+
+
+class TrackContactInfoView(SingleObjectMixin, View):
+    model = JobOffer
+
+    def post(self, request, **kwargs):
+        joboffer = self.get_object()
+
+        joboffer.track_visualization(request.session, event_type=EventType.CONTACT_INFO_VIEW)
+
+        return HttpResponse(status=204)
