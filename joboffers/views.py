@@ -346,12 +346,14 @@ class JobOfferListView(ListView, FilterableList):
         if self.request.GET.get('search'):
             context['search'] = self.request.GET.get('search')
 
+        self.context = context
+
         return context
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
 
-        joboffers = self.object_list
+        joboffers = self.context['page_obj'].object_list
 
         for joboffer in joboffers:
             joboffer.track_visualization(request.session, event_type=EventType.LISTING_VIEW)

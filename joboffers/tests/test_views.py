@@ -741,3 +741,56 @@ def test_joboffer_list_view_render_the_joboffer_that_contains_the_given_tag(clie
 
     assert len(response.context_data['object_list']) == 1
     assert response.context_data['object_list'][0] == first_joboffer
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's list page only gives one view
+    """
+    target_url = reverse(LIST_URL)
+
+    response1 = client.get(target_url)
+    response2 = client.get(target_url)
+
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
+
+    assert views_counted == len(joboffers_list)
+
+
+@pytest.mark.django_db
+def test_joboffer_list_first_page_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's list page only counts the first 20 joboffers
+    """
+    target_url = reverse(LIST_URL)
+
+    JobOfferFactory.create_batch(size=100, state=OfferState.ACTIVE)
+
+    response1 = client.get(target_url)
+    response2 = client.get(target_url)
+
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
+
+    assert views_counted == 20
+
+
+@pytest.mark.django_db
+def test_joboffer_individual_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's detail page only gives one view
+    """
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffers_list[0]})
+
+    response1 = client.get(target_url)
+    response2 = client.get(target_url)
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    assert JobOfferVisualization.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
