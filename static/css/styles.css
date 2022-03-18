@@ -631,10 +631,16 @@ div.sponsored_jobs {
   margin: 0;
   letter-spacing: 1px;
   font-weight: 700;
-  line-height: 1.4em;
+}
+
+.contact-info span {
+  letter-spacing: 4px;
+  font-size: 1.4em;
+  color: #666;
+  vertical-align: middle;
 }
 
 .contact-info li {
   margin-bottom: 10px;
-  text-transform: uppercase;
+  line-height: 20px;
 }
