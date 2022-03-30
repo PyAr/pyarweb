@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
@@ -15,10 +15,14 @@ from pycompanies.models import UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE,
-    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
+    CODE_ANALYTICS, CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT,
+    CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import EventType, JobOffer, JobOfferHistory, OfferState
+from .models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
+
+from django.shortcuts import render
+from plotly.offline import plot
+import plotly.graph_objects as go
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -370,3 +374,61 @@ class TrackContactInfoView(SingleObjectMixin, View):
         joboffer.track_visualization(request.session, event_type=EventType.CONTACT_INFO_VIEW)
 
         return HttpResponse(status=204)
+
+
+class JobOfferAnalytics(JobOfferObjectMixin, View):
+    action_code = CODE_ANALYTICS
+    model = JobOffer
+
+    def get(self, request, **kwargs):
+       """
+       View demonstrating how to display a graph object
+       on a web page with Plotly.
+       """
+
+       joboffer = self.get_object()
+
+       vis1 = JobOfferVisualization.objects \
+                                   .filter(event_type=EventType.LISTING_VIEW, joboffer=joboffer) \
+                                   .values('event_type', 'created_at__date') \
+                                   .annotate(Count('created_at__date'))
+
+       vis2 = JobOfferVisualization.objects \
+                                   .filter(event_type=EventType.DETAIL_VIEW, joboffer=joboffer) \
+                                   .values('event_type', 'created_at__date') \
+                                   .annotate(Count('created_at__date'))
+
+       vis3 = JobOfferVisualization.objects \
+                                   .filter(event_type=EventType.CONTACT_INFO_VIEW , joboffer=joboffer) \
+                                   .values('event_type', 'created_at__date') \
+                                   .annotate(Count('created_at__date'))
+
+       dates1 = vis1.values_list('created_at__date', flat=True)
+       views1 = vis1.values_list('created_at__date__count', flat=True)
+
+       dates2 = vis2.values_list('created_at__date', flat=True)
+       views2 = vis2.values_list('created_at__date__count', flat=True)
+
+       dates3 = vis3.values_list('created_at__date', flat=True)
+       views3 = vis3.values_list('created_at__date__count', flat=True)
+
+       fig = go.Figure()
+       # Adding linear plot of y1 vs. x.
+       fig.add_trace(go.Line(x=list(dates1), y=list(views1), name='Vis. en página de listado'))
+       fig.add_trace(go.Line(x=list(dates2), y=list(views2), name='Vis. detalle de la oferta'))
+       fig.add_trace(go.Line(x=list(dates3), y=list(views3), name='Vis. datos de contacto'))
+
+       fig.update_layout(barmode="stack", bargap=0.1)
+
+       # Setting layout of the figure.
+       layout = {
+           'title': 'Visualizaciones de la Oferta',
+           'xaxis_title': 'X',
+           'yaxis_title': 'Y'
+       }
+
+       # Getting HTML needed to render the plot.
+       plot_div = plot(fig, output_type='div')
+
+       return render(request, 'joboffers/joboffer_analytics.html',
+                     context={'plot_div': fig})

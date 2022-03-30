@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load email_obfuscator %}
+{% load devtags %}
+
+{% block title %}
+{{ object.title }}
+{% endblock %}
+
+{% block content %}
+<main id="main" class="joboffers container" role="main">
+  <div class="col-lg-12">
+    <div class="page-header">
+      <h2>{{ object.title }}</h2>
+    </div>
+
+    <div class="row">
+      {% autoescape off %}
+      {{ plot_div.to_html }}
+      {% endautoescape %}
+    </div>
+  </div>
+</main>
+{% endblock %}
