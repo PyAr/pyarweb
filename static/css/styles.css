@@ -644,3 +644,15 @@ div.sponsored_jobs {
   margin-bottom: 10px;
   line-height: 20px;
 }
+
+.btn-dark-green {
+  background-color: #558b2f;
+  border-color: #33691e;
+  color: #fff;
+}
+
+.btn-dark-green:hover, .btn-dark-green:focus, .btn-dark-green:active, .btn-dark-green.active, .open>.dropdown-toggle.btn-dark-green {
+  color: #fff;
+  background-color: #33681e;
+  border-color: #558b2f;
+}

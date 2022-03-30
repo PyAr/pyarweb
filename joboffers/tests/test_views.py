@@ -9,23 +9,13 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
+from ..constants import (ADD_URL, ADMIN_URL, APPROVE_URL, DEACTIVATE_URL, HISTORY_URL, LIST_URL,
+                         REJECT_URL, REQUEST_MODERATION_URL, TRACK_CONTACT_INFO_URL, VIEW_URL)
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
 from .fixtures import create_publisher_client, create_admin_user # noqa
 
-
-ADD_URL = 'joboffers:add'
-ADMIN_URL = 'joboffers:admin'
-VIEW_URL = 'joboffers:view'
-LIST_URL = 'joboffers:list'
-APPROVE_URL = 'joboffers:approve'
-DEACTIVATE_URL = 'joboffers:deactivate'
-VIEW_URL = 'joboffers:view'
-REJECT_URL = 'joboffers:reject'
-REQUEST_MODERATION_URL = 'joboffers:request_moderation'
-HISTORY_URL = 'joboffers:history'
-TRACK_CONTACT_INFO_URL = 'joboffers:track-contact-info-view'
 
 JOBOFFER_TITLE1 = 'title1'
 JOBOFFER_TITLE2 = 'title2'
