@@ -7,9 +7,11 @@ from datetime import date
 from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils.timezone import now
 from django.utils.translation import gettext as _
 
 from easyaudit.models import CRUDEvent
@@ -76,7 +78,9 @@ class OfferState(models.TextChoices):
 class JobOffer(models.Model):
     """A PyAr Job Offer."""
 
-    title = models.CharField(max_length=255, verbose_name=_('Título'))
+    title = models.CharField(
+      max_length=255, verbose_name=_('Título'), validators=[MinLengthValidator(20)], unique=True
+    )
     company = models.ForeignKey(
         'pycompanies.Company',
         verbose_name=_('Empresa'),
@@ -354,10 +358,13 @@ class JobOfferVisualization(models.Model):
     """
     Model to track visualization of joboffers
     """
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=now)
     month_and_year = models.PositiveIntegerField()
     event_type = models.PositiveSmallIntegerField(
         choices=EventType.choices, verbose_name=_('Tipo de Evento')
     )
     session = models.CharField(max_length=40, verbose_name=_('Identificador de Sesión'))
     joboffer = models.ForeignKey(JobOffer, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['created_at']

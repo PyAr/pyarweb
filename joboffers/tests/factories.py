@@ -10,6 +10,7 @@ from pycompanies.tests.factories import CompanyFactory
 class JobOfferFactory(DjangoModelFactory):
     class Meta:
         model = JobOffer
+        django_get_or_create = ('title', )
 
     title = Faker('job')
     company = SubFactory(CompanyFactory)
