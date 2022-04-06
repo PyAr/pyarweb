@@ -381,54 +381,57 @@ class JobOfferAnalytics(JobOfferObjectMixin, View):
     model = JobOffer
 
     def get(self, request, **kwargs):
-       """
-       View demonstrating how to display a graph object
-       on a web page with Plotly.
-       """
+        """
+        View demonstrating how to display a graph object
+        on a web page with Plotly.
+        """
 
-       joboffer = self.get_object()
+        joboffer = self.get_object()
 
-       vis1 = JobOfferVisualization.objects \
-                                   .filter(event_type=EventType.LISTING_VIEW, joboffer=joboffer) \
-                                   .values('event_type', 'created_at__date') \
-                                   .annotate(Count('created_at__date'))
+        event_type_with_titles = (
+          (EventType.LISTING_VIEW, _('Visualizaciones en la página de listado')),
+          (EventType.DETAIL_VIEW, _('Visualizaciones detalle de la oferta')),
+          (EventType.CONTACT_INFO_VIEW, _('Visualizaciones de datos de contacto'))
+        )
 
-       vis2 = JobOfferVisualization.objects \
-                                   .filter(event_type=EventType.DETAIL_VIEW, joboffer=joboffer) \
-                                   .values('event_type', 'created_at__date') \
-                                   .annotate(Count('created_at__date'))
+        plots = []
+        totals = []
 
-       vis3 = JobOfferVisualization.objects \
-                                   .filter(event_type=EventType.CONTACT_INFO_VIEW , joboffer=joboffer) \
-                                   .values('event_type', 'created_at__date') \
-                                   .annotate(Count('created_at__date'))
+        for event_type, title in event_type_with_titles:
+            visualizations_qs = JobOfferVisualization \
+              .objects \
+              .filter(event_type=event_type.value, joboffer=joboffer) \
+              .order_by('created_at')
 
-       dates1 = vis1.values_list('created_at__date', flat=True)
-       views1 = vis1.values_list('created_at__date__count', flat=True)
+            if visualizations_qs.exists():
+                visualizations_qs = visualizations_qs\
+                    .values('created_at__date').annotate(Count('id'))
+                dates = visualizations_qs.values_list('created_at__date', flat=True)
+                views_amount = visualizations_qs.values_list('id__count', flat=True)
 
-       dates2 = vis2.values_list('created_at__date', flat=True)
-       views2 = vis2.values_list('created_at__date__count', flat=True)
+                totals.append([title, sum(views_amount)])
 
-       dates3 = vis3.values_list('created_at__date', flat=True)
-       views3 = vis3.values_list('created_at__date__count', flat=True)
+                fig = go.Figure(data=[go.Line(
+                    x=list(dates), y=list(views_amount)
+                )])
 
-       fig = go.Figure()
-       # Adding linear plot of y1 vs. x.
-       fig.add_trace(go.Line(x=list(dates1), y=list(views1), name='Vis. en página de listado'))
-       fig.add_trace(go.Line(x=list(dates2), y=list(views2), name='Vis. detalle de la oferta'))
-       fig.add_trace(go.Line(x=list(dates3), y=list(views3), name='Vis. datos de contacto'))
+                fig.update_layout(
+                  {"margin": {"l": 50, "r": 50, "b": 50, "t": 50, "pad": 4}}
+                )
 
-       fig.update_layout(barmode="stack", bargap=0.1)
+                fig.update_xaxes(
+                  dtick=1 * 1000 * 60 * 60 * 24,
+                  tickformat="%d-%m-%Y",
+                  tickangle=60
+                )
+                fig.update_yaxes(title=_("Visitas"), automargin=True)
 
-       # Setting layout of the figure.
-       layout = {
-           'title': 'Visualizaciones de la Oferta',
-           'xaxis_title': 'X',
-           'yaxis_title': 'Y'
-       }
+                plots.append([title, plot(fig, output_type='div')])
 
-       # Getting HTML needed to render the plot.
-       plot_div = plot(fig, output_type='div')
+            else:
+                plots.append([title, None])  # No visits
 
-       return render(request, 'joboffers/joboffer_analytics.html',
-                     context={'plot_div': fig})
+        return render(
+            request, 'joboffers/joboffer_analytics.html',
+            context={'plots': plots, 'totals': totals, 'object': joboffer}
+        )

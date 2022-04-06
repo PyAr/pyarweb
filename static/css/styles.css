@@ -541,6 +541,7 @@ div.sponsored_jobs {
 
 .joboffers .btn {
   text-transform: uppercase;
+  font-weight: bold;
 }
 
 .field .field-name {

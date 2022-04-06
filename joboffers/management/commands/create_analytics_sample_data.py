@@ -21,7 +21,7 @@ class Command(BaseCommand):
           state=OfferState.ACTIVE, title="Oferta de Prueba - Analítica"
         )
 
-        today = now()
+        today = now().replace(hour=0, minute=0, second=0, microsecond=0)
 
         event_types = [event_type.value for event_type in EventType]
 
