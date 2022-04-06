@@ -33,19 +33,24 @@ ACTION_BUTTONS = {
         'target_url': 'joboffers:reactivate',
         'text': _('Volver a Activar'),
         'css_classes': ['btn-default'],
-        'icon_class': 'glyphicon-arrow-up'
+        'icon_class': 'glyphicon-arrow-up',
+        'title': _('No es necesaria la moderación, se activa directamente.')
     },
     CODE_DEACTIVATE: {
         'target_url': 'joboffers:deactivate',
         'text': _('Desactivar'),
         'css_classes': ['btn-warning'],
-        'icon_class': 'glyphicon-minus-sign'
+        'icon_class': 'glyphicon-minus-sign',
+        'title': _(
+          'Si la oferta está activa es necesario desactivar la oferta para poder editarla'
+        )
     },
     CODE_REQUEST_MODERATION: {
         'target_url': 'joboffers:request_moderation',
         'text': _('Confirmar'),
         'css_classes': ['btn-success'],
-        'icon_class': 'glyphicon-eye-open'
+        'icon_class': 'glyphicon-eye-open',
+        'title': _('Al confirmar la oferta se enviará a moderación para que sea revisada.')
     },
     CODE_APPROVE: {
         'target_url': 'joboffers:approve',

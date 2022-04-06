@@ -28,9 +28,12 @@ HISTORY_URL = 'joboffers:history'
 JOBOFFER_TITLE1 = 'title1'
 JOBOFFER_TITLE2 = 'title2'
 JOBOFFER_TITLE3 = 'title3'
+JOBOFFER_TITLE4 = 'title4'
 
 JOBOFFER_TAG_1 = 'tag1'
 JOBOFFER_TAG_2 = 'tag2'
+JOBOFFER_TAG_3 = 'tag3'
+JOBOFFER_TAG_4 = 'tag4'
 
 
 def get_plain_messages(request):
@@ -60,6 +63,25 @@ def test_joboffer_create_form_render_should_redirect_for_an_user_without_company
 
     client = logged_client
     target_url = reverse(ADD_URL)
+
+    response = client.get(target_url)
+    message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
+               "crear una oferta de trabajo.")
+
+    assert message == get_plain_messages(response)[0]
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_joboffer_admin_should_redirect_for_an_user_without_company(
+        logged_client
+):
+    """
+    Test that the get request to the joboffer's admin view redirects for an user without company
+    """
+
+    client = logged_client
+    target_url = reverse(ADMIN_URL)
 
     response = client.get(target_url)
     message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
@@ -190,6 +212,11 @@ def test_joboffer_deactivate_ok(publisher_client, user_company_profile):
 def create_joboffers_list(user_company_profile):
     company = user_company_profile.company
 
+    JobOfferFactory.create(  # Job offer from a different company
+        title=JOBOFFER_TITLE4,
+        tags=[JOBOFFER_TAG_4]
+    )
+
     return [
         JobOfferFactory.create(
             company=company,
@@ -208,16 +235,22 @@ def create_joboffers_list(user_company_profile):
             title=JOBOFFER_TITLE3,
             tags=[JOBOFFER_TAG_2],
             created_at=datetime(2021, 12, 22)
+        ),
+        JobOfferFactory.create(
+            company=company,
+            title=JOBOFFER_TITLE3,
+            tags=[JOBOFFER_TAG_3],
+            created_at=datetime(2021, 12, 22)
         )
     ]
 
 
 @pytest.mark.django_db
-def test_joboffer_admin_works_with_random_query_search(logged_client, joboffers_list):
+def test_joboffer_admin_works_with_random_query_search(publisher_client, joboffers_list):
     """
     Test that an empty queryset is returned for random search
     """
-    client = logged_client
+    client = publisher_client
 
     target_url = reverse('joboffers:admin')
 
@@ -230,11 +263,11 @@ def test_joboffer_admin_works_with_random_query_search(logged_client, joboffers_
 
 
 @pytest.mark.django_db
-def test_joboffer_admin_works_with_empty_query_search(logged_client, joboffers_list):
+def test_joboffer_admin_works_with_empty_query_search(publisher_client, joboffers_list):
     """
     Test that an empty queryset returns the joboffers reversed
     """
-    client = logged_client
+    client = publisher_client
 
     target_url = reverse('joboffers:admin')
     response = client.get(target_url, {'q': ''})
@@ -248,11 +281,11 @@ def test_joboffer_admin_works_with_empty_query_search(logged_client, joboffers_l
 
 
 @pytest.mark.django_db
-def test_joboffer_admin_works_without_query(logged_client, joboffers_list):
+def test_joboffer_admin_works_without_query(publisher_client, joboffers_list):
     """
     Test that an empty queryset returns the joboffers reversed
     """
-    client = logged_client
+    client = publisher_client
 
     target_url = reverse('joboffers:admin')
 
@@ -392,11 +425,11 @@ def test_joboffer_create_view_as_publisher(publisher_client):
 
 
 @pytest.mark.django_db
-def test_joboffer_admin_filters_by_company_name(logged_client, joboffers_list):
+def test_joboffer_admin_filters_by_joboffer_title(publisher_client, joboffers_list):
     """
     Test that searching by title2 retrieves only title2 joboffer
     """
-    client = logged_client
+    client = publisher_client
 
     target_url = reverse('joboffers:admin')
 
@@ -409,11 +442,11 @@ def test_joboffer_admin_filters_by_company_name(logged_client, joboffers_list):
 
 
 @pytest.mark.django_db
-def test_joboffer_admin_filters_by_exactly_by_tagname(logged_client, joboffers_list):
+def test_joboffer_admin_filters_by_exactly_by_tagname(publisher_client, joboffers_list):
     """
     Test that searching by tag retrieves only the offers that match exactly with the tag name
     """
-    client = logged_client
+    client = publisher_client
 
     target_url = reverse('joboffers:admin')
 
@@ -531,6 +564,7 @@ def test_joboffer_detail_view_render_state_with_rejected_label(publisher_client)
     """
     client = publisher_client
     joboffer = JobOfferFactory.create(state=OfferState.REJECTED)
+    JobOfferCommentFactory.create(joboffer=joboffer)
 
     target_url = reverse(VIEW_URL, kwargs={'slug': joboffer.slug})
 
