@@ -6,16 +6,16 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import ListView, RedirectView, View, FormView
+from django.views.generic import ListView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 
 from community.views import FilterableList
-from pycompanies.models import Company, UserCompanyProfile
+from pycompanies.models import UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_DEACTIVATE,
+    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
 from .models import JobOffer, JobOfferHistory, OfferState
@@ -34,7 +34,7 @@ class JobOfferObjectMixin(SingleObjectMixin):
         if not self.action_code:
             raise ValueError("Missing 'action_code' for the current class")
 
-        valid_actions = get_valid_actions(self.request.user, offer.company, offer.state)
+        valid_actions = get_valid_actions(self.request.user, offer)
 
         if self.action_code not in valid_actions:
             raise PermissionDenied()
@@ -64,11 +64,7 @@ class JobOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        user_company = UserCompanyProfile.objects.for_user(request.user)
-
-        company = user_company.company if user_company else None
-
-        valid_actions = get_valid_actions(self.request.user, company, OfferState.NEW)
+        valid_actions = get_valid_actions(self.request.user, None)
 
         if self.action_code not in valid_actions:
             raise PermissionDenied()
@@ -96,7 +92,7 @@ class JobOfferDetailView(DetailView):
 
     def get_action_buttons(self):
         joboffer = self.object
-        valid_actions = get_valid_actions(self.request.user, joboffer.company, joboffer.state)
+        valid_actions = get_valid_actions(self.request.user, joboffer)
 
         return [ACTION_BUTTONS[action_name] for action_name in valid_actions]
 
@@ -136,7 +132,6 @@ class JobOfferAdminView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        # TODO: Implement queryset filtering for the company
         query = self.request.GET.get('q')
 
         if query:
@@ -150,15 +145,28 @@ class JobOfferAdminView(LoginRequiredMixin, ListView):
             qs
             .order_by('-created_at')
             .filter(
-                filtering_q
+                Q(company=self.company) & filtering_q
             )
         )
 
+    def get(self, request, *args, **kwargs):
+        user_company = UserCompanyProfile.objects.for_user(request.user)
+
+        if not user_company:
+            message = ("No estas relacionade a ninguna empresa. Asociate a una para poder "
+                       "crear una oferta de trabajo.")
+            messages.warning(request, message)
+            target_url = reverse('companies:association_list')
+            return HttpResponseRedirect(target_url)
+
+        self.company = user_company.company
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, *args, **kwargs):
-        # TODO: Implement fetching the company
-        # TODO: Implement redirect when no company associated
         ctx = super().get_context_data()
-        ctx['company'] = Company.objects.first()
+        ctx['company'] = self.company
+        ctx['q'] = self.request.GET.get('q')
+
         return ctx
 
 
@@ -232,11 +240,18 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
 
     def update_object(self, offer):
         offer.state = OfferState.ACTIVE
+        offer.modified_by = self.request.user
         offer.save()
 
 
-class JobOfferReactivateView(LoginRequiredMixin, RedirectView):
-    pattern_name = 'joboffers:view'
+class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
+    action_code = CODE_REACTIVATE
+    redirect_to_pattern = 'joboffers:view'
+    success_message = _('Oferta reactivada.')
+
+    def update_object(self, offer):
+        offer.state = OfferState.ACTIVE
+        offer.save()
 
 
 class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
