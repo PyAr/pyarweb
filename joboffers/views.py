@@ -1,3 +1,5 @@
+import csv
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -19,6 +21,7 @@ from .joboffer_actions import (
     CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
 from .models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
+from .utils import get_visualization_data
 
 from django.shortcuts import render
 from plotly.offline import plot
@@ -381,11 +384,6 @@ class JobOfferAnalytics(JobOfferObjectMixin, View):
     model = JobOffer
 
     def get(self, request, **kwargs):
-        """
-        View demonstrating how to display a graph object
-        on a web page with Plotly.
-        """
-
         joboffer = self.get_object()
 
         event_type_with_titles = (
@@ -435,3 +433,23 @@ class JobOfferAnalytics(JobOfferObjectMixin, View):
             request, 'joboffers/joboffer_analytics.html',
             context={'plots': plots, 'totals': totals, 'object': joboffer}
         )
+
+
+class DownloadAnalyticsAsCsv(SingleObjectMixin, View):
+    model = JobOffer
+
+    def get(self, request, **kwargs):
+        joboffer = self.get_object()
+
+        data = get_visualization_data(joboffer)
+
+        response = HttpResponse(content_type='text/csv')
+        writer = csv.writer(response)
+
+        writer.writerow([
+          _('Fecha/Hora'), _('ID. Oferta'), _('Titulo de la Oferta'), _('Código de Evento'),
+          _('Evento')
+        ])
+
+        writer.writerows(data)
+        return response

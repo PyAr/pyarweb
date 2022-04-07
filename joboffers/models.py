@@ -24,9 +24,9 @@ class EventType(models.IntegerChoices):
     """
     Types of event visualization
     """
-    LISTING_VIEW = 0
-    DETAIL_VIEW = 1
-    CONTACT_INFO_VIEW = 2
+    LISTING_VIEW = (0, _('Visualización en Listado'))
+    DETAIL_VIEW = (1, _('Visualización de la oferta completa'))
+    CONTACT_INFO_VIEW = (2, _('Apertura de la información de contacto'))
 
 
 class Experience(models.TextChoices):

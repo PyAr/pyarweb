@@ -236,7 +236,9 @@ def test_get_valid_actions_admin_that_approved_an_offer():
     user = UserFactory.create(is_superuser=True)
     joboffer = JobOfferFactory.create(state=OfferState.ACTIVE, modified_by=user)
 
-    expected_actions = {analytics.code, approve.code, reject.code, deactivate.code, get_history.code}
+    expected_actions = {
+      analytics.code, approve.code, reject.code, deactivate.code, get_history.code
+    }
 
     actions = get_valid_actions(
         user, joboffer, {ROLE_ADMIN}

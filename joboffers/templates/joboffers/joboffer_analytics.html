@@ -17,12 +17,11 @@
     <div class="row">
       <div class="col-xs-12">
         <h2>{% trans 'Resumen de Visualizaciones' %}
-          <button class="btn btn-primary pull-right"
+          <a href="{% url 'joboffers:download-analytics-csv' object.slug %}" class="btn btn-primary pull-right"
             title="{% trans 'Descargar una planilla con el detalle de todas las visitas' %}">
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
             {% trans 'Descargar como archivo .csv' %}
-          </button>
-
+          </a>
         </h2>
 
           <table class="table table-bordered" style="max-width: 400px; margin: auto;">
