@@ -17,16 +17,6 @@ from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferVisualizationFactory
 from .fixtures import create_publisher_client, create_admin_user # noqa
 
-ADD_URL = 'joboffers:add'
-ADMIN_URL = 'joboffers:admin'
-VIEW_URL = 'joboffers:view'
-LIST_URL = 'joboffers:list'
-APPROVE_URL = 'joboffers:approve'
-DEACTIVATE_URL = 'joboffers:deactivate'
-VIEW_URL = 'joboffers:view'
-REJECT_URL = 'joboffers:reject'
-REQUEST_MODERATION_URL = 'joboffers:request_moderation'
-HISTORY_URL = 'joboffers:history'
 
 JOBOFFER_TITLE1 = 'Job Offer Sample Title 1'
 JOBOFFER_TITLE2 = 'Job Offer Sample Title 2'
