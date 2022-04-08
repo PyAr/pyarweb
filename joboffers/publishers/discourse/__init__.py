@@ -16,6 +16,7 @@ MIN_LENGTH_POST_TITLE = 20
 
 class DiscoursePublisher(Publisher):
     """Discourse Publisher."""
+
     name = 'Discourse'
 
     def _push_to_api(self, message: str, title: str):
@@ -23,7 +24,6 @@ class DiscoursePublisher(Publisher):
         headers = {
             'Api-Key': settings.DISCOURSE_API_KEY,
             'Api-Username': settings.DISCOURSE_USERNAME,
-
         }
 
         current_date = datetime.datetime.today().strftime('%d/%m/%Y')
@@ -39,11 +39,11 @@ class DiscoursePublisher(Publisher):
         payload = {
             'title': post_title,
             'raw': message,
-            'category': settings.DISCOURSE_CATEGORY
+            'category': settings.DISCOURSE_CATEGORY,
         }
 
         try:
-            result = requests.post(DISCOURSE_POST_URL, data=payload, headers=headers)
+            result = requests.post(DISCOURSE_POST_URL, json=payload, headers=headers)
         except Exception as err:
             status = None
             result_info = err
@@ -52,5 +52,5 @@ class DiscoursePublisher(Publisher):
             result_info = result.text
 
         if status != requests.codes.ok:
-            logging.error(ERROR_LOG_MESSAGE, settings.DISCOURSE_HOST, payload, result_info)
+            logging.error(ERROR_LOG_MESSAGE, DISCOURSE_POST_URL, payload, result_info)
         return status
