@@ -12,7 +12,7 @@ class JobOfferFactory(DjangoModelFactory):
         model = JobOffer
         django_get_or_create = ('title', )
 
-    title = Faker('job')
+    title = fuzzy.FuzzyText(length=20)
     company = SubFactory(CompanyFactory)
     location = Faker('address')
     contact_mail = Faker('email')

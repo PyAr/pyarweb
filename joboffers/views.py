@@ -383,9 +383,7 @@ class JobOfferAnalytics(JobOfferObjectMixin, View):
     action_code = CODE_ANALYTICS
     model = JobOffer
 
-    def get(self, request, **kwargs):
-        joboffer = self.get_object()
-
+    def get_context_data(self, joboffer):
         event_type_with_titles = (
           (EventType.LISTING_VIEW, _('Visualizaciones en la página de listado')),
           (EventType.DETAIL_VIEW, _('Visualizaciones detalle de la oferta')),
@@ -429,9 +427,16 @@ class JobOfferAnalytics(JobOfferObjectMixin, View):
             else:
                 plots.append([title, None])  # No visits
 
+        return {'plots': plots, 'totals': totals, 'object': joboffer}
+
+    def get(self, request, **kwargs):
+        joboffer = self.get_object()
+
+        context = self.get_context_data(joboffer)
+
         return render(
             request, 'joboffers/joboffer_analytics.html',
-            context={'plots': plots, 'totals': totals, 'object': joboffer}
+            context=context
         )
 
 
