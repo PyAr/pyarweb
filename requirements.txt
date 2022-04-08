@@ -1,3 +1,4 @@
+bleach==4.1.0
 Django==3.2.12
 django-allauth==0.45.0
 django-autoslug==1.9.8
@@ -18,7 +19,7 @@ django-tagging==0.5.0
 django-taggit==1.5.1
 django-taggit-autosuggest==0.3.8
 lxml==4.6.5
-plotly==5.6.0
+plotly==5.7.0
 psycopg2-binary==2.9.1
 tweepy==4.5.0
 
