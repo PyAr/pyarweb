@@ -440,8 +440,9 @@ class JobOfferAnalytics(JobOfferObjectMixin, View):
         )
 
 
-class DownloadAnalyticsAsCsv(SingleObjectMixin, View):
+class DownloadAnalyticsAsCsv(JobOfferObjectMixin, View):
     model = JobOffer
+    action_code = CODE_ANALYTICS
 
     def get(self, request, **kwargs):
         joboffer = self.get_object()

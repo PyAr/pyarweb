@@ -12,6 +12,7 @@ REQUEST_MODERATION_URL = 'joboffers:request_moderation'
 HISTORY_URL = 'joboffers:history'
 TRACK_CONTACT_INFO_URL = 'joboffers:track-contact-info-view'
 ANALYTICS_URL = 'joboffers:analytics'
+ANALYTICS_CSV_URL = 'joboffers:download-analytics-csv'
 
 CODE_ANALYTICS = 'analytics'
 CODE_CREATE = "create"

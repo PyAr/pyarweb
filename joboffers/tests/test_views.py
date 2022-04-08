@@ -9,8 +9,8 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
-from ..constants import (ANALYTICS_URL, ADD_URL, ADMIN_URL, APPROVE_URL, DEACTIVATE_URL,
-                         HISTORY_URL, LIST_URL, REJECT_URL, REQUEST_MODERATION_URL,
+from ..constants import (ANALYTICS_URL, ANALYTICS_CSV_URL, ADD_URL, ADMIN_URL, APPROVE_URL,
+                         DEACTIVATE_URL, HISTORY_URL, LIST_URL, REJECT_URL, REQUEST_MODERATION_URL,
                          TRACK_CONTACT_INFO_URL, VIEW_URL)
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
 from ..views import STATE_LABEL_CLASSES
@@ -853,3 +853,36 @@ def test_JobOfferAnalytics_get_renders_ok_for_publisher(publisher_client, user_c
     response = client.get(target_url)
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_DownloadAnalitycAsCsv_returns_a_csv_for_publisher(publisher_client, user_company_profile):
+    """
+    Test that the DownloadAnalyticsAsCsv view returns a csv file for a publisher
+    """
+    client = publisher_client
+
+    joboffer = JobOfferFactory.create(company=user_company_profile.company)
+    JobOfferVisualizationFactory.create_batch(joboffer=joboffer, size=10)
+
+    target_url = reverse(ANALYTICS_CSV_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == 'text/csv'
+
+
+@pytest.mark.django_db
+def test_DownloadAnalitycAsCsv_returns_forbidden_for_anonymous_user(client):
+    """
+    Test that the DownloadAnalyticsAsCsv view returns a csv file for a publisher
+    """
+    joboffer = JobOfferFactory.create()
+    JobOfferVisualizationFactory.create_batch(joboffer=joboffer, size=10)
+
+    target_url = reverse(ANALYTICS_CSV_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 403
