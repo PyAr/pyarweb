@@ -27,13 +27,12 @@ class TestPublishCommand(BaseCommand):
         if raw_status == 200 or status == publisher.RESULT_OK:
             self.stdout.write(
                 self.style.SUCCESS(
-                    'Oferta publicada con éxito en: ' f'{publisher.name}.'
+                    f'Oferta publicada con éxito en: {publisher.name}.'
                 )
             )
         else:
             self.stderr.write(
                 self.style.ERROR(
-                    'Hubo un error al querer publicar la oferta en: '
-                    f'{publisher.name}.'
+                    f'Hubo un error al querer publicar la oferta en: {publisher.name}.'
                 )
             )

@@ -99,9 +99,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME', os.environ.get("POSTGRES_DB", "pyarweb")),
         'USER': os.environ.get('DB_USER', os.environ.get("POSTGRES_USER", "postgres")),
         'PASSWORD': os.environ.get('DB_PASS', os.environ.get("POSTGRES_PASSWORD", "")),
-        'HOST': os.environ.get(
-            'DB_SERVICE', os.environ.get("POSTGRES_HOST", "localhost")
-        ),
+        'HOST': os.environ.get('DB_SERVICE', os.environ.get("POSTGRES_HOST", "localhost")),
         'PORT': int(os.environ.get('DB_PORT', os.environ.get("POSTGRES_PORT", 5432))),
     }
 }
@@ -131,7 +129,7 @@ STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 PYAR_WIKI_URL = 'http://localhost:8080/pages/inicio'
 
