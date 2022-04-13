@@ -148,7 +148,6 @@ class JobOffer(models.Model):
         """
         return self.joboffercomment_set.last()
 
-
     @classmethod
     def get_short_description(cls, description):
         """
