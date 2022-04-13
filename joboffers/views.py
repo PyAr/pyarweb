@@ -20,7 +20,7 @@ from .joboffer_actions import (
     CODE_ANALYTICS, CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT,
     CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
+from .models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from .utils import get_visualization_data
 
 from django.shortcuts import render
@@ -395,7 +395,7 @@ class JobOfferAnalytics(JobOfferObjectMixin, View):
         totals = []
 
         for event_type, title in event_type_with_titles:
-            visualizations_qs = JobOfferVisualization \
+            visualizations_qs = JobOfferAccessLog \
               .objects \
               .filter(event_type=event_type.value, joboffer=joboffer) \
               .order_by('created_at')

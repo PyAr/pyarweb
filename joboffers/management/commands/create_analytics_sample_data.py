@@ -7,7 +7,7 @@ from django.utils.timezone import now
 
 from events.tests.factories import UserFactory
 from joboffers.tests.factories import JobOfferFactory
-from joboffers.models import EventType, JobOfferVisualization, OfferState
+from joboffers.models import EventType, JobOfferAccessLog, OfferState
 
 
 class Command(BaseCommand):
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                     session = SessionStore()
                     session.create()
 
-                    JobOfferVisualization.objects.get_or_create(
+                    JobOfferAccessLog.objects.get_or_create(
                       created_at=visualization_date,
                       month_and_year=month_year,
                       event_type=event_type,

@@ -1,7 +1,7 @@
 import hashlib
 import unicodedata
 
-from joboffers.models import EventType, JobOfferVisualization
+from joboffers.models import EventType, JobOfferAccessLog
 
 UNWANTED_SORROUNDING_CHARS = "@/#*"
 
@@ -34,7 +34,7 @@ def get_visualization_data(joboffer):
     """
     Retrieves a plain list of the visualizations for a joboffer
     """
-    data = JobOfferVisualization \
+    data = JobOfferAccessLog \
         .objects.filter(joboffer=joboffer) \
         .values_list('created_at', 'joboffer__id', 'joboffer__title', 'event_type')
 

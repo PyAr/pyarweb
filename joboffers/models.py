@@ -1,3 +1,4 @@
+
 import html
 import json
 import re
@@ -136,13 +137,6 @@ class JobOffer(models.Model):
     )
     slug = AutoSlugField(populate_from='title', unique=True)
 
-    @property
-    def last_comment(self):
-        """
-        Return the last rejection JobOfferComment
-        """
-        return self.joboffercomment_set.last()
-
     def get_absolute_url(self):
         url = reverse('joboffers:view', kwargs={'slug': self.slug})
         absolute_url = "".join((settings.BASE_URL, url))
@@ -150,6 +144,13 @@ class JobOffer(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def last_comment(self):
+        """
+        Return the last rejection JobOfferComment
+        """
+        return self.joboffercomment_set.last()
 
     @classmethod
     def get_short_description(cls, description):
@@ -163,15 +164,15 @@ class JobOffer(models.Model):
 
     def track_visualization(self, session, event_type: EventType):
         """
-        Either get or create the matching JobOfferVisualization instance for the joboffer.
+        Either get or create the matching JobOfferAccessLog instance for the joboffer.
         """
         today = date.today()
-        month_year = today.month * 10000 + today.year
+        month_year = today.year * 100 + today.month
 
         if session.session_key is None:
             session.save()
 
-        return JobOfferVisualization.objects.get_or_create(
+        return JobOfferAccessLog.objects.get_or_create(
             month_and_year=month_year,
             event_type=event_type,
             session=session.session_key,
@@ -354,7 +355,7 @@ class JobOfferHistory(CRUDEvent):
         proxy = True
 
 
-class JobOfferVisualization(models.Model):
+class JobOfferAccessLog(models.Model):
     """
     Model to track visualization of joboffers
     """

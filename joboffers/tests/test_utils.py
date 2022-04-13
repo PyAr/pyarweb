@@ -1,7 +1,7 @@
 import pytest
 
 from ..utils import get_visualization_data, hash_secret, normalize_tags
-from .factories import JobOfferFactory, JobOfferVisualizationFactory
+from .factories import JobOfferFactory, JobOfferAccessLogFactory
 
 
 def test_normalize_tags_with_repeated():
@@ -60,7 +60,7 @@ def test_get_visualization_data():
     """
     joboffer = JobOfferFactory.create()
 
-    visualizations = JobOfferVisualizationFactory.create_batch(size=4, joboffer=joboffer)
+    visualizations = JobOfferAccessLogFactory.create_batch(size=4, joboffer=joboffer)
 
     expected_data = [
       (

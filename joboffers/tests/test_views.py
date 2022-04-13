@@ -12,9 +12,9 @@ from pycompanies.tests.fixtures import create_user_company_profile # noqa
 from ..constants import (ANALYTICS_URL, ANALYTICS_CSV_URL, ADD_URL, ADMIN_URL, APPROVE_URL,
                          DEACTIVATE_URL, HISTORY_URL, LIST_URL, REJECT_URL, REQUEST_MODERATION_URL,
                          TRACK_CONTACT_INFO_URL, VIEW_URL)
-from ..models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
+from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
-from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferVisualizationFactory
+from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
 from .fixtures import create_publisher_client, create_admin_user # noqa
 
 
@@ -750,7 +750,7 @@ def test_joboffer_list_view_count(client, joboffers_list):
     assert response1.status_code == 200
     assert response2.status_code == 200
 
-    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
+    views_counted = JobOfferAccessLog.objects.filter(event_type=EventType.LISTING_VIEW).count()
 
     assert views_counted == len(joboffers_list)
 
@@ -770,7 +770,7 @@ def test_joboffer_list_first_page_view_count(client):
     assert response1.status_code == 200
     assert response2.status_code == 200
 
-    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
+    views_counted = JobOfferAccessLog.objects.filter(event_type=EventType.LISTING_VIEW).count()
 
     assert views_counted == 20
 
@@ -787,7 +787,7 @@ def test_joboffer_individual_view_count(client, joboffers_list):
     assert response1.status_code == 200
     assert response2.status_code == 200
 
-    assert JobOfferVisualization.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
+    assert JobOfferAccessLog.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
 
 
 @pytest.mark.django_db
@@ -802,7 +802,7 @@ def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
     assert response1.status_code == 204
     assert response2.status_code == 204
 
-    views_counted = JobOfferVisualization.objects.filter(
+    views_counted = JobOfferAccessLog.objects.filter(
         event_type=EventType.CONTACT_INFO_VIEW).count()
 
     assert views_counted == 1
@@ -846,7 +846,7 @@ def test_JobOfferAnalytics_get_renders_ok_for_publisher(publisher_client, user_c
     client = publisher_client
 
     joboffer = JobOfferFactory.create(company=user_company_profile.company)
-    JobOfferVisualizationFactory.create_batch(joboffer=joboffer, size=10)
+    JobOfferAccessLogFactory.create_batch(joboffer=joboffer, size=10)
 
     target_url = reverse(ANALYTICS_URL, kwargs={'slug': joboffer.slug})
 
@@ -863,7 +863,7 @@ def test_DownloadAnalitycAsCsv_returns_a_csv_for_publisher(publisher_client, use
     client = publisher_client
 
     joboffer = JobOfferFactory.create(company=user_company_profile.company)
-    JobOfferVisualizationFactory.create_batch(joboffer=joboffer, size=10)
+    JobOfferAccessLogFactory.create_batch(joboffer=joboffer, size=10)
 
     target_url = reverse(ANALYTICS_CSV_URL, kwargs={'slug': joboffer.slug})
 
@@ -879,7 +879,7 @@ def test_DownloadAnalitycAsCsv_returns_forbidden_for_anonymous_user(client):
     Test that the DownloadAnalyticsAsCsv view returns a csv file for a publisher
     """
     joboffer = JobOfferFactory.create()
-    JobOfferVisualizationFactory.create_batch(joboffer=joboffer, size=10)
+    JobOfferAccessLogFactory.create_batch(joboffer=joboffer, size=10)
 
     target_url = reverse(ANALYTICS_CSV_URL, kwargs={'slug': joboffer.slug})
 

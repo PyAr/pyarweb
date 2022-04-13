@@ -3,7 +3,7 @@ from factory.django import DjangoModelFactory
 
 from events.tests.factories import UserFactory
 from joboffers.models import (CommentType, EventType, Experience, HiringType, JobOffer,
-                              JobOfferComment, JobOfferVisualization, Remoteness)
+                              JobOfferComment, JobOfferAccessLog, Remoteness)
 from pycompanies.tests.factories import CompanyFactory
 
 
@@ -65,9 +65,9 @@ class JobOfferCommentFactory(DjangoModelFactory):
     joboffer = SubFactory(JobOfferFactory)
 
 
-class JobOfferVisualizationFactory(DjangoModelFactory):
+class JobOfferAccessLogFactory(DjangoModelFactory):
     class Meta:
-        model = JobOfferVisualization
+        model = JobOfferAccessLog
 
     joboffer = SubFactory(JobOfferFactory)
     month_and_year = fuzzy.FuzzyInteger(low=202101, high=202401010)
