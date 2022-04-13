@@ -38,7 +38,10 @@ class UserCompanyProfileManager(models.Manager):
         """
         qs = super().get_queryset()
 
-        return qs.filter(user=user).first()
+        if user.is_authenticated:
+            return qs.filter(user=user).first()
+        else:
+            return None
 
 
 class UserCompanyProfile(models.Model):

@@ -31,7 +31,7 @@ class CompanyListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
+        user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
         if self.request.user.is_anonymous is False and user_company:
             context['own_company'] = user_company.company
         return context
@@ -76,23 +76,24 @@ class CompanyAdminView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = _('Administrar Empresa')
 
-        if self.request.user.is_anonymous is False:
+        user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
+
+        if user_company:
             context['user'] = self.request.user
-            user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
-            if user_company:
-                context['user_company_id'] = user_company.id
-                context['own_company'] = user_company.company
-                context['company_users'] = UserCompanyProfile.objects.filter(
-                    company=context['own_company'])
+            context['user_company_id'] = user_company.id
+            context['own_company'] = user_company.company
+            context['company_users'] = UserCompanyProfile.objects.filter(
+              company=context['own_company']
+            )
+
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        if self.request.user.is_anonymous is False:
-            user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
-            if not user_company:
-                return redirect(ASSOCIATION_LIST_URL)
-
-        return super().dispatch(request, *args, **kwargs)
+        user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
+        if user_company:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect(ASSOCIATION_LIST_URL)
 
 
 class CompanyAssociationListView(LoginRequiredMixin, ListView):
