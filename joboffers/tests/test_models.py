@@ -13,7 +13,7 @@ from factory import Faker
 
 from pycompanies.tests.fixtures import create_user_company_profile  # noqa
 from ..constants import STATE_LABEL_CLASSES
-from ..models import (EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState,
+from ..models import (EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState,
                       Remoteness)
 from .factories import JobOfferCommentFactory, JobOfferFactory
 from .joboffers_descriptions import (LONG_JOBOFFER_DESCRIPTION,
@@ -402,7 +402,7 @@ def test_joboffer_track_visualization_with_empty_session():
 
     assert track_record.event_type == EventType.DETAIL_VIEW
     assert track_record.joboffer == joboffer
-    assert JobOfferVisualization.objects.count() == 1
+    assert JobOfferAccessLog.objects.count() == 1
 
 
 @pytest.mark.django_db
@@ -419,7 +419,7 @@ def test_joboffer_track_visualization_with_initiated_session():
 
     assert track_record.event_type == EventType.DETAIL_VIEW
     assert track_record.joboffer == joboffer
-    assert JobOfferVisualization.objects.count() == 1
+    assert JobOfferAccessLog.objects.count() == 1
 
 
 @pytest.mark.django_db
@@ -438,7 +438,7 @@ def test_joboffer_track_visualization_should_not_repeat_multiple_hits():
     for i in range(10):
         joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
 
-    assert JobOfferVisualization.objects.count() == 1
+    assert JobOfferAccessLog.objects.count() == 1
 
 
 @pytest.mark.django_db
@@ -455,7 +455,7 @@ def test_joboffer_track_visualization_should_count_different_sessiones_on_the_sa
         session.create()
         joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
 
-    assert JobOfferVisualization.objects.count() == EXPECTED_VISUALIZATIONS
+    assert JobOfferAccessLog.objects.count() == EXPECTED_VISUALIZATIONS
 
 
 @pytest.mark.django_db
@@ -481,4 +481,4 @@ def test_joboffer_track_visualization_should_count_different_sessiones_on_differ
     # Today's hit
     joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
 
-    assert JobOfferVisualization.objects.count() == EXPECTED_VISUALIZATIONS
+    assert JobOfferAccessLog.objects.count() == EXPECTED_VISUALIZATIONS

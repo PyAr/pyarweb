@@ -160,7 +160,7 @@ class JobOffer(models.Model):
 
     def track_visualization(self, session, event_type: EventType):
         """
-        Either get or create the matching JobOfferVisualization instance for the joboffer.
+        Either get or create the matching JobOfferAccessLog instance for the joboffer.
         """
         today = date.today()
         month_year = today.year * 100 + today.month
@@ -168,7 +168,7 @@ class JobOffer(models.Model):
         if session.session_key is None:
             session.save()
 
-        return JobOfferVisualization.objects.get_or_create(
+        return JobOfferAccessLog.objects.get_or_create(
             month_and_year=month_year,
             event_type=event_type,
             session=session.session_key,
@@ -351,7 +351,7 @@ class JobOfferHistory(CRUDEvent):
         proxy = True
 
 
-class JobOfferVisualization(models.Model):
+class JobOfferAccessLog(models.Model):
     """
     Model to track visualization of joboffers
     """

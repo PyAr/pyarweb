@@ -9,7 +9,7 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
-from ..models import EventType, JobOffer, JobOfferHistory, JobOfferVisualization, OfferState
+from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
 from .fixtures import create_publisher_client, create_admin_user # noqa
@@ -757,7 +757,7 @@ def test_joboffer_list_view_count(client, joboffers_list):
     assert response1.status_code == 200
     assert response2.status_code == 200
 
-    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
+    views_counted = JobOfferAccessLog.objects.filter(event_type=EventType.LISTING_VIEW).count()
 
     assert views_counted == len(joboffers_list)
 
@@ -777,7 +777,7 @@ def test_joboffer_list_first_page_view_count(client):
     assert response1.status_code == 200
     assert response2.status_code == 200
 
-    views_counted = JobOfferVisualization.objects.filter(event_type=EventType.LISTING_VIEW).count()
+    views_counted = JobOfferAccessLog.objects.filter(event_type=EventType.LISTING_VIEW).count()
 
     assert views_counted == 20
 
@@ -794,7 +794,7 @@ def test_joboffer_individual_view_count(client, joboffers_list):
     assert response1.status_code == 200
     assert response2.status_code == 200
 
-    assert JobOfferVisualization.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
+    assert JobOfferAccessLog.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
 
 
 @pytest.mark.django_db
@@ -809,7 +809,7 @@ def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
     assert response1.status_code == 204
     assert response2.status_code == 204
 
-    views_counted = JobOfferVisualization.objects.filter(
+    views_counted = JobOfferAccessLog.objects.filter(
         event_type=EventType.CONTACT_INFO_VIEW).count()
 
     assert views_counted == 1
