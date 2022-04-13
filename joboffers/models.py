@@ -138,6 +138,9 @@ class JobOffer(models.Model):
         absolute_url = "".join((settings.BASE_URL, url))
         return absolute_url
 
+    def __str__(self):
+        return self.title
+
     @property
     def last_comment(self):
         """
@@ -145,8 +148,6 @@ class JobOffer(models.Model):
         """
         return self.joboffercomment_set.last()
 
-    def __str__(self):
-        return self.title
 
     @classmethod
     def get_short_description(cls, description):
