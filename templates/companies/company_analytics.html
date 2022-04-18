@@ -24,12 +24,30 @@
 
         <h2>{% trans 'Resumen de Visualizaciones' %}</h2>
 
-        <table class="table table-bordered" style="max-width: 400px; margin: auto;">
-          {% for concept_name, total in totals %}
+        <table class="table table-bordered">
           <tr>
-            <td>{{ concept_name }}</td>
-            <th>{{ total }}</th>
+            <th>{% trans 'Fecha de Creación' %}</th>
+            <th>{% trans 'Oferta' %}</th>
+            <th>{% trans 'Tags' %}</th>
+            <th>{% trans 'Vis. en Listado' %}</th>
+            <th>{% trans 'Vis. de Detalle (Individual)' %}</th>
+            <th>{% trans 'Vis. de Datos de Contacto' %}</th>
           </tr>
+          {% for created_at, title, tags, listing_views, detail_views, contact_info_views in joboffers_data %}
+              <tr>
+                <td>{{ created_at | date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ title }}</td>
+                <td>
+                  {% for tag in tags %}
+                  <span clss="label label-default">{{ tags }}</span>
+                  {% empty %}
+                  -
+                  {% endfor %}
+                </td>
+                <td>{{ listing_views }}</td>
+                <td>{{ detail_views }}</td>
+                <td>{{ contact_info_views }}</td>
+              </tr>
           {% endfor %}
         </table>
 

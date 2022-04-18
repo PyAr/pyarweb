@@ -10,7 +10,7 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 
 from community.views import OwnedObject
 from joboffers.utils import get_visualizations_graph
-from joboffers.models import EventType, JobOfferAccessLog
+from joboffers.models import EventType, JobOffer, JobOfferAccessLog
 from pycompanies.forms import CompanyForm
 from pycompanies.models import Company, UserCompanyProfile
 
@@ -189,7 +189,20 @@ class CompanyAnalyticsView(LoginRequiredMixin, DetailView):
             graph = get_visualizations_graph(qs)
             graphs.append([event_type.label, graph])
 
-        return {'graphs': graphs, 'company': company}
+        joboffer_data = []
+        for joboffer in JobOffer.objects.filter(company=company):
+            data = [
+              joboffer.created_at,
+              joboffer.title,
+              joboffer.tags.all()
+            ]
+
+            for event_type in EventType:
+                data.append(qs.filter(event_type=event_type.value).count())
+
+            joboffer_data.append(data)
+
+        return {'company': company, 'graphs': graphs, 'joboffers_data': joboffer_data}
 
     def get(self, request, *args, **kwargs):
         company = self.get_object()
