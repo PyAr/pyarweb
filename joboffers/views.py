@@ -1,4 +1,7 @@
 import csv
+import plotly.graph_objects as go
+
+from plotly.offline import plot
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,7 +9,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import reverse
+from django.shortcuts import render, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
@@ -22,10 +25,6 @@ from .joboffer_actions import (
 )
 from .models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from .utils import get_visualization_data
-
-from django.shortcuts import render
-from plotly.offline import plot
-import plotly.graph_objects as go
 
 
 class JobOfferObjectMixin(SingleObjectMixin):

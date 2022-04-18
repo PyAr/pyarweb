@@ -49,6 +49,5 @@ urlpatterns = [
     re_path(
       r'^(?P<slug>[\w-]+)/visitas.csv$', DownloadAnalyticsAsCsv.as_view(),
       name='download-analytics-csv'
-    ),
-
+    )
 ]

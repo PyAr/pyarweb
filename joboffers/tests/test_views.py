@@ -12,6 +12,7 @@ from pycompanies.tests.fixtures import create_user_company_profile # noqa
 from ..constants import (ANALYTICS_URL, ANALYTICS_CSV_URL, ADD_URL, ADMIN_URL, APPROVE_URL,
                          DEACTIVATE_URL, HISTORY_URL, LIST_URL, REJECT_URL, REQUEST_MODERATION_URL,
                          TRACK_CONTACT_INFO_URL, VIEW_URL)
+
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
