@@ -9,6 +9,7 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
+
 from ..constants import (ANALYTICS_URL, ANALYTICS_CSV_URL, ADD_URL, ADMIN_URL, APPROVE_URL,
                          DEACTIVATE_URL, HISTORY_URL, LIST_URL, REJECT_URL, REQUEST_MODERATION_URL,
                          TRACK_CONTACT_INFO_URL, VIEW_URL)
