@@ -1,7 +1,7 @@
 from braces.views import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView, TemplateView
@@ -9,6 +9,8 @@ from django.views.generic.base import View
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 
 from community.views import OwnedObject
+from joboffers.utils import get_visualizations_graph
+from joboffers.models import EventType, JobOfferAccessLog
 from pycompanies.forms import CompanyForm
 from pycompanies.models import Company, UserCompanyProfile
 
@@ -171,3 +173,29 @@ class CompanyAssociateView(LoginRequiredMixin, View):
         else:
             messages.warning(request, 'Le usuarie que ingresaste no existe.')
         return redirect(ADMIN_URL)
+
+
+class CompanyAnalyticsView(LoginRequiredMixin, DetailView):
+    model = Company
+    template_name = 'companies/company_analytics.html'
+
+    def get_context_data(self, company):
+        log_queryset = JobOfferAccessLog.objects.filter(joboffer__company=company)
+
+        graphs = []
+
+        for event_type in EventType:
+            qs = log_queryset.filter(event_type=event_type.value)
+            graph = get_visualizations_graph(qs)
+            graphs.append([event_type.label, graph])
+
+        return {'graphs': graphs, 'company': company}
+
+    def get(self, request, *args, **kwargs):
+        company = self.get_object()
+        context = self.get_context_data(company)
+
+        return render(
+          request, self.template_name,
+          context=context
+        )
