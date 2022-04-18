@@ -1,5 +1,5 @@
-import datetime
 import logging
+import uuid
 
 import requests
 from django.conf import settings
@@ -26,15 +26,15 @@ class DiscoursePublisher(Publisher):
             'Api-Username': settings.DISCOURSE_USERNAME,
         }
 
-        current_date = datetime.datetime.today().strftime('%d/%m/%Y')
+        uuid_suffix = str(uuid.uuid4())
 
-        # Post titles should have a minimum length of 20 characters
-        # They cannot be padded with spaces to complete the minimum size
-        # neither put those spaces in the middle, as discourse sanitizes
-        # the data removing those extra spaces.
-        post_title = f'{title} {current_date}'
+        post_title = f'{title} - {uuid_suffix[:8]}'
 
-        assert len(post_title) >= MIN_LENGTH_POST_TITLE
+        # If post_title is shorther than the minimum required length, complete
+        # with the full uuid_suffix. Even the uuid is finite, it should be
+        # long enough to complete a reasonable title length.
+        if len(post_title) < MIN_LENGTH_POST_TITLE:
+            post_title = f"{title} - {uuid_suffix}"
 
         payload = {
             'title': post_title,
