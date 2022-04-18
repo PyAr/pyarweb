@@ -1,14 +1,15 @@
-from datetime import datetime
-
 import factory
 import pytest
+
+from datetime import datetime
+
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
-from ..models import JobOffer, JobOfferHistory, OfferState
+from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
 from .fixtures import create_publisher_client, create_admin_user # noqa
@@ -24,6 +25,7 @@ VIEW_URL = 'joboffers:view'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
 HISTORY_URL = 'joboffers:history'
+TRACK_CONTACT_INFO_URL = 'joboffers:track-contact-info-view'
 
 JOBOFFER_TITLE1 = 'title1'
 JOBOFFER_TITLE2 = 'title2'
@@ -222,25 +224,29 @@ def create_joboffers_list(user_company_profile):
             company=company,
             title=JOBOFFER_TITLE1,
             tags=[JOBOFFER_TAG_1],
-            created_at=datetime(2021, 12, 20)
+            created_at=datetime(2021, 12, 20),
+            state=OfferState.ACTIVE
         ),
         JobOfferFactory.create(
             company=company,
             title=JOBOFFER_TITLE2,
             tags=[JOBOFFER_TAG_1],
-            created_at=datetime(2021, 12, 21)
+            created_at=datetime(2021, 12, 21),
+            state=OfferState.ACTIVE
         ),
         JobOfferFactory.create(
             company=company,
             title=JOBOFFER_TITLE3,
             tags=[JOBOFFER_TAG_2],
-            created_at=datetime(2021, 12, 22)
+            created_at=datetime(2021, 12, 22),
+            state=OfferState.ACTIVE
         ),
         JobOfferFactory.create(
             company=company,
             title=JOBOFFER_TITLE3,
             tags=[JOBOFFER_TAG_3],
-            created_at=datetime(2021, 12, 22)
+            created_at=datetime(2021, 12, 22),
+            state=OfferState.ACTIVE
         )
     ]
 
@@ -739,25 +745,71 @@ def test_joboffer_list_view_render_the_joboffer_that_contains_the_given_tag(clie
 
 
 @pytest.mark.django_db
-def test_joboffer_list_view_render_all_joboffers_that_contains_the_given_tags(publisher_client):
+def test_joboffer_list_view_count(client, joboffers_list):
     """
-    Test that the joboffer list view renders all joboffers that contains the given tags.
+    Test that accessing the joboffer's list page only gives one view
     """
-    client = publisher_client
-    JobOfferFactory.create(
-        state=OfferState.ACTIVE,
-        description='First Joboffer',
-        tags=['django']
-    )
-
-    JobOfferFactory.create(
-        state=OfferState.ACTIVE,
-        description='Second Joboffer',
-        tags=['javascript']
-    )
-
     target_url = reverse(LIST_URL)
 
-    response = client.get(target_url, {'tag_django': '1', 'tag_javascript': '1'})
+    response1 = client.get(target_url)
+    response2 = client.get(target_url)
 
-    assert len(response.context_data['object_list']) == 2
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    views_counted = JobOfferAccessLog.objects.filter(event_type=EventType.LISTING_VIEW).count()
+
+    assert views_counted == len(joboffers_list)
+
+
+@pytest.mark.django_db
+def test_joboffer_list_first_page_view_count(client):
+    """
+    Test that accessing the joboffer's list page only counts the first 20 joboffers
+    """
+    target_url = reverse(LIST_URL)
+
+    JobOfferFactory.create_batch(size=30, state=OfferState.ACTIVE)
+
+    response1 = client.get(target_url)
+    response2 = client.get(target_url)
+
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    views_counted = JobOfferAccessLog.objects.filter(event_type=EventType.LISTING_VIEW).count()
+
+    assert views_counted == 20
+
+
+@pytest.mark.django_db
+def test_joboffer_individual_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's detail page only gives one view
+    """
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffers_list[0]})
+
+    response1 = client.get(target_url)
+    response2 = client.get(target_url)
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    assert JobOfferAccessLog.objects.filter(event_type=EventType.DETAIL_VIEW).count() == 1
+
+
+@pytest.mark.django_db
+def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
+    """
+    Test that accessing the joboffer's detail page only gives one view
+    """
+    target_url = reverse(TRACK_CONTACT_INFO_URL, kwargs={'slug': joboffers_list[0]})
+
+    response1 = client.post(target_url)
+    response2 = client.post(target_url)
+    assert response1.status_code == 204
+    assert response2.status_code == 204
+
+    views_counted = JobOfferAccessLog.objects.filter(
+        event_type=EventType.CONTACT_INFO_VIEW).count()
+
+    assert views_counted == 1

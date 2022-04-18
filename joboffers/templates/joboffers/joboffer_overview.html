@@ -1,4 +1,4 @@
-
+{% load i18n static %}
 <dl>
   <dt>Estado</dt>
   <dd>
@@ -10,14 +10,7 @@
   </dd>
   <dt>Última Modificación</dt>
   <dd>
-    <time
-      class="published"
-      datetime="{{ obj.modified_at.isoformat }}"
-      itemprop="datePublished"
-      title="{{ "Fecha de publicación" }}"
-    >
-      {{ obj.modified_at|date:"d/m/Y" }}
-    </time>
+    {{ obj.modified_at|date:"SHORT_DATETIME_FORMAT" }}
   </dd>
   {% if obj.location %}
   <dt>Lugar de trabajo</dt>
@@ -48,3 +41,25 @@
   <!-- Agregar informacion de contacto que se despliegue con un botón y que no se muestre si esta inactiva la oferta -->
 
 </dl>
+
+<a class="btn btn-info w-100" onclick="trackContactInfo()" role="button" data-toggle="collapse" href="#contact-info" aria-expanded="false" aria-controls="collapse">
+  {% translate 'Ver Información de Contacto' %}
+</a>
+<div class="collapse" id="contact-info">
+  <ul class="list-unstyled contact-info">
+    <li>
+      <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+      {{ obj.contact_mail }}
+    </li>
+    <li>
+      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+      {{ object.contact_url }}
+    </li>
+    <li>
+      <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+      {{ object.contact_phone }}
+    </li>
+  </ul>
+
+</div>
+<script src="{% static 'js/joboffer_track.js' %}"></script>
