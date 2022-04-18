@@ -1,6 +1,11 @@
 import factory
 import pytest
+
+from datetime import date
+from unittest.mock import patch
+
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sessions.backends.db import SessionStore
 from django.db.utils import IntegrityError
 from django.utils.text import slugify
 from easyaudit.models import CRUDEvent
@@ -8,7 +13,8 @@ from factory import Faker
 
 from pycompanies.tests.fixtures import create_user_company_profile  # noqa
 from ..constants import STATE_LABEL_CLASSES
-from ..models import JobOffer, JobOfferHistory, OfferState, Remoteness
+from ..models import (EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState,
+                      Remoteness)
 from .factories import JobOfferCommentFactory, JobOfferFactory
 from .joboffers_descriptions import (LONG_JOBOFFER_DESCRIPTION,
                                      SHORT_JOBOFFER_DESCRIPTION,
@@ -381,3 +387,98 @@ def test_joboffer_last_comment():
     expected_comment = JobOfferCommentFactory.create(joboffer=joboffer)
 
     assert joboffer.last_comment.text == expected_comment.text
+
+
+@pytest.mark.django_db
+def test_joboffer_track_visualization_with_empty_session():
+    """
+    Test calling joboffer.track_visualization with an empty session
+    """
+    joboffer = JobOfferFactory.create()
+    session = SessionStore()
+    track_record, created = joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
+
+    assert created is True
+
+    assert track_record.event_type == EventType.DETAIL_VIEW
+    assert track_record.joboffer == joboffer
+    assert JobOfferAccessLog.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_joboffer_track_visualization_with_initiated_session():
+    """
+    Test calling joboffer.track_visualization with initiated sesion
+    """
+    joboffer = JobOfferFactory.create()
+    session = SessionStore()
+    session.create()
+    track_record, created = joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
+
+    assert created is True
+
+    assert track_record.event_type == EventType.DETAIL_VIEW
+    assert track_record.joboffer == joboffer
+    assert JobOfferAccessLog.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_joboffer_track_visualization_should_not_repeat_multiple_hits():
+    """
+    Test calling joboffer.track_visualization multiple times with the same session doesn't count
+    additional views
+    """
+    joboffer = JobOfferFactory.create()
+    session = SessionStore()
+    session.create()
+    track_record, created = joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
+
+    assert created is True
+
+    for i in range(10):
+        joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
+
+    assert JobOfferAccessLog.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_joboffer_track_visualization_should_count_different_sessiones_on_the_same_day():
+    """
+    Test calling joboffer.track_visualization multiple times with different sessions counts ok
+    """
+    joboffer = JobOfferFactory.create()
+
+    EXPECTED_VISUALIZATIONS = 10
+
+    for i in range(EXPECTED_VISUALIZATIONS):
+        session = SessionStore()
+        session.create()
+        joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
+
+    assert JobOfferAccessLog.objects.count() == EXPECTED_VISUALIZATIONS
+
+
+@pytest.mark.django_db
+def test_joboffer_track_visualization_should_count_different_sessiones_on_different_months():
+    """
+    Test that calling joboffer.track_visualization counts two hits from today and from a previous
+    month (same session).
+    """
+    joboffer = JobOfferFactory.create()
+
+    EXPECTED_VISUALIZATIONS = 2
+
+    session = SessionStore()
+    session.create()
+
+    previous_date = date(2022, 2, 1)
+
+    with patch('joboffers.models.date') as mocked_date:
+        mocked_date.today.return_value = previous_date
+        # Previous month's hit
+        joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
+
+    # Today's hit
+    joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
+
+    assert JobOfferAccessLog.objects.count() == EXPECTED_VISUALIZATIONS
