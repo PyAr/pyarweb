@@ -248,6 +248,7 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
 
     def update_object(self, offer):
         offer.state = OfferState.ACTIVE
+        offer.modified_by = self.request.user
         offer.save()
 
 

@@ -133,6 +133,13 @@ class JobOffer(models.Model):
     )
     slug = AutoSlugField(populate_from='title', unique=True)
 
+    @property
+    def last_comment(self):
+        """
+        Return the last rejection JobOfferComment
+        """
+        return self.joboffercomment_set.last()
+
     def get_absolute_url(self):
         url = reverse('joboffers:view', kwargs={'slug': self.slug})
         absolute_url = "".join((settings.BASE_URL, url))
@@ -140,13 +147,6 @@ class JobOffer(models.Model):
 
     def __str__(self):
         return self.title
-
-    @property
-    def last_comment(self):
-        """
-        Return the last rejection JobOfferComment
-        """
-        return self.joboffercomment_set.last()
 
     @classmethod
     def get_short_description(cls, description):
