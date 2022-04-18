@@ -38,12 +38,10 @@
       </div>
 
       <div class="col-md-4">
-        <div class="panel panel-default panel-primary">
+        <div class="offer-detail panel panel-default panel-primary">
           <div class="panel-heading"><strong>Datos de la oferta laboral</strong></div>
           <div class="panel-body">
-            <article class="list-group-item">
-              {% include 'joboffers/joboffer_overview.html' with obj=object label_class=state_label_class %}
-            </article>
+            {% include 'joboffers/joboffer_overview.html' with obj=object label_class=state_label_class %}
           </div>
         </div>
       </div>
@@ -51,8 +49,7 @@
     <div class="pull-right">
       {% for button in action_buttons %}
       <a href="{% url button.target_url object.slug %}" class="btn {{ button.css_classes|join:' ' }}"
-        title="{% if button.title %}{{ button.title }}{% else %}{{ button.text }}{% endif %}"
-      >
+        title="{% if button.title %}{{ button.title }}{% else %}{{ button.text }}{% endif %}">
         {{ button.text }}
         <span class="glyphicon {{ button.icon_class }}" aria-hidden="true"></span>
       </a>

@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, View, FormView
@@ -18,7 +18,7 @@ from .joboffer_actions import (
     CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE,
     CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import JobOffer, JobOfferHistory, OfferState
+from .models import EventType, JobOffer, JobOfferHistory, OfferState
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -102,6 +102,14 @@ class JobOfferDetailView(DetailView):
         ctx['state_label_class'] = STATE_LABEL_CLASSES[object.state]
         ctx['OfferState'] = OfferState
         return ctx
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+
+        joboffer = self.object
+        joboffer.track_visualization(request.session, event_type=EventType.DETAIL_VIEW)
+
+        return response
 
 
 class JobOfferUpdateView(LoginRequiredMixin, JobOfferObjectMixin, UpdateView):
@@ -339,4 +347,27 @@ class JobOfferListView(ListView, FilterableList):
         if self.request.GET.get('search'):
             context['search'] = self.request.GET.get('search')
 
+        self.context = context
+
         return context
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+
+        joboffers = self.context['page_obj'].object_list
+
+        for joboffer in joboffers:
+            joboffer.track_visualization(request.session, event_type=EventType.LISTING_VIEW)
+
+        return response
+
+
+class TrackContactInfoView(SingleObjectMixin, View):
+    model = JobOffer
+
+    def post(self, request, **kwargs):
+        joboffer = self.get_object()
+
+        joboffer.track_visualization(request.session, event_type=EventType.CONTACT_INFO_VIEW)
+
+        return HttpResponse(status=204)

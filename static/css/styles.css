@@ -597,3 +597,50 @@ div.sponsored_jobs {
     margin:10px;
     padding:10px;
 }
+
+.w-100 {
+    width: 100%;
+}
+
+.offer-detail {
+  margin-bottom: 10px;
+  color: #888;
+}
+
+.offer-detail .panel-heading {
+  text-transform: uppercase;
+}
+
+.offer-detail dt {
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.offer-detail dd {
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.offer-detail .btn {
+  font-weight: bold;
+}
+
+.contact-info {
+  padding: 20px 0 0;
+  margin: 0;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.contact-info span {
+  letter-spacing: 4px;
+  font-size: 1.4em;
+  color: #666;
+  vertical-align: middle;
+}
+
+.contact-info li {
+  margin-bottom: 10px;
+  line-height: 20px;
+}
