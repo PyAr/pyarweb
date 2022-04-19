@@ -4,8 +4,9 @@ from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse_lazy
 
 from pycompanies.tests.factories import CompanyFactory, UserCompanyProfileFactory, UserFactory
-from pycompanies.tests.fixtures import (create_client, create_logged_client, create_user, # noqa
-                                        create_user_company_profile)
+from joboffers.tests.fixtures import create_admin_client, create_publisher_client # noqa
+from pyarweb.tests.fixtures import (create_client, create_logged_client, create_user) # noqa
+from pycompanies.tests.fixtures import create_user_company_profile # noqa
 
 
 ERROR_USER_DOES_NOT_EXIST = 'Le usuarie que ingresaste no existe.'
@@ -200,3 +201,41 @@ def test_company_disassociate_one_user_from_company(logged_client, user):
 
     assert 200 == response.status_code
     assert DISASSOCIATE_MESSAGE == response.context_data['message']
+
+
+@pytest.mark.django_db
+def test_company_detail_doesnt_show_analytics_button_for_normal_user(logged_client):
+    client = logged_client
+    company = CompanyFactory.create(name='company_1')
+
+    target_url = reverse_lazy('companies:detail', kwargs={'pk': company.id})
+
+    response = client.get(target_url)
+
+    assert response.context_data['can_view_analytics'] is False
+
+
+@pytest.mark.django_db
+def test_company_detail_show_analytics_button_for_admin_user(admin_client):
+    client = admin_client
+    company = CompanyFactory.create(name='company_1')
+
+    target_url = reverse_lazy('companies:detail', kwargs={'pk': company.id})
+
+    response = client.get(target_url)
+
+    assert response.context_data['can_view_analytics'] is True
+
+
+@pytest.mark.django_db
+def test_company_detail_show_analytics_button_for_publisher_user(
+    publisher_client, user_company_profile
+):
+    client = publisher_client
+    company = user_company_profile.company
+
+    target_url = reverse_lazy('companies:detail', kwargs={'pk': company.id})
+
+    response = client.get(target_url)
+
+    assert response.context_data['can_view_analytics'] is True

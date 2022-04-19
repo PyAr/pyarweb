@@ -23,6 +23,18 @@ class CompanyDetailView(DetailView):
     model = Company
     template_name = 'companies/company_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+
+        if UserCompanyProfile.objects.for_user(user=user) or user.is_superuser:
+            context['can_view_analytics'] = True
+        else:
+            context['can_view_analytics'] = False
+
+        return context
+
 
 class CompanyListView(ListView):
     template_name = 'companies/company_list.html'
