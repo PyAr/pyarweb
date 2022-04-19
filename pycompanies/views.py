@@ -203,14 +203,12 @@ class CompanyAnalyticsView(LoginRequiredMixin, DetailView):
 
         joboffer_data = []
         for joboffer in JobOffer.objects.filter(company=company):
-            data = [
-              joboffer.created_at,
-              joboffer.title,
-              joboffer.tags.all()
-            ]
+            data = [joboffer]
 
             for event_type in EventType:
-                data.append(qs.filter(event_type=event_type.value).count())
+                data.append(
+                  log_queryset.filter(event_type=event_type.value, joboffer=joboffer).count()
+                )
 
             joboffer_data.append(data)
 
