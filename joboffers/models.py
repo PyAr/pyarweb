@@ -16,6 +16,7 @@ from django.utils.translation import gettext as _
 from easyaudit.models import CRUDEvent
 from taggit_autosuggest.managers import TaggableManager
 
+from pycompanies.models import UserCompanyProfile
 from .constants import STATE_LABEL_CLASSES
 
 
@@ -174,6 +175,16 @@ class JobOffer(models.Model):
             session=session.session_key,
             joboffer=self
         )
+
+    def get_publisher_mail_addresses(self):
+        profiles = UserCompanyProfile.objects.filter(company=self.company)
+
+        addresses = []
+        for profile in profiles:
+            if profile.user.email:
+                addresses.append(profile.user.email)
+
+        return addresses
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

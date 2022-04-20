@@ -68,3 +68,9 @@ STATE_LABEL_CLASSES = {
     'NEW': 'label-info',
     'REJECTED': 'label-danger',
 }
+
+APPROVED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Aprobada')
+APPROVED_MAIL_BODY = _(
+  'Le informamos que la oferta que envío a revisión (%(title)s) fue aprobada y ya se'
+  ' encuentra listada en la página y fué replicada en las redes sociales.'
+)

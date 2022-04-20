@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -12,12 +13,13 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from community.views import FilterableList
 from pycompanies.models import UserCompanyProfile
-from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
-from .forms import JobOfferForm, JobOfferCommentForm
-from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE,
-    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
+from .constants import (
+  ACTION_BUTTONS, APPROVED_MAIL_SUBJECT, APPROVED_MAIL_BODY, CODE_CREATE, CODE_EDIT, CODE_HISTORY,
+  CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE,
+  STATE_LABEL_CLASSES
 )
+from .forms import JobOfferForm, JobOfferCommentForm
+from .joboffer_actions import get_valid_actions
 from .models import EventType, JobOffer, JobOfferHistory, OfferState
 
 
@@ -250,6 +252,17 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         offer.state = OfferState.ACTIVE
         offer.modified_by = self.request.user
         offer.save()
+
+        publishers_addresses = offer.get_publisher_mail_addresses()
+
+        if publishers_addresses:
+            send_mail(
+              APPROVED_MAIL_SUBJECT,
+              APPROVED_MAIL_BODY % {'title': offer.title},
+              None,  # Default from mail in settings
+              publishers_addresses,
+              fail_silently=False
+            )
 
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):

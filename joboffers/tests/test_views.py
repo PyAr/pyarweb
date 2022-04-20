@@ -3,12 +3,14 @@ import pytest
 
 from datetime import datetime
 
+from django.core import mail
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
+from ..constants import APPROVED_MAIL_SUBJECT
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
@@ -329,12 +331,13 @@ def test_joboffer_approve_without_permission(publisher_client, user_company_prof
 
 
 @pytest.mark.django_db
-def test_joboffer_approve_ok(admin_client):
+def test_joboffer_approve_ok(admin_client, user_company_profile):
     """
     Test approval of a joboffer with an admin user
     """
     client = admin_client
-    joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(state=OfferState.MODERATION, company=company)
 
     target_url = reverse(APPROVE_URL, kwargs={'slug': joboffer.slug})
 
@@ -354,6 +357,9 @@ def test_joboffer_approve_ok(admin_client):
     joboffer = JobOffer.objects.first()
     assert OfferState.ACTIVE == joboffer.state
 
+    assert len(mail.outbox) == 1
+    assert mail.outbox[0].subject == APPROVED_MAIL_SUBJECT
+
 
 @pytest.mark.django_db
 def test_joboffer_reject_ok(admin_client):
@@ -367,8 +373,6 @@ def test_joboffer_reject_ok(admin_client):
 
     assert 1 == JobOffer.objects.count()
     assert OfferState.MODERATION == joboffer.state
-
-    # TODO: Test for deactivated state
     # end preconditions check
 
     comment_data = factory.build(dict, joboffer=joboffer.id, FACTORY_CLASS=JobOfferCommentFactory)

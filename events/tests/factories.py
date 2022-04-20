@@ -16,6 +16,7 @@ DEFAULT_USER_PASSWORD = 'secret'
 class UserFactory(DjangoModelFactory):
     username = Sequence(lambda n: f'user{n}')
     password = PostGenerationMethodCall('set_password', DEFAULT_USER_PASSWORD)
+    email = Faker('email')
 
     class Meta:
         model = User
