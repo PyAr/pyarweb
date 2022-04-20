@@ -1,6 +1,8 @@
 from braces.views import LoginRequiredMixin
-from django.contrib.auth import get_user_model
+
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -187,7 +189,7 @@ class CompanyAssociateView(LoginRequiredMixin, View):
         return redirect(ADMIN_URL)
 
 
-class CompanyAnalyticsView(LoginRequiredMixin, DetailView):
+class CompanyAnalyticsView(DetailView):
     model = Company
     template_name = 'companies/company_analytics.html'
 
@@ -216,9 +218,12 @@ class CompanyAnalyticsView(LoginRequiredMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         company = self.get_object()
-        context = self.get_context_data(company)
+        user = request.user
 
-        return render(
-          request, self.template_name,
-          context=context
-        )
+        owner_profile = UserCompanyProfile.objects.for_user(user=user, company=company)
+        if owner_profile or user.is_superuser:
+            context = self.get_context_data(company)
+
+            return render(request, self.template_name, context=context)
+        else:
+            raise PermissionDenied()

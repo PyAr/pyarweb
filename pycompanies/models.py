@@ -32,14 +32,14 @@ class Company(TimeStampedModel):
 class UserCompanyProfileManager(models.Manager):
     """User company profile manager."""
 
-    def for_user(self, user):
+    def for_user(self, user, **kwargs):
         """
         Get the company object for a given user.
         """
         qs = super().get_queryset()
 
         if user.is_authenticated:
-            return qs.filter(user=user).first()
+            return qs.filter(user=user, **kwargs).first()
         else:
             return None
 

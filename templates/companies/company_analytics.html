@@ -17,9 +17,13 @@
       <div class="col-xs-12">
         {% for title, graph in graphs %}
         <h2>{{ title }} {% trans '(todas las  ofertas)' %}</h2>
-          {% autoescape off %}
-            {{ graph }}
-          {% endautoescape %}
+          {% if graph %}
+            {% autoescape off %}
+              {{ graph }}
+            {% endautoescape %}
+          {% else %}
+             {% trans 'No información de las visitas para mostrar.' %}
+          {% endif %}
         {% endfor %}
 
         <h2>{% trans 'Resumen de Visualizaciones' %}</h2>
@@ -48,7 +52,9 @@
                 <td>{{ detail_views }}</td>
                 <td>{{ contact_info_views }}</td>
               </tr>
-          {% endfor %}
+              {% empty %}
+              <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+              {% endfor %}
         </table>
 
       </div>
