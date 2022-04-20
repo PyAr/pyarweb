@@ -204,7 +204,7 @@ class CompanyAnalyticsView(DetailView):
             graphs.append([event_type.label, graph])
 
         joboffer_data = []
-        for joboffer in JobOffer.objects.filter(company=company):
+        for joboffer in JobOffer.objects.filter(company=company).order_by('-created_at'):
             data = [joboffer]
 
             for event_type in EventType:
