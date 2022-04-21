@@ -26,7 +26,7 @@ class Publisher:
         context = Context({'job_offer': job_offer})
         return template.render(context)
 
-    def _push_to_api(self):
+    def _push_to_api(self, message: str, title: str):
         """This method should implement what is necessary to interact with each API."""
         raise NotImplementedError
 
@@ -34,7 +34,7 @@ class Publisher:
         """Render and send the JobOffer to the publisher,
         using the API configured in push_to_api method."""
         message = self._render_offer(job_offer)
-        status = self._push_to_api(message)
+        status = self._push_to_api(message, job_offer.title)
 
         if status in (200, 201):
             return self.RESULT_OK

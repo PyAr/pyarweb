@@ -23,7 +23,9 @@ def test_normalize_tags_with_non_ascii():
     """
     Test normalizing non assci chars
     """
-    repeated_tags = ['DñàÈ', ]
+    repeated_tags = [
+        'DñàÈ',
+    ]
     tags = list(normalize_tags(repeated_tags))
     assert len(tags) == 1
     assert tags[0].islower()

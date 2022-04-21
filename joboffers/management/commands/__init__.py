@@ -20,12 +20,19 @@ class TestPublishCommand(BaseCommand):
             status = publisher.publish(job_offer)
         else:
             self.stdout.write(self.style.SUCCESS('Publicando una prueba.'))
-            raw_status = publisher._push_to_api('Esto es una prueba.')
+            raw_status = publisher._push_to_api(
+                'Esto es una prueba de post.', 'Título de prueba'
+            )
 
         if raw_status == 200 or status == publisher.RESULT_OK:
-            self.stdout.write(self.style.SUCCESS('Oferta publicada con éxito en: '
-                                                 f'{publisher.name}.'))
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f'Oferta publicada con éxito en: {publisher.name}.'
+                )
+            )
         else:
-            self.stderr.write(self.style.ERROR(
-                                                'Hubo un error al querer publicar la oferta en: '
-                                                f'{publisher.name}.'))
+            self.stderr.write(
+                self.style.ERROR(
+                    f'Hubo un error al querer publicar la oferta en: {publisher.name}.'
+                )
+            )
