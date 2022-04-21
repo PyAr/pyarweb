@@ -6,8 +6,8 @@ from django.db.models import Q
 from pycompanies.models import UserCompanyProfile
 from .models import OfferState
 from .constants import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE, CODE_DEACTIVATE,
-    CODE_REQUEST_MODERATION, CODE_APPROVE
+    CODE_ANALYTICS, CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REJECT, CODE_REACTIVATE,
+    CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE
 )
 
 ACTIONS_PUBLISHER = {}
@@ -44,6 +44,19 @@ for state in OfferState.values:
     ACTIONS_PUBLISHER[state] = set()
     ACTIONS_ADMIN[state] = set()
 
+
+analytics = Action(
+    verbose_name="Visualizaciones",
+    code=CODE_ANALYTICS,
+    valid_prev_states=(
+        OfferState.MODERATION,
+        OfferState.DEACTIVATED,
+        OfferState.MODERATION,
+        OfferState.ACTIVE,
+        OfferState.EXPIRED,
+        OfferState.REJECTED
+    )
+)
 
 create = Action(
     verbose_name="Crear",
@@ -111,12 +124,14 @@ register_action(deactivate, ROLE_PUBLISHER)
 register_action(reactivate, ROLE_PUBLISHER)
 register_action(request_moderation, ROLE_PUBLISHER)
 register_action(get_history, ROLE_PUBLISHER)
+register_action(analytics, ROLE_PUBLISHER)
 
 register_action(reject, ROLE_ADMIN)
 register_action(approve, ROLE_ADMIN)
 register_action(get_history, ROLE_ADMIN)
 register_action(deactivate, ROLE_ADMIN)
 register_action(reactivate, ROLE_ADMIN)
+register_action(analytics, ROLE_ADMIN)
 
 
 ACTIONS = {

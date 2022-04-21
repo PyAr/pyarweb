@@ -10,7 +10,7 @@ from pycompanies.tests.factories import UserCompanyProfileFactory
 
 from ..joboffer_actions import (
     ACTIONS, ROLE_ADMIN, ROLE_PUBLISHER,
-    _get_roles, approve, create, deactivate, edit, get_history, get_valid_actions,
+    _get_roles, analytics, approve, create, deactivate, edit, get_history, get_valid_actions,
     reactivate, reject, request_moderation
 )
 from ..models import OfferState
@@ -18,12 +18,12 @@ from .factories import JobOfferCommentFactory, JobOfferFactory
 
 
 EXPECTED_ACTIONS_ADMIN = {
-    OfferState.ACTIVE: {deactivate.code, get_history.code},
-    OfferState.DEACTIVATED: {get_history.code},
-    OfferState.MODERATION: {get_history.code, reject.code, approve.code},
-    OfferState.EXPIRED: {deactivate.code, reactivate.code, get_history.code},
+    OfferState.ACTIVE: {analytics.code, deactivate.code, get_history.code},
+    OfferState.DEACTIVATED: {analytics.code, get_history.code},
+    OfferState.MODERATION: {analytics.code, get_history.code, reject.code, approve.code},
+    OfferState.EXPIRED: {analytics.code, deactivate.code, reactivate.code, get_history.code},
     OfferState.NEW: set(),
-    OfferState.REJECTED: {get_history.code}
+    OfferState.REJECTED: {analytics.code, get_history.code}
 }
 
 EXPECTED_ACTIONS_PUBLISHER = {
@@ -33,24 +33,29 @@ EXPECTED_ACTIONS_PUBLISHER = {
     OfferState.DEACTIVATED: {
         edit.code,
         request_moderation.code,
-        get_history.code
+        get_history.code,
+        analytics.code
     },
     OfferState.REJECTED: {
         edit.code,
-        get_history.code
+        get_history.code,
+        analytics.code
     },
     OfferState.EXPIRED: {
         edit.code,
         deactivate.code,
         reactivate.code,
-        get_history.code
+        get_history.code,
+        analytics.code
     },
     OfferState.ACTIVE: {
         deactivate.code,
-        get_history.code
+        get_history.code,
+        analytics.code
     },
     OfferState.MODERATION: {
-        get_history.code
+        get_history.code,
+        analytics.code
     }
 }
 
@@ -213,7 +218,7 @@ def test_get_valid_actions_admin_that_rejected_an_offer():
     comment = JobOfferCommentFactory.create(joboffer=joboffer)
     user = comment.created_by
 
-    expected_actions = {approve.code, reject.code, get_history.code}
+    expected_actions = {analytics.code, approve.code, reject.code, get_history.code}
 
     actions = get_valid_actions(
         user, joboffer, {ROLE_ADMIN}
@@ -231,7 +236,9 @@ def test_get_valid_actions_admin_that_approved_an_offer():
     user = UserFactory.create(is_superuser=True)
     joboffer = JobOfferFactory.create(state=OfferState.ACTIVE, modified_by=user)
 
-    expected_actions = {approve.code, reject.code, deactivate.code, get_history.code}
+    expected_actions = {
+      analytics.code, approve.code, reject.code, deactivate.code, get_history.code
+    }
 
     actions = get_valid_actions(
         user, joboffer, {ROLE_ADMIN}
@@ -249,7 +256,7 @@ def test_get_valid_actions_for_admin_that_didnt_approved_the_offer():
     user = UserFactory.create(is_superuser=True)
     joboffer = JobOfferFactory.create(state=OfferState.ACTIVE)
 
-    expected_actions = {deactivate.code, get_history.code}
+    expected_actions = {analytics.code, deactivate.code, get_history.code}
 
     actions = get_valid_actions(
         user, joboffer, {ROLE_ADMIN}
@@ -267,7 +274,7 @@ def test_get_valid_actions_publisher_with_active_offer(user_company_profile):
     user = user_company_profile.user
     joboffer = JobOfferFactory.create(state=OfferState.ACTIVE, modified_by=user)
 
-    expected_actions = {deactivate.code, get_history.code}
+    expected_actions = {analytics.code, deactivate.code, get_history.code}
 
     actions = get_valid_actions(
         user, joboffer, {ROLE_PUBLISHER}

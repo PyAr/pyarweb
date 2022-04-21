@@ -1,10 +1,15 @@
+import csv
+import plotly.graph_objects as go
+
+from plotly.offline import plot
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import reverse
+from django.shortcuts import reverse, render
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
@@ -15,10 +20,11 @@ from pycompanies.models import UserCompanyProfile
 from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import (
-    CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE,
-    CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
+    CODE_ANALYTICS, CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT,
+    CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
 )
-from .models import EventType, JobOffer, JobOfferHistory, OfferState
+from .models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
+from .utils import get_visualization_data
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -371,3 +377,85 @@ class TrackContactInfoView(SingleObjectMixin, View):
         joboffer.track_visualization(request.session, event_type=EventType.CONTACT_INFO_VIEW)
 
         return HttpResponse(status=204)
+
+
+class JobOfferAnalytics(JobOfferObjectMixin, View):
+    action_code = CODE_ANALYTICS
+    model = JobOffer
+
+    def get_context_data(self, joboffer):
+        event_type_with_titles = (
+          (EventType.LISTING_VIEW, _('Visualizaciones en la página de listado')),
+          (EventType.DETAIL_VIEW, _('Visualizaciones detalle de la oferta')),
+          (EventType.CONTACT_INFO_VIEW, _('Visualizaciones de datos de contacto'))
+        )
+
+        plots = []
+        totals = []
+
+        for event_type, title in event_type_with_titles:
+            visualizations_qs = JobOfferAccessLog \
+              .objects \
+              .filter(event_type=event_type.value, joboffer=joboffer) \
+              .order_by('created_at')
+
+            if visualizations_qs.exists():
+                visualizations_qs = visualizations_qs\
+                    .values('created_at__date').annotate(Count('id'))
+                dates = visualizations_qs.values_list('created_at__date', flat=True)
+                views_amount = visualizations_qs.values_list('id__count', flat=True)
+
+                totals.append([title, sum(views_amount)])
+
+                fig = go.Figure(data=[go.Line(
+                    x=list(dates), y=list(views_amount)
+                )])
+
+                fig.update_layout(
+                  {"margin": {"l": 50, "r": 50, "b": 50, "t": 50, "pad": 4}}
+                )
+
+                fig.update_xaxes(
+                  dtick=1 * 1000 * 60 * 60 * 24,
+                  tickformat="%d-%m-%Y",
+                  tickangle=60
+                )
+                fig.update_yaxes(title=_("Visitas"), automargin=True)
+
+                plots.append([title, plot(fig, output_type='div')])
+
+            else:
+                plots.append([title, None])  # No visits
+
+        return {'plots': plots, 'totals': totals, 'object': joboffer}
+
+    def get(self, request, **kwargs):
+        joboffer = self.get_object()
+
+        context = self.get_context_data(joboffer)
+
+        return render(
+            request, 'joboffers/joboffer_analytics.html',
+            context=context
+        )
+
+
+class DownloadAnalyticsAsCsv(JobOfferObjectMixin, View):
+    model = JobOffer
+    action_code = CODE_ANALYTICS
+
+    def get(self, request, **kwargs):
+        joboffer = self.get_object()
+
+        data = get_visualization_data(joboffer)
+
+        response = HttpResponse(content_type='text/csv')
+        writer = csv.writer(response)
+
+        writer.writerow([
+          _('Fecha/Hora'), _('ID. Oferta'), _('Titulo de la Oferta'), _('Código de Evento'),
+          _('Evento')
+        ])
+
+        writer.writerows(data)
+        return response

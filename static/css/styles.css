@@ -541,6 +541,7 @@ div.sponsored_jobs {
 
 .joboffers .btn {
   text-transform: uppercase;
+  font-weight: bold;
 }
 
 .field .field-name {
@@ -643,4 +644,16 @@ div.sponsored_jobs {
 .contact-info li {
   margin-bottom: 10px;
   line-height: 20px;
+}
+
+.btn-dark-green {
+  background-color: #558b2f;
+  border-color: #33691e;
+  color: #fff;
+}
+
+.btn-dark-green:hover, .btn-dark-green:focus, .btn-dark-green:active, .btn-dark-green.active, .open>.dropdown-toggle.btn-dark-green {
+  color: #fff;
+  background-color: #33681e;
+  border-color: #558b2f;
 }

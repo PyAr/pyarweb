@@ -19,6 +19,7 @@ class UserFactory(DjangoModelFactory):
 
     class Meta:
         model = User
+        django_get_or_create = ('username',)
 
 
 class EventFactory(DjangoModelFactory):
