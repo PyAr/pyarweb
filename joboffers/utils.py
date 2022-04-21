@@ -9,7 +9,6 @@ from django.utils.translation import gettext as _
 
 from joboffers.models import EventType, JobOfferAccessLog
 
-
 UNWANTED_SORROUNDING_CHARS = "@/#*"
 
 

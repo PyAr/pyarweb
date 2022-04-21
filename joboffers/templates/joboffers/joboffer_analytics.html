@@ -34,11 +34,11 @@
           </table>
 
         {% for title, graph in graphs %}
-        {% if graph %}
-          <h2>{{ title }}</h2>
-            {% autoescape off %}
-              {{ graph }}
-            {% endautoescape %}
+          {% if graph %}
+            <h2>{{ title }}</h2>
+              {% autoescape off %}
+                {{ graph }}
+              {% endautoescape %}
           {% endif %}
         {% endfor %}
       </div>
