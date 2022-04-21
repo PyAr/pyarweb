@@ -9,33 +9,27 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
+
+from ..constants import (ANALYTICS_URL, ANALYTICS_CSV_URL, ADD_URL, ADMIN_URL, APPROVE_URL,
+                         DEACTIVATE_URL, HISTORY_URL, LIST_URL, REJECT_URL, REQUEST_MODERATION_URL,
+                         TRACK_CONTACT_INFO_URL, VIEW_URL)
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
-from .factories import JobOfferCommentFactory, JobOfferFactory
+from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
 from .fixtures import create_publisher_client, create_admin_user # noqa
 
 
-ADD_URL = 'joboffers:add'
-ADMIN_URL = 'joboffers:admin'
-VIEW_URL = 'joboffers:view'
-LIST_URL = 'joboffers:list'
-APPROVE_URL = 'joboffers:approve'
-DEACTIVATE_URL = 'joboffers:deactivate'
-VIEW_URL = 'joboffers:view'
-REJECT_URL = 'joboffers:reject'
-REQUEST_MODERATION_URL = 'joboffers:request_moderation'
-HISTORY_URL = 'joboffers:history'
-TRACK_CONTACT_INFO_URL = 'joboffers:track-contact-info-view'
-
-JOBOFFER_TITLE1 = 'title1'
-JOBOFFER_TITLE2 = 'title2'
-JOBOFFER_TITLE3 = 'title3'
-JOBOFFER_TITLE4 = 'title4'
+JOBOFFER_TITLE1 = 'Job Offer Sample Title 1'
+JOBOFFER_TITLE2 = 'Job Offer Sample Title 2'
+JOBOFFER_TITLE3 = 'Job Offer Sample Title 3'
+JOBOFFER_TITLE4 = 'Job Offer Sample Title 4'
+JOBOFFER_TITLE5 = 'Job Offer Sample Title 5'
 
 JOBOFFER_TAG_1 = 'tag1'
 JOBOFFER_TAG_2 = 'tag2'
 JOBOFFER_TAG_3 = 'tag3'
 JOBOFFER_TAG_4 = 'tag4'
+JOBOFFER_TAG_5 = 'tag5'
 
 
 def get_plain_messages(request):
@@ -215,8 +209,8 @@ def create_joboffers_list(user_company_profile):
     company = user_company_profile.company
 
     JobOfferFactory.create(  # Job offer from a different company
-        title=JOBOFFER_TITLE4,
-        tags=[JOBOFFER_TAG_4]
+        title=JOBOFFER_TITLE5,
+        tags=[JOBOFFER_TAG_5]
     )
 
     return [
@@ -243,8 +237,8 @@ def create_joboffers_list(user_company_profile):
         ),
         JobOfferFactory.create(
             company=company,
-            title=JOBOFFER_TITLE3,
-            tags=[JOBOFFER_TAG_3],
+            title=JOBOFFER_TITLE4,
+            tags=[JOBOFFER_TAG_4],
             created_at=datetime(2021, 12, 22),
             state=OfferState.ACTIVE
         )
@@ -787,7 +781,7 @@ def test_joboffer_individual_view_count(client, joboffers_list):
     """
     Test that accessing the joboffer's detail page only gives one view
     """
-    target_url = reverse(VIEW_URL, kwargs={'slug': joboffers_list[0]})
+    target_url = reverse(VIEW_URL, kwargs={'slug': joboffers_list[0].slug})
 
     response1 = client.get(target_url)
     response2 = client.get(target_url)
@@ -802,7 +796,7 @@ def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
     """
     Test that accessing the joboffer's detail page only gives one view
     """
-    target_url = reverse(TRACK_CONTACT_INFO_URL, kwargs={'slug': joboffers_list[0]})
+    target_url = reverse(TRACK_CONTACT_INFO_URL, kwargs={'slug': joboffers_list[0].slug})
 
     response1 = client.post(target_url)
     response2 = client.post(target_url)
@@ -813,3 +807,83 @@ def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
         event_type=EventType.CONTACT_INFO_VIEW).count()
 
     assert views_counted == 1
+
+
+@pytest.mark.django_db
+def test_JobOfferAnalytics_get_is_forbidden_for_non_publisher(logged_client):
+    """
+    Test that the JobOfferAnalytics views doesn't allow anonymous
+    """
+    client = logged_client
+    joboffer = JobOfferFactory.create()
+
+    target_url = reverse(ANALYTICS_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_JobOfferAnalytics_get_renders_ok_for_admin(admin_client):
+    """
+    Test that the JobOfferAnalytics views renders ok for admin users
+    """
+    client = admin_client
+    joboffer = JobOfferFactory.create()
+
+    target_url = reverse(ANALYTICS_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_JobOfferAnalytics_get_renders_ok_for_publisher(publisher_client, user_company_profile):
+    """
+    Test that the JobOfferAnalytics views renders without errors for the publisher of the joboffer
+    """
+    client = publisher_client
+
+    joboffer = JobOfferFactory.create(company=user_company_profile.company)
+    JobOfferAccessLogFactory.create_batch(joboffer=joboffer, size=10)
+
+    target_url = reverse(ANALYTICS_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_DownloadAnalitycAsCsv_returns_a_csv_for_publisher(publisher_client, user_company_profile):
+    """
+    Test that the DownloadAnalyticsAsCsv view returns a csv file for a publisher
+    """
+    client = publisher_client
+
+    joboffer = JobOfferFactory.create(company=user_company_profile.company)
+    JobOfferAccessLogFactory.create_batch(joboffer=joboffer, size=10)
+
+    target_url = reverse(ANALYTICS_CSV_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == 'text/csv'
+
+
+@pytest.mark.django_db
+def test_DownloadAnalitycAsCsv_returns_forbidden_for_anonymous_user(client):
+    """
+    Test that the DownloadAnalyticsAsCsv view returns a csv file for a publisher
+    """
+    joboffer = JobOfferFactory.create()
+    JobOfferAccessLogFactory.create_batch(joboffer=joboffer, size=10)
+
+    target_url = reverse(ANALYTICS_CSV_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+
+    assert response.status_code == 403

@@ -1,4 +1,7 @@
-from ..utils import hash_secret, normalize_tags
+import pytest
+
+from ..utils import get_visualization_data, hash_secret, normalize_tags
+from .factories import JobOfferFactory, JobOfferAccessLogFactory
 
 
 def test_normalize_tags_with_repeated():
@@ -50,3 +53,25 @@ def test_hash_secret_None():
     expected_result = 'None'
     result = hash_secret(dummy_secret)
     assert result == expected_result
+
+
+@pytest.mark.django_db
+def test_get_visualization_data():
+    """
+    Test that get visualization works ok with a joboffer with visualizations
+    """
+    joboffer = JobOfferFactory.create()
+
+    visualizations = JobOfferAccessLogFactory.create_batch(size=4, joboffer=joboffer)
+
+    expected_data = [
+      (
+        visualization.created_at, visualization.joboffer.id, visualization.joboffer.title,
+        visualization.event_type, visualization.get_event_type_display()
+      )
+      for visualization in visualizations
+    ]
+
+    data = get_visualization_data(joboffer)
+
+    assert data == expected_data

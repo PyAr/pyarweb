@@ -1,5 +1,20 @@
 from django.utils.translation import gettext as _
 
+ADD_URL = 'joboffers:add'
+ADMIN_URL = 'joboffers:admin'
+VIEW_URL = 'joboffers:view'
+LIST_URL = 'joboffers:list'
+APPROVE_URL = 'joboffers:approve'
+DEACTIVATE_URL = 'joboffers:deactivate'
+VIEW_URL = 'joboffers:view'
+REJECT_URL = 'joboffers:reject'
+REQUEST_MODERATION_URL = 'joboffers:request_moderation'
+HISTORY_URL = 'joboffers:history'
+TRACK_CONTACT_INFO_URL = 'joboffers:track-contact-info-view'
+ANALYTICS_URL = 'joboffers:analytics'
+ANALYTICS_CSV_URL = 'joboffers:download-analytics-csv'
+
+CODE_ANALYTICS = 'analytics'
 CODE_CREATE = "create"
 CODE_EDIT = "edit"
 CODE_HISTORY = "history"
@@ -8,9 +23,17 @@ CODE_REACTIVATE = "reactivate"
 CODE_DEACTIVATE = "deactivate"
 CODE_REQUEST_MODERATION = "reqmod"
 CODE_APPROVE = "approve"
+CODE_ANALYTICS = 'analytics'
 
 
 ACTION_BUTTONS = {
+    CODE_ANALYTICS: {
+      'target_url': 'joboffers:analytics',
+      'text': _('Visualizaciones'),
+      'css_classes': ['btn-dark-green'],
+      'icon_class': 'glyphicon-eye-open',
+      'title': _('Ver las estadísticas de visualizaciones de la oferta.')
+    },
     CODE_HISTORY: {
         'target_url': 'joboffers:history',
         'text': _('Historial'),
