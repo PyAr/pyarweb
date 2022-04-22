@@ -10,7 +10,7 @@ from django.urls import reverse
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
-from ..constants import APPROVED_MAIL_SUBJECT
+from ..constants import APPROVED_MAIL_SUBJECT, REJECTED_MAIL_SUBJECT
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory
@@ -362,12 +362,13 @@ def test_joboffer_approve_ok(admin_client, user_company_profile):
 
 
 @pytest.mark.django_db
-def test_joboffer_reject_ok(admin_client):
+def test_joboffer_reject_ok(admin_client, user_company_profile):
     """
     Test rejection of the joboffer by the admin user
     """
     client = admin_client
-    joboffer = JobOfferFactory.create(state=OfferState.MODERATION)
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(company=company, state=OfferState.MODERATION)
 
     target_url = reverse(REJECT_URL, kwargs={'slug': joboffer.slug})
 
@@ -388,6 +389,9 @@ def test_joboffer_reject_ok(admin_client):
 
     joboffer = JobOffer.objects.first()
     assert joboffer.state == OfferState.REJECTED
+
+    assert len(mail.outbox) == 1
+    assert REJECTED_MAIL_SUBJECT
 
 
 @pytest.mark.django_db

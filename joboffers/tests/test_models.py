@@ -11,6 +11,7 @@ from django.utils.text import slugify
 from easyaudit.models import CRUDEvent
 from factory import Faker
 
+from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile  # noqa
 from ..constants import STATE_LABEL_CLASSES
 from ..models import (EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState,
@@ -482,3 +483,28 @@ def test_joboffer_track_visualization_should_count_different_sessiones_on_differ
     joboffer.track_visualization(session, event_type=EventType.DETAIL_VIEW)
 
     assert JobOfferAccessLog.objects.count() == EXPECTED_VISUALIZATIONS
+
+
+@pytest.mark.django_db
+def test_joboffer_get_publisher_mail_addresses_with_multiple_users():
+    profile1 = UserCompanyProfileFactory.create()
+    company = profile1.company
+    profile2 = UserCompanyProfileFactory.create(company=company)
+    joboffer = JobOfferFactory.create(company=company)
+
+    EXPECTED_MAILS = {profile1.user.email, profile2.user.email}
+
+    mails = joboffer.get_publisher_mail_addresses()
+
+    assert mails == EXPECTED_MAILS
+
+
+@pytest.mark.django_db
+def test_joboffer_get_publisher_mail_addresses_without_users():
+    joboffer = JobOfferFactory.create()
+
+    EXPECTED_MAILS = set()
+
+    mails = joboffer.get_publisher_mail_addresses()
+
+    assert mails == EXPECTED_MAILS

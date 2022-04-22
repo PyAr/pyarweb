@@ -16,11 +16,12 @@ from pycompanies.models import UserCompanyProfile
 from .constants import (
   ACTION_BUTTONS, APPROVED_MAIL_SUBJECT, APPROVED_MAIL_BODY, CODE_CREATE, CODE_EDIT, CODE_HISTORY,
   CODE_REACTIVATE, CODE_REJECT, CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE,
-  STATE_LABEL_CLASSES
+  REJECTED_MAIL_SUBJECT, REJECTED_MAIL_BODY, STATE_LABEL_CLASSES
 )
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import get_valid_actions
 from .models import EventType, JobOffer, JobOfferHistory, OfferState
+from .utils import send_mail_to_publishers
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -217,11 +218,24 @@ class JobOfferRejectView(
         return initial
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        form.instance.modified_by = self.request.user
-        self.object.state = OfferState.REJECTED
-        self.object.save()
+        offer_comment = form.instance
+        offer = self.object
+
+        offer_comment.created_by = self.request.user
+        offer_comment.modified_by = self.request.user
+        offer.state = OfferState.REJECTED
+        offer.save()
         form.save()
+
+        subject = REJECTED_MAIL_SUBJECT
+        body = REJECTED_MAIL_BODY % {
+          'reason': offer_comment.get_comment_type_display(),
+          'text': offer_comment.text,
+          'title': offer.title
+        }
+
+        send_mail_to_publishers(offer, subject, body)
+
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):

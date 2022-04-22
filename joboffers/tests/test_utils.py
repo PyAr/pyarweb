@@ -1,4 +1,7 @@
-from ..utils import hash_secret, normalize_tags
+from unittest.mock import MagicMock
+
+from django.core import mail
+from ..utils import hash_secret, normalize_tags, send_mail_to_publishers
 
 
 def test_normalize_tags_with_repeated():
@@ -48,3 +51,36 @@ def test_hash_secret_None():
     expected_result = 'None'
     result = hash_secret(dummy_secret)
     assert result == expected_result
+
+
+TEST_RECEIVER = 'sample@pyar.org.ar'
+TEST_SUBJECT = 'test subject'
+TEST_BODY = 'test body'
+
+
+def test_send_mail_to_publishers_with_mails():
+    """
+    Test send_mail_to_publishers sends mails when there are users with emails
+    """
+    joboffer = MagicMock()
+    joboffer.get_publisher_mail_addresses = MagicMock(return_value=[TEST_RECEIVER])
+
+    send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY)
+
+    assert len(mail.outbox) == 1
+
+    assert mail.outbox[0].to == [TEST_RECEIVER]
+    assert mail.outbox[0].subject == TEST_SUBJECT
+    assert mail.outbox[0].body == TEST_BODY
+
+
+def test_send_mail_to_publishers_without_emails():
+    """
+    Test send_mail_to_publishers doesn't send emails when there are no recipients
+    """
+    joboffer = MagicMock()
+    joboffer.get_publisher_mail_addresses = MagicMock(return_value=[])
+
+    send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY)
+
+    assert len(mail.outbox) == 0
