@@ -36,12 +36,11 @@ class UserCompanyProfileManager(models.Manager):
         """
         Get the company object for a given user.
         """
-        qs = super().get_queryset()
-
-        if user.is_authenticated:
-            return qs.filter(user=user, **kwargs).first()
-        else:
+        if user.is_anonymous:
             return None
+
+        qs = super().get_queryset()
+        return qs.filter(user=user, **kwargs).first()
 
 
 class UserCompanyProfile(models.Model):
