@@ -1,7 +1,10 @@
+import pytest
 from unittest.mock import MagicMock
 
 from django.core import mail
-from ..utils import hash_secret, normalize_tags, send_mail_to_publishers
+
+from ..utils import get_visualization_data, hash_secret, normalize_tags, send_mail_to_publishers
+from .factories import JobOfferFactory, JobOfferAccessLogFactory
 
 
 def test_normalize_tags_with_repeated():
@@ -26,7 +29,9 @@ def test_normalize_tags_with_non_ascii():
     """
     Test normalizing non assci chars
     """
-    repeated_tags = ['DñàÈ', ]
+    repeated_tags = [
+        'DñàÈ',
+    ]
     tags = list(normalize_tags(repeated_tags))
     assert len(tags) == 1
     assert tags[0].islower()
@@ -84,3 +89,25 @@ def test_send_mail_to_publishers_without_emails():
     send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY)
 
     assert len(mail.outbox) == 0
+
+
+@pytest.mark.django_db
+def test_get_visualization_data():
+    """
+    Test that get visualization works ok with a joboffer with visualizations
+    """
+    joboffer = JobOfferFactory.create()
+
+    visualizations = JobOfferAccessLogFactory.create_batch(size=4, joboffer=joboffer)
+
+    expected_data = [
+      (
+        visualization.created_at, visualization.joboffer.id, visualization.joboffer.title,
+        visualization.event_type, visualization.get_event_type_display()
+      )
+      for visualization in visualizations
+    ]
+
+    data = get_visualization_data(joboffer)
+
+    assert data == expected_data

@@ -1,4 +1,4 @@
-from factory import Faker, SubFactory
+from factory import Sequence, SubFactory
 from factory.django import DjangoModelFactory
 
 from events.tests.factories import UserFactory
@@ -9,7 +9,7 @@ class CompanyFactory(DjangoModelFactory):
     class Meta:
         model = Company
 
-    name = Faker('company')
+    name = Sequence(lambda n: f'company-{n}')
     owner = SubFactory(UserFactory)
     rank = 1
 

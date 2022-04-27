@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 # Dos veces os.path.dirname porque el archivo de settings está dentro de otro path.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
@@ -69,7 +70,7 @@ INSTALLED_APPS = (
     'dbbackup',
     'captcha',
     'sanitizer',
-    'easyaudit'
+    'easyaudit',
 )
 
 MIDDLEWARE = (
@@ -81,7 +82,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    'easyaudit.middleware.easyaudit.EasyAuditMiddleware'
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 )
 
 ROOT_URLCONF = 'pyarweb.urls'
@@ -128,9 +129,7 @@ STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 PYAR_WIKI_URL = 'http://localhost:8080/pages/inicio'
 
@@ -144,7 +143,6 @@ TEMPLATES = [
                 #  allauth specific context processors
                 # "allauth.account.context_processors.account",
                 # "allauth.socialaccount.context_processors.socialaccount",
-
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.media",
@@ -153,7 +151,6 @@ TEMPLATES = [
                 "django.template.context_processors.i18n",
                 "django.contrib.messages.context_processors.messages",
                 "community.context_processors.pyar_wiki_url",
-
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
             ],
@@ -164,7 +161,6 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
-
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
 )
@@ -193,32 +189,66 @@ CAPTCHA_FLITE_PATH = "/usr/bin/flite"
 CAPTCHA_IMAGE_TEMPLATE = "account/custom_captcha.html"
 
 ALLOWED_HTML_TAGS_INPUT = [
-    'a', 'b', 'br', 'i', 'u', 'p', 'hr',
-    'pre', 'img', 'span', 'table', 'tbody',
-    'thead', 'tr', 'th', 'td', 'blockquote',
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'font',
-    'o:p', 'sup', 'sub', 'strike', 'li', 'ul',
-    'ol', 'div',
+    'a',
+    'b',
+    'br',
+    'i',
+    'u',
+    'p',
+    'hr',
+    'pre',
+    'img',
+    'span',
+    'table',
+    'tbody',
+    'thead',
+    'tr',
+    'th',
+    'td',
+    'blockquote',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'font',
+    'o:p',
+    'sup',
+    'sub',
+    'strike',
+    'li',
+    'ul',
+    'ol',
+    'div',
 ]
 ALLOWED_HTML_ATTRIBUTES_INPUT = [
-    'href', 'src', 'style', 'width', 'class', 'face',
+    'href',
+    'src',
+    'style',
+    'width',
+    'class',
+    'face',
 ]
 ALLOWED_HTML_STYLES_INPUT = [
-    'text-align', 'margin-left', 'background-color',
+    'text-align',
+    'margin-left',
+    'background-color',
     'font-size',
 ]
 TAGGIT_CASE_INSENSITIVE = True
 
 GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
 
-ACCOUNT_FORMS = {
-    'signup': 'pyarweb.forms.SingupFormWithCaptcha'
-}
+ACCOUNT_FORMS = {'signup': 'pyarweb.forms.SingupFormWithCaptcha'}
 
 DJANGO_EASY_AUDIT_WATCH_AUTH_EVENTS = False
 DJANGO_EASY_AUDIT_WATCH_REQUEST_EVENTS = False
 
-DJANGO_EASY_AUDIT_REGISTERED_CLASSES = ['joboffers.JobOffer', 'joboffers.JobofferComment']
+DJANGO_EASY_AUDIT_REGISTERED_CLASSES = [
+    'joboffers.JobOffer',
+    'joboffers.JobofferComment',
+]
 
 # Azure blob-storage
 AZURE_ACCOUNT_KEY = os.environ.get("AZURE_ACCOUNT_KEY")
@@ -242,3 +272,9 @@ TWITTER_ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN')
 TWITTER_ACCESS_SECRET = os.environ.get('TWITTER_ACCESS_SECRET')
 TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
+
+# Discourse constants
+DISCOURSE_HOST = os.environ.get('DISCOURSE_HOST')
+DISCOURSE_API_KEY = os.environ.get('DISCOURSE_API_KEY')
+DISCOURSE_USERNAME = os.environ.get('DISCOURSE_USERNAME')
+DISCOURSE_CATEGORY = os.environ.get('DISCOURSE_CATEGORY')

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load email_obfuscator %}
+{% load devtags %}
+
+{% block title %}
+{{ object.title }}
+{% endblock %}
+
+{% block content %}
+<main id="main" class="joboffers container" role="main">
+  <div class="col-lg-12">
+    <div class="page-header">
+      <h2>{% trans 'Estadísticas de ' %} {{ object.title }}</h2>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <h2>{% trans 'Resumen de Visualizaciones' %}
+          <a href="{% url 'joboffers:download-analytics-csv' object.slug %}" class="btn btn-primary pull-right"
+            title="{% trans 'Descargar una planilla con el detalle de todas las visitas' %}">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+            {% trans 'Descargar como archivo .csv' %}
+          </a>
+        </h2>
+
+          <table class="table table-bordered" style="max-width: 400px; margin: auto;">
+            {% for concept_name, total in totals %}
+            <tr>
+              <td>{{ concept_name }}</td>
+              <th>{{ total }}</th>
+            </tr>
+            {% endfor %}
+          </table>
+
+        {% for title, plot in plots %}
+        <h2>{{ title }}</h2>
+          {% autoescape off %}
+            {{ plot }}
+          {% endautoescape %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

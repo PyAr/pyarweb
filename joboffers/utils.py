@@ -2,6 +2,7 @@ import hashlib
 import unicodedata
 
 from django.core.mail import send_mail
+from joboffers.models import EventType, JobOfferAccessLog
 
 UNWANTED_SORROUNDING_CHARS = "@/#*"
 
@@ -41,3 +42,20 @@ def send_mail_to_publishers(joboffer, subject: str, body: str):
           publishers_addresses,
           fail_silently=False
         )
+
+
+def get_visualization_data(joboffer):
+    """
+    Retrieves a plain list of the visualizations for a joboffer
+    """
+    data = JobOfferAccessLog \
+        .objects.filter(joboffer=joboffer) \
+        .values_list('created_at', 'joboffer__id', 'joboffer__title', 'event_type')
+
+    output_data = []
+
+    for row in data:
+        new_row = (*row, EventType(row[-1]).label)
+        output_data.append(new_row)
+
+    return output_data
