@@ -1,4 +1,3 @@
-
 import html
 import json
 import re
@@ -193,6 +192,12 @@ class JobOffer(models.Model):
                 addresses.add(profile.user.email)
 
         return addresses
+
+    def get_visualizations_amount(self, event_type):
+        """
+        Get the visualizations amount for the given event type
+        """
+        return JobOfferAccessLog.objects.filter(joboffer=self, event_type=event_type).count()
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
