@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from pycompanies.tests.factories import UserCompanyProfileFactory
 
-from ..constants import EXPIRED_OFFER_MAIL_SUBJECT, EXPIRED_OFFER_MAIL_BODY, OFFER_EXPIRATION_DAYS
+from ..constants import EXPIRED_OFFER_MAIL_SUBJECT
 from ..models import JobOffer, OfferState
 from ..utils import (
   expire_old_offers,
