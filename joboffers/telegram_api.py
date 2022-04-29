@@ -47,3 +47,8 @@ def send_message(message: str, chat_id: int):
         logging.error(ERROR_LOG_MESSAGE, _repr_credentials(), status.text)
 
     return status.status_code
+
+
+def send_notification_to_moderators(message: str):
+    """Send a notification of a slug thats needs to be moderated to moderator's group."""
+    return send_message(message, settings.TELEGRAM_MODERATORS_CHAT_ID)

@@ -32,11 +32,15 @@ from .constants import (
   CODE_REQUEST_MODERATION,
   REJECTED_MAIL_SUBJECT,
   REJECTED_MAIL_BODY,
-  STATE_LABEL_CLASSES
+  STATE_LABEL_CLASSES,
+  TELEGRAM_APPROVED_MESSAGE,
+  TELEGRAM_MODERATION_MESSAGE,
+  TELEGRAM_REJECT_MESSAGE
 )
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import get_valid_actions
 from .models import EventType, JobOffer, JobOfferAccessLog, JobOfferHistory, OfferState
+from .telegram_api import send_notification_to_moderators
 from .utils import get_visualization_data, send_mail_to_publishers
 
 
@@ -283,11 +287,20 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         offer.modified_by = self.request.user
         offer.save()
 
+        user = self.request.user
+
         send_mail_to_publishers(
           offer,
           APPROVED_MAIL_SUBJECT,
-          APPROVED_MAIL_BODY % {'title': offer.title},
+          APPROVED_MAIL_BODY % {'title': offer.title}
         )
+
+        moderators_message = TELEGRAM_APPROVED_MESSAGE % {
+          'offer_url': offer.get_absolute_url(),
+          'username': user.username
+        }
+
+        send_notification_to_moderators(moderators_message)
 
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
