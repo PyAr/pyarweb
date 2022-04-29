@@ -5,7 +5,6 @@ from plotly.offline import plot
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Count
@@ -284,16 +283,11 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         offer.modified_by = self.request.user
         offer.save()
 
-        publishers_addresses = offer.get_publisher_mail_addresses()
-
-        if publishers_addresses:
-            send_mail(
-              APPROVED_MAIL_SUBJECT,
-              APPROVED_MAIL_BODY % {'title': offer.title},
-              None,  # Default from mail in settings
-              publishers_addresses,
-              fail_silently=False
-            )
+        send_mail_to_publishers(
+          offer,
+          APPROVED_MAIL_SUBJECT,
+          APPROVED_MAIL_BODY % {'title': offer.title},
+        )
 
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
