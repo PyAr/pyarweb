@@ -53,3 +53,10 @@ def publish_offer(job_offer: 'JobOffer', publishers: list = None):
         raise ValueError
 
     return results
+
+
+def publish_to_all_social_networks(joboffer):
+    """
+
+    """
+    print("== truly publishing ==")

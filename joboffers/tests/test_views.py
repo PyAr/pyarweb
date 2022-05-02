@@ -2,6 +2,7 @@ import factory
 import pytest
 
 from datetime import datetime
+from unittest.mock import patch
 
 from django.core import mail
 from django.contrib.messages import get_messages as contrib_get_messages
@@ -26,6 +27,7 @@ from ..constants import (
   REQUEST_MODERATION_URL,
   TRACK_CONTACT_INFO_URL,
   TELEGRAM_APPROVED_MESSAGE,
+  TELEGRAM_MODERATION_MESSAGE,
   TELEGRAM_REJECT_MESSAGE,
   VIEW_URL
 )
@@ -165,7 +167,7 @@ def test_joboffer_creation_as_admin_should_fail(admin_client, user_company_profi
 
 
 @pytest.mark.django_db
-def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
+def test_joboffer_request_moderation_ok(publisher_client, user_company_profile, telegram_dummy):
     """
     Test request for moderation for a publisher user
     """
@@ -190,6 +192,13 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
 
     joboffer = JobOffer.objects.first()
     assert OfferState.MODERATION == joboffer.state
+
+    telegram_history = telegram_dummy.call_history
+    assert len(telegram_history) == 1
+    sent_message = telegram_history[0]['text'][0]
+    assert sent_message.endswith(TELEGRAM_MODERATION_MESSAGE % {
+      'offer_url': joboffer.get_absolute_url(),
+    })
 
 
 @pytest.mark.django_db
@@ -339,7 +348,10 @@ def test_joboffer_approve_without_permission(publisher_client, user_company_prof
 
 
 @pytest.mark.django_db
-def test_joboffer_approve_ok(admin_client, admin_user, user_company_profile, telegram_dummy):
+@patch('joboffers.views.publish_to_all_social_networks')
+def test_joboffer_approve_ok(
+    publish_function, admin_client, admin_user, user_company_profile, telegram_dummy
+):
     """
     Test approval of a joboffer with an admin user
     """
@@ -376,6 +388,9 @@ def test_joboffer_approve_ok(admin_client, admin_user, user_company_profile, tel
       'offer_url': joboffer.get_absolute_url(),
       'username': admin_user.username
     })
+
+    assert publish_function.called
+    assert publish_function.call_args[0][0] == joboffer
 
 
 @pytest.mark.django_db

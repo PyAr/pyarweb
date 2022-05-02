@@ -34,13 +34,14 @@ from .constants import (
   REJECTED_MAIL_BODY,
   STATE_LABEL_CLASSES,
   TELEGRAM_APPROVED_MESSAGE,
-  #TELEGRAM_MODERATION_MESSAGE,
+  TELEGRAM_MODERATION_MESSAGE,
   TELEGRAM_REJECT_MESSAGE
 )
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import get_valid_actions
 from .models import EventType, JobOffer, JobOfferAccessLog, JobOfferHistory, OfferState
 from .telegram_api import send_notification_to_moderators
+from .publishers import publish_to_all_social_networks
 from .utils import get_visualization_data, send_mail_to_publishers
 
 
@@ -310,6 +311,8 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
 
         send_notification_to_moderators(moderators_message)
 
+        publish_to_all_social_networks(offer)
+
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
     action_code = CODE_REACTIVATE
@@ -342,6 +345,12 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
     def update_object(self, offer):
         offer.state = OfferState.MODERATION
         offer.save()
+
+        moderators_message = TELEGRAM_MODERATION_MESSAGE % {
+          'offer_url': offer.get_absolute_url()
+        }
+
+        send_notification_to_moderators(moderators_message)
 
 
 class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
