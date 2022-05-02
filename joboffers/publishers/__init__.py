@@ -1,7 +1,9 @@
 import os
 import inspect
 
+from django.conf import settings
 from django.template import Context, Template
+from django.utils.module_loading import import_string
 
 from ..models import JobOffer
 
@@ -57,6 +59,7 @@ def publish_offer(job_offer: 'JobOffer', publishers: list = None):
 
 def publish_to_all_social_networks(joboffer):
     """
-
+    Send the joboffer to all the configured social networks.
     """
-    print("== truly publishing ==")
+    publishers = [import_string(p) for p in settings.SOCIAL_NETWORKS_PUBLISHERS]
+    publish_offer(joboffer, publishers)
