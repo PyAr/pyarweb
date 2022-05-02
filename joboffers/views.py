@@ -34,7 +34,7 @@ from .constants import (
   REJECTED_MAIL_BODY,
   STATE_LABEL_CLASSES,
   TELEGRAM_APPROVED_MESSAGE,
-  TELEGRAM_MODERATION_MESSAGE,
+  #TELEGRAM_MODERATION_MESSAGE,
   TELEGRAM_REJECT_MESSAGE
 )
 from .forms import JobOfferForm, JobOfferCommentForm
@@ -240,6 +240,7 @@ class JobOfferRejectView(
     def form_valid(self, form):
         offer_comment = form.instance
         offer = self.object
+        user = self.request.user
 
         offer_comment.created_by = self.request.user
         offer_comment.modified_by = self.request.user
@@ -255,6 +256,13 @@ class JobOfferRejectView(
         }
 
         send_mail_to_publishers(offer, subject, body)
+
+        moderators_message = TELEGRAM_REJECT_MESSAGE % {
+          'offer_url': offer.get_absolute_url(),
+          'username': user.username
+        }
+
+        send_notification_to_moderators(moderators_message)
 
         return super().form_valid(form)
 

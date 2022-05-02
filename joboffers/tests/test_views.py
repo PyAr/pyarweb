@@ -2,7 +2,6 @@ import factory
 import pytest
 
 from datetime import datetime
-from requests_mock import ANY, mock
 
 from django.core import mail
 from django.contrib.messages import get_messages as contrib_get_messages
@@ -27,13 +26,13 @@ from ..constants import (
   REQUEST_MODERATION_URL,
   TRACK_CONTACT_INFO_URL,
   TELEGRAM_APPROVED_MESSAGE,
+  TELEGRAM_REJECT_MESSAGE,
   VIEW_URL
 )
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
-from ..telegram_api import _compose_message, _get_request_url
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
-from .fixtures import create_publisher_client, create_admin_user # noqa
+from .fixtures import create_publisher_client, create_admin_user, create_telegram_dummy # noqa
 
 
 JOBOFFER_TITLE1 = 'Job Offer Sample Title 1'
@@ -340,9 +339,7 @@ def test_joboffer_approve_without_permission(publisher_client, user_company_prof
 
 
 @pytest.mark.django_db
-def test_joboffer_approve_ok(
-    admin_client, admin_user, user_company_profile, requests_mock, settings
-):
+def test_joboffer_approve_ok(admin_client, admin_user, user_company_profile, telegram_dummy):
     """
     Test approval of a joboffer with an admin user
     """
@@ -355,21 +352,6 @@ def test_joboffer_approve_ok(
     assert 1 == JobOffer.objects.count()
     assert OfferState.MODERATION == joboffer.state
     # end preconditions
-
-    settings.TELEGRAM_BOT_TOKEN = '12345'
-    settings.TELEGRAM_MESSAGE_PREFIX = 'test'
-    settings.TELEGRAM_MODERATORS_CHAT_ID = 1
-    telegram_message = TELEGRAM_APPROVED_MESSAGE % {
-      'offer_url': joboffer.get_absolute_url(),
-      'username': admin_user.username
-    }
-
-    expected_telegram_message = f"{settings.TELEGRAM_MESSAGE_PREFIX} {telegram_message}"
-    safe_message = _compose_message(telegram_message)
-    expected_telegram_url = _get_request_url(safe_message, settings.TELEGRAM_MODERATORS_CHAT_ID)
-
-    mock.case_sensitive = True
-    requests_mock.register_uri(ANY, ANY, text='test')
 
     response = client.get(target_url)
 
@@ -387,16 +369,17 @@ def test_joboffer_approve_ok(
     assert mail.outbox[0].to == [user_company_profile.user.email]
     assert mail.outbox[0].subject == APPROVED_MAIL_SUBJECT
 
-    telegram_history = requests_mock.request_history
-    sent_message = telegram_history[0].qs['text'][0]
-
+    telegram_history = telegram_dummy.call_history
     assert len(telegram_history) == 1
-    assert sent_message == expected_telegram_message
-    assert telegram_history[0].url == expected_telegram_url
+    sent_message = telegram_history[0]['text'][0]
+    assert sent_message.endswith(TELEGRAM_APPROVED_MESSAGE % {
+      'offer_url': joboffer.get_absolute_url(),
+      'username': admin_user.username
+    })
 
 
 @pytest.mark.django_db
-def test_joboffer_reject_ok(admin_client, user_company_profile):
+def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, telegram_dummy):
     """
     Test rejection of the joboffer by the admin user
     """
@@ -426,6 +409,15 @@ def test_joboffer_reject_ok(admin_client, user_company_profile):
 
     assert len(mail.outbox) == 1
     assert REJECTED_MAIL_SUBJECT
+
+    telegram_history = telegram_dummy.call_history
+    assert len(telegram_history) == 1
+    sent_message = telegram_history[0]['text'][0]
+    assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE % {
+      'offer_title': joboffer.title,
+      'offer_url': joboffer.get_absolute_url(),
+      'username': admin_user.username
+    })
 
 
 @pytest.mark.django_db

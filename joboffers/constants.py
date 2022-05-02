@@ -118,4 +118,6 @@ OFFER_EXPIRATION_DAYS = 180
 
 TELEGRAM_MODERATION_MESSAGE = _('La oferta %(offer_url)s necesita ser moderada.')
 TELEGRAM_APPROVED_MESSAGE = _('La oferta %(offer_url)s fue aprobada por %(username)s.')
-TELEGRAM_REJECT_MESSAGE = _('La oferta %(offer_title) fue rechazada por %(username)s. %(offer_url)s')
+TELEGRAM_REJECT_MESSAGE = _(
+  'La oferta %(offer_url)s fue rechazada por %(username)s.'
+)
