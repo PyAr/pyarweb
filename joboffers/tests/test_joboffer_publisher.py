@@ -77,11 +77,18 @@ def test_publisher_publish_error():
 
 @pytest.mark.django_db
 @patch('joboffers.publishers.publish_offer')
-def test_publisher_to_all_social_networks_works_ok(publish_offer_function):
+def test_publisher_to_all_social_networks_works_ok(publish_offer_function, settings):
     """
     Test that publish_to_all_social_networks() uses all the condifured publishers
     """
     joboffer = JobOfferFactory.create(state=OfferState.ACTIVE)
+    settings.SOCIAL_NETWORKS_PUBLISHERS = [
+      'joboffers.publishers.discourse.DiscoursePublisher',
+      'joboffers.publishers.facebook.FacebookPublisher',
+      'joboffers.publishers.telegram.TelegramPublisher',
+      'joboffers.publishers.twitter.TwitterPublisher'
+    ]
+
     publish_to_all_social_networks(joboffer)
 
     expected_publishers = [
