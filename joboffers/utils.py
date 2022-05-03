@@ -1,5 +1,8 @@
 import hashlib
+import logging
 import unicodedata
+
+from smtplib import SMTPException
 
 from django.core.mail import send_mail
 from datetime import timedelta
@@ -47,13 +50,16 @@ def send_mail_to_publishers(joboffer, subject: str, body: str):
     publishers_addresses = joboffer.get_publisher_mail_addresses()
 
     if publishers_addresses:
-        send_mail(
-          subject,
-          body,
-          None,  # Default from mail in settings
-          publishers_addresses,
-          fail_silently=False
-        )
+        try:
+            send_mail(
+              subject,
+              body,
+              None,  # Default from mail in settings
+              publishers_addresses,
+              fail_silently=False
+            )
+        except SMTPException as e:
+            logging.error(e)
 
 
 def get_visualization_data(joboffer):
