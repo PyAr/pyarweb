@@ -136,14 +136,13 @@ def test_expire_old_offers():
     two_hundred_days_ago = today - timedelta(days=200)
     JobOfferFactory.create(company=company)
     offer2 = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
-    offer3 = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
+    JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
     JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
 
-    JobOffer.objects.filter(id__in=[offer2.id, offer3.id]).update(modified_at=two_hundred_days_ago)
+    JobOffer.objects.filter(id=offer2.id).update(modified_at=two_hundred_days_ago)
 
     expire_old_offers()
 
-    assert len(mail.outbox) == 2
+    assert len(mail.outbox) == 1
     assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT % {'title': offer2.title}
-    assert mail.outbox[1].subject == EXPIRED_OFFER_MAIL_SUBJECT % {'title': offer3.title}
-    assert JobOffer.objects.filter(state=OfferState.EXPIRED).count() == 2
+    assert JobOffer.objects.filter(state=OfferState.EXPIRED).count() == 1
