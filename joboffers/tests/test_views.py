@@ -19,11 +19,13 @@ from ..constants import (
   ADMIN_URL,
   APPROVE_URL,
   APPROVED_MAIL_SUBJECT,
-  REJECTED_MAIL_SUBJECT,
   DEACTIVATE_URL,
   HISTORY_URL,
   LIST_URL,
+  REACTIVATE_URL,
+  REACTIVATED_MAIL_SUBJECT,
   REJECT_URL,
+  REJECTED_MAIL_SUBJECT,
   REQUEST_MODERATION_URL,
   TRACK_CONTACT_INFO_URL,
   TELEGRAM_APPROVED_MESSAGE,
@@ -227,6 +229,38 @@ def test_joboffer_deactivate_ok(publisher_client, user_company_profile):
 
     joboffer = JobOffer.objects.get(id=joboffer.id)
     assert OfferState.DEACTIVATED == joboffer.state
+
+
+@pytest.mark.django_db
+def test_joboffer_reactivate_ok(publisher_client, user_company_profile):
+    """
+    Test reactiving a joboffer by a publisher
+    """
+    client = publisher_client
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(company=company, state=OfferState.EXPIRED)
+
+    target_url = reverse(REACTIVATE_URL, kwargs={'slug': joboffer.slug})
+
+    assert 1 == JobOffer.objects.count()
+    assert joboffer.state == OfferState.EXPIRED
+    # end preconditions
+
+    response = client.get(target_url)
+
+    # Asserts redirection to the joboffer status page
+    assert 302 == response.status_code
+    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+
+    messages = get_plain_messages(response)
+    assert messages[0].startswith("Oferta reactivada")
+
+    joboffer = JobOffer.objects.get(id=joboffer.id)
+    assert OfferState.ACTIVE == joboffer.state
+
+    assert len(mail.outbox) == 1
+    assert mail.outbox[0].to == [user_company_profile.user.email]
+    assert mail.outbox[0].subject == REACTIVATED_MAIL_SUBJECT
 
 
 @pytest.fixture(name="joboffers_list")

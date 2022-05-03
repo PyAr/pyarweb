@@ -7,6 +7,7 @@ LIST_URL = 'joboffers:list'
 APPROVE_URL = 'joboffers:approve'
 DEACTIVATE_URL = 'joboffers:deactivate'
 VIEW_URL = 'joboffers:view'
+REACTIVATE_URL = 'joboffers:reactivate'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
 HISTORY_URL = 'joboffers:history'
@@ -94,8 +95,14 @@ STATE_LABEL_CLASSES = {
 
 APPROVED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Aprobada')
 APPROVED_MAIL_BODY = _(
-  'Le informamos que la oferta que envío a revisión (%(title)s) ha sido aprobada y ya se'
-  ' encuentra listada en la página y fué replicada en las redes sociales.'
+  'Le informamos que la oferta que envío a revisión (%(title)s) ha sido aprobada. Ya se '
+  'puede visualizar en listado de ofertas de trabajo de PyAr y fué replicada en las redes'
+  'sociales.'
+)
+REACTIVATED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Reactivado')
+REACTIVATED_MAIL_BODY = _(
+  'Le informamos que la oferta (%(title)s) ha sido reactivada. Ya se puede visualizar'
+  'en el listado de ofertas de trabajo de PyAr.'
 )
 REJECTED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Rechazada')
 REJECTED_MAIL_BODY = _(

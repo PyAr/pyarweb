@@ -30,6 +30,8 @@ from .constants import (
   CODE_REACTIVATE,
   CODE_REJECT,
   CODE_REQUEST_MODERATION,
+  REACTIVATED_MAIL_BODY,
+  REACTIVATED_MAIL_SUBJECT,
   REJECTED_MAIL_SUBJECT,
   REJECTED_MAIL_BODY,
   STATE_LABEL_CLASSES,
@@ -322,6 +324,12 @@ class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
     def update_object(self, offer):
         offer.state = OfferState.ACTIVE
         offer.save()
+
+        send_mail_to_publishers(
+          offer,
+          REACTIVATED_MAIL_SUBJECT,
+          REACTIVATED_MAIL_BODY % {'title': offer.title}
+        )
 
 
 class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
