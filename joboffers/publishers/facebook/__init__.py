@@ -15,10 +15,11 @@ class FacebookPublisher(Publisher):
     """Facebook Publisher."""
     name = 'Facebook'
 
-    def _push_to_api(self, message: str, title: str):
+    def _push_to_api(self, message: str, title: str, link: str):
         """Publish a message to the configured facebook page."""
         payload = {
             'message': message,
+            'link': link,
             'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
         }
 

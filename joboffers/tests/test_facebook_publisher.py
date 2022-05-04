@@ -10,6 +10,8 @@ from ..publishers.facebook import (ERROR_LOG_MESSAGE, FACEBOOK_POST_URL,
 DUMMY_MESSAGE = 'message'
 DUMMY_EXCEPTION_MESSAGE = 'Oops'
 DUMMY_BAD_REQUEST_TEXT = 'This is bad'
+DUMMY_TITLE = 'This is the a title'
+DUMMY_LINK = 'https://example/com'
 
 
 class DummyRequest:
@@ -22,7 +24,7 @@ def test_publish_message_ok(requests_mock: Mocker):
     requests_mock.post(FACEBOOK_POST_URL, json='', status_code=200)
 
     try:
-        status = FacebookPublisher()._push_to_api('message', 'title')
+        status = FacebookPublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
     except NoMockAddress:
         assert False, 'publish_offer raised an exception, wich means that the url is malformed.'
 
@@ -35,9 +37,10 @@ def test_publish_message_ok(requests_mock: Mocker):
     )
 def test_publish_message_urlerror(mocked_object, caplog):
     """Test error handling of requests made to the facebook api when url does not exists."""
-    status = FacebookPublisher()._push_to_api('message', 'title')
+    status = FacebookPublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
     payload = {
         'message': DUMMY_MESSAGE,
+        'link': DUMMY_LINK,
         'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
     }
 
@@ -56,10 +59,11 @@ def test_publish_message_parameters_error(caplog):
     with patch('joboffers.publishers.facebook.requests.post') as mocked_object:
 
         mocked_object.return_value = DummyRequest
-        status = FacebookPublisher()._push_to_api('message', 'title')
+        status = FacebookPublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
 
     payload = {
         'message': DUMMY_MESSAGE,
+        'link': DUMMY_LINK,
         'access_token': settings.FACEBOOK_PAGE_ACCESS_TOKEN
     }
 

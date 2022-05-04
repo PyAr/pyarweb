@@ -21,7 +21,9 @@ class TestPublishCommand(BaseCommand):
         else:
             self.stdout.write(self.style.SUCCESS('Publicando una prueba.'))
             raw_status = publisher._push_to_api(
-                'Esto es una prueba de post.', 'Título de prueba'
+                'Esto es una prueba de post.\nhttps://github.com/PyAr/pyarweb',
+                'Título de prueba',
+                'https://github.com/PyAr/pyarweb'
             )
 
         if raw_status == 200 or status == publisher.RESULT_OK:
