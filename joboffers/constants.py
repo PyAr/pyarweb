@@ -122,9 +122,14 @@ EXPIRED_OFFER_MAIL_BODY = _(
 )
 
 OFFER_EXPIRATION_DAYS = 180
+PENDING_MODERATION_OFFER_DAYS = 2
 
 TELEGRAM_MODERATION_MESSAGE = _('La oferta %(offer_url)s necesita ser moderada.')
 TELEGRAM_APPROVED_MESSAGE = _('La oferta %(offer_url)s fue aprobada por %(username)s.')
 TELEGRAM_REJECT_MESSAGE = _(
   'La oferta %(offer_url)s fue rechazada por %(username)s.'
+)
+
+TELEGRAM_PENDING_MODERATION_MESSAGE = _(
+  'La oferta %(offer_url)s necesita moderación y ya pasaron %(moderation_reminder_days)s días.'
 )
