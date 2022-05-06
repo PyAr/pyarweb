@@ -1,17 +1,20 @@
 import pytest
 
 from django.contrib.messages import get_messages as contrib_get_messages
-from django.urls import reverse_lazy
+from django.urls import reverse
 
 from pycompanies.tests.factories import CompanyFactory, UserCompanyProfileFactory, UserFactory
-from pycompanies.tests.fixtures import (create_client, create_logged_client, create_user, # noqa
-                                        create_user_company_profile)
+from joboffers.tests.fixtures import create_publisher_client  # noqa
+from pyarweb.tests.fixtures import (create_client, create_moderator_client,  # noqa
+                                    create_logged_client, create_user)
+from pycompanies.tests.fixtures import create_user_company_profile  # noqa
+from joboffers.tests.utils import create_analytics_sample_data
 
 
 ERROR_USER_DOES_NOT_EXIST = 'Le usuarie que ingresaste no existe.'
 USER_ASSOCIATED_CORRECTLY = 'Le usuarie fue asociade correctamente.'
 
-ADMIN_URL = reverse_lazy('companies:admin')
+ADMIN_URL = reverse('companies:admin')
 
 
 def get_plain_messages(request):
@@ -28,7 +31,7 @@ def test_associate_nonexistent_user(logged_client):
     Should fail to associate an nonexistent user
     """
     company = CompanyFactory.create()
-    ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
+    ASSOCIATE_URL = reverse('companies:associate', kwargs={'company': company.id})
 
     response = logged_client.post(ASSOCIATE_URL, data={'username': 'pepito'})
     message = get_plain_messages(response)[0]
@@ -45,7 +48,7 @@ def test_associate_user_in_company(logged_client, user):
     """
     company = CompanyFactory.create()
 
-    ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
+    ASSOCIATE_URL = reverse('companies:associate', kwargs={'company': company.id})
 
     response = logged_client.post(ASSOCIATE_URL, data={'username': user.username})
     message = get_plain_messages(response)[0]
@@ -66,7 +69,7 @@ def test_associate_user_already_in_company(logged_client, user):
     ERROR_USER_ALREADY_IN_COMPANY = ('Le usuarie que desea vincular ya '
                                      f'pertenece a {user_company.company}')
 
-    ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
+    ASSOCIATE_URL = reverse('companies:associate', kwargs={'company': company.id})
 
     response = logged_client.post(ASSOCIATE_URL, data={'username': user.username})
     message = get_plain_messages(response)[0]
@@ -87,7 +90,7 @@ def test_associate_user_in_other_company(logged_client, user):
 
     ERROR_USER_IN_OTHER_COMPANY = f'Le usuarie que ingresó esta vinculade a {other_company}.'
 
-    ASSOCIATE_URL = reverse_lazy('companies:associate', kwargs={'company': company.id})
+    ASSOCIATE_URL = reverse('companies:associate', kwargs={'company': company.id})
 
     response = logged_client.post(ASSOCIATE_URL, data={'username': user.username})
     message = get_plain_messages(response)[0]
@@ -137,7 +140,7 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
     """
     company_1 = CompanyFactory.create(name='company_1')
     company_2 = CompanyFactory.create(name='company_2')
-    COMPANY_LIST_URL = reverse_lazy('companies:association_list')
+    COMPANY_LIST_URL = reverse('companies:association_list')
 
     response = logged_client.get(COMPANY_LIST_URL, data={'empresa': 'company'})
 
@@ -153,7 +156,7 @@ def test_company_admin_should_have_no_matching_company_in_context(logged_client)
     Context should have an empty companies if the search doesn't match any company name
     """
     CompanyFactory.create(name='company_1')
-    COMPANY_LIST_URL = reverse_lazy('companies:association_list')
+    COMPANY_LIST_URL = reverse('companies:association_list')
 
     response = logged_client.get(COMPANY_LIST_URL, data={'empresa': 'not_matching_search'})
 
@@ -172,8 +175,8 @@ def test_company_disassociate_last_user_from_company(logged_client, user):
     company_1 = CompanyFactory.create(name='company_1')
     user_company_profile = UserCompanyProfileFactory.create(company=company_1, user=user)
 
-    COMPANY_DISSASOCIATE_URL = reverse_lazy('companies:disassociate',
-                                            kwargs={'pk': user_company_profile.id})
+    COMPANY_DISSASOCIATE_URL = reverse('companies:disassociate',
+                                       kwargs={'pk': user_company_profile.id})
 
     response = logged_client.get(COMPANY_DISSASOCIATE_URL, data={'empresa': company_1})
 
@@ -193,10 +196,102 @@ def test_company_disassociate_one_user_from_company(logged_client, user):
 
     DISASSOCIATE_MESSAGE = f'¿Estás seguro que deseas desvincular a {user} de {company.name}?'
 
-    COMPANY_DISSASOCIATE_URL = reverse_lazy('companies:disassociate',
-                                            kwargs={'pk': user_company_profile.id})
+    COMPANY_DISSASOCIATE_URL = reverse('companies:disassociate',
+                                       kwargs={'pk': user_company_profile.id})
 
     response = logged_client.get(COMPANY_DISSASOCIATE_URL, data={'empresa': company})
 
     assert 200 == response.status_code
     assert DISASSOCIATE_MESSAGE == response.context_data['message']
+
+
+@pytest.mark.django_db
+def test_company_detail_doesnt_show_analytics_button_for_normal_user(logged_client):
+    """
+    Test that the company page doesn't show the analytics button for authenticated users that
+    doesn't belong to the current company
+    """
+    client = logged_client
+    company = CompanyFactory.create(name='company_1')
+
+    target_url = reverse('companies:detail', kwargs={'pk': company.id})
+
+    response = client.get(target_url)
+
+    assert response.context_data['can_view_analytics'] is False
+
+
+@pytest.mark.django_db
+def test_company_detail_show_analytics_button_for_admin_user(admin_client):
+    """
+    Test that the company page show the analytics button for an admin user
+    """
+    client = admin_client
+    company = CompanyFactory.create(name='company_1')
+
+    target_url = reverse('companies:detail', kwargs={'pk': company.id})
+
+    response = client.get(target_url)
+
+    assert response.context_data['can_view_analytics'] is True
+
+
+@pytest.mark.django_db
+def test_company_detail_show_analytics_button_for_publisher_user(
+    publisher_client, user_company_profile
+):
+    """
+    Test that the company page show the analytics button for a publisher that belongs to the
+    company
+    """
+    client = publisher_client
+    company = user_company_profile.company
+
+    target_url = reverse('companies:detail', kwargs={'pk': company.id})
+
+    response = client.get(target_url)
+
+    assert response.context_data['can_view_analytics'] is True
+
+
+@pytest.mark.django_db
+def test_company_analytics_access_denied_for_external_user(logged_client):
+    """
+    Test that the rendering of JobOfferAccessLog data for a company doesn't fail.
+    """
+    client = logged_client
+    company = CompanyFactory.create(name='company_1')
+
+    target_url = reverse('companies:analytics', kwargs={'pk': company.id})
+
+    response = client.get(target_url)
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_render_company_analytics_ok(publisher_client, user_company_profile):
+    """
+    Test that the rendering of JobOfferAccessLog data for a company doesn't fail.
+    """
+    client = publisher_client
+    company = user_company_profile.company
+    user = user_company_profile.user
+
+    target_url = reverse('companies:analytics', kwargs={'pk': company.id})
+
+    create_analytics_sample_data(
+      test_username=user.username,
+      test_offer_title='Testing Offer 1',
+      test_company=company,
+      max_views_amount=10
+    )
+
+    create_analytics_sample_data(
+      test_username=user.username,
+      test_offer_title='Testing Offer 2',
+      test_company=company,
+      max_views_amount=10
+    )
+
+    response = client.get(target_url)
+    assert response.status_code == 200

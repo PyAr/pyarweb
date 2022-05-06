@@ -33,11 +33,13 @@
             {% endfor %}
           </table>
 
-        {% for title, plot in plots %}
-        <h2>{{ title }}</h2>
-          {% autoescape off %}
-            {{ plot }}
-          {% endautoescape %}
+        {% for title, graph in graphs %}
+          {% if graph %}
+            <h2>{{ title }}</h2>
+              {% autoescape off %}
+                {{ graph }}
+              {% endautoescape %}
+          {% endif %}
         {% endfor %}
       </div>
     </div>
