@@ -19,6 +19,8 @@ class UserFactory(DjangoModelFactory):
 
     class Meta:
         model = User
+        # Warning!: Using the factory to get an already existing user logs out the user in the
+        # session :(, maybe because the password setting
         django_get_or_create = ('username',)
 
 

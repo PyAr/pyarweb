@@ -1,5 +1,11 @@
 import hashlib
 import unicodedata
+import plotly.graph_objects as go
+
+from plotly.offline import plot
+
+from django.db.models import Count
+from django.utils.translation import gettext as _
 
 from joboffers.models import EventType, JobOfferAccessLog
 
@@ -45,3 +51,38 @@ def get_visualization_data(joboffer):
         output_data.append(new_row)
 
     return output_data
+
+
+def get_visualizations_graph(log_queryset):
+    """
+    Return a graph of the visualizations amount for the provided queryset.
+    """
+    if log_queryset.exists():
+        grouping_qs = log_queryset\
+          .order_by('created_at') \
+          .values('created_at__date').annotate(Count('id'))
+
+        dates = grouping_qs.values_list('created_at__date', flat=True)
+        views_amount = grouping_qs.values_list('id__count', flat=True)
+
+        fig = go.Figure(data=[go.Scatter(
+          x=list(dates), y=list(views_amount)
+        )])
+
+        fig.update_layout(
+          {"margin": {"l": 50, "r": 50, "b": 50, "t": 50, "pad": 4}}
+        )
+
+        fig.update_xaxes(
+          dtick=1 * 1000 * 60 * 60 * 24,
+          tickformat="%d-%m-%Y",
+          tickangle=60
+        )
+
+        fig.update_yaxes(title=_("Visitas"), automargin=True)
+
+        graph = plot(fig, output_type='div')
+    else:
+        graph = None
+
+    return graph
