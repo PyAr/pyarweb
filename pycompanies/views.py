@@ -1,7 +1,9 @@
 from braces.views import LoginRequiredMixin
-from django.contrib.auth import get_user_model
+
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView, TemplateView
@@ -9,6 +11,8 @@ from django.views.generic.base import View
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 
 from community.views import OwnedObject
+from joboffers.utils import get_visualizations_graph
+from joboffers.models import EventType, JobOffer, JobOfferAccessLog
 from pycompanies.forms import CompanyForm
 from pycompanies.models import Company, UserCompanyProfile
 
@@ -21,6 +25,18 @@ class CompanyDetailView(DetailView):
     model = Company
     template_name = 'companies/company_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+
+        if UserCompanyProfile.objects.for_user(user=user) or user.is_superuser:
+            context['can_view_analytics'] = True
+        else:
+            context['can_view_analytics'] = False
+
+        return context
+
 
 class CompanyListView(ListView):
     template_name = 'companies/company_list.html'
@@ -31,7 +47,7 @@ class CompanyListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
+        user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
         if self.request.user.is_anonymous is False and user_company:
             context['own_company'] = user_company.company
         return context
@@ -76,23 +92,24 @@ class CompanyAdminView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = _('Administrar Empresa')
 
-        if self.request.user.is_anonymous is False:
+        user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
+
+        if user_company:
             context['user'] = self.request.user
-            user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
-            if user_company:
-                context['user_company_id'] = user_company.id
-                context['own_company'] = user_company.company
-                context['company_users'] = UserCompanyProfile.objects.filter(
-                    company=context['own_company'])
+            context['user_company_id'] = user_company.id
+            context['own_company'] = user_company.company
+            context['company_users'] = UserCompanyProfile.objects.filter(
+              company=context['own_company']
+            )
+
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        if self.request.user.is_anonymous is False:
-            user_company = UserCompanyProfile.objects.filter(user=self.request.user).first()
-            if not user_company:
-                return redirect(ASSOCIATION_LIST_URL)
-
-        return super().dispatch(request, *args, **kwargs)
+        user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
+        if user_company:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect(ASSOCIATION_LIST_URL)
 
 
 class CompanyAssociationListView(LoginRequiredMixin, ListView):
@@ -170,3 +187,43 @@ class CompanyAssociateView(LoginRequiredMixin, View):
         else:
             messages.warning(request, 'Le usuarie que ingresaste no existe.')
         return redirect(ADMIN_URL)
+
+
+class CompanyAnalyticsView(DetailView):
+    model = Company
+    template_name = 'companies/company_analytics.html'
+
+    def get_context_data(self, company):
+        log_queryset = JobOfferAccessLog.objects.filter(joboffer__company=company)
+
+        graphs = []
+
+        for event_type in EventType:
+            qs = log_queryset.filter(event_type=event_type.value)
+            graph = get_visualizations_graph(qs)
+            graphs.append([event_type.label, graph])
+
+        joboffer_data = []
+        for joboffer in JobOffer.objects.filter(company=company).order_by('-created_at'):
+            data = [joboffer]
+
+            for event_type in EventType:
+                data.append(
+                  log_queryset.filter(event_type=event_type.value, joboffer=joboffer).count()
+                )
+
+            joboffer_data.append(data)
+
+        return {'company': company, 'graphs': graphs, 'joboffers_data': joboffer_data}
+
+    def get(self, request, *args, **kwargs):
+        company = self.get_object()
+        user = request.user
+
+        owner_profile = UserCompanyProfile.objects.for_user(user=user, company=company)
+        if owner_profile or user.is_superuser:
+            context = self.get_context_data(company)
+
+            return render(request, self.template_name, context=context)
+        else:
+            raise PermissionDenied()

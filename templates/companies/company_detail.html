@@ -17,6 +17,9 @@
             <a href="{% url 'companies:edit' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
             <a href="{% url 'companies:delete' object.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
             {% endif %}
+            {% if can_view_analytics %}
+              <a href="{% url 'companies:analytics' object.id %}" class="btn btn-dark-green">{% trans 'Analítica' %}</a>
+            {% endif %}
           </span>
         </h2>
       </div>

@@ -7,7 +7,9 @@ from django.core import mail
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
-from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
+from pyarweb.tests.fixtures import ( # noqa
+  create_client, create_logged_client, create_moderator_user, create_user
+)
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
 
@@ -30,7 +32,7 @@ from ..constants import (
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
-from .fixtures import create_publisher_client, create_admin_user # noqa
+from .fixtures import create_publisher_client # noqa
 
 
 JOBOFFER_TITLE1 = 'Job Offer Sample Title 1'
@@ -597,7 +599,7 @@ def test_joboffer_detail_view_render_state_with_rejected_label(publisher_client)
 
 @pytest.mark.django_db
 def test_JobOfferHistoryView_renders_with_context(
-        publisher_client, settings, user_company_profile, admin_user
+        publisher_client, settings, user_company_profile, moderator_user
 ):
     """
     Test that JobOfferHistoryView renders correctly
@@ -614,7 +616,7 @@ def test_JobOfferHistoryView_renders_with_context(
     joboffer.save()
     joboffer.state = OfferState.MODERATION
     joboffer.save()
-    comment = JobOfferCommentFactory.build(joboffer=joboffer, created_by=admin_user)
+    comment = JobOfferCommentFactory.build(joboffer=joboffer, created_by=moderator_user)
     comment.save()
     joboffer.state = OfferState.ACTIVE
     joboffer.save()
