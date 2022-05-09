@@ -241,11 +241,11 @@ class JobOfferRejectView(
         form.save()
 
         subject = REJECTED_MAIL_SUBJECT
-        body = REJECTED_MAIL_BODY % {
-          'reason': offer_comment.get_comment_type_display(),
-          'text': offer_comment.text,
-          'title': offer.title
-        }
+        body = REJECTED_MAIL_BODY.format(
+          reason=offer_comment.get_comment_type_display(),
+          text=offer_comment.text,
+          title=offer.title
+        )
 
         send_mail_to_publishers(offer, subject, body)
 
@@ -283,7 +283,7 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         send_mail_to_publishers(
           offer,
           APPROVED_MAIL_SUBJECT,
-          APPROVED_MAIL_BODY % {'title': offer.title},
+          APPROVED_MAIL_BODY.format(title=offer.title)
         )
 
 

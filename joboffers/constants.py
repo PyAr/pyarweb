@@ -94,24 +94,24 @@ STATE_LABEL_CLASSES = {
 
 APPROVED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Aprobada')
 APPROVED_MAIL_BODY = _(
-  'Le informamos que la oferta que envío a revisión (%(title)s) ha sido aprobada y ya se'
+  'Le informamos que la oferta que envío a revisión ({title}) ha sido aprobada y ya se'
   ' encuentra listada en la página y fué replicada en las redes sociales.'
 )
 REJECTED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Rechazada')
 REJECTED_MAIL_BODY = _(
-  'Le informamos que la oferta que envío a revisión (%(title)s) ha sido rechazada.\n'
-  'Razón de Rechazo: %(reason)s \n'
-  'Observación: %(text)s'
+  'Le informamos que la oferta que envío a revisión ({title}) ha sido rechazada.\n'
+  'Razón de Rechazo: {reason} \n'
+  'Observación: {text}'
 )
-EXPIRED_OFFER_MAIL_SUBJECT = _('%(title)s - Caducada')
+EXPIRED_OFFER_MAIL_SUBJECT = _('{title} - Caducada')
 EXPIRED_OFFER_MAIL_BODY = _(
-  'Le informamos que la oferta "%(title)s" ha caducado. Han pasado los %(expiration_days)s días '
-  'desde su última activación. Puede reactivar la oferta dirigiéndose a %(offer_url)s\n\n'
+  'Le informamos que la oferta "{title}" ha caducado. Han pasado los {expiration_days} días '
+  'desde su última activación. Puede reactivar la oferta dirigiéndose a {offer_url}\n\n'
   'Resumen de Visitas\n'
   '===================\n\n'
-  ' - %(listing_views)s Visualizaciones en listado\n'
-  ' - %(detail_views)s Visualizaciones de la oferta completa\n'
-  ' - %(contact_info_views)s Visualizaciones de los datos de contacto.\n'
+  ' - {listing_views} Visualizaciones en listado\n'
+  ' - {detail_views} Visualizaciones de la oferta completa\n'
+  ' - {contact_info_views} Visualizaciones de los datos de contacto.\n'
 )
 
 OFFER_EXPIRATION_DAYS = 180
