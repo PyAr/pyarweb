@@ -4,6 +4,7 @@ import unicodedata
 
 from smtplib import SMTPException
 
+from django.contrib import messages
 from django.core.mail import send_mail
 from datetime import timedelta
 
@@ -12,6 +13,7 @@ from django.utils import timezone
 from joboffers.constants import (
   EXPIRED_OFFER_MAIL_BODY,
   EXPIRED_OFFER_MAIL_SUBJECT,
+  MAIL_SENDING_ERROR,
   OFFER_EXPIRATION_DAYS
 )
 from joboffers.models import EventType, JobOffer, JobOfferAccessLog, OfferState
@@ -43,7 +45,7 @@ def hash_secret(credential: str):
     return digest
 
 
-def send_mail_to_publishers(joboffer, subject: str, body: str):
+def send_mail_to_publishers(joboffer, subject: str, body: str, request=None):
     """
     Send an email to the publishers of the provided joboffer
     """
@@ -59,6 +61,8 @@ def send_mail_to_publishers(joboffer, subject: str, body: str):
               fail_silently=False
             )
         except SMTPException as e:
+            if request:
+                messages.add_message(request, MAIL_SENDING_ERROR)
             logging.error(e)
 
 

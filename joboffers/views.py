@@ -30,6 +30,7 @@ from .constants import (
   CODE_REACTIVATE,
   CODE_REJECT,
   CODE_REQUEST_MODERATION,
+  PUBLISHER_FAILED_ERROR,
   REACTIVATED_MAIL_BODY,
   REACTIVATED_MAIL_SUBJECT,
   REJECTED_MAIL_SUBJECT,
@@ -258,7 +259,7 @@ class JobOfferRejectView(
           'title': offer.title
         }
 
-        send_mail_to_publishers(offer, subject, body)
+        send_mail_to_publishers(offer, subject, body, self.request)
 
         moderators_message = TELEGRAM_REJECT_MESSAGE % {
           'offer_url': offer.get_absolute_url(),
@@ -303,7 +304,8 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         send_mail_to_publishers(
           offer,
           APPROVED_MAIL_SUBJECT,
-          APPROVED_MAIL_BODY % {'title': offer.title}
+          APPROVED_MAIL_BODY % {'title': offer.title},
+          self.request
         )
 
         moderators_message = TELEGRAM_APPROVED_MESSAGE % {
@@ -313,7 +315,14 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
 
         send_notification_to_moderators(moderators_message)
 
-        publish_to_all_social_networks(offer)
+        publishers_failed = publish_to_all_social_networks(offer)
+
+        for publisher_failed in publishers_failed:
+            messages.add_message(
+              self.request,
+              messages.ERROR,
+              PUBLISHER_FAILED_ERROR % {'publisher': publisher_failed}
+            )
 
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
@@ -328,7 +337,8 @@ class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
         send_mail_to_publishers(
           offer,
           REACTIVATED_MAIL_SUBJECT,
-          REACTIVATED_MAIL_BODY % {'title': offer.title}
+          REACTIVATED_MAIL_BODY % {'title': offer.title},
+          self.request
         )
 
 
