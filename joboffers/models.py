@@ -193,9 +193,9 @@ class JobOffer(models.Model):
 
         return addresses
 
-    def get_visualizations_amount(self, event_type):
+    def get_visualizations_count(self, event_type):
         """
-        Get the visualizations amount for the given event type
+        Get the visualizations count for the given event type
         """
         return JobOfferAccessLog.objects.filter(joboffer=self, event_type=event_type).count()
 

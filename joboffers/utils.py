@@ -93,9 +93,9 @@ def expire_old_offers():
         body = EXPIRED_OFFER_MAIL_BODY % {
           'title': joboffer.title,
           'offer_url': joboffer.get_absolute_url(),
-          'listing_views': joboffer.get_visualizations_amount(EventType.LISTING_VIEW),
-          'detail_views': joboffer.get_visualizations_amount(EventType.DETAIL_VIEW),
-          'contact_info_views': joboffer.get_visualizations_amount(EventType.CONTACT_INFO_VIEW),
+          'listing_views': joboffer.get_visualizations_count(EventType.LISTING_VIEW),
+          'detail_views': joboffer.get_visualizations_count(EventType.DETAIL_VIEW),
+          'contact_info_views': joboffer.get_visualizations_count(EventType.CONTACT_INFO_VIEW),
           'expiration_days': OFFER_EXPIRATION_DAYS
         }
         joboffer.state = OfferState.EXPIRED
