@@ -182,7 +182,7 @@ class JobOffer(models.Model):
     def get_publisher_mail_addresses(self):
         """
         Return a list of the email addresses of the publishers of this offer.
-        It filters user the empty mail field
+        It filters users with empty mail field
         """
         profiles = UserCompanyProfile.objects.filter(company=self.company)
 
