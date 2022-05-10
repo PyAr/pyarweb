@@ -253,20 +253,20 @@ class JobOfferRejectView(
         form.save()
 
         subject = REJECTED_MAIL_SUBJECT
-        body = REJECTED_MAIL_BODY % {
+        body = REJECTED_MAIL_BODY.format({
           'reason': offer_comment.get_comment_type_display(),
           'text': offer_comment.text,
           'title': offer.title
-        }
+        })
 
         send_mail_to_publishers(offer, subject, body, self.request)
 
-        moderators_message = TELEGRAM_REJECT_MESSAGE % {
+        moderators_message = TELEGRAM_REJECT_MESSAGE.format({
           'offer_url': offer.get_absolute_url(),
           'username': user.username
-        }
+        })
 
-        send_notification_to_moderators(moderators_message)
+        send_notification_to_moderators(moderators_message, self.request)
 
         return super().form_valid(form)
 
@@ -313,7 +313,7 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
           'username': user.username
         }
 
-        send_notification_to_moderators(moderators_message)
+        send_notification_to_moderators(moderators_message, self.request)
 
         publishers_failed = publish_to_all_social_networks(offer)
 
@@ -368,7 +368,7 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
           'offer_url': offer.get_absolute_url()
         }
 
-        send_notification_to_moderators(moderators_message)
+        send_notification_to_moderators(moderators_message, self.request)
 
 
 class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):

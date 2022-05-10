@@ -125,6 +125,7 @@ OFFER_EXPIRATION_DAYS = 180
 
 MAIL_SENDING_ERROR = _('Falló al intentar enviar mail a los publicadores.')
 PUBLISHER_FAILED_ERROR = _('Falló al publicar al oferta en %(publisher)s.')
+TELEGRAM_SENDING_ERROR = _('Falló al notificar a los moderadores por telegram')
 
 TELEGRAM_MODERATION_MESSAGE = _('La oferta %(offer_url)s necesita ser moderada.')
 TELEGRAM_APPROVED_MESSAGE = _('La oferta %(offer_url)s fue aprobada por %(username)s.')

@@ -496,11 +496,10 @@ def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, tele
     telegram_history = telegram_dummy.call_history
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
-    assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE % {
-      'offer_title': joboffer.title,
+    assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE.format({
       'offer_url': joboffer.get_absolute_url(),
       'username': admin_user.username
-    })
+    }))
 
 
 @pytest.mark.django_db
