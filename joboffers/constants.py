@@ -104,14 +104,16 @@ REJECTED_MAIL_BODY = _(
   'Observación: {text}'
 )
 EXPIRED_OFFER_MAIL_SUBJECT = _('{title} - Caducada')
-EXPIRED_OFFER_MAIL_BODY = _(
-  'Le informamos que la oferta "{title}" ha caducado. Han pasado los {expiration_days} días '
-  'desde su última activación. Puede reactivar la oferta dirigiéndose a {offer_url}\n\n'
-  'Resumen de Visitas\n'
-  '===================\n\n'
-  ' - {listing_views} Visualizaciones en listado\n'
-  ' - {detail_views} Visualizaciones de la oferta completa\n'
-  ' - {contact_info_views} Visualizaciones de los datos de contacto.\n'
-)
+EXPIRED_OFFER_MAIL_BODY = _("""
+Le informamos que la oferta "{title}" ha caducado. Han pasado los {expiration_days} días desde su
+última activación. Puede reactivar la oferta dirigiéndose a {offer_url}.
+
+Resumen de Visitas
+==================
+
+ - {listing_views} Visualizaciones en listado.
+ - {detail_views} Visualizaciones de la oferta completa.
+ - {contact_info_views} Visualizaciones de los datos de contacto.
+""")
 
 OFFER_EXPIRATION_DAYS = 180
