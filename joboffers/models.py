@@ -8,6 +8,7 @@ from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
+from django.db.models.aggregates import Count
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -193,11 +194,17 @@ class JobOffer(models.Model):
 
         return addresses
 
-    def get_visualizations_count(self, event_type):
+    def get_visualizations_count(self):
         """
-        Get the visualizations count for the given event type
+        Get a dict with visualizations count for every kind of event
         """
-        return JobOfferAccessLog.objects.filter(joboffer=self, event_type=event_type).count()
+        items = JobOfferAccessLog.objects \
+                                 .filter(joboffer=self) \
+                                 .values_list('event_type') \
+                                 .annotate(total=Count('event_type')) \
+                                 .order_by()
+
+        return dict(items)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

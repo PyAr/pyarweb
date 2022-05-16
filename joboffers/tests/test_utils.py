@@ -144,6 +144,6 @@ def test_expire_old_offers():
     expire_old_offers()
 
     assert len(mail.outbox) == 2
-    assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT % {'title': offer2.title}
-    assert mail.outbox[1].subject == EXPIRED_OFFER_MAIL_SUBJECT % {'title': offer3.title}
+    assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offer2.title)
+    assert mail.outbox[1].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offer3.title)
     assert JobOffer.objects.filter(state=OfferState.EXPIRED).count() == 2

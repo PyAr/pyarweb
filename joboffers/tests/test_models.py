@@ -16,7 +16,7 @@ from pycompanies.tests.fixtures import create_user_company_profile  # noqa
 from ..constants import STATE_LABEL_CLASSES
 from ..models import (EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState,
                       Remoteness)
-from .factories import JobOfferCommentFactory, JobOfferFactory
+from .factories import JobOfferAccessLogFactory, JobOfferCommentFactory, JobOfferFactory
 from .joboffers_descriptions import (LONG_JOBOFFER_DESCRIPTION,
                                      SHORT_JOBOFFER_DESCRIPTION,
                                      STRIPPED_LONG_JOBOFFER_DESCRIPTION,
@@ -508,3 +508,53 @@ def test_joboffer_get_publisher_mail_addresses_without_users():
     mails = joboffer.get_publisher_mail_addresses()
 
     assert mails == EXPECTED_MAILS
+
+
+@pytest.mark.django_db
+def test_joboffer_get_visualizations_full():
+    """
+    Test get_visualizations with all the event types
+    """
+    joboffer = JobOfferFactory.create()
+    JobOfferAccessLogFactory.create_batch(
+      size=1, event_type=EventType.LISTING_VIEW, joboffer=joboffer
+    )
+    JobOfferAccessLogFactory.create_batch(
+      size=2, event_type=EventType.DETAIL_VIEW, joboffer=joboffer
+    )
+    JobOfferAccessLogFactory.create_batch(
+      size=3, event_type=EventType.CONTACT_INFO_VIEW, joboffer=joboffer
+    )
+
+    visualizations = joboffer.get_visualizations_count()
+
+    assert visualizations[EventType.LISTING_VIEW] == 1
+    assert visualizations[EventType.DETAIL_VIEW] == 2
+    assert visualizations[EventType.CONTACT_INFO_VIEW] == 3
+
+
+@pytest.mark.django_db
+def test_joboffer_get_visualizations_some():
+    """
+    Test get_visualizations with only listing view type
+    """
+    joboffer = JobOfferFactory.create()
+    JobOfferAccessLogFactory.create_batch(
+      size=1, event_type=EventType.LISTING_VIEW, joboffer=joboffer
+    )
+
+    visualizations = joboffer.get_visualizations_count()
+
+    assert visualizations == {EventType.LISTING_VIEW: 1}
+
+
+@pytest.mark.django_db
+def test_joboffer_get_visualizations_empty():
+    """
+    Test get_visualizations without access log
+    """
+    joboffer = JobOfferFactory.create()
+
+    visualizations = joboffer.get_visualizations_count()
+
+    assert visualizations == {}

@@ -89,15 +89,17 @@ def expire_old_offers():
     )
 
     for joboffer in joboffers:
-        subject = EXPIRED_OFFER_MAIL_SUBJECT % {'title': joboffer.title}
-        body = EXPIRED_OFFER_MAIL_BODY % {
-          'title': joboffer.title,
-          'offer_url': joboffer.get_absolute_url(),
-          'listing_views': joboffer.get_visualizations_count(EventType.LISTING_VIEW),
-          'detail_views': joboffer.get_visualizations_count(EventType.DETAIL_VIEW),
-          'contact_info_views': joboffer.get_visualizations_count(EventType.CONTACT_INFO_VIEW),
-          'expiration_days': OFFER_EXPIRATION_DAYS
-        }
+        visualizations = joboffer.get_visualizations_count()
+
+        subject = EXPIRED_OFFER_MAIL_SUBJECT.format(title=joboffer.title)
+        body = EXPIRED_OFFER_MAIL_BODY.format(
+          title=joboffer.title,
+          offer_url=joboffer.get_absolute_url(),
+          listing_views=visualizations.get(EventType.LISTING_VIEW, 0),
+          detail_views=visualizations.get(EventType.DETAIL_VIEW, 0),
+          contact_info_views=visualizations.get(EventType.CONTACT_INFO_VIEW, 0),
+          expiration_days=OFFER_EXPIRATION_DAYS
+        )
         joboffer.state = OfferState.EXPIRED
         joboffer.save()
 
