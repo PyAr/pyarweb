@@ -91,3 +91,29 @@ STATE_LABEL_CLASSES = {
     'NEW': 'label-info',
     'REJECTED': 'label-danger',
 }
+
+APPROVED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Aprobada')
+APPROVED_MAIL_BODY = _("""
+Le informamos que la oferta que envío a revisión ({title}) ha sido aprobada y ya se
+encuentra listada en la página y fué replicada en las redes sociales.
+""")
+REJECTED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Rechazada')
+REJECTED_MAIL_BODY = _("""
+Le informamos que la oferta que envío a revisión ({title}) ha sido rechazada.
+Razón de Rechazo: {reason}
+Observación: {text}
+""")
+EXPIRED_OFFER_MAIL_SUBJECT = _('{title} - Caducada')
+EXPIRED_OFFER_MAIL_BODY = _("""
+Le informamos que la oferta "{title}" ha caducado. Han pasado los {expiration_days} días desde su
+última activación. Puede reactivar la oferta dirigiéndose a {offer_url}.
+
+Resumen de Visitas
+==================
+
+ - {listing_views} Visualizaciones en listado.
+ - {detail_views} Visualizaciones de la oferta completa.
+ - {contact_info_views} Visualizaciones de los datos de contacto.
+""")
+
+OFFER_EXPIRATION_DAYS = 180

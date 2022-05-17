@@ -14,14 +14,27 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from community.views import FilterableList
 from pycompanies.models import UserCompanyProfile
-from .constants import ACTION_BUTTONS, STATE_LABEL_CLASSES
-from .forms import JobOfferForm, JobOfferCommentForm
-from .joboffer_actions import (
-    CODE_ANALYTICS, CODE_CREATE, CODE_EDIT, CODE_HISTORY, CODE_REACTIVATE, CODE_REJECT,
-    CODE_DEACTIVATE, CODE_REQUEST_MODERATION, CODE_APPROVE, get_valid_actions
+from .constants import (
+  ACTION_BUTTONS,
+  APPROVED_MAIL_SUBJECT,
+  APPROVED_MAIL_BODY,
+  CODE_ANALYTICS,
+  CODE_APPROVE,
+  CODE_CREATE,
+  CODE_DEACTIVATE,
+  CODE_EDIT,
+  CODE_HISTORY,
+  CODE_REACTIVATE,
+  CODE_REJECT,
+  CODE_REQUEST_MODERATION,
+  REJECTED_MAIL_SUBJECT,
+  REJECTED_MAIL_BODY,
+  STATE_LABEL_CLASSES
 )
-from .models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
-from .utils import get_visualization_data, get_visualizations_graph
+from .forms import JobOfferForm, JobOfferCommentForm
+from .joboffer_actions import get_valid_actions
+from .models import EventType, JobOffer, JobOfferAccessLog, JobOfferHistory, OfferState
+from .utils import get_visualization_data, get_visualizations_graph, send_mail_to_publishers
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -218,11 +231,24 @@ class JobOfferRejectView(
         return initial
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        form.instance.modified_by = self.request.user
-        self.object.state = OfferState.REJECTED
-        self.object.save()
+        offer_comment = form.instance
+        offer = self.object
+
+        offer_comment.created_by = self.request.user
+        offer_comment.modified_by = self.request.user
+        offer.state = OfferState.REJECTED
+        offer.save()
         form.save()
+
+        subject = REJECTED_MAIL_SUBJECT
+        body = REJECTED_MAIL_BODY.format(
+          reason=offer_comment.get_comment_type_display(),
+          text=offer_comment.text,
+          title=offer.title
+        )
+
+        send_mail_to_publishers(offer, subject, body)
+
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
@@ -253,6 +279,12 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         offer.state = OfferState.ACTIVE
         offer.modified_by = self.request.user
         offer.save()
+
+        send_mail_to_publishers(
+          offer,
+          APPROVED_MAIL_SUBJECT,
+          APPROVED_MAIL_BODY.format(title=offer.title)
+        )
 
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):

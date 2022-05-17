@@ -7,7 +7,17 @@ from plotly.offline import plot
 from django.db.models import Count
 from django.utils.translation import gettext as _
 
-from joboffers.models import EventType, JobOfferAccessLog
+from django.core.mail import send_mail
+from datetime import timedelta
+
+from django.utils import timezone
+
+from joboffers.constants import (
+  EXPIRED_OFFER_MAIL_BODY,
+  EXPIRED_OFFER_MAIL_SUBJECT,
+  OFFER_EXPIRATION_DAYS
+)
+from joboffers.models import EventType, JobOffer, JobOfferAccessLog, OfferState
 
 UNWANTED_SORROUNDING_CHARS = "@/#*"
 
@@ -36,6 +46,22 @@ def hash_secret(credential: str):
     return digest
 
 
+def send_mail_to_publishers(joboffer, subject: str, body: str):
+    """
+    Send an email to the publishers of the provided joboffer
+    """
+    publishers_addresses = joboffer.get_publisher_mail_addresses()
+
+    if publishers_addresses:
+        send_mail(
+          subject,
+          body,
+          None,  # Default from mail in settings
+          publishers_addresses,
+          fail_silently=False
+        )
+
+
 def get_visualization_data(joboffer):
     """
     Retrieves a plain list of the visualizations for a joboffer
@@ -51,6 +77,33 @@ def get_visualization_data(joboffer):
         output_data.append(new_row)
 
     return output_data
+
+
+def expire_old_offers():
+    """
+    Mark old job offers as EXPIRED and send a mail to the publishers
+    """
+    expiration_date = timezone.now() - timedelta(days=OFFER_EXPIRATION_DAYS)
+    joboffers = JobOffer.objects.filter(
+      state=OfferState.ACTIVE, modified_at__lte=expiration_date
+    )
+
+    for joboffer in joboffers:
+        visualizations = joboffer.get_visualizations_count()
+
+        subject = EXPIRED_OFFER_MAIL_SUBJECT.format(title=joboffer.title)
+        body = EXPIRED_OFFER_MAIL_BODY.format(
+          title=joboffer.title,
+          offer_url=joboffer.get_absolute_url(),
+          listing_views=visualizations.get(EventType.LISTING_VIEW, 0),
+          detail_views=visualizations.get(EventType.DETAIL_VIEW, 0),
+          contact_info_views=visualizations.get(EventType.CONTACT_INFO_VIEW, 0),
+          expiration_days=OFFER_EXPIRATION_DAYS
+        )
+        joboffer.state = OfferState.EXPIRED
+        joboffer.save()
+
+        send_mail_to_publishers(joboffer, subject, body)
 
 
 def get_visualizations_graph(log_queryset):
