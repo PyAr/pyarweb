@@ -1,7 +1,22 @@
 import pytest
 
-from ..utils import get_visualization_data, hash_secret, normalize_tags
-from .factories import JobOfferFactory, JobOfferAccessLogFactory
+from datetime import timedelta
+from unittest.mock import MagicMock
+
+from django.core import mail
+from django.utils import timezone
+
+from pycompanies.tests.factories import UserCompanyProfileFactory
+
+from ..constants import EXPIRED_OFFER_MAIL_SUBJECT
+from ..models import JobOffer, OfferState
+from ..utils import (
+  expire_old_offers,
+  get_visualization_data,
+  hash_secret, normalize_tags,
+  send_mail_to_publishers
+)
+from .factories import JobOfferAccessLogFactory, JobOfferFactory
 
 
 def test_normalize_tags_with_repeated():
@@ -55,6 +70,38 @@ def test_hash_secret_None():
     assert result == expected_result
 
 
+TEST_RECEIVER = 'sample@pyar.org.ar'
+TEST_SUBJECT = 'test subject'
+TEST_BODY = 'test body'
+
+
+def test_send_mail_to_publishers_with_mails():
+    """
+    Test send_mail_to_publishers sends mails when there are users with emails
+    """
+    joboffer = MagicMock()
+    joboffer.get_publisher_mail_addresses = MagicMock(return_value=[TEST_RECEIVER])
+
+    send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY)
+
+    assert len(mail.outbox) == 1
+
+    assert mail.outbox[0].to == [TEST_RECEIVER]
+    assert mail.outbox[0].subject == TEST_SUBJECT
+    assert mail.outbox[0].body == TEST_BODY
+
+
+def test_send_mail_to_publishers_without_emails():
+    """
+    Test send_mail_to_publishers doesn't send emails when there are no recipients
+    """
+    joboffer = MagicMock()
+    joboffer.get_publisher_mail_addresses = MagicMock(return_value=[])
+
+    send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY)
+    assert len(mail.outbox) == 0
+
+
 @pytest.mark.django_db
 def test_get_visualization_data():
     """
@@ -75,3 +122,29 @@ def test_get_visualization_data():
     data = get_visualization_data(joboffer)
 
     assert data == expected_data
+
+
+@pytest.mark.django_db
+def test_expire_old_offers():
+    """
+    Test expiration of old joboffers command
+    """
+    profile = UserCompanyProfileFactory.create()
+    company = profile.company
+
+    today = timezone.now()
+    two_hundred_days_ago = today - timedelta(days=200)
+    JobOfferFactory.create(company=company)
+    offer2 = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
+    offer3 = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
+    JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
+
+    JobOffer.objects.filter(id__in=[offer2.id, offer3.id]).update(modified_at=two_hundred_days_ago)
+
+    expire_old_offers()
+
+    assert len(mail.outbox) == 2
+    offers = JobOffer.objects.filter(state=OfferState.EXPIRED)
+    assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offers[0].title)
+    assert mail.outbox[1].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offers[1].title)
+    assert JobOffer.objects.filter(state=OfferState.EXPIRED).count() == 2

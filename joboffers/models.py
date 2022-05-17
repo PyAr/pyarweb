@@ -1,4 +1,3 @@
-
 import html
 import json
 import re
@@ -9,6 +8,7 @@ from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
+from django.db.models.aggregates import Count
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -18,6 +18,7 @@ from django.utils.translation import gettext as _
 from easyaudit.models import CRUDEvent
 from taggit_autosuggest.managers import TaggableManager
 
+from pycompanies.models import UserCompanyProfile
 from .constants import STATE_LABEL_CLASSES
 
 
@@ -178,6 +179,32 @@ class JobOffer(models.Model):
             session=session.session_key,
             joboffer=self
         )
+
+    def get_publisher_mail_addresses(self):
+        """
+        Return a list of the email addresses of the publishers of this offer.
+        It filters users with empty mail field
+        """
+        profiles = UserCompanyProfile.objects.filter(company=self.company)
+
+        addresses = set()
+        for profile in profiles:
+            if profile.user.email:
+                addresses.add(profile.user.email)
+
+        return addresses
+
+    def get_visualizations_count(self):
+        """
+        Get a dict with visualizations count for every kind of event
+        """
+        items = JobOfferAccessLog.objects \
+                                 .filter(joboffer=self) \
+                                 .values_list('event_type') \
+                                 .annotate(total=Count('event_type')) \
+                                 .order_by()
+
+        return dict(items)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
