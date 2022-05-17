@@ -93,16 +93,16 @@ STATE_LABEL_CLASSES = {
 }
 
 APPROVED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Aprobada')
-APPROVED_MAIL_BODY = _(
-  'Le informamos que la oferta que envío a revisión ({title}) ha sido aprobada y ya se'
-  ' encuentra listada en la página y fué replicada en las redes sociales.'
-)
+APPROVED_MAIL_BODY = _("""
+Le informamos que la oferta que envío a revisión ({title}) ha sido aprobada y ya se
+encuentra listada en la página y fué replicada en las redes sociales.
+""")
 REJECTED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Rechazada')
-REJECTED_MAIL_BODY = _(
-  'Le informamos que la oferta que envío a revisión ({title}) ha sido rechazada.\n'
-  'Razón de Rechazo: {reason} \n'
-  'Observación: {text}'
-)
+REJECTED_MAIL_BODY = _("""
+Le informamos que la oferta que envío a revisión ({title}) ha sido rechazada.
+Razón de Rechazo: {reason}
+Observación: {text}
+""")
 EXPIRED_OFFER_MAIL_SUBJECT = _('{title} - Caducada')
 EXPIRED_OFFER_MAIL_BODY = _("""
 Le informamos que la oferta "{title}" ha caducado. Han pasado los {expiration_days} días desde su
