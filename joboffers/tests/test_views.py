@@ -5,12 +5,11 @@ from datetime import datetime
 from unittest.mock import patch
 
 from django.core import mail
-from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
-from pyarweb.tests.fixtures import create_client, create_logged_client, create_user # noqa
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
+from pyarweb.tests.fixtures import create_user, create_logged_client # noqa
 
 from ..constants import (
   ANALYTICS_URL,
@@ -36,7 +35,8 @@ from ..constants import (
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
-from .fixtures import create_publisher_client, create_admin_user, create_telegram_dummy # noqa
+from .fixtures import create_admin_user, create_publisher_client, create_telegram_dummy # noqa
+from .utils import get_plain_messages
 
 
 JOBOFFER_TITLE1 = 'Job Offer Sample Title 1'
@@ -50,14 +50,6 @@ JOBOFFER_TAG_2 = 'tag2'
 JOBOFFER_TAG_3 = 'tag3'
 JOBOFFER_TAG_4 = 'tag4'
 JOBOFFER_TAG_5 = 'tag5'
-
-
-def get_plain_messages(request):
-    """
-    Gets a plain text message from a given request/response object. Useful for testing messages
-    """
-    messages = contrib_get_messages(request.wsgi_request)
-    return [m.message for m in messages]
 
 
 @pytest.mark.django_db
@@ -432,6 +424,7 @@ def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, tele
     """
     Test rejection of the joboffer by the admin user
     """
+
     client = admin_client
     company = user_company_profile.company
     joboffer = JobOfferFactory.create(company=company, state=OfferState.MODERATION)
