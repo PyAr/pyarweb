@@ -19,10 +19,10 @@ def notify_pending_moderation_offers():
     )
 
     for joboffer in joboffers:
-        message = TELEGRAM_PENDING_MODERATION_MESSAGE % {
-          'offer_url': joboffer.get_absolute_url(),
-          'moderation_reminder_days': PENDING_MODERATION_OFFER_DAYS
-        }
+        message = TELEGRAM_PENDING_MODERATION_MESSAGE.format(
+          offer_url=joboffer.get_absolute_url(),
+          moderation_reminder_days=PENDING_MODERATION_OFFER_DAYS
+        )
 
         send_notification_to_moderators(message)
 

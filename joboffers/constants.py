@@ -101,7 +101,7 @@ encuentra listada en la página y fué replicada en las redes sociales.
 
 REACTIVATED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Reactivado')
 REACTIVATED_MAIL_BODY = _(
-  'Le informamos que la oferta (%(title)s) ha sido reactivada. Ya se puede visualizar'
+  'Le informamos que la oferta ({title}) ha sido reactivada. Ya se puede visualizar'
   'en el listado de ofertas de trabajo de PyAr.'
 )
 
@@ -129,12 +129,12 @@ OFFER_EXPIRATION_DAYS = 180
 
 PENDING_MODERATION_OFFER_DAYS = 2
 
-TELEGRAM_MODERATION_MESSAGE = _('La oferta %(offer_url)s necesita ser moderada.')
-TELEGRAM_APPROVED_MESSAGE = _('La oferta %(offer_url)s fue aprobada por %(username)s.')
+TELEGRAM_MODERATION_MESSAGE = _('La oferta {offer_url} necesita ser moderada.')
+TELEGRAM_APPROVED_MESSAGE = _('La oferta {offer_url} fue aprobada por {username}.')
 TELEGRAM_REJECT_MESSAGE = _(
-  'La oferta %(offer_url)s fue rechazada por %(username)s.'
+  'La oferta {offer_url} fue rechazada por {username}.'
 )
 
 TELEGRAM_PENDING_MODERATION_MESSAGE = _(
-  'La oferta %(offer_url)s necesita moderación y ya pasaron %(moderation_reminder_days)s días.'
+  'La oferta {offer_url} necesita moderación y ya pasaron {moderation_reminder_days} días.'
 )

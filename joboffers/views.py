@@ -257,10 +257,10 @@ class JobOfferRejectView(
 
         send_mail_to_publishers(offer, subject, body)
 
-        moderators_message = TELEGRAM_REJECT_MESSAGE % {
-          'offer_url': offer.get_absolute_url(),
-          'username': user.username
-        }
+        moderators_message = TELEGRAM_REJECT_MESSAGE.format(
+          offer_url=offer.get_absolute_url(),
+          username=user.username
+        )
 
         send_notification_to_moderators(moderators_message)
         return super().form_valid(form)
@@ -302,10 +302,10 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
           APPROVED_MAIL_BODY.format(title=offer.title)
         )
 
-        moderators_message = TELEGRAM_APPROVED_MESSAGE % {
-          'offer_url': offer.get_absolute_url(),
-          'username': user.username
-        }
+        moderators_message = TELEGRAM_APPROVED_MESSAGE.format(
+          offer_url=offer.get_absolute_url(),
+          username=user.username
+        )
 
         send_notification_to_moderators(moderators_message)
 
@@ -324,7 +324,7 @@ class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
         send_mail_to_publishers(
           offer,
           REACTIVATED_MAIL_SUBJECT,
-          REACTIVATED_MAIL_BODY % {'title': offer.title}
+          REACTIVATED_MAIL_BODY.format(title=offer.title)
         )
 
 
@@ -350,9 +350,9 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
         offer.state = OfferState.MODERATION
         offer.save()
 
-        moderators_message = TELEGRAM_MODERATION_MESSAGE % {
-          'offer_url': offer.get_absolute_url()
-        }
+        moderators_message = TELEGRAM_MODERATION_MESSAGE.format(
+          offer_url=offer.get_absolute_url()
+        )
 
         send_notification_to_moderators(moderators_message)
 

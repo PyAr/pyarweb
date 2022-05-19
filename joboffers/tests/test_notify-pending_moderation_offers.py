@@ -34,7 +34,7 @@ def test_remind_offers_in_moderation(telegram_dummy):
 
     assert offers_notified == 1
     assert len(telegram_history) == 1
-    assert sent_message.endswith(TELEGRAM_PENDING_MODERATION_MESSAGE % {
-      'offer_url': offer2.get_absolute_url(),
-      'moderation_reminder_days': PENDING_MODERATION_OFFER_DAYS
-    })
+    assert sent_message.endswith(TELEGRAM_PENDING_MODERATION_MESSAGE.format(
+      offer_url=offer2.get_absolute_url(),
+      moderation_reminder_days=PENDING_MODERATION_OFFER_DAYS
+    ))

@@ -190,9 +190,9 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile, 
     telegram_history = telegram_dummy.call_history
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
-    assert sent_message.endswith(TELEGRAM_MODERATION_MESSAGE % {
-      'offer_url': joboffer.get_absolute_url(),
-    })
+    assert sent_message.endswith(TELEGRAM_MODERATION_MESSAGE.format(
+      offer_url=joboffer.get_absolute_url()
+    ))
 
 
 @pytest.mark.django_db
@@ -410,10 +410,10 @@ def test_joboffer_approve_ok(
     telegram_history = telegram_dummy.call_history
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
-    assert sent_message.endswith(TELEGRAM_APPROVED_MESSAGE % {
-      'offer_url': joboffer.get_absolute_url(),
-      'username': admin_user.username
-    })
+    assert sent_message.endswith(TELEGRAM_APPROVED_MESSAGE.format(
+      offer_url=joboffer.get_absolute_url(),
+      username=admin_user.username
+    ))
 
     assert publish_function.called
     assert publish_function.call_args[0][0] == joboffer
@@ -455,11 +455,11 @@ def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, tele
     telegram_history = telegram_dummy.call_history
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
-    assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE % {
-      'offer_title': joboffer.title,
-      'offer_url': joboffer.get_absolute_url(),
-      'username': admin_user.username
-    })
+    assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE.format(
+      offer_title=joboffer.title,
+      offer_url=joboffer.get_absolute_url(),
+      username=admin_user.username
+    ))
 
 
 @pytest.mark.django_db
