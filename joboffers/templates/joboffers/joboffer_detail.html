@@ -7,6 +7,12 @@
 {{ object.title }}
 {% endblock %}
 
+{% block extra_head %}
+  <meta property="og:title" content="{{ object.title }}">
+  <meta name="description" property="og:description" content="{{ object.short_description }}">
+  <meta property="og:image" content="{{ object.company.photo.url }}">
+{% endblock %}
+
 {% block content %}
 <main id="main" class="joboffers container" role="main">
   <div class="col-lg-12">

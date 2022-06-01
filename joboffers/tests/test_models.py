@@ -7,6 +7,7 @@ from unittest.mock import patch
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sessions.backends.db import SessionStore
 from django.db.utils import IntegrityError
+from django.shortcuts import reverse
 from django.utils.text import slugify
 from easyaudit.models import CRUDEvent
 from factory import Faker
@@ -508,6 +509,19 @@ def test_joboffer_get_publisher_mail_addresses_without_users():
     mails = joboffer.get_publisher_mail_addresses()
 
     assert mails == EXPECTED_MAILS
+
+
+def test_joboffer_get_absolute_joboffer_url(settings):
+    """Test that the url being crafted has the correct BASE_URL and the right format."""
+    dummy_url = 'http://example.com'
+    dummy_job_slug = 'python-job'
+    settings.BASE_URL = dummy_url
+    joboffer_url = reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
+    expected_url = "".join((dummy_url, joboffer_url))
+
+    joboffer = JobOffer(slug=dummy_job_slug)
+    result = joboffer.get_absolute_url()
+    assert expected_url == result
 
 
 @pytest.mark.django_db

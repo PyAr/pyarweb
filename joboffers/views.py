@@ -27,13 +27,20 @@ from .constants import (
   CODE_REACTIVATE,
   CODE_REJECT,
   CODE_REQUEST_MODERATION,
+  REACTIVATED_MAIL_BODY,
+  REACTIVATED_MAIL_SUBJECT,
   REJECTED_MAIL_SUBJECT,
   REJECTED_MAIL_BODY,
-  STATE_LABEL_CLASSES
+  STATE_LABEL_CLASSES,
+  TELEGRAM_APPROVED_MESSAGE,
+  TELEGRAM_MODERATION_MESSAGE,
+  TELEGRAM_REJECT_MESSAGE
 )
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import get_valid_actions
 from .models import EventType, JobOffer, JobOfferAccessLog, JobOfferHistory, OfferState
+from .telegram_api import send_notification_to_moderators
+from .publishers import publish_to_all_social_networks
 from .utils import get_visualization_data, get_visualizations_graph, send_mail_to_publishers
 
 
@@ -233,9 +240,10 @@ class JobOfferRejectView(
     def form_valid(self, form):
         offer_comment = form.instance
         offer = self.object
+        user = self.request.user
 
-        offer_comment.created_by = self.request.user
-        offer_comment.modified_by = self.request.user
+        offer_comment.created_by = user
+        offer_comment.modified_by = user
         offer.state = OfferState.REJECTED
         offer.save()
         form.save()
@@ -249,6 +257,12 @@ class JobOfferRejectView(
 
         send_mail_to_publishers(offer, subject, body)
 
+        moderators_message = TELEGRAM_REJECT_MESSAGE.format(
+          offer_url=offer.get_absolute_url(),
+          username=user.username
+        )
+
+        send_notification_to_moderators(moderators_message)
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
@@ -280,11 +294,22 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         offer.modified_by = self.request.user
         offer.save()
 
+        user = self.request.user
+
         send_mail_to_publishers(
           offer,
           APPROVED_MAIL_SUBJECT,
           APPROVED_MAIL_BODY.format(title=offer.title)
         )
+
+        moderators_message = TELEGRAM_APPROVED_MESSAGE.format(
+          offer_url=offer.get_absolute_url(),
+          username=user.username
+        )
+
+        send_notification_to_moderators(moderators_message)
+
+        publish_to_all_social_networks(offer)
 
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
@@ -295,6 +320,12 @@ class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
     def update_object(self, offer):
         offer.state = OfferState.ACTIVE
         offer.save()
+
+        send_mail_to_publishers(
+          offer,
+          REACTIVATED_MAIL_SUBJECT,
+          REACTIVATED_MAIL_BODY.format(title=offer.title)
+        )
 
 
 class JobOfferDeactivateView(LoginRequiredMixin, TransitionView):
@@ -318,6 +349,12 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
     def update_object(self, offer):
         offer.state = OfferState.MODERATION
         offer.save()
+
+        moderators_message = TELEGRAM_MODERATION_MESSAGE.format(
+          offer_url=offer.get_absolute_url()
+        )
+
+        send_notification_to_moderators(moderators_message)
 
 
 class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):

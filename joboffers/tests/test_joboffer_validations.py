@@ -13,7 +13,7 @@ from pycompanies.tests.fixtures import create_user_company_profile # noqa
 
 from .factories import JobOfferFactory
 from ..models import JobOffer, OfferState, Remoteness
-from .test_views import get_plain_messages
+from .utils import get_plain_messages
 
 
 ADD_URL = 'joboffers:add'

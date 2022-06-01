@@ -37,7 +37,7 @@ class TwitterPublisher(Publisher):
 
     name = 'Twitter'
 
-    def _push_to_api(self, message: str, title: str):
+    def _push_to_api(self, message: str, title: str, link: str):
         """Publish a message to twitter."""
         try:
             auth = tweepy.OAuthHandler(

@@ -278,3 +278,10 @@ DISCOURSE_HOST = os.environ.get('DISCOURSE_HOST')
 DISCOURSE_API_KEY = os.environ.get('DISCOURSE_API_KEY')
 DISCOURSE_USERNAME = os.environ.get('DISCOURSE_USERNAME')
 DISCOURSE_CATEGORY = os.environ.get('DISCOURSE_CATEGORY')
+
+SOCIAL_NETWORKS_PUBLISHERS = [
+  'joboffers.publishers.discourse.DiscoursePublisher',
+  'joboffers.publishers.facebook.FacebookPublisher',
+  'joboffers.publishers.telegram.TelegramPublisher',
+  'joboffers.publishers.twitter.TwitterPublisher'
+]

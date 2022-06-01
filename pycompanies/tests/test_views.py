@@ -4,9 +4,8 @@ from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
 from pycompanies.tests.factories import CompanyFactory, UserCompanyProfileFactory, UserFactory
-from joboffers.tests.fixtures import create_publisher_client  # noqa
-from pyarweb.tests.fixtures import (create_client, create_moderator_client,  # noqa
-                                    create_logged_client, create_user)
+from joboffers.tests.fixtures import create_admin_client, create_publisher_client  # noqa
+from pyarweb.tests.fixtures import create_client, create_logged_client, create_user  # noqa
 from pycompanies.tests.fixtures import create_user_company_profile  # noqa
 from joboffers.tests.utils import create_analytics_sample_data
 
