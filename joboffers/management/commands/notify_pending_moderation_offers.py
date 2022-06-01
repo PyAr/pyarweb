@@ -11,7 +11,7 @@ from joboffers.telegram_api import send_notification_to_moderators
 
 def notify_pending_moderation_offers():
     """
-    Mark old job offers as EXPIRED and send a mail to the publishers
+    Notify all the moderators that there is a pending joboffer offer moderation
     """
     expiration_date = timezone.now() - timedelta(days=PENDING_MODERATION_OFFER_DAYS)
     joboffers = JobOffer.objects.filter(
@@ -30,16 +30,17 @@ def notify_pending_moderation_offers():
 
 
 class Command(BaseCommand):
-    help = \
-      'Check for pending moderation offers and send a telegram notifaction to the moderators group'
+    help = '''
+    Check for pending moderation offers and send a telegram notification to the moderators group
+    '''
 
     def handle(self, *args, **options):
         offers_notifed = notify_pending_moderation_offers()
 
         self.stdout.write(
           self.style.SUCCESS(
-            _('Se enviaron %(offers_notified)s recordatorios de moderación.') % {
-              'offers_notified': offers_notifed
-            }
+            _('Se enviaron {offers_notified} recordatorios de moderación.').format(
+              offers_notified=offers_notifed
+            )
           )
         )
