@@ -1,5 +1,5 @@
 from factory import Sequence, SubFactory
-from factory.django import DjangoModelFactory
+from factory.django import DjangoModelFactory, ImageField
 
 from events.tests.factories import UserFactory
 from pycompanies.models import Company, UserCompanyProfile
@@ -11,6 +11,7 @@ class CompanyFactory(DjangoModelFactory):
 
     name = Sequence(lambda n: f'company-{n}')
     owner = SubFactory(UserFactory)
+    photo = ImageField(color='blue')
     rank = 1
 
 

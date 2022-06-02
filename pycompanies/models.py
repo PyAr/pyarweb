@@ -32,13 +32,15 @@ class Company(TimeStampedModel):
 class UserCompanyProfileManager(models.Manager):
     """User company profile manager."""
 
-    def for_user(self, user):
+    def for_user(self, user, **kwargs):
         """
         Get the company object for a given user.
         """
-        qs = super().get_queryset()
+        if user.is_anonymous:
+            return None
 
-        return qs.filter(user=user).first()
+        qs = super().get_queryset()
+        return qs.filter(user=user, **kwargs).first()
 
 
 class UserCompanyProfile(models.Model):

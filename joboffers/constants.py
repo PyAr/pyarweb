@@ -94,41 +94,51 @@ STATE_LABEL_CLASSES = {
 }
 
 APPROVED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Aprobada')
-APPROVED_MAIL_BODY = _(
-  'Le informamos que la oferta que envío a revisión (%(title)s) ha sido aprobada. Ya se '
-  'puede visualizar en listado de ofertas de trabajo de PyAr y fué replicada en las redes'
-  'sociales.'
-)
+APPROVED_MAIL_BODY = _("""
+Le informamos que la oferta que envío a revisión ({title}) ha sido aprobada y ya se
+encuentra listada en la página y fué replicada en las redes sociales.
+""")
+
 REACTIVATED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Reactivado')
 REACTIVATED_MAIL_BODY = _(
-  'Le informamos que la oferta (%(title)s) ha sido reactivada. Ya se puede visualizar'
+  'Le informamos que la oferta ({title}) ha sido reactivada. Ya se puede visualizar'
   'en el listado de ofertas de trabajo de PyAr.'
 )
+
 REJECTED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Rechazada')
-REJECTED_MAIL_BODY = _(
-  'Le informamos que la oferta que envío a revisión (%(title)s) ha sido rechazada.\n'
-  'Razón de Rechazo: %(reason)s \n'
-  'Observación: %(text)s'
-)
-EXPIRED_OFFER_MAIL_SUBJECT = _('%(title)s - Caducada')
-EXPIRED_OFFER_MAIL_BODY = _(
-  'Le informamos que la oferta "%(title)s" ha caducado. Han pasado los %(expiration_days)s días '
-  'desde su última activación. Puede reactivar la oferta dirigiéndose a %(offer_url)s\n\n'
-  'Resumen de Visitas\n'
-  '===================\n\n'
-  ' - %(listing_views)s Visualizaciones en listado\n'
-  ' - %(detail_views)s Visualizaciones de la oferta completa\n'
-  ' - %(contact_info_views)s Visualizaciones de los datos de contacto.\n'
-)
+REJECTED_MAIL_BODY = _("""
+Le informamos que la oferta que envío a revisión ({title}) ha sido rechazada.
+Razón de Rechazo: {reason}
+Observación: {text}
+""")
+
+EXPIRED_OFFER_MAIL_SUBJECT = _('{title} - Caducada')
+EXPIRED_OFFER_MAIL_BODY = _("""
+Le informamos que la oferta "{title}" ha caducado. Han pasado los {expiration_days} días desde su
+última activación. Puede reactivar la oferta dirigiéndose a {offer_url}.
+
+Resumen de Visitas
+==================
+
+ - {listing_views} Visualizaciones en listado.
+ - {detail_views} Visualizaciones de la oferta completa.
+ - {contact_info_views} Visualizaciones de los datos de contacto.
+""")
 
 OFFER_EXPIRATION_DAYS = 180
 
-MAIL_SENDING_ERROR = _('Falló al intentar enviar mail a los publicadores.')
-PUBLISHER_FAILED_ERROR = _('Falló al publicar al oferta en %(publisher)s.')
-TELEGRAM_SENDING_ERROR = _('Falló al notificar a los moderadores por telegram')
+PENDING_MODERATION_OFFER_DAYS = 2
 
-TELEGRAM_MODERATION_MESSAGE = _('La oferta %(offer_url)s necesita ser moderada.')
-TELEGRAM_APPROVED_MESSAGE = _('La oferta %(offer_url)s fue aprobada por %(username)s.')
+TELEGRAM_MODERATION_MESSAGE = _('La oferta {offer_url} necesita ser moderada.')
+TELEGRAM_APPROVED_MESSAGE = _('La oferta {offer_url} fue aprobada por {username}.')
 TELEGRAM_REJECT_MESSAGE = _(
-  'La oferta %(offer_url)s fue rechazada por %(username)s.'
+  'La oferta {offer_url} fue rechazada por {username}.'
 )
+
+TELEGRAM_PENDING_MODERATION_MESSAGE = _(
+  'La oferta {offer_url} necesita moderación y ya pasaron {moderation_reminder_days} días.'
+)
+
+MAIL_SENDING_ERROR = _('Falló al intentar enviar mail a los publicadores.')
+PUBLISHER_FAILED_ERROR = _('Falló al publicar al oferta en {publisher}.')
+TELEGRAM_SENDING_ERROR = _('Falló al notificar a los moderadores por telegram')

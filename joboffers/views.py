@@ -1,14 +1,11 @@
 import csv
-import plotly.graph_objects as go
-
-from plotly.offline import plot
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -47,7 +44,7 @@ from .joboffer_actions import get_valid_actions
 from .models import EventType, JobOffer, JobOfferAccessLog, JobOfferHistory, OfferState
 from .telegram_api import send_notification_to_moderators
 from .publishers import publish_to_all_social_networks
-from .utils import get_visualization_data, send_mail_to_publishers
+from .utils import get_visualization_data, get_visualizations_graph, send_mail_to_publishers
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
@@ -248,28 +245,27 @@ class JobOfferRejectView(
         offer = self.object
         user = self.request.user
 
-        offer_comment.created_by = self.request.user
-        offer_comment.modified_by = self.request.user
+        offer_comment.created_by = user
+        offer_comment.modified_by = user
         offer.state = OfferState.REJECTED
         offer.save()
         form.save()
 
         subject = REJECTED_MAIL_SUBJECT
-        body = REJECTED_MAIL_BODY.format({
-          'reason': offer_comment.get_comment_type_display(),
-          'text': offer_comment.text,
-          'title': offer.title
-        })
+        body = REJECTED_MAIL_BODY.format(
+          reason=offer_comment.get_comment_type_display(),
+          text=offer_comment.text,
+          title=offer.title
+        )
 
-        send_mail_to_publishers(offer, subject, body, self.request)
+        send_mail_to_publishers(offer, subject, body)
 
-        moderators_message = TELEGRAM_REJECT_MESSAGE.format({
-          'offer_url': offer.get_absolute_url(),
-          'username': user.username
-        })
+        moderators_message = TELEGRAM_REJECT_MESSAGE.format(
+          offer_url=offer.get_absolute_url(),
+          username=user.username
+        )
 
-        send_notification_to_moderators(moderators_message, self.request)
-
+        send_notification_to_moderators(moderators_message)
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
@@ -306,16 +302,15 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         send_mail_to_publishers(
           offer,
           APPROVED_MAIL_SUBJECT,
-          APPROVED_MAIL_BODY % {'title': offer.title},
-          self.request
+          APPROVED_MAIL_BODY.format(title=offer.title)
         )
 
-        moderators_message = TELEGRAM_APPROVED_MESSAGE % {
-          'offer_url': offer.get_absolute_url(),
-          'username': user.username
-        }
+        moderators_message = TELEGRAM_APPROVED_MESSAGE.format(
+          offer_url=offer.get_absolute_url(),
+          username=user.username
+        )
 
-        send_notification_to_moderators(moderators_message, self.request)
+        send_notification_to_moderators(moderators_message)
 
         publishers_failed = publish_to_all_social_networks(offer)
 
@@ -323,7 +318,7 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
             messages.add_message(
               self.request,
               messages.ERROR,
-              PUBLISHER_FAILED_ERROR % {'publisher': publisher_failed}
+              PUBLISHER_FAILED_ERROR.format(publisher=publisher_failed)
             )
 
 
@@ -339,8 +334,7 @@ class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
         send_mail_to_publishers(
           offer,
           REACTIVATED_MAIL_SUBJECT,
-          REACTIVATED_MAIL_BODY % {'title': offer.title},
-          self.request
+          REACTIVATED_MAIL_BODY.format(title=offer.title)
         )
 
 
@@ -366,11 +360,11 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
         offer.state = OfferState.MODERATION
         offer.save()
 
-        moderators_message = TELEGRAM_MODERATION_MESSAGE % {
-          'offer_url': offer.get_absolute_url()
-        }
+        moderators_message = TELEGRAM_MODERATION_MESSAGE.format(
+          offer_url=offer.get_absolute_url()
+        )
 
-        send_notification_to_moderators(moderators_message, self.request)
+        send_notification_to_moderators(moderators_message)
 
 
 class JobOfferHistoryView(LoginRequiredMixin, JobOfferObjectMixin, ListView):
@@ -464,62 +458,28 @@ class TrackContactInfoView(SingleObjectMixin, View):
 class JobOfferAnalytics(JobOfferObjectMixin, View):
     action_code = CODE_ANALYTICS
     model = JobOffer
+    template_name = 'joboffers/joboffer_analytics.html'
 
     def get_context_data(self, joboffer):
-        event_type_with_titles = (
-          (EventType.LISTING_VIEW, _('Visualizaciones en la página de listado')),
-          (EventType.DETAIL_VIEW, _('Visualizaciones detalle de la oferta')),
-          (EventType.CONTACT_INFO_VIEW, _('Visualizaciones de datos de contacto'))
-        )
+        log_queryset = JobOfferAccessLog.objects.filter(joboffer=joboffer)
 
-        plots = []
         totals = []
+        graphs = []
 
-        for event_type, title in event_type_with_titles:
-            visualizations_qs = JobOfferAccessLog \
-              .objects \
-              .filter(event_type=event_type.value, joboffer=joboffer) \
-              .order_by('created_at')
+        for event_type in EventType:
+            qs = log_queryset.filter(event_type=event_type.value)
+            graph = get_visualizations_graph(qs)
 
-            if visualizations_qs.exists():
-                visualizations_qs = visualizations_qs\
-                    .values('created_at__date').annotate(Count('id'))
-                dates = visualizations_qs.values_list('created_at__date', flat=True)
-                views_amount = visualizations_qs.values_list('id__count', flat=True)
+            totals.append([event_type.label, qs.count()])
+            graphs.append([event_type.label, graph])
 
-                totals.append([title, sum(views_amount)])
-
-                fig = go.Figure(data=[go.Line(
-                    x=list(dates), y=list(views_amount)
-                )])
-
-                fig.update_layout(
-                  {"margin": {"l": 50, "r": 50, "b": 50, "t": 50, "pad": 4}}
-                )
-
-                fig.update_xaxes(
-                  dtick=1 * 1000 * 60 * 60 * 24,
-                  tickformat="%d-%m-%Y",
-                  tickangle=60
-                )
-                fig.update_yaxes(title=_("Visitas"), automargin=True)
-
-                plots.append([title, plot(fig, output_type='div')])
-
-            else:
-                plots.append([title, None])  # No visits
-
-        return {'plots': plots, 'totals': totals, 'object': joboffer}
+        return {'graphs': graphs, 'totals': totals, 'object': joboffer}
 
     def get(self, request, **kwargs):
         joboffer = self.get_object()
 
         context = self.get_context_data(joboffer)
-
-        return render(
-            request, 'joboffers/joboffer_analytics.html',
-            context=context
-        )
+        return render(request, self.template_name, context=context)
 
 
 class DownloadAnalyticsAsCsv(JobOfferObjectMixin, View):

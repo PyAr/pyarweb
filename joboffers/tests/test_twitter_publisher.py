@@ -9,6 +9,8 @@ from ..publishers.twitter import (
 )
 
 DUMMY_MESSAGE = 'message'
+DUMMY_TITLE = 'title'
+DUMMY_LINK = 'https://example.com'
 DUMMY_EXCEPTION_MESSAGE = 'Oops'
 DUMMY_BAD_REQUEST_TEXT = 'This is bad'
 
@@ -37,7 +39,7 @@ def test_push_to_api_wrong_credential_format(settings, caplog):
     settings.TWITTER_CONSUMER_SECRET = 123
     settings.TWITTER_ACCESS_TOKEN = 123
     settings.TWITTER_ACCESS_SECRET = 123
-    status = TwitterPublisher()._push_to_api('message', 'title')
+    status = TwitterPublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
     expected_error_message = 'Consumer key must be string or bytes'
 
     assert expected_error_message in caplog.text
@@ -55,7 +57,7 @@ def test_push_to_api_bad_credentials_None(mock_api, settings, caplog):
     settings.TWITTER_ACCESS_SECRET = None
     settings.TWITTER_CONSUMER_KEY = None
 
-    status = TwitterPublisher()._push_to_api('message', 'title')
+    status = TwitterPublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
     assert status is None
 
 
@@ -70,7 +72,7 @@ def test_push_to_api_bad_credentials(mock_api, settings, caplog):
     settings.TWITTER_CONSUMER_SECRET = ''
     settings.TWITTER_CONSUMER_KEY = ''
 
-    status = TwitterPublisher()._push_to_api('message', 'title')
+    status = TwitterPublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
     expected_error_message = ERROR_LOG_MESSAGE_POST % (_repr_credentials(), '')
 
     assert expected_error_message in caplog.text
@@ -88,6 +90,6 @@ def test_push_to_api_ok(mock_api, settings):
     settings.TWITTER_CONSUMER_SECRET = ''
     settings.TWITTER_CONSUMER_KEY = ''
 
-    status = TwitterPublisher()._push_to_api('message', 'title')
+    status = TwitterPublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
 
     assert status == 200

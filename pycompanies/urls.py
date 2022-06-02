@@ -1,8 +1,17 @@
 from django.urls import re_path
 
-from .views import (CompanyAdminView, CompanyAssociationListView, CompanyAssociateView,
-                    CompanyCreateView, CompanyDeleteView, CompanyDetailView,
-                    CompanyDisassociateView, CompanyListView, CompanyUpdateView)
+from .views import (
+  CompanyAdminView,
+  CompanyAnalyticsView,
+  CompanyAssociateView,
+  CompanyAssociationListView,
+  CompanyCreateView,
+  CompanyDeleteView,
+  CompanyDetailView,
+  CompanyDisassociateView,
+  CompanyListView,
+  CompanyUpdateView
+)
 
 app_name = 'pycompanies'
 urlpatterns = [
@@ -14,5 +23,6 @@ urlpatterns = [
     re_path(r'^(?P<company>\d+)/asociar/$', CompanyAssociateView.as_view(), name='associate'),
     re_path(r'^asociarme/$', CompanyAssociationListView.as_view(), name='association_list'),
     re_path(r'^admin/$', CompanyAdminView.as_view(), name='admin'),
-    re_path(r'^(?P<pk>\d+)/desasociar/$', CompanyDisassociateView.as_view(), name='disassociate')
+    re_path(r'^(?P<pk>\d+)/desasociar/$', CompanyDisassociateView.as_view(), name='disassociate'),
+    re_path(r'^(?P<pk>\d+)/analitica/$', CompanyAnalyticsView.as_view(), name='analytics')
 ]

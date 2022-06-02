@@ -1,10 +1,15 @@
 import hashlib
 import logging
 import unicodedata
+import plotly.graph_objects as go
 
 from smtplib import SMTPException
+from plotly.offline import plot
 
 from django.contrib import messages
+from django.db.models import Count
+from django.utils.translation import gettext as _
+
 from django.core.mail import send_mail
 from datetime import timedelta
 
@@ -17,6 +22,7 @@ from joboffers.constants import (
   OFFER_EXPIRATION_DAYS
 )
 from joboffers.models import EventType, JobOffer, JobOfferAccessLog, OfferState
+
 
 UNWANTED_SORROUNDING_CHARS = "@/#*"
 
@@ -63,6 +69,7 @@ def send_mail_to_publishers(joboffer, subject: str, body: str, request=None):
         except SMTPException as e:
             if request:
                 messages.add_message(request, MAIL_SENDING_ERROR)
+
             logging.error(e)
 
 
@@ -93,16 +100,54 @@ def expire_old_offers():
     )
 
     for joboffer in joboffers:
-        subject = EXPIRED_OFFER_MAIL_SUBJECT % {'title': joboffer.title}
-        body = EXPIRED_OFFER_MAIL_BODY % {
-          'title': joboffer.title,
-          'offer_url': joboffer.get_absolute_url(),
-          'listing_views': joboffer.get_visualizations_amount(EventType.LISTING_VIEW),
-          'detail_views': joboffer.get_visualizations_amount(EventType.DETAIL_VIEW),
-          'contact_info_views': joboffer.get_visualizations_amount(EventType.CONTACT_INFO_VIEW),
-          'expiration_days': OFFER_EXPIRATION_DAYS
-        }
+        visualizations = joboffer.get_visualizations_count()
+
+        subject = EXPIRED_OFFER_MAIL_SUBJECT.format(title=joboffer.title)
+        body = EXPIRED_OFFER_MAIL_BODY.format(
+          title=joboffer.title,
+          offer_url=joboffer.get_absolute_url(),
+          listing_views=visualizations.get(EventType.LISTING_VIEW, 0),
+          detail_views=visualizations.get(EventType.DETAIL_VIEW, 0),
+          contact_info_views=visualizations.get(EventType.CONTACT_INFO_VIEW, 0),
+          expiration_days=OFFER_EXPIRATION_DAYS
+        )
+
         joboffer.state = OfferState.EXPIRED
         joboffer.save()
 
         send_mail_to_publishers(joboffer, subject, body)
+
+
+def get_visualizations_graph(log_queryset):
+    """
+    Return a graph of the visualizations amount for the provided queryset.
+    """
+    if log_queryset.exists():
+        grouping_qs = log_queryset\
+          .order_by('created_at') \
+          .values('created_at__date').annotate(Count('id'))
+
+        dates = grouping_qs.values_list('created_at__date', flat=True)
+        views_amount = grouping_qs.values_list('id__count', flat=True)
+
+        fig = go.Figure(data=[go.Scatter(
+          x=list(dates), y=list(views_amount)
+        )])
+
+        fig.update_layout(
+          {"margin": {"l": 50, "r": 50, "b": 50, "t": 50, "pad": 4}}
+        )
+
+        fig.update_xaxes(
+          dtick=1 * 1000 * 60 * 60 * 24,
+          tickformat="%d-%m-%Y",
+          tickangle=60
+        )
+
+        fig.update_yaxes(title=_("Visitas"), automargin=True)
+
+        graph = plot(fig, output_type='div')
+    else:
+        graph = None
+
+    return graph

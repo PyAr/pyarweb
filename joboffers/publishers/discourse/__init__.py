@@ -19,7 +19,7 @@ class DiscoursePublisher(Publisher):
 
     name = 'Discourse'
 
-    def _push_to_api(self, message: str, title: str):
+    def _push_to_api(self, message: str, title: str, link: str):
         """Publish a message to discourse."""
         headers = {
             'Api-Key': settings.DISCOURSE_API_KEY,

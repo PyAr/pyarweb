@@ -1,8 +1,10 @@
 import pytest
 
-from datetime import timedelta
 from smtplib import SMTPException
 from unittest.mock import MagicMock, patch
+
+
+from datetime import timedelta
 
 from django.core import mail
 from django.utils import timezone
@@ -170,6 +172,7 @@ def test_expire_old_offers():
     two_hundred_days_ago = today - timedelta(days=200)
     JobOfferFactory.create(company=company)
     offer2 = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
+
     JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
     JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
 
@@ -178,5 +181,5 @@ def test_expire_old_offers():
     expire_old_offers()
 
     assert len(mail.outbox) == 1
-    assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT % {'title': offer2.title}
+    assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offer2.title)
     assert JobOffer.objects.filter(state=OfferState.EXPIRED).count() == 1
