@@ -21,6 +21,7 @@ from ..constants import (
   DEACTIVATE_URL,
   HISTORY_URL,
   LIST_URL,
+  PUBLISHER_FAILED_ERROR,
   REACTIVATE_URL,
   REACTIVATED_MAIL_SUBJECT,
   REJECT_URL,
@@ -33,6 +34,7 @@ from ..constants import (
   VIEW_URL
 )
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
+from ..publishers import Publisher
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
 from .fixtures import create_admin_user, create_publisher_client, create_telegram_dummy # noqa
@@ -417,6 +419,38 @@ def test_joboffer_approve_ok(
 
     assert publish_function.called
     assert publish_function.call_args[0][0] == joboffer
+
+
+class FailingPublisher(Publisher):
+    name = "Dummy"
+
+    def publish(self, jobo_ffer):
+        """Fails to publish for testing purposes"""
+        return self.RESULT_BAD
+
+
+@pytest.mark.django_db
+def test_joboffer_approve_failed_to_publish(
+    admin_client, admin_user, user_company_profile, telegram_dummy, settings
+):
+    """Test that approving a joboffer with a failing publisher adds an error message"""
+    client = admin_client
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(state=OfferState.MODERATION, company=company)
+
+    target_url = reverse(APPROVE_URL, kwargs={'slug': joboffer.slug})
+
+    assert 1 == JobOffer.objects.count()
+    assert OfferState.MODERATION == joboffer.state
+    # end preconditions
+
+    settings.SOCIAL_NETWORKS_PUBLISHERS = ['joboffers.tests.test_views.FailingPublisher']
+
+    response = client.get(target_url)
+
+    messages = get_plain_messages(response)
+    expected_message = PUBLISHER_FAILED_ERROR.format(publisher=FailingPublisher.name)
+    assert expected_message in messages
 
 
 @pytest.mark.django_db

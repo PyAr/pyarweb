@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from smtplib import SMTPException
 from plotly.offline import plot
 
+from django.contrib import messages
 from django.db.models import Count
 from django.utils.translation import gettext as _
 
@@ -17,6 +18,7 @@ from django.utils import timezone
 from joboffers.constants import (
   EXPIRED_OFFER_MAIL_BODY,
   EXPIRED_OFFER_MAIL_SUBJECT,
+  MAIL_SENDING_ERROR,
   OFFER_EXPIRATION_DAYS
 )
 from joboffers.models import EventType, JobOffer, JobOfferAccessLog, OfferState
@@ -49,7 +51,7 @@ def hash_secret(credential: str):
     return digest
 
 
-def send_mail_to_publishers(joboffer, subject: str, body: str):
+def send_mail_to_publishers(joboffer, subject: str, body: str, request=None):
     """
     Send an email to the publishers of the provided joboffer
     """
@@ -65,6 +67,9 @@ def send_mail_to_publishers(joboffer, subject: str, body: str):
               fail_silently=False
             )
         except SMTPException as e:
+            if request:
+                messages.add_message(request, MAIL_SENDING_ERROR)
+
             logging.error(e)
 
 
@@ -74,7 +79,9 @@ def get_visualization_data(joboffer):
     """
     data = JobOfferAccessLog \
         .objects.filter(joboffer=joboffer) \
-        .values_list('created_at', 'joboffer__id', 'joboffer__title', 'event_type')
+        .values_list(
+          'created_at__date', 'created_at__time', 'joboffer__id', 'joboffer__title', 'event_type'
+        )
 
     output_data = []
 
@@ -106,6 +113,7 @@ def expire_old_offers():
           contact_info_views=visualizations.get(EventType.CONTACT_INFO_VIEW, 0),
           expiration_days=OFFER_EXPIRATION_DAYS
         )
+
         joboffer.state = OfferState.EXPIRED
         joboffer.save()
 

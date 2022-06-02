@@ -46,15 +46,18 @@ class Publisher:
 
 def publish_offer(job_offer: 'JobOffer', publishers: list = None):
     """Publish a job_offer into the given list of publishers."""
-    results = {}
+    failed = []
 
     if publishers:
         for publisher in publishers:
-            results[publisher.name] = publisher().publish(job_offer)
+            result = publisher().publish(job_offer)
+
+            if result != Publisher.RESULT_OK:
+                failed.append(publisher.name)
     else:
         raise ValueError
 
-    return results
+    return failed
 
 
 def publish_to_all_social_networks(joboffer):
@@ -62,4 +65,4 @@ def publish_to_all_social_networks(joboffer):
     Send the joboffer to all the configured social networks.
     """
     publishers = [import_string(p) for p in settings.SOCIAL_NETWORKS_PUBLISHERS]
-    publish_offer(joboffer, publishers)
+    return publish_offer(joboffer, publishers)

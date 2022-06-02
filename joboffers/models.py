@@ -81,7 +81,7 @@ class JobOffer(models.Model):
     """A PyAr Job Offer."""
 
     title = models.CharField(
-      max_length=255, verbose_name=_('Título'), validators=[MinLengthValidator(20)], unique=True
+      max_length=255, verbose_name=_('Título'), validators=[MinLengthValidator(20)]
     )
     company = models.ForeignKey(
         'pycompanies.Company',

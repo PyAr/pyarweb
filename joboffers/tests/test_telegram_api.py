@@ -2,10 +2,11 @@ import urllib.parse
 
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
-from ..models import JobOffer
-from ..telegram_api import (
+from joboffers.constants import TELEGRAM_SENDING_ERROR
+from joboffers.models import JobOffer
+from joboffers.telegram_api import (
   _compose_message,
   _get_request_url,
   TELEGRAM_API_URL,
@@ -53,6 +54,34 @@ def test_send_message(requests_mock: Mocker):
         assert (
             False
         ), 'Send Message raised an exception, wich means that the url is malformed.'
+
+
+def test_logging_failing_send_message(requests_mock: Mocker, caplog):
+    """Test that failing sendind a messages creates a log entry"""
+    message = 'this is a test'
+    safe_message = _compose_message(message)
+    chat_id = 1
+    url = _get_request_url(safe_message, chat_id)
+    requests_mock.get(url, json='', status_code=404)
+
+    send_message(message, chat_id)
+    assert len(caplog.records) == 1
+
+
+@patch("joboffers.telegram_api.messages")
+def test_messages_failing_send_message(mocked_messages, requests_mock):
+    """Test that failing sendind a messages creates a log entry"""
+    message = 'this is a test'
+    safe_message = _compose_message(message)
+    chat_id = 1
+    url = _get_request_url(safe_message, chat_id)
+    requests_mock.get(url, json='', status_code=404)
+    request = MagicMock()
+
+    send_message(message, chat_id, request)
+
+    assert mocked_messages.add_message.called
+    assert mocked_messages.add_message.call_args[0][1] == TELEGRAM_SENDING_ERROR
 
 
 def test_send_notification_to_moderators(settings):

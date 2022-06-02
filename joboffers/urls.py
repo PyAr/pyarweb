@@ -3,7 +3,7 @@ from .views import (
   DownloadAnalyticsAsCsv, JobOfferAdminView, JobOfferAnalytics, JobOfferApproveView,
   JobOfferCreateView, JobOfferDeactivateView, JobOfferDetailView, JobOfferHistoryView,
   JobOfferListView, JobOfferUpdateView, JobOfferRejectView, JobOfferReactivateView,
-  JobOfferRequestModerationView, TrackContactInfoView
+  JobOfferRequestModerationView, TrackContactInfoView, JobOffersFeed
 )
 
 
@@ -11,6 +11,7 @@ urlpatterns = [
     re_path(r'^$', JobOfferListView.as_view(), name='list'),
     re_path(r'^admin/$', JobOfferAdminView.as_view(), name='admin'),
     re_path(r'^nueva/$', JobOfferCreateView.as_view(), name='add'),
+    re_path(r'^rss/$', JobOffersFeed(), name='feed'),
     re_path(
       r'^(?P<slug>[\w-]+)/rechazar/$', JobOfferRejectView.as_view(), name='reject'
     ),
