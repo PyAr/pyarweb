@@ -2,8 +2,16 @@ import urllib.parse
 
 from requests_mock.exceptions import NoMockAddress
 from requests_mock.mocker import Mocker
+from unittest.mock import patch
 
-from ..telegram_api import TELEGRAM_API_URL, _compose_message, _get_request_url, send_message
+from ..models import JobOffer
+from ..telegram_api import (
+  _compose_message,
+  _get_request_url,
+  TELEGRAM_API_URL,
+  send_message,
+  send_notification_to_moderators
+)
 
 
 def test_get_request_url(settings):
@@ -45,3 +53,19 @@ def test_send_message(requests_mock: Mocker):
         assert (
             False
         ), 'Send Message raised an exception, wich means that the url is malformed.'
+
+
+def test_send_notification_to_moderators(settings):
+    """Test that message has been crafted correctly."""
+    dummy_job_slug = 'python-job'
+    dummy_message = 'dummy message'
+    dummy_chat_id = 1
+
+    settings.TELEGRAM_MODERATORS_CHAT_ID = dummy_chat_id
+
+    offer = JobOffer(slug=dummy_job_slug)
+    expected_message = offer.get_absolute_url()
+
+    with patch('joboffers.telegram_api.send_message') as mock_send_message:
+        send_notification_to_moderators(dummy_message)
+        assert mock_send_message.called_args(expected_message, dummy_chat_id)

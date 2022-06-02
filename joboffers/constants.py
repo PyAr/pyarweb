@@ -7,6 +7,7 @@ LIST_URL = 'joboffers:list'
 APPROVE_URL = 'joboffers:approve'
 DEACTIVATE_URL = 'joboffers:deactivate'
 VIEW_URL = 'joboffers:view'
+REACTIVATE_URL = 'joboffers:reactivate'
 REJECT_URL = 'joboffers:reject'
 REQUEST_MODERATION_URL = 'joboffers:request_moderation'
 HISTORY_URL = 'joboffers:history'
@@ -97,12 +98,20 @@ APPROVED_MAIL_BODY = _("""
 Le informamos que la oferta que envío a revisión ({title}) ha sido aprobada y ya se
 encuentra listada en la página y fué replicada en las redes sociales.
 """)
+
+REACTIVATED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Reactivado')
+REACTIVATED_MAIL_BODY = _(
+  'Le informamos que la oferta ({title}) ha sido reactivada. Ya se puede visualizar'
+  'en el listado de ofertas de trabajo de PyAr.'
+)
+
 REJECTED_MAIL_SUBJECT = _('PyAr - Oferta de Trabajo Rechazada')
 REJECTED_MAIL_BODY = _("""
 Le informamos que la oferta que envío a revisión ({title}) ha sido rechazada.
 Razón de Rechazo: {reason}
 Observación: {text}
 """)
+
 EXPIRED_OFFER_MAIL_SUBJECT = _('{title} - Caducada')
 EXPIRED_OFFER_MAIL_BODY = _("""
 Le informamos que la oferta "{title}" ha caducado. Han pasado los {expiration_days} días desde su
@@ -117,3 +126,15 @@ Resumen de Visitas
 """)
 
 OFFER_EXPIRATION_DAYS = 180
+
+PENDING_MODERATION_OFFER_DAYS = 2
+
+TELEGRAM_MODERATION_MESSAGE = _('La oferta {offer_url} necesita ser moderada.')
+TELEGRAM_APPROVED_MESSAGE = _('La oferta {offer_url} fue aprobada por {username}.')
+TELEGRAM_REJECT_MESSAGE = _(
+  'La oferta {offer_url} fue rechazada por {username}.'
+)
+
+TELEGRAM_PENDING_MODERATION_MESSAGE = _(
+  'La oferta {offer_url} necesita moderación y ya pasaron {moderation_reminder_days} días.'
+)

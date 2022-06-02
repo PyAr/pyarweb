@@ -1,7 +1,9 @@
 import hashlib
+import logging
 import unicodedata
 import plotly.graph_objects as go
 
+from smtplib import SMTPException
 from plotly.offline import plot
 
 from django.db.models import Count
@@ -18,6 +20,7 @@ from joboffers.constants import (
   OFFER_EXPIRATION_DAYS
 )
 from joboffers.models import EventType, JobOffer, JobOfferAccessLog, OfferState
+
 
 UNWANTED_SORROUNDING_CHARS = "@/#*"
 
@@ -53,13 +56,16 @@ def send_mail_to_publishers(joboffer, subject: str, body: str):
     publishers_addresses = joboffer.get_publisher_mail_addresses()
 
     if publishers_addresses:
-        send_mail(
-          subject,
-          body,
-          None,  # Default from mail in settings
-          publishers_addresses,
-          fail_silently=False
-        )
+        try:
+            send_mail(
+              subject,
+              body,
+              None,  # Default from mail in settings
+              publishers_addresses,
+              fail_silently=False
+            )
+        except SMTPException as e:
+            logging.error(e)
 
 
 def get_visualization_data(joboffer):

@@ -1,3 +1,4 @@
+
 from dataclasses import dataclass
 from typing import Set
 
@@ -195,7 +196,7 @@ def get_valid_actions(user, joboffer=None, roles=None):
     if joboffer:
         if joboffer.state == OfferState.ACTIVE:
             if ROLE_ADMIN in roles_ and joboffer.modified_by == user:
-                actions = actions | {approve.code, reject.code}
+                actions = actions | {reject.code}
 
         elif joboffer.state == OfferState.REJECTED:
             if joboffer.last_comment.created_by == user:

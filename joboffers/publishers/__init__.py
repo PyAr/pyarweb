@@ -1,7 +1,9 @@
 import os
 import inspect
 
+from django.conf import settings
 from django.template import Context, Template
+from django.utils.module_loading import import_string
 
 from ..models import JobOffer
 
@@ -34,7 +36,7 @@ class Publisher:
         """Render and send the JobOffer to the publisher,
         using the API configured in push_to_api method."""
         message = self._render_offer(job_offer)
-        status = self._push_to_api(message, job_offer.title)
+        status = self._push_to_api(message, job_offer.title, job_offer.get_absolute_url())
 
         if status in (200, 201):
             return self.RESULT_OK
@@ -53,3 +55,11 @@ def publish_offer(job_offer: 'JobOffer', publishers: list = None):
         raise ValueError
 
     return results
+
+
+def publish_to_all_social_networks(joboffer):
+    """
+    Send the joboffer to all the configured social networks.
+    """
+    publishers = [import_string(p) for p in settings.SOCIAL_NETWORKS_PUBLISHERS]
+    publish_offer(joboffer, publishers)

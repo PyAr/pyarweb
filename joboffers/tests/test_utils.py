@@ -1,7 +1,10 @@
 import pytest
 
+from smtplib import SMTPException
+from unittest.mock import MagicMock, patch
+
+
 from datetime import timedelta
-from unittest.mock import MagicMock
 
 from django.core import mail
 from django.utils import timezone
@@ -100,6 +103,22 @@ def test_send_mail_to_publishers_without_emails():
 
     send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY)
     assert len(mail.outbox) == 0
+
+
+EXPECTED_SMTP_ERROR = 'random error'
+
+
+@patch('joboffers.utils.send_mail', side_effect=SMTPException(EXPECTED_SMTP_ERROR))
+def test_send_mail_logs_when_there_is_an_error(send_mail_function, caplog):
+    """
+    Test send_mail_to_publishers doesn't send emails when there is an error with the connection
+    """
+    joboffer = MagicMock()
+    joboffer.get_publisher_mail_addresses = MagicMock(return_value=[TEST_RECEIVER])
+
+    send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY)
+    assert len(mail.outbox) == 0
+    assert caplog.messages[0] == EXPECTED_SMTP_ERROR
 
 
 @pytest.mark.django_db

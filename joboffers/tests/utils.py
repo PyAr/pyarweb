@@ -1,6 +1,7 @@
 from datetime import timedelta
 from random import randint
 
+from django.contrib.messages import get_messages as contrib_get_messages
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
@@ -64,3 +65,11 @@ def create_analytics_sample_data(
                   session=session.session_key,
                   joboffer=joboffer
                 )
+
+
+def get_plain_messages(request):
+    """
+    Gets a plain text message from a given request/response object. Useful for testing messages
+    """
+    messages = contrib_get_messages(request.wsgi_request)
+    return [m.message for m in messages]

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from joboffers.telegram_notifier import send_notification_to_moderators
+from joboffers.telegram_api import send_notification_to_moderators
 
 
 class Command(BaseCommand):

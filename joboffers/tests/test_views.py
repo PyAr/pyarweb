@@ -2,16 +2,14 @@ import factory
 import pytest
 
 from datetime import datetime
+from unittest.mock import patch
 
 from django.core import mail
-from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
-from pyarweb.tests.fixtures import ( # noqa
-  create_client, create_logged_client, create_moderator_user, create_user
-)
 from pycompanies.tests.factories import UserCompanyProfileFactory
 from pycompanies.tests.fixtures import create_user_company_profile # noqa
+from pyarweb.tests.fixtures import create_user, create_logged_client # noqa
 
 from ..constants import (
   ANALYTICS_URL,
@@ -20,19 +18,25 @@ from ..constants import (
   ADMIN_URL,
   APPROVE_URL,
   APPROVED_MAIL_SUBJECT,
-  REJECTED_MAIL_SUBJECT,
   DEACTIVATE_URL,
   HISTORY_URL,
   LIST_URL,
+  REACTIVATE_URL,
+  REACTIVATED_MAIL_SUBJECT,
   REJECT_URL,
+  REJECTED_MAIL_SUBJECT,
   REQUEST_MODERATION_URL,
   TRACK_CONTACT_INFO_URL,
+  TELEGRAM_APPROVED_MESSAGE,
+  TELEGRAM_MODERATION_MESSAGE,
+  TELEGRAM_REJECT_MESSAGE,
   VIEW_URL
 )
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
-from .fixtures import create_publisher_client # noqa
+from .fixtures import create_admin_user, create_publisher_client, create_telegram_dummy # noqa
+from .utils import get_plain_messages
 
 
 JOBOFFER_TITLE1 = 'Job Offer Sample Title 1'
@@ -46,14 +50,6 @@ JOBOFFER_TAG_2 = 'tag2'
 JOBOFFER_TAG_3 = 'tag3'
 JOBOFFER_TAG_4 = 'tag4'
 JOBOFFER_TAG_5 = 'tag5'
-
-
-def get_plain_messages(request):
-    """
-    Gets a plain text message from a given request/response object. Useful for testing messages
-    """
-    messages = contrib_get_messages(request.wsgi_request)
-    return [m.message for m in messages]
 
 
 @pytest.mark.django_db
@@ -165,7 +161,7 @@ def test_joboffer_creation_as_admin_should_fail(admin_client, user_company_profi
 
 
 @pytest.mark.django_db
-def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
+def test_joboffer_request_moderation_ok(publisher_client, user_company_profile, telegram_dummy):
     """
     Test request for moderation for a publisher user
     """
@@ -190,6 +186,13 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile):
 
     joboffer = JobOffer.objects.first()
     assert OfferState.MODERATION == joboffer.state
+
+    telegram_history = telegram_dummy.call_history
+    assert len(telegram_history) == 1
+    sent_message = telegram_history[0]['text'][0]
+    assert sent_message.endswith(TELEGRAM_MODERATION_MESSAGE.format(
+      offer_url=joboffer.get_absolute_url()
+    ))
 
 
 @pytest.mark.django_db
@@ -218,6 +221,38 @@ def test_joboffer_deactivate_ok(publisher_client, user_company_profile):
 
     joboffer = JobOffer.objects.get(id=joboffer.id)
     assert OfferState.DEACTIVATED == joboffer.state
+
+
+@pytest.mark.django_db
+def test_joboffer_reactivate_ok(publisher_client, user_company_profile):
+    """
+    Test reactiving a joboffer by a publisher
+    """
+    client = publisher_client
+    company = user_company_profile.company
+    joboffer = JobOfferFactory.create(company=company, state=OfferState.EXPIRED)
+
+    target_url = reverse(REACTIVATE_URL, kwargs={'slug': joboffer.slug})
+
+    assert 1 == JobOffer.objects.count()
+    assert joboffer.state == OfferState.EXPIRED
+    # end preconditions
+
+    response = client.get(target_url)
+
+    # Asserts redirection to the joboffer status page
+    assert 302 == response.status_code
+    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+
+    messages = get_plain_messages(response)
+    assert messages[0].startswith("Oferta reactivada")
+
+    joboffer = JobOffer.objects.get(id=joboffer.id)
+    assert OfferState.ACTIVE == joboffer.state
+
+    assert len(mail.outbox) == 1
+    assert mail.outbox[0].to == [user_company_profile.user.email]
+    assert mail.outbox[0].subject == REACTIVATED_MAIL_SUBJECT
 
 
 @pytest.fixture(name="joboffers_list")
@@ -339,7 +374,10 @@ def test_joboffer_approve_without_permission(publisher_client, user_company_prof
 
 
 @pytest.mark.django_db
-def test_joboffer_approve_ok(admin_client, user_company_profile):
+@patch('joboffers.views.publish_to_all_social_networks')
+def test_joboffer_approve_ok(
+    publish_function, admin_client, admin_user, user_company_profile, telegram_dummy
+):
     """
     Test approval of a joboffer with an admin user
     """
@@ -366,14 +404,27 @@ def test_joboffer_approve_ok(admin_client, user_company_profile):
     assert OfferState.ACTIVE == joboffer.state
 
     assert len(mail.outbox) == 1
+    assert mail.outbox[0].to == [user_company_profile.user.email]
     assert mail.outbox[0].subject == APPROVED_MAIL_SUBJECT
+
+    telegram_history = telegram_dummy.call_history
+    assert len(telegram_history) == 1
+    sent_message = telegram_history[0]['text'][0]
+    assert sent_message.endswith(TELEGRAM_APPROVED_MESSAGE.format(
+      offer_url=joboffer.get_absolute_url(),
+      username=admin_user.username
+    ))
+
+    assert publish_function.called
+    assert publish_function.call_args[0][0] == joboffer
 
 
 @pytest.mark.django_db
-def test_joboffer_reject_ok(admin_client, user_company_profile):
+def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, telegram_dummy):
     """
     Test rejection of the joboffer by the admin user
     """
+
     client = admin_client
     company = user_company_profile.company
     joboffer = JobOfferFactory.create(company=company, state=OfferState.MODERATION)
@@ -400,6 +451,15 @@ def test_joboffer_reject_ok(admin_client, user_company_profile):
 
     assert len(mail.outbox) == 1
     assert REJECTED_MAIL_SUBJECT
+
+    telegram_history = telegram_dummy.call_history
+    assert len(telegram_history) == 1
+    sent_message = telegram_history[0]['text'][0]
+    assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE.format(
+      offer_title=joboffer.title,
+      offer_url=joboffer.get_absolute_url(),
+      username=admin_user.username
+    ))
 
 
 @pytest.mark.django_db
@@ -599,7 +659,7 @@ def test_joboffer_detail_view_render_state_with_rejected_label(publisher_client)
 
 @pytest.mark.django_db
 def test_JobOfferHistoryView_renders_with_context(
-        publisher_client, settings, user_company_profile, moderator_user
+        publisher_client, settings, user_company_profile, admin_user
 ):
     """
     Test that JobOfferHistoryView renders correctly
@@ -616,7 +676,7 @@ def test_JobOfferHistoryView_renders_with_context(
     joboffer.save()
     joboffer.state = OfferState.MODERATION
     joboffer.save()
-    comment = JobOfferCommentFactory.build(joboffer=joboffer, created_by=moderator_user)
+    comment = JobOfferCommentFactory.build(joboffer=joboffer, created_by=admin_user)
     comment.save()
     joboffer.state = OfferState.ACTIVE
     joboffer.save()
