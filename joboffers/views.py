@@ -495,7 +495,7 @@ class DownloadAnalyticsAsCsv(JobOfferObjectMixin, View):
         writer = csv.writer(response)
 
         writer.writerow([
-          _('Fecha/Hora'), _('ID. Oferta'), _('Titulo de la Oferta'), _('Código de Evento'),
+          _('Fecha'), _('Hora'), _('ID. Oferta'), _('Titulo de la Oferta'), _('Código de Evento'),
           _('Evento')
         ])
 

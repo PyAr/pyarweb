@@ -149,7 +149,8 @@ def test_get_visualization_data():
 
     expected_data = [
       (
-        visualization.created_at, visualization.joboffer.id, visualization.joboffer.title,
+        visualization.created_at.date(), visualization.created_at.astimezone().time(),
+        visualization.joboffer.id, visualization.joboffer.title,
         visualization.event_type, visualization.get_event_type_display()
       )
       for visualization in visualizations

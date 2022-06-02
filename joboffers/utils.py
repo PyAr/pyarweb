@@ -79,7 +79,9 @@ def get_visualization_data(joboffer):
     """
     data = JobOfferAccessLog \
         .objects.filter(joboffer=joboffer) \
-        .values_list('created_at', 'joboffer__id', 'joboffer__title', 'event_type')
+        .values_list(
+          'created_at__date', 'created_at__time', 'joboffer__id', 'joboffer__title', 'event_type'
+        )
 
     output_data = []
 
