@@ -17,9 +17,7 @@ class Company(TimeStampedModel):
     name = models.CharField('Nombre', max_length=255, unique=True)
     description = models.TextField('Descripción')
     photo = models.ImageField('Logo', upload_to='pycompanies/logos')
-    link = models.URLField('URL',
-                           help_text=_('Dirección web de la empresa')
-                           )
+    link = models.URLField('URL', help_text=_('Dirección web de la empresa'))
     rank = models.PositiveIntegerField(default=0)
 
     def get_absolute_url(self):
@@ -47,9 +45,9 @@ class UserCompanyProfile(models.Model):
     """Company data for a User."""
     objects = UserCompanyProfileManager()
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                related_name='company',
-                                on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name='company',
+                             on_delete=models.CASCADE)
     company = models.ForeignKey(Company,
                                 related_name='users',
                                 on_delete=models.CASCADE)
@@ -59,6 +57,7 @@ class UserCompanyProfile(models.Model):
 
 
 #  SIGNALS
+
 
 @receiver(post_delete, sender=Company)
 def post_delete_user(sender, instance, *args, **kwargs):
