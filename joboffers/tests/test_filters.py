@@ -66,6 +66,17 @@ def test_joboffer_value_returns_human_readable_for_a_choices_field():
     assert result == HiringType.COOPERATIVE.label
 
 
+def test_joboffer_value_returns_human_readable_update_field_foreign_key_field():
+    """
+    Assert that the joboffer_value filter returns human readable value for a choices field
+    """
+    TEST_VALUE = 'random_user'
+    field_item = ('modified_by', TEST_VALUE)
+    result = joboffer_value(field_item)
+
+    assert result == TEST_VALUE
+
+
 @pytest.mark.django_db
 def test_joboffer_value_returns_human_readable_for_a_foreign_key_field():
     """

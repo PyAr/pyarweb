@@ -3,7 +3,9 @@ import urllib.parse
 
 import requests
 from django.conf import settings
+from django.contrib import messages
 
+from joboffers.constants import TELEGRAM_SENDING_ERROR
 from joboffers.utils import hash_secret
 
 
@@ -38,17 +40,19 @@ def _get_request_url(message: str, chat_id: int):
     return url
 
 
-def send_message(message: str, chat_id: int):
+def send_message(message: str, chat_id: int, request=None):
     """Send a message to a chat using a bot."""
     safe_message = _compose_message(message)
     url = _get_request_url(safe_message, chat_id)
     status = requests.get(url)
     if status.status_code != requests.codes.ok:
         logging.error(ERROR_LOG_MESSAGE, _repr_credentials(), status.text)
+        if request:
+            messages.add_message(request, TELEGRAM_SENDING_ERROR)
 
     return status.status_code
 
 
-def send_notification_to_moderators(message: str):
+def send_notification_to_moderators(message: str, request=None):
     """Send a notification of a slug thats needs to be moderated to moderator's group."""
     return send_message(message, settings.TELEGRAM_MODERATORS_CHAT_ID)

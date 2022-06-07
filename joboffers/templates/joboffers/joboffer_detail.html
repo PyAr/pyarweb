@@ -10,7 +10,9 @@
 {% block extra_head %}
   <meta property="og:title" content="{{ object.title }}">
   <meta name="description" property="og:description" content="{{ object.short_description }}">
+  {% if object.company.photo %}
   <meta property="og:image" content="{{ object.company.photo.url }}">
+  {% endif %}
 {% endblock %}
 
 {% block content %}

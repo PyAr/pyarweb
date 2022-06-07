@@ -3,10 +3,12 @@ import csv
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.syndication.views import Feed
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, reverse
+from django.shortcuts import render
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
@@ -27,6 +29,7 @@ from .constants import (
   CODE_REACTIVATE,
   CODE_REJECT,
   CODE_REQUEST_MODERATION,
+  PUBLISHER_FAILED_ERROR,
   REACTIVATED_MAIL_BODY,
   REACTIVATED_MAIL_SUBJECT,
   REJECTED_MAIL_SUBJECT,
@@ -309,7 +312,14 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
 
         send_notification_to_moderators(moderators_message)
 
-        publish_to_all_social_networks(offer)
+        publishers_failed = publish_to_all_social_networks(offer)
+
+        for publisher_failed in publishers_failed:
+            messages.add_message(
+              self.request,
+              messages.ERROR,
+              PUBLISHER_FAILED_ERROR.format(publisher=publisher_failed)
+            )
 
 
 class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
@@ -485,9 +495,44 @@ class DownloadAnalyticsAsCsv(JobOfferObjectMixin, View):
         writer = csv.writer(response)
 
         writer.writerow([
-          _('Fecha/Hora'), _('ID. Oferta'), _('Titulo de la Oferta'), _('Código de Evento'),
+          _('Fecha'), _('Hora'), _('ID. Oferta'), _('Titulo de la Oferta'), _('Código de Evento'),
           _('Evento')
         ])
 
         writer.writerows(data)
         return response
+
+
+class JobOffersFeed(Feed):
+    title = "Feed de ofertas laborales de Pyar"
+    link = reverse_lazy("joboffers:list")
+
+    def items(self):
+        return JobOffer.objects.order_by('-created_at')[:5]
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.short_description
+
+    def item_pubdate(self, obj):
+        return obj.created_at
+
+    def item_link(self, item):
+        return reverse('joboffers:view', args=[item.pk])
+
+    def item_author_name(self, obj):
+        return obj.company.name
+
+    def item_author_email(self, obj):
+        if obj.contact_mail:
+            return obj.contact_mail
+        else:
+            return ''
+
+    def item_author_link(self, obj):
+        return obj.company.get_absolute_url()
+
+    def item_categories(self, obj):
+        return obj.tags.values_list('name', flat=True)

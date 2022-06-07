@@ -11,7 +11,7 @@ from django.utils import timezone
 
 from pycompanies.tests.factories import UserCompanyProfileFactory
 
-from ..constants import EXPIRED_OFFER_MAIL_SUBJECT
+from ..constants import EXPIRED_OFFER_MAIL_SUBJECT, MAIL_SENDING_ERROR
 from ..models import JobOffer, OfferState
 from ..utils import (
   expire_old_offers,
@@ -121,6 +121,23 @@ def test_send_mail_logs_when_there_is_an_error(send_mail_function, caplog):
     assert caplog.messages[0] == EXPECTED_SMTP_ERROR
 
 
+@patch('joboffers.utils.messages')
+@patch('joboffers.utils.send_mail', side_effect=SMTPException(EXPECTED_SMTP_ERROR))
+def test_send_mail_add_message_when_there_is_an_error(send_mail_function, messages):
+    """
+    Test send_mail_to_publishers doesn't send emails when there is an error with the connection
+    """
+    joboffer = MagicMock()
+    joboffer.get_publisher_mail_addresses = MagicMock(return_value=[TEST_RECEIVER])
+    request = MagicMock()
+
+    send_mail_to_publishers(joboffer, TEST_SUBJECT, TEST_BODY, request)
+
+    assert messages.add_message.called
+    assert messages.add_message.call_args[0][0] == request
+    assert messages.add_message.call_args[0][1] == MAIL_SENDING_ERROR
+
+
 @pytest.mark.django_db
 def test_get_visualization_data():
     """
@@ -132,7 +149,8 @@ def test_get_visualization_data():
 
     expected_data = [
       (
-        visualization.created_at, visualization.joboffer.id, visualization.joboffer.title,
+        visualization.created_at.date(), visualization.created_at.astimezone().time(),
+        visualization.joboffer.id, visualization.joboffer.title,
         visualization.event_type, visualization.get_event_type_display()
       )
       for visualization in visualizations
@@ -155,15 +173,14 @@ def test_expire_old_offers():
     two_hundred_days_ago = today - timedelta(days=200)
     JobOfferFactory.create(company=company)
     offer2 = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
-    offer3 = JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
+
+    JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
     JobOfferFactory.create(company=company, state=OfferState.ACTIVE)
 
-    JobOffer.objects.filter(id__in=[offer2.id, offer3.id]).update(modified_at=two_hundred_days_ago)
+    JobOffer.objects.filter(id=offer2.id).update(modified_at=two_hundred_days_ago)
 
     expire_old_offers()
 
-    assert len(mail.outbox) == 2
-    offers = JobOffer.objects.filter(state=OfferState.EXPIRED)
-    assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offers[0].title)
-    assert mail.outbox[1].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offers[1].title)
-    assert JobOffer.objects.filter(state=OfferState.EXPIRED).count() == 2
+    assert len(mail.outbox) == 1
+    assert mail.outbox[0].subject == EXPIRED_OFFER_MAIL_SUBJECT.format(title=offer2.title)
+    assert JobOffer.objects.filter(state=OfferState.EXPIRED).count() == 1

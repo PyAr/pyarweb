@@ -57,7 +57,10 @@ def joboffer_value(field_item):
     if display_function:
         return display_function()
     else:
-        return getattr(joboffer, field_name)
+        try:
+            return getattr(joboffer, field_name)
+        except ValueError:
+            return field_value
 
 
 @register.filter

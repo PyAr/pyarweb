@@ -138,3 +138,7 @@ TELEGRAM_REJECT_MESSAGE = _(
 TELEGRAM_PENDING_MODERATION_MESSAGE = _(
   'La oferta {offer_url} necesita moderación y ya pasaron {moderation_reminder_days} días.'
 )
+
+MAIL_SENDING_ERROR = _('Falló al intentar enviar mail a los publicadores.')
+PUBLISHER_FAILED_ERROR = _('Falló al publicar al oferta en {publisher}.')
+TELEGRAM_SENDING_ERROR = _('Falló al notificar a los moderadores por telegram')
