@@ -52,6 +52,8 @@ def forward(apps, schema_editor):
                 state = 'EXPIRED'
             else:
                 state = 'ACTIVE'
+        elif job.jobinactivated_set.exists():
+            state = 'REJECTED'
         else:
             state = 'DEACTIVATED'
 
