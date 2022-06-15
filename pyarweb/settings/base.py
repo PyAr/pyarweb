@@ -129,6 +129,8 @@ STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
 
+TAGGIT_AUTOSUGGEST_STATIC_BASE_URL = 'jquery-autosuggest'  # Force autosuggest static's namespace
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 PYAR_WIKI_URL = 'http://localhost:8080/pages/inicio'
