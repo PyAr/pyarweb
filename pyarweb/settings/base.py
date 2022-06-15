@@ -29,6 +29,9 @@ SITE_ID = 1
 
 ALLOWED_HOSTS = ['*']
 
+# BASE_URL to use in any notification that might require them
+BASE_URL = os.environ.get('BASE_URL')
+
 # Django registration
 # https://django-registration.readthedocs.org/en/latest/quickstart.html
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -128,6 +131,8 @@ FORMAT_MODULE_PATH = 'pyarweb.formats'
 STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
+
+TAGGIT_AUTOSUGGEST_STATIC_BASE_URL = 'jquery-autosuggest'  # Force autosuggest static's namespace
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
