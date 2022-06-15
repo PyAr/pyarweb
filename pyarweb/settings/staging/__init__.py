@@ -52,6 +52,3 @@ if not TEST_RUNNING:
 
 # Prefix for telegram messages
 TELEGRAM_MESSAGE_PREFIX = '[STAGING]'
-
-# BASE_URL to use in any notification that might require them
-BASE_URL = 'https://web.staging.python.org.ar'
