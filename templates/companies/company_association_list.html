@@ -30,7 +30,11 @@
             {% endif %}
             {% for company_user in company.users.all %}
               <h4 style="color:#428bca;">
-                {{company_user.user.username}}
+                {% if company_user.user.first_name or company_user.last_name %}
+                  {{ company_user.user.first_name }} {{ company_user.user.last_name }}
+                {% else %}
+                  {{company_user.user.username}}
+                {% endif %}
               </h4>
             {% empty %}
               <h4>{% trans 'No hay ninguna persona asociada a esta empresa.' %}</h4>
