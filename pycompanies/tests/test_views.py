@@ -139,14 +139,32 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
     """
     company_1 = CompanyFactory.create(name='company_1')
     company_2 = CompanyFactory.create(name='company_2')
+
+    FIRST_NAME_1 = 'firstname1'
+    LAST_NAME_1 = 'lastname1'
+
+    profile_1 = UserCompanyProfileFactory.create(
+      company=company_1, user__first_name=FIRST_NAME_1, user__last_name=LAST_NAME_1
+    )
+    profile_2 = UserCompanyProfileFactory.create(company=company_2)
+    profile_3 = UserCompanyProfileFactory.create(company=company_2)
+
     COMPANY_LIST_URL = reverse('companies:association_list')
 
     response = logged_client.get(COMPANY_LIST_URL, data={'empresa': 'company'})
 
+    expected_name_1 = f"{profile_1.user.first_name} {profile_1.user.last_name}"
+    expected_name_2 = profile_2.user.username
+    expected_name_3 = profile_3.user.username
+
+    companies_and_owners = list(response.context_data['companies_and_owners'])
+
     assert 200 == response.status_code
-    assert 2 == len(response.context['companies'])
-    assert company_1 == response.context['companies'][0]
-    assert company_2 == response.context['companies'][1]
+    assert 2 == len(companies_and_owners)
+    assert company_1 == companies_and_owners[0][0]
+    assert company_2 == companies_and_owners[1][0]
+    assert [expected_name_1] == companies_and_owners[0][1]
+    assert [expected_name_2, expected_name_3] == companies_and_owners[1][1]
 
 
 @pytest.mark.django_db
