@@ -3,6 +3,7 @@ import pytest
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
+from pycompanies.views import get_user_display_name
 from pycompanies.tests.factories import CompanyFactory, UserCompanyProfileFactory, UserFactory
 from joboffers.tests.fixtures import create_admin_client, create_publisher_client  # noqa
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user  # noqa
@@ -312,3 +313,43 @@ def test_render_company_analytics_ok(publisher_client, user_company_profile):
 
     response = client.get(target_url)
     assert response.status_code == 200
+
+
+def test_get_user_display_name_without_first_name_and_last_name():
+    """
+    Test return for an user without first_name and last_name
+    """
+    user = UserFactory.build(first_name='', last_name='')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == user.username
+
+
+def test_get_user_display_name_with_first_name():
+    """
+    Test return for an user with only first_name
+    """
+    user = UserFactory.build(first_name='firstname', last_name='')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == f"{user.first_name} "
+
+
+def test_get_user_display_name_with_last_name():
+    """
+    Test return for an user with only last_name
+    """
+    user = UserFactory.build(first_name='', last_name='lastname')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == f" {user.last_name}"
+
+
+def test_get_user_display_name_with_first_name_and_last_name():
+    """
+    Test return for an user with first_name and last_name
+    """
+    user = UserFactory.build(first_name='firstname', last_name='lastname')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == f"{user.first_name} {user.last_name}"

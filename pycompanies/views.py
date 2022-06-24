@@ -112,7 +112,7 @@ class CompanyAdminView(LoginRequiredMixin, TemplateView):
             return redirect(ASSOCIATION_LIST_URL)
 
 
-def get_display_name(user):
+def get_user_display_name(user):
     if user.first_name or user.last_name:
         return f"{user.first_name} {user.last_name}"
     else:
@@ -149,7 +149,7 @@ class CompanyAssociationListView(LoginRequiredMixin, ListView):
 
         for user_profiles in company_user_profiles:
             owner_names.append(
-              [get_display_name(user_profile.user) for user_profile in user_profiles]
+              [get_user_display_name(user_profile.user) for user_profile in user_profiles]
             )
 
         context['companies_and_owners'] = list(zip(companies, owner_names))
