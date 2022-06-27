@@ -112,6 +112,13 @@ class CompanyAdminView(LoginRequiredMixin, TemplateView):
             return redirect(ASSOCIATION_LIST_URL)
 
 
+def get_user_display_name(user):
+    if user.first_name or user.last_name:
+        return f"{user.first_name} {user.last_name}"
+    else:
+        return user.username
+
+
 class CompanyAssociationListView(LoginRequiredMixin, ListView):
     model = Company
     template_name = 'companies/company_association_list.html'
@@ -134,6 +141,19 @@ class CompanyAssociationListView(LoginRequiredMixin, ListView):
         in order to set the search input previous value.
         """
         context = super().get_context_data(**kwargs)
+        companies = context['companies'] or []
+
+        company_user_profiles = [company.users.all() for company in companies]
+
+        owner_names = []
+
+        for user_profiles in company_user_profiles:
+            owner_names.append(
+              [get_user_display_name(user_profile.user) for user_profile in user_profiles]
+            )
+
+        context['companies_and_owners'] = list(zip(companies, owner_names))
+
         if self.request.GET.get('empresa'):
             context['busqueda'] = self.request.GET.get('empresa')
         return context
