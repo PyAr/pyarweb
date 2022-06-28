@@ -10,7 +10,7 @@
       <form id="search-form" class="input-group" role="form" action="{% url 'joboffers:admin' %}" method="get" novalidate>
         <input
           type="search" name="q" class="form-control input-lg"
-          placeholder="{% trans 'Buscar ofertas...' %}" value="{{ q }}" required>
+          placeholder="{% trans 'Buscar ofertas...' %}" value="{{ q | default:'' }}" required>
         <span class="input-group-btn">
           <button class="btn btn-default btn-lg" type="submit">
             <span class="glyphicon glyphicon-search"></span>

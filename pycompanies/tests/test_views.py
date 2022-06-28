@@ -3,6 +3,7 @@ import pytest
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
+from pycompanies.views import get_user_display_name
 from pycompanies.tests.factories import CompanyFactory, UserCompanyProfileFactory, UserFactory
 from joboffers.tests.fixtures import create_admin_client, create_publisher_client  # noqa
 from pyarweb.tests.fixtures import create_client, create_logged_client, create_user  # noqa
@@ -139,14 +140,32 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
     """
     company_1 = CompanyFactory.create(name='company_1')
     company_2 = CompanyFactory.create(name='company_2')
+
+    FIRST_NAME_1 = 'firstname1'
+    LAST_NAME_1 = 'lastname1'
+
+    profile_1 = UserCompanyProfileFactory.create(
+      company=company_1, user__first_name=FIRST_NAME_1, user__last_name=LAST_NAME_1
+    )
+    profile_2 = UserCompanyProfileFactory.create(company=company_2)
+    profile_3 = UserCompanyProfileFactory.create(company=company_2)
+
     COMPANY_LIST_URL = reverse('companies:association_list')
 
     response = logged_client.get(COMPANY_LIST_URL, data={'empresa': 'company'})
 
+    expected_name_1 = f"{profile_1.user.first_name} {profile_1.user.last_name}"
+    expected_name_2 = profile_2.user.username
+    expected_name_3 = profile_3.user.username
+
+    companies_and_owners = list(response.context_data['companies_and_owners'])
+
     assert 200 == response.status_code
-    assert 2 == len(response.context['companies'])
-    assert company_1 == response.context['companies'][0]
-    assert company_2 == response.context['companies'][1]
+    assert 2 == len(companies_and_owners)
+    assert company_1 == companies_and_owners[0][0]
+    assert company_2 == companies_and_owners[1][0]
+    assert [expected_name_1] == companies_and_owners[0][1]
+    assert [expected_name_2, expected_name_3] == companies_and_owners[1][1]
 
 
 @pytest.mark.django_db
@@ -294,3 +313,43 @@ def test_render_company_analytics_ok(publisher_client, user_company_profile):
 
     response = client.get(target_url)
     assert response.status_code == 200
+
+
+def test_get_user_display_name_without_first_name_and_last_name():
+    """
+    Test return for an user without first_name and last_name
+    """
+    user = UserFactory.build(first_name='', last_name='')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == user.username
+
+
+def test_get_user_display_name_with_first_name():
+    """
+    Test return for an user with only first_name
+    """
+    user = UserFactory.build(first_name='firstname', last_name='')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == f"{user.first_name} "
+
+
+def test_get_user_display_name_with_last_name():
+    """
+    Test return for an user with only last_name
+    """
+    user = UserFactory.build(first_name='', last_name='lastname')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == f" {user.last_name}"
+
+
+def test_get_user_display_name_with_first_name_and_last_name():
+    """
+    Test return for an user with first_name and last_name
+    """
+    user = UserFactory.build(first_name='firstname', last_name='lastname')
+    actual_name = get_user_display_name(user)
+
+    assert actual_name == f"{user.first_name} {user.last_name}"

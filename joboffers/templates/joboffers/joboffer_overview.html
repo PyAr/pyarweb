@@ -47,18 +47,24 @@
 </a>
 <div class="collapse" id="contact-info">
   <ul class="list-unstyled contact-info">
+    {% if obj.contact_mail %}
     <li>
       <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
       {{ obj.contact_mail }}
     </li>
+    {% endif %}
+    {% if obj.contact_url %}
     <li>
       <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
       {{ object.contact_url }}
     </li>
+    {% endif %}
+    {% if obj.contact_phone %}
     <li>
       <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
       {{ object.contact_phone }}
     </li>
+    {% endif %}
   </ul>
 
 </div>
