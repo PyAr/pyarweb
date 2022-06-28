@@ -17,9 +17,9 @@
         </span>
       </form>
       <div>
-      {% if companies %}
+      {% if companies_and_owners %}
       <div class="accordion" id="companiesAccordion">
-        {% for company in companies %}
+        {% for company, owner_names in companies_and_owners %}
           <div>
             <a data-toggle="collapse" href="#collapse-{{company.id}}" role="button" aria-expanded="false" aria-controls="collapse-{{company.id}}">
               <h3 style="color: #666;" >{{company.name}}</h3>
@@ -28,9 +28,9 @@
             {% if company.users.all %}
               <h4>Para asociarte a la empresa, por favor comunicate con alguna de estas personas:</h4>
             {% endif %}
-            {% for company_user in company.users.all %}
+            {% for owner_name in owner_names %}
               <h4 style="color:#428bca;">
-                {{company_user.user.username}}
+                {{ owner_name }}
               </h4>
             {% empty %}
               <h4>{% trans 'No hay ninguna persona asociada a esta empresa.' %}</h4>
