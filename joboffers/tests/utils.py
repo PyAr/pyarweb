@@ -47,6 +47,8 @@ def create_analytics_sample_data(
 
     event_types = [event_type.value for event_type in EventType]
 
+    total_views = 0
+
     for i in range(DAYS_BEFORE):
         visualization_date = today - timedelta(days=i)
 
@@ -69,6 +71,10 @@ def create_analytics_sample_data(
                   session=session.session_key,
                   joboffer=joboffer
                 )
+
+                total_views += 1
+
+    return joboffer, total_views
 
 
 def get_plain_messages(request):

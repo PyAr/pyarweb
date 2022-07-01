@@ -226,10 +226,14 @@ class CompanyAnalyticsView(DetailView):
         for event_type in EventType:
             qs = grouped_views_qs.filter(event_type=event_type)
 
-            dates = qs.values_list('created_at__date', flat=True)
-            day_views = qs.values_list('day_views', flat=True)
+            if qs.exists():
+                dates = qs.values_list('created_at__date', flat=True)
+                day_views = qs.values_list('day_views', flat=True)
 
-            graph = get_visualizations_graph(dates, day_views)
+                graph = get_visualizations_graph(dates, day_views)
+            else:
+                graph = None
+
             graphs.append([event_type.label, graph])
 
         totals_qs = JobOfferAccessLog.objects.filter(joboffer__company=company) \
@@ -237,6 +241,7 @@ class CompanyAnalyticsView(DetailView):
                                              .annotate(total_views=Count('id'))
 
         joboffer_data = []
+
         for joboffer in JobOffer.objects.filter(company=company).order_by('-created_at'):
             data = [joboffer]
 
