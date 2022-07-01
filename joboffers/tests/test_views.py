@@ -926,9 +926,9 @@ def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
 
 
 @pytest.mark.django_db
-def test_JobOfferAnalytics_get_is_forbidden_for_non_publisher(logged_client):
+def test_JobOfferAnalyticsView_get_is_forbidden_for_non_publisher(logged_client):
     """
-    Test that the JobOfferAnalytics views doesn't allow anonymous
+    Test that the JobOfferAnalyticsView views doesn't allow anonymous
     """
     client = logged_client
     joboffer = JobOfferFactory.create()
@@ -941,9 +941,9 @@ def test_JobOfferAnalytics_get_is_forbidden_for_non_publisher(logged_client):
 
 
 @pytest.mark.django_db
-def test_JobOfferAnalytics_get_renders_ok_for_admin(admin_client):
+def test_JobOfferAnalyticsView_get_renders_ok_for_admin(admin_client):
     """
-    Test that the JobOfferAnalytics views renders ok for admin users
+    Test that the JobOfferAnalyticsView views renders ok for admin users
     """
     client = admin_client
     joboffer = JobOfferFactory.create()
@@ -956,9 +956,12 @@ def test_JobOfferAnalytics_get_renders_ok_for_admin(admin_client):
 
 
 @pytest.mark.django_db
-def test_JobOfferAnalytics_get_renders_ok_for_publisher(publisher_client, user_company_profile):
+def test_JobOfferAnalyticsView_get_renders_ok_for_publisher(
+    publisher_client, user_company_profile
+):
     """
-    Test that the JobOfferAnalytics views renders without errors for the publisher of the joboffer
+    Test that the JobOfferAnalyticsView views renders without errors for the publisher of the
+    joboffer
     """
     client = publisher_client
 
