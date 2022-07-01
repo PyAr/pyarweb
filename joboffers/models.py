@@ -3,7 +3,7 @@ import json
 import re
 
 from datetime import date
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
 
 from autoslug import AutoSlugField
 from django.conf import settings
