@@ -1,0 +1,41 @@
+{% load i18n static %}
+
+<form method="GET" id="tags-form">
+    <section class="list-group">
+        <article class="list-group-item">
+                <div class="input-group col-md-12">
+                    <input type="search" name="search" placeholder="Buscar ofertas..." class="form-control input-lg" value="{% if search %}{{search}}{% endif %}">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-lg" type="submit">
+                            {% trans 'Buscar' %}
+                        </button>
+                    </span>
+                </div>
+                <div class="ma-5" style="margin-top:15px;">
+                    <input name="active" type="hidden" value="{% if not active %}true{% else %}false{% endif %}">
+                    <input type="checkbox"  style="vertical-align: top;" onclick="this.form.active.value=!JSON.parse(this.form.active.value);this.form.submit();" {% if not active %} checked {% endif %}>
+                    <span>{% trans 'Mostrar solo ofertas activas' %}</span>
+                </div>
+        </article>
+        <header class="list-group-item">
+            <h4 class="list-group-item-heading">{% trans 'Filtrar por etiqueta' %} <button type="button" class="close" aria-label="Close"><span aria-hidden="true" id="reset-btn">&times;</span></button></h4>
+
+        </header>
+        <article class="list-group-item" style="padding:30px;">
+            <div class="row">
+                    {% for tag in tags %}
+                    <select name="tag_{{ tag.slug }}" id="tag_{{ tag.slug }}" class="hidden">
+                        <option value=""></option>
+                        <option value="1" {% if tag.slug in included %}selected{% endif %}></option>
+                        <option value="2" {% if tag.slug in excluded %}selected{% endif %}></option>
+                    </select>
+                    <label for="tag_{{ tag.slug }}" class="filter_tag btn btn-sm {% if tag.slug in included %}included btn-success{% elif tag.slug in excluded%}excluded btn-danger{% else %}btn-default{% endif %}">
+                        {{ tag.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            <div class="clearfix"></div>
+        </article>
+    </section>
+</form>
+<script src="{% static 'js/tag_filtering.js' %}"></script>
