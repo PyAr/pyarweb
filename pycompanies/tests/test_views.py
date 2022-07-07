@@ -224,13 +224,17 @@ def test_company_disassociate_one_user_from_company(logged_client, user):
 
 
 @pytest.mark.django_db
-def test_company_detail_doesnt_show_analytics_button_for_normal_user(logged_client):
+def test_company_detail_doesnt_show_analytics_button_for_normal_user(user, logged_client):
     """
     Test that the company page doesn't show the analytics button for authenticated users that
     doesn't belong to the current company
     """
+    logged_user = user
     client = logged_client
     company = CompanyFactory.create(name='company_1')
+    UserCompanyProfileFactory.create(company=company)
+    # Associate the logged user to another company to cover this also that case
+    UserCompanyProfileFactory.create(user=logged_user)
 
     target_url = reverse('companies:detail', kwargs={'pk': company.id})
 

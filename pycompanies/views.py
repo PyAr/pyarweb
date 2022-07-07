@@ -29,8 +29,9 @@ class CompanyDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         user = self.request.user
+        company = self.object
 
-        if UserCompanyProfile.objects.for_user(user=user) or user.is_superuser:
+        if UserCompanyProfile.objects.for_user(user=user, company=company) or user.is_superuser:
             context['can_view_analytics'] = True
         else:
             context['can_view_analytics'] = False
