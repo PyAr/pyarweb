@@ -1,0 +1,36 @@
+{% load i18n %}
+<div class="list-group my-actions">
+  {% if own_company %}
+    <div class="list-group-item">
+      <div class="h4 list-group-item-heading flex-center">
+        <span>{{ own_company.name }}</span>
+        <span class="pull-right">
+          <i class="fa fa-building" style="font-size: 1.5em;"></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="list-group-item">
+      <a href="{% url 'joboffers:admin' %}" class="btn btn-default">
+        {% trans 'Administrar Ofertas' %}
+      </a>
+      <a href="{% url 'companies:analytics' own_company.id %}" class="btn btn-dark-green">
+        {% trans 'Analítica de Ofertas' %}
+      </a>
+    </div>
+  {% else %}
+    <div class="list-group-item">
+      <div class="h4 list-group-item-heading flex-center">
+        <span>{{ user.username }}</span>
+        <span class="pull-right">
+          <i class="fa fa-user" style="font-size: 1.5em;"></i>
+        </span>
+      </div>
+    </div>
+    <div class="list-group-item">
+      <a href="{% url 'companies:admin' %}" class="btn btn-default btn-md">
+        {% trans 'Asociarme a Empresa' %}
+      </a>
+    </div>
+  {% endif %}
+</div>
