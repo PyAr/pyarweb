@@ -10,7 +10,6 @@ class CompanyFactory(DjangoModelFactory):
         model = Company
 
     name = Sequence(lambda n: f'company-{n}')
-    owner = SubFactory(UserFactory)
     photo = ImageField(color='blue')
     rank = 1
 

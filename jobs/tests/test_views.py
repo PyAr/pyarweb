@@ -17,7 +17,7 @@ class JobsTest(TestCase):
 
     def test_jobs_view_list(self):
         job = JobFactory(owner=self.user)
-        company = CompanyFactory(owner=self.user, rank=3)
+        company = CompanyFactory(rank=3)
         sponsored_job = JobFactory(owner=self.user, company=company)
         sponsored_job2 = JobFactory(owner=self.user, company=company)
 
@@ -42,11 +42,11 @@ class JobsTest(TestCase):
         self.assertEqual(len(response.context["job_list"]), 1)
 
     def test_jobs_view_list_regular_and_sponsored(self):
-        sponsored_company = CompanyFactory(name='Name', owner=self.user, rank=3)
+        sponsored_company = CompanyFactory(name='Name', rank=3)
         sponsored_job = JobFactory(owner=self.user, company=sponsored_company)
         sponsored_job_2 = JobFactory(owner=self.user, company=sponsored_company)
 
-        company = CompanyFactory(name='Other name', owner=self.user, rank=0)
+        company = CompanyFactory(name='Other name', rank=0)
         job = JobFactory(owner=self.user, company=company)
         job_2 = JobFactory(owner=self.user, company=company)
 

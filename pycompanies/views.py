@@ -49,7 +49,7 @@ class CompanyListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
-        if self.request.user.is_anonymous is False and user_company:
+        if user_company.exists():
             context['own_company'] = user_company.company
         return context
 
@@ -61,7 +61,6 @@ class CompanyCreateView(LoginRequiredMixin, CreateView):
     template_name = 'companies/company_form.html'
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
