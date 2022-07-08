@@ -341,6 +341,7 @@ def test_company_create_view_GET_doesnt_allow_creation_of_company_for_logged_use
 
     assert response.status_code == 403
 
+
 @pytest.mark.django_db
 def test_company_create_view_POST_doesnt_allow_creation_of_company_for_logged_user_with_company(
     user, logged_client
@@ -371,7 +372,6 @@ def test_company_list_view_includes_own_company_for_logged_user_with_company(
 
     response = client.get(target_url)
     assert 'own_company' in response.context_data
-
 
 
 @pytest.mark.django_db
