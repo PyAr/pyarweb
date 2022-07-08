@@ -3,6 +3,7 @@ from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -49,7 +50,7 @@ class CompanyListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
-        if user_company.exists():
+        if user_company:
             context['own_company'] = user_company.company
         return context
 
@@ -60,8 +61,22 @@ class CompanyCreateView(LoginRequiredMixin, CreateView):
     success_url = '/empresas/'
     template_name = 'companies/company_form.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        company_profile = UserCompanyProfile.objects.for_user(user=user)
+
+        if company_profile:
+            raise PermissionDenied
+
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        company = form.instance
+        user = self.request.user
+        UserCompanyProfile.objects.create(user=user, company=company)
+
+        return response
 
 
 class CompanyUpdateView(LoginRequiredMixin, OwnedObject, UpdateView):
