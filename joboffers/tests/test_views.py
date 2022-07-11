@@ -38,8 +38,7 @@ from ..publishers import Publisher
 from ..views import STATE_LABEL_CLASSES
 from .factories import JobOfferCommentFactory, JobOfferFactory, JobOfferAccessLogFactory
 from .fixtures import create_admin_user, create_publisher_client, create_telegram_dummy # noqa
-from .utils import get_plain_messages
-
+from .utils import get_plain_messages, create_analytics_sample_data
 
 JOBOFFER_TITLE1 = 'Job Offer Sample Title 1'
 JOBOFFER_TITLE2 = 'Job Offer Sample Title 2'
@@ -926,9 +925,9 @@ def test_joboffer_individual_contact_info_view_count(client, joboffers_list):
 
 
 @pytest.mark.django_db
-def test_JobOfferAnalytics_get_is_forbidden_for_non_publisher(logged_client):
+def test_JobOfferAnalyticsView_get_is_forbidden_for_non_publisher(logged_client):
     """
-    Test that the JobOfferAnalytics views doesn't allow anonymous
+    Test that the JobOfferAnalyticsView views doesn't allow anonymous
     """
     client = logged_client
     joboffer = JobOfferFactory.create()
@@ -941,9 +940,9 @@ def test_JobOfferAnalytics_get_is_forbidden_for_non_publisher(logged_client):
 
 
 @pytest.mark.django_db
-def test_JobOfferAnalytics_get_renders_ok_for_admin(admin_client):
+def test_JobOfferAnalyticsView_get_renders_ok_for_admin(admin_client):
     """
-    Test that the JobOfferAnalytics views renders ok for admin users
+    Test that the JobOfferAnalyticsView views renders ok for admin users
     """
     client = admin_client
     joboffer = JobOfferFactory.create()
@@ -956,9 +955,12 @@ def test_JobOfferAnalytics_get_renders_ok_for_admin(admin_client):
 
 
 @pytest.mark.django_db
-def test_JobOfferAnalytics_get_renders_ok_for_publisher(publisher_client, user_company_profile):
+def test_JobOfferAnalyticsView_get_renders_ok_for_publisher(
+    publisher_client, user_company_profile
+):
     """
-    Test that the JobOfferAnalytics views renders without errors for the publisher of the joboffer
+    Test that the JobOfferAnalyticsView views renders without errors for the publisher of the
+    joboffer
     """
     client = publisher_client
 
@@ -970,6 +972,46 @@ def test_JobOfferAnalytics_get_renders_ok_for_publisher(publisher_client, user_c
     response = client.get(target_url)
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+@patch('joboffers.views.get_visualizations_graph')
+def test_render_joboffers_analytics_and_counts_ok(
+    get_visualizations_graph_mock, publisher_client, user_company_profile
+):
+    """
+    Test that the rendering of JobOfferAccessLog data for a joboffer doesn't fail and matches the
+    expected visualizations amounts.
+    """
+    client = publisher_client
+    company = user_company_profile.company
+    user = user_company_profile.user
+
+    joboffer, expected_total_job_views = create_analytics_sample_data(
+      test_username=user.username,
+      test_offer_title='Testing Offer 1',
+      test_company=company,
+      max_views_amount=10
+    )
+
+    target_url = reverse(ANALYTICS_URL, kwargs={'slug': joboffer.slug})
+
+    response = client.get(target_url)
+    assert response.status_code == 200
+
+    assert get_visualizations_graph_mock.call_count == 3
+
+    call_list = get_visualizations_graph_mock.call_args_list
+
+    total_views = sum([sum(args[0][1]) for args in call_list])
+
+    assert total_views == expected_total_job_views
+
+    table_data = response.context['totals']
+
+    table_views = sum([views for _, views in table_data])
+
+    assert table_views == expected_total_job_views
 
 
 @pytest.mark.django_db
