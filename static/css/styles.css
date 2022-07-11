@@ -659,3 +659,14 @@ div.sponsored_jobs {
   background-color: #33681e;
   border-color: #558b2f;
 }
+
+.my-actions .list-group-item {
+  background-color: #F6DDCC;
+  color: ;
+}
+
+.my-actions .list-group-item-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
