@@ -25,7 +25,7 @@ def forward(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joboffers', '0015_migrate_old_jobs'),
+        ('joboffers', '0016_migrate_old_jobs'),
     ]
 
     operations = [migrations.RunPython(forward, migrations.RunPython.noop)]

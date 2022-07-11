@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('pycompanies', '0005_company_owner_to_usercompanyprofile'),
-        ('joboffers', '0013_alter_joboffer_title'),
+        ('joboffers', '0014_alter_jobofferaccesslog_options'),
     ]
 
     operations = [

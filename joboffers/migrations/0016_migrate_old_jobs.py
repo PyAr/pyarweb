@@ -80,7 +80,7 @@ def forward(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joboffers', '0014_alter_joboffer_company'),
+        ('joboffers', '0015_alter_joboffer_company'),
     ]
 
     operations = [migrations.RunPython(forward, migrations.RunPython.noop)]
