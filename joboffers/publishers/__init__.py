@@ -36,7 +36,7 @@ class Publisher:
         """Render and send the JobOffer to the publisher,
         using the API configured in push_to_api method."""
         message = self._render_offer(job_offer)
-        status = self._push_to_api(message, job_offer.title, job_offer.get_absolute_url())
+        status = self._push_to_api(message, job_offer.title, job_offer.get_full_url())
 
         if status in (200, 201):
             return self.RESULT_OK
