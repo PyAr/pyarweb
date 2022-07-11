@@ -47,6 +47,8 @@ def create_analytics_sample_data(
 
     event_types = [event_type.value for event_type in EventType]
 
+    total_views = 0
+
     for i in range(DAYS_BEFORE):
         visualization_date = today - timedelta(days=i)
 
@@ -58,13 +60,21 @@ def create_analytics_sample_data(
                 session = SessionStore()
                 session.create()
 
+                created_at = visualization_date.replace(
+                  hour=randint(0, 23), minute=randint(0, 59), second=randint(0, 59)
+                )
+
                 JobOfferAccessLog.objects.get_or_create(
-                  created_at=visualization_date,
+                  created_at=created_at,
                   month_and_year=month_year,
                   event_type=event_type,
                   session=session.session_key,
                   joboffer=joboffer
                 )
+
+                total_views += 1
+
+    return joboffer, total_views
 
 
 def get_plain_messages(request):

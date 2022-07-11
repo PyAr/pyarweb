@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -455,22 +455,41 @@ class TrackContactInfoView(SingleObjectMixin, View):
         return HttpResponse(status=204)
 
 
-class JobOfferAnalytics(JobOfferObjectMixin, View):
+class JobOfferAnalyticsView(JobOfferObjectMixin, View):
     action_code = CODE_ANALYTICS
     model = JobOffer
     template_name = 'joboffers/joboffer_analytics.html'
 
     def get_context_data(self, joboffer):
-        log_queryset = JobOfferAccessLog.objects.filter(joboffer=joboffer)
+        # Group the visualization by created_at and event_type and count the visualization for each
+        # group
+        # Warning!: Using order_by('created_at') causes that the django ORM add 'created_at' as
+        # column for grouping. This way you'll end with 'created_at__date' and 'created_at' column
+        # when you only want to group by 'created_at__date'.
+        date_n_type_grouped_vis = JobOfferAccessLog.objects \
+                                                   .values('created_at__date', 'event_type') \
+                                                   .annotate(day_views=Count('id')) \
+                                                   .filter(joboffer=joboffer) \
+                                                   .order_by('created_at__date')
+
+        visualizations_by_events = joboffer.get_visualizations_count()
 
         totals = []
         graphs = []
 
         for event_type in EventType:
-            qs = log_queryset.filter(event_type=event_type.value)
-            graph = get_visualizations_graph(qs)
+            qs = date_n_type_grouped_vis.filter(event_type=event_type)
 
-            totals.append([event_type.label, qs.count()])
+            if qs.exists():
+                dates = qs.values_list('created_at__date', flat=True)
+                day_views = qs.values_list('day_views', flat=True)
+                graph = get_visualizations_graph(dates, day_views)
+            else:
+                graph = None
+
+            total_views = visualizations_by_events.get(event_type, None)
+
+            totals.append([event_type.label, total_views])
             graphs.append([event_type.label, graph])
 
         return {'graphs': graphs, 'totals': totals, 'object': joboffer}
