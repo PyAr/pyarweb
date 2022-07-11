@@ -1,5 +1,7 @@
 import pytest
 
+from unittest.mock import patch
+
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
@@ -287,9 +289,13 @@ def test_company_analytics_access_denied_for_external_user(logged_client):
 
 
 @pytest.mark.django_db
-def test_render_company_analytics_ok(publisher_client, user_company_profile):
+@patch('pycompanies.views.get_visualizations_graph')
+def test_render_company_analytics_ok(
+    get_visualizations_graph_mock, publisher_client, user_company_profile
+):
     """
-    Test that the rendering of JobOfferAccessLog data for a company doesn't fail.
+    Test that the rendering of JobOfferAccessLog data for a company doesn't fail and matches the
+    expected visualization amounts
     """
     client = publisher_client
     company = user_company_profile.company
@@ -297,14 +303,14 @@ def test_render_company_analytics_ok(publisher_client, user_company_profile):
 
     target_url = reverse('companies:analytics', kwargs={'pk': company.id})
 
-    create_analytics_sample_data(
+    _, views_job_1 = create_analytics_sample_data(
       test_username=user.username,
       test_offer_title='Testing Offer 1',
       test_company=company,
       max_views_amount=10
     )
 
-    create_analytics_sample_data(
+    _, views_job_2 = create_analytics_sample_data(
       test_username=user.username,
       test_offer_title='Testing Offer 2',
       test_company=company,
@@ -313,6 +319,22 @@ def test_render_company_analytics_ok(publisher_client, user_company_profile):
 
     response = client.get(target_url)
     assert response.status_code == 200
+
+    assert get_visualizations_graph_mock.call_count == 3
+
+    call_list = get_visualizations_graph_mock.call_args_list
+
+    expected_total_views = views_job_1 + views_job_2
+
+    total_views = sum([sum(args[0][1]) for args in call_list])
+
+    assert total_views == expected_total_views
+
+    table_data = response.context['joboffers_data']
+    expected_table_views = set([views_job_1, views_job_2])
+    table_views = set([sum(table_data[0][1:]), sum(table_data[1][1:])])
+
+    assert table_views == expected_table_views
 
 
 def test_get_user_display_name_without_first_name_and_last_name():

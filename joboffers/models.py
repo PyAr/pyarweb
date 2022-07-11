@@ -199,9 +199,9 @@ class JobOffer(models.Model):
         Get a dict with visualizations count for every kind of event
         """
         items = JobOfferAccessLog.objects \
-                                 .filter(joboffer=self) \
                                  .values_list('event_type') \
                                  .annotate(total=Count('event_type')) \
+                                 .filter(joboffer=self) \
                                  .order_by()
 
         return dict(items)
@@ -393,6 +393,3 @@ class JobOfferAccessLog(models.Model):
     )
     session = models.CharField(max_length=40, verbose_name=_('Identificador de Sesión'))
     joboffer = models.ForeignKey(JobOffer, on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ['created_at']

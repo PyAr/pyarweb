@@ -3,6 +3,7 @@ from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -214,23 +215,41 @@ class CompanyAnalyticsView(DetailView):
     template_name = 'companies/company_analytics.html'
 
     def get_context_data(self, company):
-        log_queryset = JobOfferAccessLog.objects.filter(joboffer__company=company)
+        grouped_views_qs = JobOfferAccessLog.objects \
+                                        .values('created_at__date', 'event_type') \
+                                        .annotate(day_views=Count('id')) \
+                                        .filter(joboffer__company=company) \
+                                        .order_by('created_at__date')
 
         graphs = []
 
         for event_type in EventType:
-            qs = log_queryset.filter(event_type=event_type.value)
-            graph = get_visualizations_graph(qs)
+            qs = grouped_views_qs.filter(event_type=event_type)
+
+            if qs.exists():
+                dates = qs.values_list('created_at__date', flat=True)
+                day_views = qs.values_list('day_views', flat=True)
+
+                graph = get_visualizations_graph(dates, day_views)
+            else:
+                graph = None
+
             graphs.append([event_type.label, graph])
 
+        totals_qs = JobOfferAccessLog.objects.filter(joboffer__company=company) \
+                                             .values('joboffer', 'event_type') \
+                                             .annotate(total_views=Count('id'))
+
         joboffer_data = []
+
         for joboffer in JobOffer.objects.filter(company=company).order_by('-created_at'):
             data = [joboffer]
 
+            qs = totals_qs.filter(joboffer=joboffer)
+            totals_by_event_type = dict(qs.values_list('event_type', 'total_views'))
+
             for event_type in EventType:
-                data.append(
-                  log_queryset.filter(event_type=event_type.value, joboffer=joboffer).count()
-                )
+                data.append(totals_by_event_type.get(event_type, 0))
 
             joboffer_data.append(data)
 
