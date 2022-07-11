@@ -3,6 +3,7 @@ import json
 import re
 
 from datetime import date
+from urllib.parse import urlparse
 
 from autoslug import AutoSlugField
 from django.conf import settings
@@ -139,9 +140,17 @@ class JobOffer(models.Model):
     slug = AutoSlugField(populate_from='title', unique=True)
 
     def get_absolute_url(self):
-        url = reverse('joboffers:view', kwargs={'slug': self.slug})
-        absolute_url = "".join((settings.BASE_URL, url))
-        return absolute_url
+        """
+        Get the url of the joboffer without the domain, can be used in the site
+        """
+        return reverse('joboffers:view', kwargs={'slug': self.slug})
+
+    def get_full_url(self):
+        """
+        Get the full url of the offer with domain and scheme prefix
+        """
+        prefix = urlparse(settings.BASE_URL, scheme='https').geturl()
+        return f"{prefix}{self.get_absolute_url()}"
 
     def __str__(self):
         return self.title
