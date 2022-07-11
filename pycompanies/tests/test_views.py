@@ -17,6 +17,7 @@ ERROR_USER_DOES_NOT_EXIST = 'Le usuarie que ingresaste no existe.'
 USER_ASSOCIATED_CORRECTLY = 'Le usuarie fue asociade correctamente.'
 
 ADMIN_URL = reverse('companies:admin')
+COMPANY_LIST_URL = reverse('companies:company_list_all')
 
 
 def get_plain_messages(request):
@@ -375,3 +376,42 @@ def test_get_user_display_name_with_first_name_and_last_name():
     actual_name = get_user_display_name(user)
 
     assert actual_name == f"{user.first_name} {user.last_name}"
+
+
+@pytest.mark.django_db
+def test_company_list_view_includes_user_and_own_company_for_publisher(publisher_client):
+    """
+    Test that the company list view includes user and own_company in the companies for a publisher
+    """
+    client = publisher_client
+
+    response = client.get(COMPANY_LIST_URL)
+
+    assert response.context_data['user'].is_authenticated
+    assert 'own_company' in response.context_data
+
+
+@pytest.mark.django_db
+def test_company_list_view_includes_user_and_own_company_for_user_without_company(logged_client):
+    """
+    Test that the company list view includes user and own_company in the companies for user
+    without company
+    """
+    client = logged_client
+
+    response = client.get(COMPANY_LIST_URL)
+
+    assert response.context_data['user'].is_authenticated
+    assert 'own_company' not in response.context_data
+
+
+@pytest.mark.django_db
+def test_company_list_view_includes_user_and_own_company_for_unlogged_user(client):
+    """
+    Test that the company list view includes user and own_company for anonymous user
+    """
+
+    response = client.get(COMPANY_LIST_URL)
+
+    assert response.context_data['user'].is_anonymous
+    assert 'own_company' not in response.context_data

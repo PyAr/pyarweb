@@ -37,30 +37,11 @@
 {% endblock %}
 
 {% block right-column %}
-  <section class="list-group">
-    <header class="list-group-item">
-        <h4 class="list-group-item-heading" style="color: #35679a;">
-          {% if own_company %}
-            {% trans 'Estás asociade a la empresa' %}
-            <span style="color:#428bca;">{{own_company}}</span>
-          {% else %}
-            {% trans 'No estás asociade a ninguna empresa' %}
-          {% endif %}
-        </h4>
-    </header>
-    <article class="list-group-item">
-          {% if own_company %}
-            <a href="{% url 'companies:admin' %}" class="btn btn-default btn-md">
-              {% trans 'Administrar ' %}
-            </a>
-            {% else %}
-            <a href="{% url 'companies:association_list' %}" class="btn btn-default btn-md">
-              {% trans 'Administrar' %}
-            </a>
-          {% endif %}
-        <div class="clearfix"></div>
-    </article>
-  </section>
+  {% if user.is_authenticated %}
+    {% include "companies/_user_actions.html" %}
+  {% endif %}
+
   {{ block.super }}
+
   {% include "_tags_filtering_form.html" %}
 {% endblock %}

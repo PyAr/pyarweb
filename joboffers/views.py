@@ -429,6 +429,12 @@ class JobOfferListView(ListView, FilterableList):
         if self.request.GET.get('search'):
             context['search'] = self.request.GET.get('search')
 
+        context['user'] = self.request.user
+
+        user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
+        if user_company:
+            context['own_company'] = user_company.company
+
         self.context = context
 
         return context

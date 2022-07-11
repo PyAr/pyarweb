@@ -48,6 +48,9 @@ class CompanyListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context['user'] = self.request.user
+
         user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
         if self.request.user.is_anonymous is False and user_company:
             context['own_company'] = user_company.company

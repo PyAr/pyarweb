@@ -730,6 +730,54 @@ def test_JobOfferHistoryView_renders_with_context(
 
 
 @pytest.mark.django_db
+def test_joboffer_list_view_includes_user_and_own_company_for_publisher(publisher_client):
+    """
+    Test that the joboffer list view includes user and own_company in the companies for a publisher
+    """
+    client = publisher_client
+    JobOfferFactory.create(state=OfferState.ACTIVE)
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url)
+
+    assert response.context_data['user'].is_authenticated
+    assert response.context_data['own_company']
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_includes_user_and_own_company_for_user_without_company(logged_client):
+    """
+    Test that the joboffer list view includes user and own_company in the companies for user
+    without company
+    """
+    client = logged_client
+    JobOfferFactory.create(state=OfferState.ACTIVE)
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url)
+
+    assert response.context_data['user'].is_authenticated
+    assert 'own_company' not in response.context_data
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_includes_user_and_own_company_for_unlogged_user(client):
+    """
+    Test that the joboffer list view includes user and own_company for anonymous user
+    """
+    JobOfferFactory.create(state=OfferState.ACTIVE)
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url)
+
+    assert response.context_data['user'].is_anonymous
+    assert 'own_company' not in response.context_data
+
+
+@pytest.mark.django_db
 def test_joboffer_list_view_render_list_with_an_active_joboffer(publisher_client):
     """
     Test that the joboffer list view renders the list with an active joboffer
