@@ -93,7 +93,7 @@ def test_send_notification_to_moderators(settings):
     settings.TELEGRAM_MODERATORS_CHAT_ID = dummy_chat_id
 
     offer = JobOffer(slug=dummy_job_slug)
-    expected_message = offer.get_absolute_url()
+    expected_message = offer.get_full_url()
 
     with patch('joboffers.telegram_api.send_message') as mock_send_message:
         send_notification_to_moderators(dummy_message)

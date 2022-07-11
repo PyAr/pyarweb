@@ -1,6 +1,6 @@
 from django.urls import re_path
 from .views import (
-  DownloadAnalyticsAsCsv, JobOfferAdminView, JobOfferAnalytics, JobOfferApproveView,
+  DownloadAnalyticsAsCsv, JobOfferAdminView, JobOfferAnalyticsView, JobOfferApproveView,
   JobOfferCreateView, JobOfferDeactivateView, JobOfferDetailView, JobOfferHistoryView,
   JobOfferListView, JobOfferUpdateView, JobOfferRejectView, JobOfferReactivateView,
   JobOfferRequestModerationView, TrackContactInfoView, JobOffersFeed
@@ -44,7 +44,7 @@ urlpatterns = [
       name='track-contact-info-view'
     ),
     re_path(
-      r'^(?P<slug>[\w-]+)/analitica$', JobOfferAnalytics.as_view(),
+      r'^(?P<slug>[\w-]+)/analitica$', JobOfferAnalyticsView.as_view(),
       name='analytics'
     ),
     re_path(
