@@ -1,3 +1,4 @@
+import factory
 import pytest
 
 from unittest.mock import patch
@@ -5,6 +6,7 @@ from unittest.mock import patch
 from django.contrib.messages import get_messages as contrib_get_messages
 from django.urls import reverse
 
+from pycompanies.models import Company, UserCompanyProfile
 from pycompanies.views import get_user_display_name
 from pycompanies.tests.factories import CompanyFactory, UserCompanyProfileFactory, UserFactory
 from joboffers.tests.fixtures import create_admin_client, create_publisher_client  # noqa
@@ -16,8 +18,9 @@ from joboffers.tests.utils import create_analytics_sample_data
 ERROR_USER_DOES_NOT_EXIST = 'Le usuarie que ingresaste no existe.'
 USER_ASSOCIATED_CORRECTLY = 'Le usuarie fue asociade correctamente.'
 
-ADMIN_URL = reverse('companies:admin')
-COMPANY_LIST_URL = reverse('companies:company_list_all')
+ADMIN_URL = 'companies:admin'
+LIST_URL = 'companies:company_list_all'
+CREATE_URL = 'companies:add'
 
 
 def get_plain_messages(request):
@@ -39,8 +42,10 @@ def test_associate_nonexistent_user(logged_client):
     response = logged_client.post(ASSOCIATE_URL, data={'username': 'pepito'})
     message = get_plain_messages(response)[0]
 
+    admin_url = reverse(ADMIN_URL)
+
     assert 302 == response.status_code
-    assert ADMIN_URL == response.url
+    assert admin_url == response.url
     assert ERROR_USER_DOES_NOT_EXIST == message
 
 
@@ -56,8 +61,10 @@ def test_associate_user_in_company(logged_client, user):
     response = logged_client.post(ASSOCIATE_URL, data={'username': user.username})
     message = get_plain_messages(response)[0]
 
+    admin_url = reverse(ADMIN_URL)
+
     assert 302 == response.status_code
-    assert ADMIN_URL == response.url
+    assert admin_url == response.url
     assert USER_ASSOCIATED_CORRECTLY == message
 
 
@@ -78,7 +85,7 @@ def test_associate_user_already_in_company(logged_client, user):
     message = get_plain_messages(response)[0]
 
     assert 302 == response.status_code
-    assert ADMIN_URL == response.url
+    assert reverse(ADMIN_URL) == response.url
     assert ERROR_USER_ALREADY_IN_COMPANY == message
 
 
@@ -99,7 +106,7 @@ def test_associate_user_in_other_company(logged_client, user):
     message = get_plain_messages(response)[0]
 
     assert 302 == response.status_code
-    assert ADMIN_URL == response.url
+    assert reverse(ADMIN_URL) == response.url
     assert message == ERROR_USER_IN_OTHER_COMPANY
 
 
@@ -108,7 +115,7 @@ def test_company_admin_with_no_logged_user_should_redirect(client):
     """
     Should redirect if the user is not logged
     """
-    response = client.get(ADMIN_URL)
+    response = client.get(reverse(ADMIN_URL))
 
     assert 302 == response.status_code
 
@@ -118,7 +125,7 @@ def test_company_admin_with_no_company_logged_user_should_redirect(logged_client
     """
     Should redirect if the user is logged but not associated to a company
     """
-    response = logged_client.get(ADMIN_URL)
+    response = logged_client.get(reverse(ADMIN_URL))
 
     assert 302 == response.status_code
 
@@ -131,7 +138,7 @@ def test_company_admin_with_company_logged_user_should_not_redirect(logged_clien
     company = CompanyFactory.create(name='company')
     UserCompanyProfileFactory.create(company=company, user=user)
 
-    response = logged_client.get(ADMIN_URL)
+    response = logged_client.get(reverse(ADMIN_URL))
 
     assert 200 == response.status_code
 
@@ -227,13 +234,17 @@ def test_company_disassociate_one_user_from_company(logged_client, user):
 
 
 @pytest.mark.django_db
-def test_company_detail_doesnt_show_analytics_button_for_normal_user(logged_client):
+def test_company_detail_doesnt_show_analytics_button_for_normal_user(user, logged_client):
     """
     Test that the company page doesn't show the analytics button for authenticated users that
     doesn't belong to the current company
     """
+    logged_user = user
     client = logged_client
     company = CompanyFactory.create(name='company_1')
+    UserCompanyProfileFactory.create(company=company)
+    # Associate the logged user to another company to cover this also that case
+    UserCompanyProfileFactory.create(user=logged_user)
 
     target_url = reverse('companies:detail', kwargs={'pk': company.id})
 
@@ -338,6 +349,75 @@ def test_render_company_analytics_ok(
     assert table_views == expected_table_views
 
 
+@pytest.mark.django_db
+def test_company_create_view_GET_doesnt_allow_creation_of_company_for_logged_user_with_company(
+    user, logged_client
+):
+    """
+    Test that the company create GET doesn't allow creation of multiple companies for GET
+    """
+    client = logged_client
+    UserCompanyProfileFactory.create(user=user)
+
+    response = client.get(reverse(CREATE_URL))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_company_create_view_POST_doesnt_allow_creation_of_company_for_logged_user_with_company(
+    user, logged_client
+):
+    """
+    Test that the company create POST doesn't allow creation of multiple companies
+    """
+    client = logged_client
+    UserCompanyProfileFactory.create(user=user)
+
+    response = client.post(reverse(CREATE_URL))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_company_list_view_includes_own_company_for_logged_user_with_company(
+    user, logged_client
+):
+    """
+    Test that the company list view does not includes own_company for user with company created
+    (Doesn't allow creation of multiple companies)
+    """
+    client = logged_client
+    UserCompanyProfileFactory.create(user=user)
+
+    target_url = reverse(LIST_URL)
+
+    response = client.get(target_url)
+    assert 'own_company' in response.context_data
+
+
+@pytest.mark.django_db
+def test_create_company_associates_the_user_to_a_company(user, logged_client):
+    """
+    Test that company creation associates the logged user to that company
+    """
+    client = logged_client
+    target_url = reverse(CREATE_URL)
+
+    company_data = factory.build(
+        dict,
+        FACTORY_CLASS=CompanyFactory
+    )
+
+    assert Company.objects.count() == 0
+
+    response = client.post(target_url, company_data, format="multipart")
+
+    assert response.status_code == 302
+    assert Company.objects.count() == 1
+    assert UserCompanyProfile.objects.for_user(user=user)
+
+
 def test_get_user_display_name_without_first_name_and_last_name():
     """
     Test return for an user without first_name and last_name
@@ -385,7 +465,7 @@ def test_company_list_view_includes_user_and_own_company_for_publisher(publisher
     """
     client = publisher_client
 
-    response = client.get(COMPANY_LIST_URL)
+    response = client.get(reverse(LIST_URL))
 
     assert response.context_data['user'].is_authenticated
     assert 'own_company' in response.context_data
@@ -399,7 +479,7 @@ def test_company_list_view_includes_user_and_own_company_for_user_without_compan
     """
     client = logged_client
 
-    response = client.get(COMPANY_LIST_URL)
+    response = client.get(reverse(LIST_URL))
 
     assert response.context_data['user'].is_authenticated
     assert 'own_company' not in response.context_data
@@ -411,7 +491,7 @@ def test_company_list_view_includes_user_and_own_company_for_unlogged_user(clien
     Test that the company list view includes user and own_company for anonymous user
     """
 
-    response = client.get(COMPANY_LIST_URL)
+    response = client.get(reverse(LIST_URL))
 
     assert response.context_data['user'].is_anonymous
     assert 'own_company' not in response.context_data

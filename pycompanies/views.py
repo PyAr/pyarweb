@@ -30,8 +30,9 @@ class CompanyDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         user = self.request.user
+        company = self.object
 
-        if UserCompanyProfile.objects.for_user(user=user) or user.is_superuser:
+        if UserCompanyProfile.objects.for_user(user=user, company=company) or user.is_superuser:
             context['can_view_analytics'] = True
         else:
             context['can_view_analytics'] = False
@@ -52,7 +53,7 @@ class CompanyListView(ListView):
         context['user'] = self.request.user
 
         user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
-        if self.request.user.is_anonymous is False and user_company:
+        if user_company:
             context['own_company'] = user_company.company
         return context
 
@@ -63,9 +64,22 @@ class CompanyCreateView(LoginRequiredMixin, CreateView):
     success_url = '/empresas/'
     template_name = 'companies/company_form.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        company_profile = UserCompanyProfile.objects.for_user(user=user)
+
+        if company_profile:
+            raise PermissionDenied
+
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        company = form.instance
+        user = self.request.user
+        UserCompanyProfile.objects.create(user=user, company=company)
+
+        return response
 
 
 class CompanyUpdateView(LoginRequiredMixin, OwnedObject, UpdateView):

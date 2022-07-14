@@ -1,4 +1,4 @@
-from factory import Sequence, SubFactory
+from factory import Faker, Sequence, SubFactory
 from factory.django import DjangoModelFactory, ImageField
 
 from events.tests.factories import UserFactory
@@ -10,8 +10,9 @@ class CompanyFactory(DjangoModelFactory):
         model = Company
 
     name = Sequence(lambda n: f'company-{n}')
-    owner = SubFactory(UserFactory)
     photo = ImageField(color='blue')
+    description = Faker('text')
+    link = Faker('url')
     rank = 1
 
 
