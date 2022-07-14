@@ -35,6 +35,8 @@
               </div>
             </div>
           </div>
+          {% empty %}
+            <p>No hay registros históricos para esta oferta.</p>
           {% endfor %}
         </div>
         {% include 'joboffers/_paginator.html' with page_obj=page_obj %}
