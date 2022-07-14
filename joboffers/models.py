@@ -88,6 +88,7 @@ class JobOffer(models.Model):
         'pycompanies.Company',
         verbose_name=_('Empresa'),
         on_delete=models.CASCADE,
+        null=True
     )
     location = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Lugar'))
     contact_mail = models.EmailField(
