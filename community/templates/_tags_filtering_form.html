@@ -6,15 +6,17 @@
                 <div class="input-group col-md-12">
                     <input type="search" name="search" placeholder="Buscar ofertas..." class="form-control input-lg" value="{% if search %}{{search}}{% endif %}">
                     <span class="input-group-btn">
-                        <button class="btn btn-default btn-lg" type="submit">
+                        <button id="buscar" class="btn btn-default btn-lg" type="submit">
                             {% trans 'Buscar' %}
                         </button>
                     </span>
                 </div>
                 <div class="ma-5" style="margin-top:15px;">
-                    <input name="active" type="hidden" value="{% if not active %}true{% else %}false{% endif %}">
-                    <input type="checkbox"  style="vertical-align: top;" onclick="this.form.active.value=!JSON.parse(this.form.active.value);this.form.submit();" {% if not active %} checked {% endif %}>
-                    <span>{% trans 'Mostrar solo ofertas activas' %}</span>
+                  <label>
+                    <input name="active" type="hidden" value="{{ active|yesno:'false,true' }}">
+                    <input id="show-active" type="checkbox" {% if not active %}checked{% endif %} />
+                    {% trans 'Mostrar solo ofertas activas' %}
+                  </label>
                 </div>
         </article>
         <header class="list-group-item">

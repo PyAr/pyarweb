@@ -32,3 +32,9 @@ $("#tags-form").submit(function() {
     ).prop('disabled', true);
     return true;
 });
+
+
+$("#show-active").click(function() {
+    this.form.active.value=this.checked;
+    $("#buscar").click();
+});
