@@ -3,6 +3,6 @@ pytest==6.2.5
 pytest-django==4.4.0
 factory-boy==3.2.1
 requests-mock==1.9.3
-ipython==7.31.1
+ipython==8.10.0
 ipdb==0.13.9
 flake8==4.0.1
