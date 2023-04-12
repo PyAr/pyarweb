@@ -3,7 +3,7 @@ import json
 import re
 
 from datetime import date
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 from autoslug import AutoSlugField
 from django.conf import settings
@@ -150,8 +150,8 @@ class JobOffer(models.Model):
         """
         Get the full url of the offer with domain and scheme prefix
         """
-        prefix = urlparse(settings.BASE_URL, scheme='https').geturl()
-        return f"{prefix}{self.get_absolute_url()}"
+        prefix = urlparse(f"https://{settings.BASE_URL}").geturl()
+        return urljoin(prefix, self.get_absolute_url())
 
     def __str__(self):
         return self.title

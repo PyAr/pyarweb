@@ -261,7 +261,7 @@ class JobOfferRejectView(
         send_mail_to_publishers(offer, subject, body)
 
         moderators_message = TELEGRAM_REJECT_MESSAGE.format(
-          offer_url=offer.get_absolute_url(),
+          offer_url=offer.get_full_url(),
           username=user.username
         )
 
@@ -306,7 +306,7 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         )
 
         moderators_message = TELEGRAM_APPROVED_MESSAGE.format(
-          offer_url=offer.get_absolute_url(),
+          offer_url=offer.get_full_url(),
           username=user.username
         )
 
@@ -361,7 +361,7 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
         offer.save()
 
         moderators_message = TELEGRAM_MODERATION_MESSAGE.format(
-          offer_url=offer.get_absolute_url()
+          offer_url=offer.get_full_url()
         )
 
         send_notification_to_moderators(moderators_message)
