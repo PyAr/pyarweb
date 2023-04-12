@@ -75,7 +75,7 @@ class JobOfferForm(forms.ModelForm):
         remoteness = cleaned_data.get('remoteness')
         location = cleaned_data.get('location')
 
-        if remoteness == Remoteness.OFFICE and not location:
+        if remoteness in (Remoteness.OFFICE, Remoteness.HYBRID) and not location:
             raise ValidationError(_('Debe especificar un lugar para modalidad prescencial.'))
 
     class Meta:
