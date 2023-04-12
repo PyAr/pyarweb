@@ -1,5 +1,5 @@
 bleach==4.1.0 # Pinning bleach until this issue is resolved: https://github.com/marksweb/django-bleach/issues/51
-Django==3.2.15
+Django==3.2.18
 django-allauth==0.45.0
 django-autoslug==1.9.8
 django-bootstrap3==21.1
