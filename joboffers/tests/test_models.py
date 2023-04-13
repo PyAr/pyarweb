@@ -517,7 +517,7 @@ def test_joboffer_get_full_url(settings):
     dummy_job_slug = 'python-job'
     settings.BASE_URL = dummy_url
     joboffer_url = reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
-    expected_url = "".join(('https:///example.com', joboffer_url))
+    expected_url = "".join(('https://example.com', joboffer_url))
 
     joboffer = JobOffer(slug=dummy_job_slug)
     result = joboffer.get_full_url()
