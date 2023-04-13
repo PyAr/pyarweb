@@ -192,7 +192,7 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile, 
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
     assert sent_message.endswith(TELEGRAM_MODERATION_MESSAGE.format(
-      offer_url=joboffer.get_absolute_url()
+      offer_url=joboffer.get_full_url()
     ))
 
 
@@ -412,7 +412,7 @@ def test_joboffer_approve_ok(
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
     assert sent_message.endswith(TELEGRAM_APPROVED_MESSAGE.format(
-      offer_url=joboffer.get_absolute_url(),
+      offer_url=joboffer.get_full_url(),
       username=admin_user.username
     ))
 
@@ -490,7 +490,7 @@ def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, tele
     sent_message = telegram_history[0]['text'][0]
     assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE.format(
       offer_title=joboffer.title,
-      offer_url=joboffer.get_absolute_url(),
+      offer_url=joboffer.get_full_url(),
       username=admin_user.username
     ))
 
