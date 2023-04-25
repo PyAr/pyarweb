@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pycompanies', '0005_company_owner_to_usercompanyprofile'),
+        ('pycompanies', '0006_company_owner_to_usercompanyprofile'),
         ('joboffers', '0014_alter_jobofferaccesslog_options'),
     ]
 
