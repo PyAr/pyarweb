@@ -113,7 +113,7 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
         event_id = self.kwargs['pk']
         form.instance.event_id = event_id
 
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             response = self.form_valid_for_authenticated_user(form)
         else:
             response = self.form_valid_for_anonymous_user(form)
@@ -124,7 +124,7 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
         """
         Handles GET requests and instantiates a blank version of the form.
         """
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             event = self.get_event()
             participation = event.participants.filter(user_id=self.request.user.id)
             if participation.exists():
@@ -143,7 +143,7 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
         Returns the form class to use in this view
         """
         self.form_class = AnonymousEventParticipationForm
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             self.form_class = AuthenticatedEventParticipationForm
         return self.form_class
 
@@ -154,14 +154,14 @@ class EventParticipationCreate(SuccessMessageMixin, EventParticipationMixin, Cre
         initial = super().get_initial()
         initial['event'] = self.get_event()
         user = self.request.user
-        if user.is_authenticated():
+        if user.is_authenticated:
             initial['name'] = self.aux_get_user_name()
             initial['email'] = user.email
         return initial
 
     def get_success_message(self, cleaned_data):
         success_message = "Tu inscripción al evento ha sido registrada."
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             success_message = "Recibirás un email para confirmar la dirección provista y así " \
                               "completar tu inscripción."
         return _(success_message + '<br><i>¡Muchas gracias!</i>')
@@ -191,7 +191,7 @@ class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, EventPar
         Returns the form class to use in this view
         """
         self.form_class = AnonymousEventParticipationForm
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             self.form_class = AuthenticatedEventParticipationForm
         return self.form_class
 
