@@ -81,6 +81,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('joboffers', '0015_alter_joboffer_company'),
+        ('jobs', '0003_normalize_tags_20180428_1955'),
     ]
 
     operations = [migrations.RunPython(forward, migrations.RunPython.noop)]

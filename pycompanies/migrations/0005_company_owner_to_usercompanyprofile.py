@@ -23,7 +23,7 @@ def backward(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pycompanies', '0005_remove_company_owner'),
+        ('pycompanies', '0004_alter_usercompanyprofile_user'),
     ]
 
     operations = [migrations.RunPython(forward, backward)]
