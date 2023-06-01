@@ -155,7 +155,7 @@ def test_company_admin_should_have_two_companies_in_context(logged_client):
     LAST_NAME_1 = 'lastname1'
 
     profile_1 = UserCompanyProfileFactory.create(
-      company=company_1, user__first_name=FIRST_NAME_1, user__last_name=LAST_NAME_1
+        company=company_1, user__first_name=FIRST_NAME_1, user__last_name=LAST_NAME_1
     )
     profile_2 = UserCompanyProfileFactory.create(company=company_2)
     profile_3 = UserCompanyProfileFactory.create(company=company_2)
@@ -234,7 +234,7 @@ def test_company_disassociate_one_user_from_company(logged_client, user):
 
 
 @pytest.mark.django_db
-def test_company_detail_doesnt_show_analytics_button_for_normal_user(user, logged_client):
+def test_company_detail_buttons_flags_for_normal_user(user, logged_client):
     """
     Test that the company page doesn't show the analytics button for authenticated users that
     doesn't belong to the current company
@@ -250,11 +250,12 @@ def test_company_detail_doesnt_show_analytics_button_for_normal_user(user, logge
 
     response = client.get(target_url)
 
-    assert response.context_data['can_view_analytics'] is False
+    assert response.context_data['user_company_related'] is False
+    assert response.context_data['user_is_superuser'] is False
 
 
 @pytest.mark.django_db
-def test_company_detail_show_analytics_button_for_admin_user(admin_client):
+def test_company_detail_buttons_flags_for_admin_user(admin_client):
     """
     Test that the company page show the analytics button for an admin user
     """
@@ -265,11 +266,12 @@ def test_company_detail_show_analytics_button_for_admin_user(admin_client):
 
     response = client.get(target_url)
 
-    assert response.context_data['can_view_analytics'] is True
+    assert response.context_data['user_company_related'] is False
+    assert response.context_data['user_is_superuser'] is True
 
 
 @pytest.mark.django_db
-def test_company_detail_show_analytics_button_for_publisher_user(
+def test_company_detail_buttons_flags_for_publisher_user(
     publisher_client, user_company_profile
 ):
     """
@@ -283,7 +285,8 @@ def test_company_detail_show_analytics_button_for_publisher_user(
 
     response = client.get(target_url)
 
-    assert response.context_data['can_view_analytics'] is True
+    assert response.context_data['user_company_related'] is True
+    assert response.context_data['user_is_superuser'] is False
 
 
 @pytest.mark.django_db
@@ -316,17 +319,17 @@ def test_render_company_analytics_ok(
     target_url = reverse('companies:analytics', kwargs={'pk': company.id})
 
     _, views_job_1 = create_analytics_sample_data(
-      test_username=user.username,
-      test_offer_title='Testing Offer 1',
-      test_company=company,
-      max_views_amount=10
+        test_username=user.username,
+        test_offer_title='Testing Offer 1',
+        test_company=company,
+        max_views_amount=10
     )
 
     _, views_job_2 = create_analytics_sample_data(
-      test_username=user.username,
-      test_offer_title='Testing Offer 2',
-      test_company=company,
-      max_views_amount=10
+        test_username=user.username,
+        test_offer_title='Testing Offer 2',
+        test_company=company,
+        max_views_amount=10
     )
 
     response = client.get(target_url)
