@@ -32,10 +32,9 @@ class CompanyDetailView(DetailView):
         user = self.request.user
         company = self.object
 
-        if UserCompanyProfile.objects.for_user(user=user, company=company) or user.is_superuser:
-            context['can_view_analytics'] = True
-        else:
-            context['can_view_analytics'] = False
+        context['user_company_related'] = bool(
+            UserCompanyProfile.objects.for_user(user=user, company=company))
+        context['user_is_superuser'] = user.is_superuser
 
         return context
 
@@ -117,7 +116,7 @@ class CompanyAdminView(LoginRequiredMixin, TemplateView):
             context['user_company_id'] = user_company.id
             context['own_company'] = user_company.company
             context['company_users'] = UserCompanyProfile.objects.filter(
-              company=context['own_company']
+                company=context['own_company']
             )
 
         return context
@@ -167,7 +166,7 @@ class CompanyAssociationListView(LoginRequiredMixin, ListView):
 
         for user_profiles in company_user_profiles:
             owner_names.append(
-              [get_user_display_name(user_profile.user) for user_profile in user_profiles]
+                [get_user_display_name(user_profile.user) for user_profile in user_profiles]
             )
 
         context['companies_and_owners'] = list(zip(companies, owner_names))

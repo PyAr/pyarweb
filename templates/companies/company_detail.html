@@ -13,12 +13,12 @@
         <h2>
           {{ object.name }}
           <span class="pull-right">
-            {% if object.owner == user %}
-            <a href="{% url 'companies:edit' object.id %}" class="btn btn-info">{% trans 'Editar' %}</a>
-            <a href="{% url 'companies:delete' object.id %}" class="btn btn-danger">{% trans 'Borrar' %}</a>
+            {% if user_company_related or user_is_superuser %}
+              <a href="{% url 'companies:analytics' object.id %}" class="btn btn-dark-green">{% trans 'Ver analítica' %}</a>
+              <a href="{% url 'companies:edit' object.id %}" class="btn btn-info">{% trans 'Editar datos' %}</a>
             {% endif %}
-            {% if can_view_analytics %}
-              <a href="{% url 'companies:analytics' object.id %}" class="btn btn-dark-green">{% trans 'Analítica' %}</a>
+            {% if user_company_related %}
+              <a href="{% url 'companies:disassociate' object.id %}" class="btn btn-danger">{% trans 'Desvincularme' %}</a>
             {% endif %}
           </span>
         </h2>
