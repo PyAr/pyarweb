@@ -42,9 +42,12 @@
         </div>
       {% elif busqueda  %}
         <div class="col-md-12">
-          <p>{% trans 'No existen empresas para esta busqueda.' %}</p>
+            <p>{% trans 'No existen empresas para esta busqueda. Podés <a href="/empresas/agregar/">crear una empresa acá</a>.' %}</p>
         </div>
       {% endif %}
     </div>
   </section>
+{% endblock %}
+
+{% block right-column %}
 {% endblock %}
