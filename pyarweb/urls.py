@@ -27,12 +27,12 @@ urlpatterns = [
     re_path(r'^empresas/', include(('pycompanies.urls', 'pycompanies'), namespace='companies')),
     re_path(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     re_path(r'^summernote/', include('django_summernote.urls')),
-    re_path(r'^trabajo/', include('jobs.urls')),
+    re_path(r'^trabajo-vieja/', include('jobs.urls')),
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^accounts/', include('allauth.urls')),
     re_path(r'^eventos/', include(('events.urls', 'events'), namespace='events')),
     re_path(r'^captcha/', include('captcha.urls')),
-    re_path(r'^trabajo-nueva/', include(('joboffers.urls', 'joboffers'), namespace='joboffers')),
+    re_path(r'^trabajo/', include(('joboffers.urls', 'joboffers'), namespace='joboffers')),
 
     # no puedo usar el static porque no funcia en produccion y en prod django esta
     # sirviendo los archivos estaticos. Esto es sacado del codigo de la funcion.
