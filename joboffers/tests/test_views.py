@@ -12,26 +12,26 @@ from pycompanies.tests.fixtures import create_user_company_profile # noqa
 from pyarweb.tests.fixtures import create_user, create_logged_client # noqa
 
 from ..constants import (
-  ANALYTICS_URL,
-  ANALYTICS_CSV_URL,
-  ADD_URL,
-  ADMIN_URL,
-  APPROVE_URL,
-  APPROVED_MAIL_SUBJECT,
-  DEACTIVATE_URL,
-  HISTORY_URL,
-  LIST_URL,
-  PUBLISHER_FAILED_ERROR,
-  REACTIVATE_URL,
-  REACTIVATED_MAIL_SUBJECT,
-  REJECT_URL,
-  REJECTED_MAIL_SUBJECT,
-  REQUEST_MODERATION_URL,
-  TRACK_CONTACT_INFO_URL,
-  TELEGRAM_APPROVED_MESSAGE,
-  TELEGRAM_MODERATION_MESSAGE,
-  TELEGRAM_REJECT_MESSAGE,
-  VIEW_URL
+    ANALYTICS_URL,
+    ANALYTICS_CSV_URL,
+    ADD_URL,
+    ADMIN_URL,
+    APPROVE_URL,
+    APPROVED_MAIL_SUBJECT,
+    DEACTIVATE_URL,
+    HISTORY_URL,
+    LIST_URL,
+    PUBLISHER_FAILED_ERROR,
+    REACTIVATE_URL,
+    REACTIVATED_MAIL_SUBJECT,
+    REJECT_URL,
+    REJECTED_MAIL_SUBJECT,
+    REQUEST_MODERATION_URL,
+    TRACK_CONTACT_INFO_URL,
+    TELEGRAM_APPROVED_MESSAGE,
+    TELEGRAM_MODERATION_MESSAGE,
+    TELEGRAM_REJECT_MESSAGE,
+    VIEW_URL
 )
 from ..models import EventType, JobOffer, JobOfferHistory, JobOfferAccessLog, OfferState
 from ..publishers import Publisher
@@ -180,7 +180,7 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile, 
 
     # Asserts redirection to the joboffer status page
     assert 302 == response.status_code
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+    assert f"/trabajo/{joboffer.slug}/" == response.url
 
     messages = get_plain_messages(response)
     assert messages[0].startswith("Oferta enviada a moderación")
@@ -192,7 +192,7 @@ def test_joboffer_request_moderation_ok(publisher_client, user_company_profile, 
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
     assert sent_message.endswith(TELEGRAM_MODERATION_MESSAGE.format(
-      offer_url=joboffer.get_full_url()
+        offer_url=joboffer.get_full_url()
     ))
 
 
@@ -215,7 +215,7 @@ def test_joboffer_deactivate_ok(publisher_client, user_company_profile):
 
     # Asserts redirection to the joboffer status page
     assert 302 == response.status_code
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+    assert f"/trabajo/{joboffer.slug}/" == response.url
 
     messages = get_plain_messages(response)
     assert messages[0].startswith("Oferta desactiva")
@@ -243,7 +243,7 @@ def test_joboffer_reactivate_ok(publisher_client, user_company_profile):
 
     # Asserts redirection to the joboffer status page
     assert 302 == response.status_code
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+    assert f"/trabajo/{joboffer.slug}/" == response.url
 
     messages = get_plain_messages(response)
     assert messages[0].startswith("Oferta reactivada")
@@ -396,7 +396,7 @@ def test_joboffer_approve_ok(
 
     # Asserts redirection to the joboffer status page
     assert 302 == response.status_code
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+    assert f"/trabajo/{joboffer.slug}/" == response.url
 
     messages = get_plain_messages(response)
     assert messages[0].startswith("Oferta aceptada y activada.")
@@ -412,8 +412,8 @@ def test_joboffer_approve_ok(
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
     assert sent_message.endswith(TELEGRAM_APPROVED_MESSAGE.format(
-      offer_url=joboffer.get_full_url(),
-      username=admin_user.username
+        offer_url=joboffer.get_full_url(),
+        username=admin_user.username
     ))
 
     assert publish_function.called
@@ -474,7 +474,7 @@ def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, tele
 
     # Asserts redirection to the joboffer status page
     assert 302 == response.status_code
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+    assert f"/trabajo/{joboffer.slug}/" == response.url
 
     messages = get_plain_messages(response)
     assert messages[0].startswith("Oferta rechazada.")
@@ -489,9 +489,9 @@ def test_joboffer_reject_ok(admin_client, admin_user, user_company_profile, tele
     assert len(telegram_history) == 1
     sent_message = telegram_history[0]['text'][0]
     assert sent_message.endswith(TELEGRAM_REJECT_MESSAGE.format(
-      offer_title=joboffer.title,
-      offer_url=joboffer.get_full_url(),
-      username=admin_user.username
+        offer_title=joboffer.title,
+        offer_url=joboffer.get_full_url(),
+        username=admin_user.username
     ))
 
 
@@ -1036,10 +1036,10 @@ def test_render_joboffers_analytics_and_counts_ok(
     user = user_company_profile.user
 
     joboffer, expected_total_job_views = create_analytics_sample_data(
-      test_username=user.username,
-      test_offer_title='Testing Offer 1',
-      test_company=company,
-      max_views_amount=10
+        test_username=user.username,
+        test_offer_title='Testing Offer 1',
+        test_company=company,
+        max_views_amount=10
     )
 
     target_url = reverse(ANALYTICS_URL, kwargs={'slug': joboffer.slug})
