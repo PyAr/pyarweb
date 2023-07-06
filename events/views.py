@@ -4,12 +4,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
 from django.http import Http404, HttpResponseRedirect
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import (CreateView,
-                                       UpdateView,
-                                       DeleteView)
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .forms import EventForm, AnonymousEventParticipationForm, AuthenticatedEventParticipationForm
 from .models import Event, EventParticipation
