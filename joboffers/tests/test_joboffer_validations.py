@@ -42,7 +42,7 @@ def test_joboffer_creation_as_publisher_with_all_fields_ok(publisher_client, use
 
     # Asserts redirection to the joboffer status page
     assert response.status_code == 302
-    assert f"/trabajo-nueva/{joboffer.slug}/" == response.url
+    assert f"/trabajo/{joboffer.slug}/" == response.url
 
     # Deactivated should be the first state
     assert OfferState.DEACTIVATED == joboffer.state
