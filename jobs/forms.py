@@ -1,7 +1,7 @@
 from random import choice
 from django import forms
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from .models import Job, JobInactivated
 from crispy_forms.layout import Submit, Reset, Layout

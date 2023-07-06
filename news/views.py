@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from community.views import OwnedObject, FilterableList
 from .models import NewsArticle
 from .forms import NewsArticleForm

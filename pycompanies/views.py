@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.base import View
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
@@ -232,10 +232,10 @@ class CompanyAnalyticsView(DetailView):
 
     def get_context_data(self, company):
         grouped_views_qs = JobOfferAccessLog.objects \
-                                        .values('created_at__date', 'event_type') \
-                                        .annotate(day_views=Count('id')) \
-                                        .filter(joboffer__company=company) \
-                                        .order_by('created_at__date')
+            .values('created_at__date', 'event_type') \
+            .annotate(day_views=Count('id')) \
+            .filter(joboffer__company=company) \
+            .order_by('created_at__date')
 
         graphs = []
 
