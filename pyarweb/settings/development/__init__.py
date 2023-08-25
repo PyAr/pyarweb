@@ -17,3 +17,5 @@ SOCIAL_NETWORKS_PUBLISHERS = []  # Empty by default to avoid sending on local te
 
 # BASE_URL to use in any notification that might require them
 BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8000')
+
+DISCOURSE_HOST = "testdiscourse.com"
