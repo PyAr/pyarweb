@@ -290,3 +290,5 @@ SOCIAL_NETWORKS_PUBLISHERS = [
   'joboffers.publishers.telegram.TelegramPublisher',
   'joboffers.publishers.twitter.TwitterPublisher'
 ]
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
