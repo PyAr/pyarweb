@@ -2,5 +2,5 @@ from allauth.account.forms import SignupForm
 from captcha.fields import CaptchaField
 
 
-class SingupFormWithCaptcha(SignupForm):
+class SignupFormWithCaptcha(SignupForm):
     captcha = CaptchaField()
