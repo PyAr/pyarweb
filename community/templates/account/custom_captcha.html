@@ -1,0 +1,23 @@
+{% load i18n %}
+{% spaceless %}
+<div class="form-group">
+  <label class="control-label">{{ label }}</label>
+  <div class="form-group">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <img src="{{ image }}" alt="captcha" class="captcha" />
+        {% if audio %}
+        <audio 
+            title="{% trans "Play CAPTCHA as audio file" %}" 
+            src="{{ audio }}"
+            alt="captcha audio"
+            controls
+            style="display: block; padding-bottom: 1rem;"
+        >
+        {% endif %}
+      </div>
+      {% include "django/forms/widgets/multiwidget.html" %}
+    </div>
+  </div>
+</div>
+{% endspaceless %}
