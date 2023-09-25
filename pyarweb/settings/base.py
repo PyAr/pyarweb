@@ -191,7 +191,6 @@ DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
 #
 CAPTCHA_LENGTH = 6
 CAPTCHA_FLITE_PATH = "/usr/bin/flite"
-CAPTCHA_IMAGE_TEMPLATE = "account/custom_captcha.html"
 
 ALLOWED_HTML_TAGS_INPUT = [
     'a',
@@ -245,7 +244,7 @@ TAGGIT_CASE_INSENSITIVE = True
 
 GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
 
-ACCOUNT_FORMS = {'signup': 'pyarweb.forms.SingupFormWithCaptcha'}
+ACCOUNT_FORMS = {'signup': 'pyarweb.forms.SignupFormWithCaptcha'}
 
 DJANGO_EASY_AUDIT_WATCH_AUTH_EVENTS = False
 DJANGO_EASY_AUDIT_WATCH_REQUEST_EVENTS = False
@@ -290,3 +289,5 @@ SOCIAL_NETWORKS_PUBLISHERS = [
   'joboffers.publishers.telegram.TelegramPublisher',
   'joboffers.publishers.twitter.TwitterPublisher'
 ]
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
