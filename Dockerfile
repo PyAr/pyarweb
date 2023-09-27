@@ -1,6 +1,7 @@
 FROM python:3.9
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /code:$PYTHONPATH
+RUN apt-get update && apt-get -y install flite=2.2-5
 RUN mkdir /code
 WORKDIR /code
 COPY dev_requirements.txt /code

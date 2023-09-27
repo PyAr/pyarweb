@@ -12,7 +12,7 @@ django-extensions==3.1.5
 django-html-sanitizer==0.1.5
 django-model-utils==4.2.0
 django-sendfile==0.3.11
-django-simple-captcha==0.5.14
+django-simple-captcha==0.5.18
 django-storages[azure]==1.11.1
 django-summernote==0.8.20.0
 django-tagging==0.5.0
