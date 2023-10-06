@@ -277,6 +277,10 @@ TWITTER_ACCESS_SECRET = os.environ.get('TWITTER_ACCESS_SECRET')
 TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
 
+# Mastodon constants
+MASTODON_AUTH_TOKEN = os.environ.get('MASTODON_AUTH_TOKEN')
+MASTODON_API_BASE_URL = os.environ.get('MASTODON_API_BASE_URL')
+
 # Discourse constants
 DISCOURSE_HOST = os.environ.get('DISCOURSE_HOST')
 DISCOURSE_API_KEY = os.environ.get('DISCOURSE_API_KEY')
@@ -284,10 +288,11 @@ DISCOURSE_USERNAME = os.environ.get('DISCOURSE_USERNAME')
 DISCOURSE_CATEGORY = os.environ.get('DISCOURSE_CATEGORY')
 
 SOCIAL_NETWORKS_PUBLISHERS = [
-  'joboffers.publishers.discourse.DiscoursePublisher',
-  'joboffers.publishers.facebook.FacebookPublisher',
-  'joboffers.publishers.telegram.TelegramPublisher',
-  'joboffers.publishers.twitter.TwitterPublisher'
+    'joboffers.publishers.discourse.DiscoursePublisher',
+    'joboffers.publishers.facebook.FacebookPublisher',
+    'joboffers.publishers.telegram.TelegramPublisher',
+    'joboffers.publishers.twitter.TwitterPublisher',
+    'joboffers.publishers.mastodon.MastodonPublisher',
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
