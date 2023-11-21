@@ -27,7 +27,6 @@ urlpatterns = [
     re_path(r'^empresas/', include(('pycompanies.urls', 'pycompanies'), namespace='companies')),
     re_path(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     re_path(r'^summernote/', include('django_summernote.urls')),
-    re_path(r'^trabajo-vieja/', include('jobs.urls')),
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^accounts/', include('allauth.urls')),
     re_path(r'^eventos/', include(('events.urls', 'events'), namespace='events')),

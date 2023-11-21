@@ -5,13 +5,19 @@ from django.urls import reverse
 
 from autoslug import AutoSlugField
 
-from jobs.models import JOB_SENIORITIES
-
 
 GENDER_OPTIONS = (
     ('female', _('femenino')),
     ('male', _('masculino')),
     ('Otro', _('otro')),
+)
+
+JOB_SENIORITIES = (
+    ('Trainee', 'Trainee'),
+    ('Junior', 'Junior'),
+    ('Semi Senior', 'Semi Senior'),
+    ('Senior', 'Senior'),
+    ('Guido', 'Soy Guido Van Rossum'),
 )
 
 
@@ -55,7 +61,7 @@ class EventParticipation(models.Model):
         max_length=100,
         blank=True,
         default='',
-        choices=JOB_SENIORITIES + (('guido', _('Soy Guido Van Rossum')),),
+        choices=JOB_SENIORITIES,
         verbose_name=_('experiencia')
     )
 
