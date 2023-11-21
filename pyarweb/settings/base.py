@@ -53,7 +53,6 @@ INSTALLED_APPS = (
     'community',
     'news',
     'pycompanies',
-    'jobs',
     'events',
     'joboffers',
     # 3rd party apps

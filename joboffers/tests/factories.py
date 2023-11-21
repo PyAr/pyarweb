@@ -39,7 +39,7 @@ class JobOfferFactory(DjangoModelFactory):
 
         """
         if extracted:
-            obj.created = extracted
+            obj.created_at = extracted
             obj.save()
 
     @post_generation
