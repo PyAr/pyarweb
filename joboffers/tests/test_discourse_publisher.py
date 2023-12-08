@@ -1,98 +1,79 @@
+import uuid
 from unittest.mock import patch
 
-from requests_mock.exceptions import NoMockAddress
-from requests_mock.mocker import Mocker
-
-from ..publishers.discourse import (
-    ERROR_LOG_MESSAGE,
-    DISCOURSE_POST_URL,
-    DiscoursePublisher,
-)
-
-DUMMY_MESSAGE = 'message'
-DUMMY_TITLE = 'This is a title with the right length'
-DUMMY_TITLE_SHORT = 'Short'
-DUMMY_LINK = 'https://example.com/'
-DUMMY_CATEGORY = '1'
-DUMMY_EXCEPTION_MESSAGE = 'Oops'
-DUMMY_BAD_REQUEST_TEXT = 'This is bad'
-DUMMY_UUID = 'aafd27ff-8baf-433b-82eb-8c7fada847da'
+from ..publishers.discourse import DiscoursePublisher
 
 
-class DummyRequest:
-    status_code = 400
-    text = DUMMY_BAD_REQUEST_TEXT
+DUMMY_MESSAGE = "message"
+DUMMY_TITLE = "This is a title with the right length"
+DUMMY_LINK = "https://example.com/"
+DUMMY_CATEGORY = "1"
+DUMMY_UUID = uuid.UUID("ce322dce-ef12-4393-bebc-1ad56e4007fd")
 
 
-def mocked_uuid():
-    """Mock of uuid4 method."""
-    return DUMMY_UUID
-
-
-@patch('joboffers.publishers.discourse.uuid.uuid4')
-def test_publish_message_ok(uuid_mock, requests_mock: Mocker, settings):
-    """Test that a requests made to the facebook api is ok."""
-    requests_mock.post(DISCOURSE_POST_URL, json='', status_code=200)
-    uuid_mock.return_value = DUMMY_UUID
+@patch("joboffers.publishers.discourse.uuid.uuid4", return_value=DUMMY_UUID)
+def test_publish_message_ok(uuid_mock, requests_mock, settings):
+    """Request made to the Discourse API is ok."""
     settings.DISCOURSE_CATEGORY = DUMMY_CATEGORY
-    try:
-        status = DiscoursePublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
-    except NoMockAddress:
-        assert (
-            False
-        ), 'publish_offer raised an exception, wich means that the url is malformed.'
+    settings.DISCOURSE_BASE_URL = "https://localhost:9876"
+    requests_mock.post("https://localhost:9876/posts.json", json="", status_code=200)
 
-    post_title = f'{DUMMY_TITLE} - {DUMMY_UUID[:8]}'
-
-    expected_payload = {
-        'title': post_title,
-        'raw': DUMMY_MESSAGE,
-        'category': settings.DISCOURSE_CATEGORY,
-    }
-
-    assert expected_payload == requests_mock.request_history[0].json()
-    assert status == 200
-
-
-@patch('joboffers.publishers.discourse.uuid.uuid4')
-def test_publish_message_insufficient_title_length(uuid_mock, requests_mock: Mocker, settings):
-    """Test that a requests made to the discourse api with a short title."""
-    requests_mock.post(DISCOURSE_POST_URL, json='', status_code=200)
-    uuid_mock.return_value = DUMMY_UUID
-    settings.DISCOURSE_CATEGORY = DUMMY_CATEGORY
-    status = DiscoursePublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE_SHORT, DUMMY_LINK)
-
-    post_title = f'{DUMMY_TITLE_SHORT} - {DUMMY_UUID}'
-
-    expected_payload = {
-        'title': post_title,
-        'raw': DUMMY_MESSAGE,
-        'category': settings.DISCOURSE_CATEGORY,
-    }
-
-    assert expected_payload == requests_mock.request_history[0].json()
-    assert status == 200
-
-
-@patch(
-    'joboffers.publishers.discourse.requests.post',
-    side_effect=Exception(DUMMY_EXCEPTION_MESSAGE),
-)
-@patch('joboffers.publishers.discourse.uuid.uuid4', mocked_uuid)
-def test_publish_message_generic_error(post_mock, settings, caplog):
-    """Test error handling of requests with a general error."""
-    settings.DISCOURSE_CATEGORY = DUMMY_CATEGORY
     status = DiscoursePublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
 
-    post_title = f'{DUMMY_TITLE} - {DUMMY_UUID[:8]}'
+    expected_payload = {
+        "title": f"{DUMMY_TITLE} - {DUMMY_UUID.hex[:8]}",
+        "raw": DUMMY_MESSAGE,
+        "category": settings.DISCOURSE_CATEGORY,
+    }
+    assert expected_payload == requests_mock.request_history[0].json()
+    assert status == 200
 
-    payload = {'title': post_title, 'raw': DUMMY_MESSAGE, 'category': DUMMY_CATEGORY}
 
-    expected_error_message = ERROR_LOG_MESSAGE % (
-        DISCOURSE_POST_URL,
-        payload,
-        DUMMY_EXCEPTION_MESSAGE,
-    )
+@patch("joboffers.publishers.discourse.uuid.uuid4", return_value=DUMMY_UUID)
+def test_publish_message_insufficient_title_length(uuid_mock, requests_mock, settings):
+    """Fix the title being too short."""
+    settings.DISCOURSE_CATEGORY = DUMMY_CATEGORY
+    settings.DISCOURSE_BASE_URL = "https://localhost:9876"
+    requests_mock.post("https://localhost:9876/posts.json", json="", status_code=200)
 
-    assert expected_error_message in caplog.text
+    very_short_title = "A job!"
+    status = DiscoursePublisher()._push_to_api(DUMMY_MESSAGE, very_short_title, DUMMY_LINK)
+
+    expected_payload = {
+        "title": f"{very_short_title} - {DUMMY_UUID.hex}",
+        "raw": DUMMY_MESSAGE,
+        "category": settings.DISCOURSE_CATEGORY,
+    }
+    assert expected_payload == requests_mock.request_history[0].json()
+    assert status == 200
+
+
+@patch("joboffers.publishers.discourse.requests.post", side_effect=ValueError("Oops"))
+def test_publish_message_request_crash(post_mock, settings, caplog):
+    """The request call ended really bad."""
+    settings.DISCOURSE_CATEGORY = DUMMY_CATEGORY
+    settings.DISCOURSE_BASE_URL = "https://localhost:9876"
+
+    status = DiscoursePublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
     assert status is None
+
+    expected_error_message = "Unknown error when publishing: ValueError('Oops')"
+    assert expected_error_message in caplog.text
+
+
+@patch("joboffers.publishers.discourse.uuid.uuid4", return_value=DUMMY_UUID)
+def test_publish_message_request_failure(uuid_mock, requests_mock, settings, caplog):
+    """The server didn"t return OK."""
+    settings.DISCOURSE_CATEGORY = DUMMY_CATEGORY
+    settings.DISCOURSE_BASE_URL = "https://localhost:9876"
+    requests_mock.post("https://localhost:9876/posts.json", text="Problem!", status_code=500)
+
+    status = DiscoursePublisher()._push_to_api(DUMMY_MESSAGE, DUMMY_TITLE, DUMMY_LINK)
+    assert status == 500
+
+    real_title = f"{DUMMY_TITLE} - {DUMMY_UUID.hex[:8]}"
+    expected_error_message = (
+        f"Bad server response when publishing: 500 ('Problem!'); "
+        f"title={real_title!r} message={DUMMY_MESSAGE!r}"
+    )
+    assert expected_error_message in caplog.text
