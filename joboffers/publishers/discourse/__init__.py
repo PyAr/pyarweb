@@ -6,11 +6,6 @@ from django.conf import settings
 
 from joboffers.publishers import Publisher
 
-
-DISCOURSE_POST_URL = f'http://{settings.DISCOURSE_HOST}/posts'
-
-ERROR_LOG_MESSAGE = 'Falló al querer publicar a discourse, url=%s data=%s: %s'
-
 MIN_LENGTH_POST_TITLE = 20
 
 
@@ -26,13 +21,11 @@ class DiscoursePublisher(Publisher):
             'Api-Username': settings.DISCOURSE_USERNAME,
         }
 
-        uuid_suffix = str(uuid.uuid4())
+        uuid_suffix = uuid.uuid4().hex
 
+        # make the title unique by appending part of an uuid; however if the title
+        # is too short for discourse use the whole uuid
         post_title = f'{title} - {uuid_suffix[:8]}'
-
-        # If post_title is shorther than the minimum required length, complete
-        # with the full uuid_suffix. Even the uuid is finite, it should be
-        # long enough to complete a reasonable title length.
         if len(post_title) < MIN_LENGTH_POST_TITLE:
             post_title = f"{title} - {uuid_suffix}"
 
@@ -42,15 +35,17 @@ class DiscoursePublisher(Publisher):
             'category': settings.DISCOURSE_CATEGORY,
         }
 
+        url = f'{settings.DISCOURSE_BASE_URL}/posts.json'
         try:
-            result = requests.post(DISCOURSE_POST_URL, json=payload, headers=headers)
+            resp = requests.post(url, json=payload, headers=headers)
         except Exception as err:
+            logging.error("Unknown error when publishing: %r", err)
             status = None
-            result_info = err
         else:
-            status = result.status_code
-            result_info = result.text
+            status = resp.status_code
+            if status != requests.codes.ok:
+                logging.error(
+                    "Bad server response when publishing: %s (%r); title=%r message=%r",
+                    status, resp.text, post_title, message)
 
-        if status != requests.codes.ok:
-            logging.error(ERROR_LOG_MESSAGE, DISCOURSE_POST_URL, payload, result_info)
         return status
