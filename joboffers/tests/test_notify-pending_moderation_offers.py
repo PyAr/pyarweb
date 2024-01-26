@@ -1,10 +1,11 @@
 import pytest
 
 from datetime import timedelta
+from unittest.mock import patch
 
 from django.utils import timezone
 
-from joboffers.constants import PENDING_MODERATION_OFFER_DAYS, TELEGRAM_PENDING_MODERATION_MESSAGE
+from joboffers.constants import TELEGRAM_PENDING_MODERATION_MESSAGE
 from joboffers.models import JobOffer, OfferState
 from joboffers.management.commands.notify_pending_moderation_offers import (
     notify_pending_moderation_offers
@@ -14,6 +15,9 @@ from .fixtures import create_telegram_dummy # noqa
 
 
 @pytest.mark.django_db
+@patch(
+    "joboffers.management.commands.notify_pending_moderation_offers.PENDING_MODERATION_OFFER_DAYS",
+    2)
 def test_remind_offers_in_moderation(telegram_dummy):
     """Expiration of old joboffers command."""
     today = timezone.now()
@@ -34,5 +38,5 @@ def test_remind_offers_in_moderation(telegram_dummy):
     assert len(telegram_history) == 1
     assert sent_message.endswith(TELEGRAM_PENDING_MODERATION_MESSAGE.format(
         offer_url=offer2.get_full_url(),
-        moderation_reminder_days=PENDING_MODERATION_OFFER_DAYS
+        moderation_reminder_days=2
     ))
