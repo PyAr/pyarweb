@@ -127,7 +127,7 @@ Resumen de Visitas
 
 OFFER_EXPIRATION_DAYS = 180
 
-PENDING_MODERATION_OFFER_DAYS = 2
+PENDING_MODERATION_OFFER_DAYS = 0
 
 TELEGRAM_MODERATION_MESSAGE = _('La oferta {offer_url} necesita ser moderada.')
 TELEGRAM_APPROVED_MESSAGE = _('La oferta {offer_url} fue aprobada por {username}.')
