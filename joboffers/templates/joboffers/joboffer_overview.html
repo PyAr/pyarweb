@@ -50,19 +50,19 @@
     {% if obj.contact_mail %}
     <li>
       <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-      {{ obj.contact_mail }}
+      <a href="mailto:{{ object.contact_mail }}" target="_blank" rel="noopener noreferrer">{{ object.contact_mail }}</a>
     </li>
     {% endif %}
     {% if obj.contact_url %}
     <li>
       <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-      {{ object.contact_url }}
+      <a href="{{ object.contact_url }}" target="_blank" rel="noopener noreferrer">{{ object.contact_url }}</a>
     </li>
     {% endif %}
     {% if obj.contact_phone %}
     <li>
       <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
-      {{ object.contact_phone }}
+      <a href="tel:{{ object.contact_phone }}" target="_blank" rel="noopener noreferrer">{{ object.contact_phone }}</a>
     </li>
     {% endif %}
   </ul>
