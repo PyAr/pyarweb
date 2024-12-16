@@ -24,7 +24,7 @@
     </dd>
   {% endif %}
   <dt>Permite trabajar remoto</dt>
-  <dd>{% if obj.remote_work %}Si{% else %}No{% endif %}</dd>
+  <dd>{% if obj.allows_remote_work %}Sí{% else %}No{% endif %}</dd>
 
   <dt>Experiencia Requerida</dt>
   <dd>{{ obj.get_experience_display }}</dd>
