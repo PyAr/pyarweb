@@ -8,7 +8,6 @@ from crispy_forms.layout import Div, ButtonHolder, Layout, Submit
 
 from .models import Company, UserCompanyProfile
 
-
 class CompanyForm(forms.ModelForm):
     """A PyAr companies form."""
 
@@ -41,7 +40,6 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         fields = ['name', 'photo', 'link', 'description']
         model = Company
-
 
 class UserCompanyForm(forms.ModelForm):
     """A PyAr user companies form."""
