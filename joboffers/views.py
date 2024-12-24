@@ -359,7 +359,9 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
         offer.state = OfferState.MODERATION
         offer.save()
 
-        moderators_message = TELEGRAM_MODERATION_MESSAGE.format(offer_url=offer.get_full_url())
+        moderators_message = TELEGRAM_MODERATION_MESSAGE.format(
+            offer_url=offer.get_full_url()
+        )
 
         send_notification_to_moderators(moderators_message)
 
@@ -399,7 +401,7 @@ class JobOfferListView(ListView, FilterableList):
         queryset = super().get_queryset()
         search = self.request.GET.get('search')
 
-        if search:
+        if (search):
             search_filter = Q(title__icontains=search) | Q(description__icontains=search)
         else:
             search_filter = Q()

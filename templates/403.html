@@ -1,0 +1,17 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+
+{% block title %}403 - {{ block.super }}{% endblock %}
+
+{% block content %}
+<section>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 20px">
+            <div class="alert alert-danger">
+                <h4>{% trans "Access Denied" %}</h4>
+                <p>{% trans "You are not authorized to view this page." %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
