@@ -1,6 +1,0 @@
-# ...existing code...
-
-# Add the custom 403 error handler
-handler403 = 'django.views.defaults.permission_denied'
-
-# ...existing code...

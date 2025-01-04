@@ -512,15 +512,16 @@ def test_joboffer_get_publisher_mail_addresses_without_users():
 
 
 def test_joboffer_get_full_url(settings):
+    """Test that the url being crafted has the correct BASE_URL and the right format."""
+    dummy_url = 'example.com'
     dummy_job_slug = 'python-job'
-    settings.BASE_URL = 'example.com'
+    settings.BASE_URL = dummy_url
     joboffer_url = reverse('joboffers:view', kwargs={'slug': dummy_job_slug})
     expected_url = "".join(('https://example.com', joboffer_url))
 
     joboffer = JobOffer(slug=dummy_job_slug)
     result = joboffer.get_full_url()
-
-    assert result == expected_url
+    assert expected_url == result
 
 
 @pytest.mark.django_db
