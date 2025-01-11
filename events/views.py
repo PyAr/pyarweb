@@ -281,23 +281,29 @@ class ReportEventView(LoginRequiredMixin, View):
     def post(self, request, event_id):
         event = get_object_or_404(Event, pk=event_id)
         try:
+            message = (
+                f"El evento '{event.name}' ha sido reportado por el usuario "
+                f"{request.user.username}. \n\n"
+                f"Detalles del evento:\n"
+                f"Nombre: {event.name}\n"
+                f"Descripción: {event.description}\n"
+                f"Lugar: {event.place}\n"
+                f"Fecha y hora: {event.start_at}\n\n"
+                f"Ver más detalles: {request.build_absolute_uri(event.get_absolute_url())}"
+            )
             # Send email to admin
             send_mail(
-                subject=f'Reporte de evento: {event.name}',
-                message=f'El evento "{event.name}" ha sido reportado por el usuario {request.user.username}. \n\n'
-                        f'Detalles del evento:\n'
-                        f'Nombre: {event.name}\n'
-                        f'Descripción: {event.description}\n'
-                        f'Lugar: {event.place}\n'
-                        f'Fecha y hora: {event.start_at}\n\n'
-                        f'Ver más detalles: {request.build_absolute_uri(event.get_absolute_url())}',
-                from_email='noreply@python.org.ar',
-                recipient_list=['admin@python.org.ar'],
+                subject=f"Reporte de evento: {event.name}",
+                message=message,
+                from_email="noreply@python.org.ar",
+                recipient_list=["admin@python.org.ar"],
                 fail_silently=False,
             )
 
-            messages.success(request, 'El evento ha sido reportado correctamente. Gracias por tu colaboración.')
-            return redirect(reverse_lazy('events:events_list_all'))
+            txt = "El evento ha sido reportado correctamente. Gracias por tu colaboración."
+            messages.success(request, txt)
+            return redirect(reverse_lazy("events:events_list_all"))
         except Exception:
-            messages.error(request, 'Ocurrió un error al reportar el evento. Por favor, intentá nuevamente.')
-            return redirect(reverse_lazy('events:events_list_all'))
+            txt = "Ocurrió un error al reportar el evento. Por favor, intentá nuevamente."
+            messages.error(request, txt)
+            return redirect(reverse_lazy("events:events_list_all"))
