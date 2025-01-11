@@ -1,5 +1,5 @@
 
-from django.urls import re_path
+from django.urls import re_path, path
 from django.views.generic.detail import DetailView
 
 from .models import Event
@@ -13,7 +13,8 @@ from .views import (EventDetail,
                     EventParticipationCreate,
                     EventParticipationDetail,
                     EventParticipationDelete,
-                    EventParticipationDownload)
+                    EventParticipationDownload,
+                    ReportEventView)
 
 urlpatterns = [
     re_path(r'^$', EventList.as_view(), name='events_list_all'),
@@ -34,4 +35,5 @@ urlpatterns = [
             name='registration'),
     re_path(r'^(?P<pk>\d+)/inscripcion/(?P<participation_pk>\d+)/borrar/$',
             EventParticipationDelete.as_view(), name='unregister'),
+    path('<int:event_id>/reportar/', ReportEventView.as_view(), name='report'),
 ]

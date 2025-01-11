@@ -1,17 +1,26 @@
-from braces.views import LoginRequiredMixin
-from community.views import validate_obj_owner, OwnedObject
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
+from django.core.mail import send_mail
 from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views import View
+from django.views.generic import DetailView, ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from .forms import EventForm, AnonymousEventParticipationForm, AuthenticatedEventParticipationForm
+from community.views import OwnedObject, validate_obj_owner
+
+from .forms import (
+    AnonymousEventParticipationForm,
+    AuthenticatedEventParticipationForm,
+    EventForm,
+)
+from .mixins import CSVResponseMixin, EventMixin, EventParticipationMixin
 from .models import Event, EventParticipation
-from .mixins import EventMixin, EventParticipationMixin, CSVResponseMixin
 
 
 class EventsFeed(Feed):
@@ -266,3 +275,29 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
         if self.event.has_sponsors:
             row += (obj.cv, obj.share_with_sponsors)
         return row
+
+
+class ReportEventView(LoginRequiredMixin, View):
+    def post(self, request, event_id):
+        event = get_object_or_404(Event, pk=event_id)
+        try:
+            # Send email to admin
+            send_mail(
+                subject=f'Reporte de evento: {event.name}',
+                message=f'El evento "{event.name}" ha sido reportado por el usuario {request.user.username}. \n\n'
+                        f'Detalles del evento:\n'
+                        f'Nombre: {event.name}\n'
+                        f'Descripción: {event.description}\n'
+                        f'Lugar: {event.place}\n'
+                        f'Fecha y hora: {event.start_at}\n\n'
+                        f'Ver más detalles: {request.build_absolute_uri(event.get_absolute_url())}',
+                from_email='noreply@python.org.ar',
+                recipient_list=['admin@python.org.ar'],
+                fail_silently=False,
+            )
+
+            messages.success(request, 'El evento ha sido reportado correctamente. Gracias por tu colaboración.')
+            return redirect(reverse_lazy('events:events_list_all'))
+        except Exception:
+            messages.error(request, 'Ocurrió un error al reportar el evento. Por favor, intentá nuevamente.')
+            return redirect(reverse_lazy('events:events_list_all'))
