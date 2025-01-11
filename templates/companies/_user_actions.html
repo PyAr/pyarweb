@@ -23,7 +23,7 @@
         <form action="{% url 'companies:disassociate' user.company.first.id %}" method="post" style="display:inline;">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">
-            {% trans 'Desuscribirse' %}
+            {% trans 'Desasociarse' %}
           </button>
         </form>
       </div>

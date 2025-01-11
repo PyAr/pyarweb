@@ -195,7 +195,7 @@ def test_company_admin_should_have_no_matching_company_in_context(logged_client)
 @pytest.mark.django_db
 def test_company_disassociate_last_user_from_company(logged_client, user):
     """
-    Verifica que el mensaje es correcto y que el perfil se elimina al desasociarse.
+    Verifies that the message is correct and the profile is deleted when disassociating
     """
     DISASSOCIATE_MESSAGE = ('Esta es la última persona vinculada a esta empresa '
                             '¿Estás seguro que deseas desvincularla?')
