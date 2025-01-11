@@ -84,8 +84,8 @@ class Command(BaseCommand):
         data = json.loads(result.text)
 
         long_lived_page_access_token = data.get('access_token')
-        self.stdout.write(('\nPor favor, copiá el token y pegalo en el archivo .env o su '
-                          'equivalente para el entorno de producción:'))
+        self.stdout.write('\nPor favor, copiá el token y pegalo en el archivo .env o su '
+                          'equivalente para el entorno de producción:')
 
         self.stdout.write(
             self.style.SUCCESS(

@@ -73,7 +73,7 @@ class EventForm(CrispyFormMixin):
         }
 
     def clean(self):
-        cleaned_data = super(EventForm, self).clean()
+        cleaned_data = super().clean()
         start_at = cleaned_data.get('start_at')
         end_at = cleaned_data.get('end_at')
         if start_at is not None and end_at is not None:
@@ -84,7 +84,7 @@ class EventForm(CrispyFormMixin):
         return cleaned_data
 
     def save(self, *args, **kwargs):
-        super(EventForm, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.instance.save()
 
 

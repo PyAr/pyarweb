@@ -45,7 +45,7 @@ class EventList(ListView):
     context_object_name = "eventos_pasados"
 
     def get_context_data(self, **kwargs):
-        context = super(EventList, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['eventos_proximos'] = Event.objects.filter(
             end_at__gte=timezone.now()).order_by('start_at')
 
@@ -77,7 +77,7 @@ class EventDetail(EventMixin, DetailView):
         return details
 
     def get_context_data(self, **kwargs):
-        context = super(EventDetail, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context.update(self.user_participation_details())
         return context
 
@@ -87,7 +87,7 @@ class EventCreate(LoginRequiredMixin, EventMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(EventCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
@@ -206,7 +206,7 @@ class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, EventPar
 
 
 class EventParticipationList(LoginRequiredMixin, ListView):
-    http_method_names = [u'get']
+    http_method_names = ['get']
     context_object_name = 'participants'
 
     def __init__(self, *args, **kwargs):
@@ -215,7 +215,7 @@ class EventParticipationList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """Overwrite get_context_data to add the related Event's ID to the template context."""
-        context = super(EventParticipationList, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['event'] = self.event
         return context
 
@@ -237,7 +237,7 @@ class EventParticipationDelete(LoginRequiredMixin, EventParticipationMixin, Dele
     def get_object(self, *args, **kwargs):
         """A User can delete its participation to an Event. The Event owner can also do that."""
 
-        inscription = super(EventParticipationDelete, self).get_object(*args, **kwargs)
+        inscription = super().get_object(*args, **kwargs)
         if self.request.user not in [inscription.user, inscription.event.owner]:
             raise Http404()
         return inscription
@@ -247,7 +247,7 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
     def get_csv_filename(self):
         event = self.event.name.lower().replace(' ', '_')
         timestamp = timezone.now().isoformat().replace(':', '').replace('-', '').split('.')[0]
-        return '{0}-{1}.csv'.format(event, timestamp)
+        return f'{event}-{timestamp}.csv'
 
     def get_rows(self):
         columns = ('Nombre', 'Correo electrónico', 'Género', 'Nivel', 'Usuario PyAr',

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 """Configure Celery for PyAr Web."""
 
 

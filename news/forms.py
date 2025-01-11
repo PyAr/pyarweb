@@ -12,7 +12,7 @@ class NewsArticleForm(forms.ModelForm):
     body = forms.CharField(widget=SummernoteInplaceWidget())
 
     def __init__(self, *args, **kwargs):
-        super(NewsArticleForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.add_input(Submit('news_submit', _('Guardar')))
         self.helper.add_input(Reset('news_reset', _('Limpiar'),
