@@ -195,7 +195,7 @@ def test_company_admin_should_have_no_matching_company_in_context(logged_client)
 @pytest.mark.django_db
 def test_company_disassociate_last_user_from_company(logged_client, user):
     """
-    Message in context should notice if is the last user associated to the company
+    Verifica que el mensaje es correcto y que el perfil se elimina al desasociarse.
     """
     DISASSOCIATE_MESSAGE = ('Esta es la última persona vinculada a esta empresa '
                             '¿Estás seguro que deseas desvincularla?')
@@ -206,10 +206,16 @@ def test_company_disassociate_last_user_from_company(logged_client, user):
     COMPANY_DISSASOCIATE_URL = reverse('companies:disassociate',
                                        kwargs={'pk': user_company_profile.id})
 
-    response = logged_client.get(COMPANY_DISSASOCIATE_URL, data={'empresa': company_1})
-
-    assert 200 == response.status_code
+    # Simula la carga de la página de confirmación
+    response = logged_client.get(COMPANY_DISSASOCIATE_URL)
+    assert response.status_code == 200
     assert DISASSOCIATE_MESSAGE == response.context_data['message']
+
+    # Simula la acción de desasociarse (esto es lo que realmente elimina el perfil)
+    response = logged_client.post(COMPANY_DISSASOCIATE_URL)
+
+    # Verifica redirección después de desasociarse
+    assert response.status_code == 302  # Redirección exitosa
     assert not UserCompanyProfile.objects.filter(id=user_company_profile.id).exists()
 
 
