@@ -210,6 +210,7 @@ def test_company_disassociate_last_user_from_company(logged_client, user):
 
     assert 200 == response.status_code
     assert DISASSOCIATE_MESSAGE == response.context_data['message']
+    assert not UserCompanyProfile.objects.filter(id=user_company_profile.id).exists()
 
 
 @pytest.mark.django_db
