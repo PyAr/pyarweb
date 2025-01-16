@@ -1,7 +1,8 @@
-from django.conf.urls import patterns, url
+from django.urls import re_path
+from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
     '',
-    url(r'^', 'community.views.homepage', name='homepage'),
+    re_path(r'^', 'community.views.homepage', name='homepage'),
 )
