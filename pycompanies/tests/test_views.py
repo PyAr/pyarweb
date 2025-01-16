@@ -353,8 +353,8 @@ def test_render_company_analytics_ok(
     assert total_views == expected_total_views
 
     table_data = response.context['joboffers_data']
-    expected_table_views = set([views_job_1, views_job_2])
-    table_views = set([sum(table_data[0][1:]), sum(table_data[1][1:])])
+    expected_table_views = {views_job_1, views_job_2}
+    table_views = {sum(table_data[0][1:]), sum(table_data[1][1:])}
 
     assert table_views == expected_table_views
 

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 """URLS configurations for PyAr Web."""
 import re
 

@@ -18,7 +18,7 @@ class CompanyForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(CompanyForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.layout = Layout(
             Div(

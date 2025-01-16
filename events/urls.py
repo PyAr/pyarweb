@@ -1,4 +1,3 @@
-
 from django.urls import re_path, path
 from django.views.generic.detail import DetailView
 
