@@ -12,7 +12,7 @@
 	    <form action="" method="POST">{% csrf_token %}
 		    <p>{% blocktrans %}¿Está seguro de que desear eliminar "{{ object }}"?{% endblocktrans %}</p>
 		    <input class="btn btn-primary" type="submit" value="{% trans 'Confirmar' %}" />
-		    <a href="{% block return_url %}{% endblock %}" class="btn btn-default">{% trans 'Cancelar' %}</a> 
+		    <a href="{% block return_url %}{% endblock %}" class="btn btn-default">{% trans 'Cancelar' %}</a>
 		</form>
 	</div>
 </main>

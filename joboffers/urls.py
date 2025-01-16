@@ -1,3 +1,4 @@
+from django.urls import path
 from django.urls import re_path
 from .views import (
     DownloadAnalyticsAsCsv, JobOfferAdminView, JobOfferAnalyticsView, JobOfferApproveView,
@@ -8,10 +9,10 @@ from .views import (
 
 
 urlpatterns = [
-    re_path(r'^$', JobOfferListView.as_view(), name='list'),
-    re_path(r'^admin/$', JobOfferAdminView.as_view(), name='admin'),
-    re_path(r'^nueva/$', JobOfferCreateView.as_view(), name='add'),
-    re_path(r'^rss/$', JobOffersFeed(), name='feed'),
+    path('', JobOfferListView.as_view(), name='list'),
+    path('admin/', JobOfferAdminView.as_view(), name='admin'),
+    path('nueva/', JobOfferCreateView.as_view(), name='add'),
+    path('rss/', JobOffersFeed(), name='feed'),
     re_path(r'^(?P<slug>[\w-]+)/rechazar/$', JobOfferRejectView.as_view(), name='reject'),
     re_path(r'^(?P<slug>[\w-]+)/aceptar/$', JobOfferApproveView.as_view(), name='approve'),
     re_path(
