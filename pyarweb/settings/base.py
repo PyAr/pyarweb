@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'pyarweb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME', os.environ.get("POSTGRES_DB", "pyarweb")),
         'USER': os.environ.get('DB_USER', os.environ.get("POSTGRES_USER", "postgres")),
         'PASSWORD': os.environ.get('DB_PASS', os.environ.get("POSTGRES_PASSWORD", "")),

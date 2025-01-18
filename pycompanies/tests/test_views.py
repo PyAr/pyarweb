@@ -195,7 +195,7 @@ def test_company_admin_should_have_no_matching_company_in_context(logged_client)
 @pytest.mark.django_db
 def test_company_disassociate_last_user_from_company(logged_client, user):
     """
-    Message in context should notice if is the last user associated to the company
+    Verifies that the message is correct and the profile is deleted when disassociating
     """
     DISASSOCIATE_MESSAGE = ('Esta es la última persona vinculada a esta empresa '
                             '¿Estás seguro que deseas desvincularla?')
@@ -206,10 +206,17 @@ def test_company_disassociate_last_user_from_company(logged_client, user):
     COMPANY_DISSASOCIATE_URL = reverse('companies:disassociate',
                                        kwargs={'pk': user_company_profile.id})
 
-    response = logged_client.get(COMPANY_DISSASOCIATE_URL, data={'empresa': company_1})
-
-    assert 200 == response.status_code
+    # Simula la carga de la página de confirmación
+    response = logged_client.get(COMPANY_DISSASOCIATE_URL)
+    assert response.status_code == 200
     assert DISASSOCIATE_MESSAGE == response.context_data['message']
+
+    # Simula la acción de desasociarse (esto es lo que realmente elimina el perfil)
+    response = logged_client.post(COMPANY_DISSASOCIATE_URL)
+
+    # Verifica redirección después de desasociarse
+    assert response.status_code == 302  # Redirección exitosa
+    assert not UserCompanyProfile.objects.filter(id=user_company_profile.id).exists()
 
 
 @pytest.mark.django_db
@@ -346,8 +353,8 @@ def test_render_company_analytics_ok(
     assert total_views == expected_total_views
 
     table_data = response.context['joboffers_data']
-    expected_table_views = set([views_job_1, views_job_2])
-    table_views = set([sum(table_data[0][1:]), sum(table_data[1][1:])])
+    expected_table_views = {views_job_1, views_job_2}
+    table_views = {sum(table_data[0][1:]), sum(table_data[1][1:])}
 
     assert table_views == expected_table_views
 

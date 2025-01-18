@@ -42,9 +42,19 @@
             {{ event.start_at|time:"TIME_FORMAT" }}
           </small>
         </h4>
+
         <p class="list-group-item-text">
           {{ event.description|truncatewords:"100"|striptags|safe }}
           <hr>
+          <!-- 🚨 Report Button -->
+          {% if user.is_authenticated %}
+            <form action="{% url 'events:report' event.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">
+                {% trans "Reportar Evento" %}
+              </button>
+            </form>
+          {% endif %}
         </p>
       </article>
     {% empty %}

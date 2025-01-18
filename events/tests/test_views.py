@@ -103,5 +103,5 @@ class EventsViewTest(TestCase):
 
     def test_events_view_slug(self):
         event = EventFactory()
-        response_por_slug = self.client.get('/eventos/{}/'.format(event.slug))
+        response_por_slug = self.client.get(f'/eventos/{event.slug}/')
         self.assertEqual(response_por_slug.context['event'].id, event.id)

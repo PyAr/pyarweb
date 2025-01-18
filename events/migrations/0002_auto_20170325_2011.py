@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import migrations, models
 from django.conf import settings
 
@@ -50,6 +47,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='eventparticipation',
-            unique_together=set([('event', 'email')]),
+            unique_together={('event', 'email')},
         ),
     ]

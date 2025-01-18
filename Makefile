@@ -28,6 +28,9 @@ only_test:
 pep8:
 	docker-compose run --rm web flake8
 
+format:
+	pre-commit run -a
+
 test: pep8 only_test
 
 dockershell:

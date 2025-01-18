@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import path
 
 from .views import (
   CompanyAdminView,
@@ -15,14 +15,14 @@ from .views import (
 
 app_name = 'pycompanies'
 urlpatterns = [
-    re_path(r'^$', CompanyListView.as_view(), name='company_list_all'),
-    re_path(r'^(?P<pk>\d+)/$', CompanyDetailView.as_view(), name='detail'),
-    re_path(r'^agregar/$', CompanyCreateView.as_view(), name='add'),
-    re_path(r'^(?P<pk>\d+)/editar/$', CompanyUpdateView.as_view(), name='edit'),
-    re_path(r'^(?P<pk>\d+)/eliminar/$', CompanyDeleteView.as_view(), name='delete'),
-    re_path(r'^(?P<company>\d+)/asociar/$', CompanyAssociateView.as_view(), name='associate'),
-    re_path(r'^asociarme/$', CompanyAssociationListView.as_view(), name='association_list'),
-    re_path(r'^admin/$', CompanyAdminView.as_view(), name='admin'),
-    re_path(r'^(?P<pk>\d+)/desasociar/$', CompanyDisassociateView.as_view(), name='disassociate'),
-    re_path(r'^(?P<pk>\d+)/analitica/$', CompanyAnalyticsView.as_view(), name='analytics')
+    path('', CompanyListView.as_view(), name='company_list_all'),
+    path('<int:pk>/', CompanyDetailView.as_view(), name='detail'),
+    path('agregar/', CompanyCreateView.as_view(), name='add'),
+    path('<int:pk>/editar/', CompanyUpdateView.as_view(), name='edit'),
+    path('<int:pk>/eliminar/', CompanyDeleteView.as_view(), name='delete'),
+    path('<int:company>/asociar/', CompanyAssociateView.as_view(), name='associate'),
+    path('asociarme/', CompanyAssociationListView.as_view(), name='association_list'),
+    path('admin/', CompanyAdminView.as_view(), name='admin'),
+    path('<int:pk>/desasociar/', CompanyDisassociateView.as_view(), name='disassociate'),
+    path('<int:pk>/analitica/', CompanyAnalyticsView.as_view(), name='analytics')
 ]

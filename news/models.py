@@ -21,7 +21,7 @@ class NewsArticle(TimeStampedModel):
         return reverse('news_view', args=(self.id,))
 
     def __unicode__(self):
-        return u'{0}'.format(self.title)
+        return f'{self.title}'
 
     class Meta:
         ordering = ('-created',)

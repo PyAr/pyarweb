@@ -2,7 +2,7 @@
 fieldset.module .tags{
     overflow: visible;
 }
-fieldset.module .row:before, fieldset.module .row:after {  content: "\0020"; display: block; height: 0; visibility: hidden;	 } 
+fieldset.module .row:before, fieldset.module .row:after {  content: "\0020"; display: block; height: 0; visibility: hidden;	 }
 fieldset.module .row:after { clear: both; }
 fieldset.module .row { zoom: 1; }
 
@@ -139,20 +139,20 @@ li.as-result-item.active {
 	color: #000;
 }
 
-li.as-result-item em { 
-	font-style: normal; 
-	background: #444;  
+li.as-result-item em {
+	font-style: normal;
+	background: #444;
 	padding: 0 2px;
 	color: #fff;
 }
 
-li.as-result-item.active em { 
-	background: #253f7a;  
+li.as-result-item.active em {
+	background: #253f7a;
 	color: #fff;
 }
 
 /* Webkit Hacks  */
-@media screen and (-webkit-min-device-pixel-ratio:0) {	
+@media screen and (-webkit-min-device-pixel-ratio:0) {
 	ul.as-selections {
 		border-top-width: 2px;
 	}
@@ -189,7 +189,7 @@ ul.as-selections li.as-selection-item a.as-close {
 }
 
 /* Firefox 3.0 Hacks */
-ul.as-list,  x:-moz-any-link, x:default { 
+ul.as-list,  x:-moz-any-link, x:default {
 	border: 1px solid #888;
 }
 BODY:first-of-type ul.as-list, x:-moz-any-link, x:default { /* Target FF 3.5+ */

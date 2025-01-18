@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 """Handle the Views of the Homepage and others."""
 
 from django.db.models import F, Value, CharField
@@ -59,7 +56,7 @@ class HomePageView(TemplateView):
         # Sort the last news, jobs and events to define the definitive 'recent' list
         recent = sorted(news + jobs + events, key=lambda r: r.created, reverse=True)
 
-        context = super(HomePageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['recent'] = recent[:RECENT_ITEMS_LEN]
         return context
 
@@ -84,7 +81,7 @@ class OwnedObject(SingleObjectMixin):
         before allowing manipulation. """
 
     def get_object(self, *args, **kwargs):
-        obj = super(OwnedObject, self).get_object(*args, **kwargs)
+        obj = super().get_object(*args, **kwargs)
         return validate_obj_owner(obj, self.request.user)
 
 
@@ -102,7 +99,7 @@ class FilterableList(MultipleObjectMixin):
                     self.included_tags.append(k[4:])
                 elif v == '2':
                     self.excluded_tags.append(k[4:])
-        return super(FilterableList, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def filter_queryset_tags(self, obj_list):
         included = self.included_tags
@@ -114,10 +111,10 @@ class FilterableList(MultipleObjectMixin):
         return obj_list
 
     def get_queryset(self):
-        return self.filter_queryset_tags(super(FilterableList, self).get_queryset())
+        return self.filter_queryset_tags(super().get_queryset())
 
     def get_context_data(self, **kwargs):
-        context = super(FilterableList, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['tags'] = self.model.tags.all()
         context['included'] = self.included_tags
         context['excluded'] = self.excluded_tags
