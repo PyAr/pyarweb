@@ -7,18 +7,17 @@ from .models import JobOffer, JobOfferComment, Remoteness
 from crispy_forms.layout import Submit, Reset, Layout
 from crispy_forms.helper import FormHelper
 from django_summernote.widgets import SummernoteInplaceWidget
-from sanitizer.forms import SanitizedCharField
-
+from events.html_sanitizer import sanitize_html
 from . import utils
 
 
 class JobOfferForm(forms.ModelForm):
     """A PyAr Jobs form."""
 
-    description = SanitizedCharField(
-        allowed_tags=settings.ALLOWED_HTML_TAGS_INPUT,
-        allowed_attributes=settings.ALLOWED_HTML_ATTRIBUTES_INPUT,
-        strip=False, widget=SummernoteInplaceWidget(), label='Descripción',
+    description = forms.CharField(
+        widget=SummernoteInplaceWidget(),
+        label='Descripción',
+        required=True
     )
 
     def __init__(self, *args, **kwargs):
@@ -48,6 +47,20 @@ class JobOfferForm(forms.ModelForm):
         self.helper.add_input(
             Reset('reset', _('Limpiar'), css_class='btn-default')
         )
+
+    def clean_description(self):
+        """
+        Clean and sanitize the 'description' field using the allowed tags/attrs/styles
+        from Django settings (similar to your EventForm).
+        """
+        raw_description = self.cleaned_data.get('description', '')
+        safe_html = sanitize_html(
+            html=raw_description,
+            allowed_tags=settings.ALLOWED_HTML_TAGS_INPUT,
+            allowed_attrs=settings.ALLOWED_HTML_ATTRIBUTES_INPUT,
+            allowed_styles=settings.ALLOWED_HTML_STYLES_INPUT
+        )
+        return safe_html
 
     def clean_tags(self):
         """

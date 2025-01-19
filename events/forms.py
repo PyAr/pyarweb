@@ -4,9 +4,7 @@ from django import forms
 from django.conf import settings
 from django_summernote.widgets import SummernoteInplaceWidget
 from django.utils.translation import gettext_lazy as _
-
-from sanitizer.forms import SanitizedCharField
-
+from .html_sanitizer import sanitize_html
 from .models import Event, EventParticipation
 from .mixins import CrispyFormMixin, ReadOnlyFieldsMixin
 
@@ -21,11 +19,11 @@ HAS_SPONSORS_HELP_TEXT = _(
 
 class EventForm(CrispyFormMixin):
 
-    description = SanitizedCharField(
-        allowed_tags=settings.ALLOWED_HTML_TAGS_INPUT,
-        allowed_attributes=settings.ALLOWED_HTML_ATTRIBUTES_INPUT,
-        allowed_styles=settings.ALLOWED_HTML_STYLES_INPUT,
-        strip=False, widget=SummernoteInplaceWidget())
+    description = forms.CharField(
+        widget=SummernoteInplaceWidget(),
+        required=False,
+        label=_("Descripción")
+    )
 
     start_at = forms.SplitDateTimeField(
         required=True,
@@ -72,15 +70,30 @@ class EventForm(CrispyFormMixin):
             'has_sponsors': HAS_SPONSORS_HELP_TEXT,
         }
 
+    def clean_description(self):
+        """
+        Clean and sanitize the 'description' field using the allowed tags/attrs/styles
+        from Django settings.
+        """
+        raw_description = self.cleaned_data.get('description', '')
+        safe_html = sanitize_html(
+            html=raw_description,
+            allowed_tags=settings.ALLOWED_HTML_TAGS_INPUT,
+            allowed_attrs=settings.ALLOWED_HTML_ATTRIBUTES_INPUT,
+            allowed_styles=settings.ALLOWED_HTML_STYLES_INPUT
+        )
+        return safe_html
+
     def clean(self):
         cleaned_data = super().clean()
         start_at = cleaned_data.get('start_at')
         end_at = cleaned_data.get('end_at')
-        if start_at is not None and end_at is not None:
-            if start_at > end_at:
-                msg = 'La fecha de inicio es menor a la fecha de finalizacion'
-                self._errors['start_at'] = [_(msg)]
-                self._errors['end_at'] = [_(msg)]
+
+        if start_at and end_at and start_at > end_at:
+            msg = 'La fecha de inicio es menor a la fecha de finalizacion'
+            self._errors['start_at'] = [_(msg)]
+            self._errors['end_at'] = [_(msg)]
+
         return cleaned_data
 
     def save(self, *args, **kwargs):
