@@ -3,7 +3,7 @@ from crispy_forms.layout import Field
 from django import forms
 from django.conf import settings
 from django_summernote.widgets import SummernoteInplaceWidget
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from sanitizer.forms import SanitizedCharField
 
@@ -73,7 +73,7 @@ class EventForm(CrispyFormMixin):
         }
 
     def clean(self):
-        cleaned_data = super(EventForm, self).clean()
+        cleaned_data = super().clean()
         start_at = cleaned_data.get('start_at')
         end_at = cleaned_data.get('end_at')
         if start_at is not None and end_at is not None:
@@ -84,7 +84,7 @@ class EventForm(CrispyFormMixin):
         return cleaned_data
 
     def save(self, *args, **kwargs):
-        super(EventForm, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.instance.save()
 
 
@@ -113,7 +113,7 @@ class AnonymousEventParticipationForm(CrispyFormMixin):
         )
         help_texts = {
             'interest': _('¿Qué temas de Python te interesaría ver en una charla?'),
-            'gender':  _('Queremos reducir la brecha de género. Este dato nos ayuda.'),
+            'gender': _('Queremos reducir la brecha de género. Este dato nos ayuda.'),
             'cv': 'Dejanos un link a tu CV, perfil de LinkedIn o algo similar'
         }
 

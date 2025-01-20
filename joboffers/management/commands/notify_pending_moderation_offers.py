@@ -15,13 +15,13 @@ def notify_pending_moderation_offers():
     """
     expiration_date = timezone.now() - timedelta(days=PENDING_MODERATION_OFFER_DAYS)
     joboffers = JobOffer.objects.filter(
-      state=OfferState.MODERATION, modified_at__lte=expiration_date
+        state=OfferState.MODERATION, modified_at__lte=expiration_date
     )
 
     for joboffer in joboffers:
         message = TELEGRAM_PENDING_MODERATION_MESSAGE.format(
-          offer_url=joboffer.get_absolute_url(),
-          moderation_reminder_days=PENDING_MODERATION_OFFER_DAYS
+            offer_url=joboffer.get_full_url(),
+            moderation_reminder_days=PENDING_MODERATION_OFFER_DAYS
         )
 
         send_notification_to_moderators(message)
@@ -38,9 +38,8 @@ class Command(BaseCommand):
         offers_notifed = notify_pending_moderation_offers()
 
         self.stdout.write(
-          self.style.SUCCESS(
-            _('Se enviaron {offers_notified} recordatorios de moderación.').format(
-              offers_notified=offers_notifed
+            self.style.SUCCESS(
+                _('Se enviaron {offers_notified} recordatorios de moderación.').format(
+                    offers_notified=offers_notifed)
             )
-          )
         )

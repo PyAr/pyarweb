@@ -223,6 +223,10 @@ class JobOffer(models.Model):
 
         super().save(*args, **kwargs)
 
+    @property
+    def allows_remote_work(self):
+        return self.remoteness == Remoteness.REMOTE
+
     @classmethod
     def get_options(cls):
         """

@@ -10,6 +10,7 @@ from ..publishers.discourse import DiscoursePublisher
 from ..publishers.facebook import FacebookPublisher
 from ..publishers.telegram import TelegramPublisher
 from ..publishers.twitter import TwitterPublisher
+from ..publishers.mastodon import MastodonPublisher
 from ..models import OfferState
 from .factories import JobOfferFactory
 
@@ -78,21 +79,24 @@ def test_publisher_publish_error():
 @pytest.mark.django_db
 @patch('joboffers.publishers.publish_offer')
 def test_publisher_to_all_social_networks_works_ok(publish_offer_function, settings):
-    """
-    Test that publish_to_all_social_networks() uses all the condifured publishers
-    """
+    """Test that publish_to_all_social_networks() uses all the configured publishers."""
     joboffer = JobOfferFactory.create(state=OfferState.ACTIVE)
     settings.SOCIAL_NETWORKS_PUBLISHERS = [
-      'joboffers.publishers.discourse.DiscoursePublisher',
-      'joboffers.publishers.facebook.FacebookPublisher',
-      'joboffers.publishers.telegram.TelegramPublisher',
-      'joboffers.publishers.twitter.TwitterPublisher'
+        'joboffers.publishers.discourse.DiscoursePublisher',
+        'joboffers.publishers.facebook.FacebookPublisher',
+        'joboffers.publishers.telegram.TelegramPublisher',
+        'joboffers.publishers.twitter.TwitterPublisher',
+        'joboffers.publishers.mastodon.MastodonPublisher',
     ]
 
     publish_to_all_social_networks(joboffer)
 
     expected_publishers = [
-      DiscoursePublisher, FacebookPublisher, TelegramPublisher, TwitterPublisher
+        DiscoursePublisher,
+        FacebookPublisher,
+        TelegramPublisher,
+        TwitterPublisher,
+        MastodonPublisher,
     ]
 
     assert publish_offer_function.called

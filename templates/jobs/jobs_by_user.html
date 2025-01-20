@@ -18,7 +18,7 @@
                         <a href='/companies/add'>Add your company</a>
                       </article>
                   {% else %}
-                  {% for company in companies %} 
+                  {% for company in companies %}
                     <article class="list-group-item">
                       <h4 class="list-group-item-heading">{{ company.link }}</h4>
                       <a href='/companies/{{company.id}}/edit'>{{company.link}}</a>
@@ -28,7 +28,7 @@
             </section>
         </div>
         <div class="col-md-5">
-        
+
             <!-- SeachBox -->
 
             <form id="search-form" class="input-group" role="form">
@@ -46,7 +46,7 @@
                 <header class="list-group-item">
                     <h3 class="list-group-item-heading">Próximos eventos</h3>
                 </header>
-                {% for i in 4|get_range %} 
+                {% for i in 4|get_range %}
                     <article class="list-group-item">
                         <h4 class="list-group-item-heading">PyCon Argentina</h4>
                         <p class="list-group-item-text"><span>23 de Agosto de 2012</span> | <span>20:00 hs</span> | <span>Audotorio UnQui</span></p>
@@ -54,19 +54,6 @@
                 {% endfor %}
             </section>
 
-            <!-- Planeta PyAr -->
-
-            <section class="list-group">
-                <header class="list-group-item">
-                    <h3 class="list-group-item-heading">Planeta PyAr</h3>
-                </header>
-                {% for i in 4|get_range %} 
-                    <article class="list-group-item">
-                        <h4 class="list-group-item-heading">Mi experiencia con PyQT y HTML5</h4>
-                        <p class="list-group-item-text"><span class="text-muted">via: </span><span>http://elblogdefulanito...</span><span class="text-muted"> | 23-05-2012 | 22:05</span></p>
-                    </article>
-                {% endfor %}
-            </section>
         </div>
     </div>
 </main>

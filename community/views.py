@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 """Handle the Views of the Homepage and others."""
 
 from django.db.models import F, Value, CharField
@@ -10,7 +7,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
 from django.utils.timezone import now
 from events.models import Event
-from jobs.models import Job
+from joboffers.models import JobOffer, OfferState
 from news.models import NewsArticle
 
 RECENT_ITEMS_LEN = 10
@@ -26,9 +23,8 @@ class HomePageView(TemplateView):
     template_name = "community/index.html"
 
     def get_events_for_context(self):
-        """Ensure events have 'category', created' and 'title' fields"""
+        """Get events annotated for proper usage."""
         events = Event.objects.filter(start_at__lt=now())
-        events = events.order_by('-start_at')
         events = events.annotate(
             created=F('start_at'),
             title=F('name'),
@@ -36,13 +32,16 @@ class HomePageView(TemplateView):
         return aux_qs_to_list_for_context(events)
 
     def get_jobs_for_context(self):
-        """Ensure jobs have a 'category' field"""
-        jobs = Job.objects.order_by('-created')
-        jobs = jobs.annotate(category=Value('Trabajos', output_field=CharField()))
+        """Get jobs annotated for proper usage."""
+        jobs = JobOffer.objects.filter(state=OfferState.ACTIVE)
+        jobs = jobs.annotate(
+            category=Value('Trabajos', output_field=CharField()),
+            created=F('created_at'),
+        )
         return aux_qs_to_list_for_context(jobs)
 
     def get_news_for_context(self):
-        """Ensure news have 'category' and 'description' fields"""
+        """Get news annotated for proper usage."""
         news = NewsArticle.objects.order_by('-created')
         news = news.annotate(
             description=F('body'),
@@ -57,7 +56,7 @@ class HomePageView(TemplateView):
         # Sort the last news, jobs and events to define the definitive 'recent' list
         recent = sorted(news + jobs + events, key=lambda r: r.created, reverse=True)
 
-        context = super(HomePageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['recent'] = recent[:RECENT_ITEMS_LEN]
         return context
 
@@ -82,7 +81,7 @@ class OwnedObject(SingleObjectMixin):
         before allowing manipulation. """
 
     def get_object(self, *args, **kwargs):
-        obj = super(OwnedObject, self).get_object(*args, **kwargs)
+        obj = super().get_object(*args, **kwargs)
         return validate_obj_owner(obj, self.request.user)
 
 
@@ -100,7 +99,7 @@ class FilterableList(MultipleObjectMixin):
                     self.included_tags.append(k[4:])
                 elif v == '2':
                     self.excluded_tags.append(k[4:])
-        return super(FilterableList, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def filter_queryset_tags(self, obj_list):
         included = self.included_tags
@@ -112,10 +111,10 @@ class FilterableList(MultipleObjectMixin):
         return obj_list
 
     def get_queryset(self):
-        return self.filter_queryset_tags(super(FilterableList, self).get_queryset())
+        return self.filter_queryset_tags(super().get_queryset())
 
     def get_context_data(self, **kwargs):
-        context = super(FilterableList, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['tags'] = self.model.tags.all()
         context['included'] = self.included_tags
         context['excluded'] = self.excluded_tags

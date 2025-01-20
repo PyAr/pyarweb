@@ -13,8 +13,8 @@
                 </div>
                 <div class="ma-5" style="margin-top:15px;">
                   <label>
-                    <input name="active" type="hidden" value="{{ active|yesno:'false,true' }}">
-                    <input id="show-active" type="checkbox" {% if not active %}checked{% endif %} />
+                    <input name="active" type="hidden" value="{{ active|yesno:'true,false' }}">
+                    <input id="show-active" type="checkbox" {% if active %}checked{% endif %} />
                     {% trans 'Mostrar solo ofertas activas' %}
                   </label>
                 </div>
@@ -25,7 +25,7 @@
         </header>
         <article class="list-group-item" style="padding:30px;">
             <div class="row">
-                    {% for tag in tags %}
+                    {% for tag in usefultags %}
                     <select name="tag_{{ tag.slug }}" id="tag_{{ tag.slug }}" class="hidden">
                         <option value=""></option>
                         <option value="1" {% if tag.slug in included %}selected{% endif %}></option>

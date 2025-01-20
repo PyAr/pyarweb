@@ -1,6 +1,4 @@
-
 from dataclasses import dataclass
-from typing import Set
 
 from django.db.models import Q
 
@@ -187,7 +185,7 @@ def get_valid_actions(user, joboffer=None, roles=None):
     else:
         roles_ = roles
 
-    actions: Set[str] = set()
+    actions: set[str] = set()
 
     for role in roles_:
         # Appends the actions for every role

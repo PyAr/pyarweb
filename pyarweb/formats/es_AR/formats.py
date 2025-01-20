@@ -1,6 +1,3 @@
-# -*- encoding: utf-8 -*-
-
-
 # The *_FORMAT strings use the Django date format syntax,
 # see http://docs.djangoproject.com/en/dev/ref/templates/builtins/#date
 DATE_FORMAT = r'j \d\e N \d\e Y'

@@ -13,31 +13,32 @@ from django.utils.translation import gettext as _
 from django.views.generic import ListView, View, FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
+from taggit.models import Tag
 
 from community.views import FilterableList
 from pycompanies.models import UserCompanyProfile
 from .constants import (
-  ACTION_BUTTONS,
-  APPROVED_MAIL_SUBJECT,
-  APPROVED_MAIL_BODY,
-  CODE_ANALYTICS,
-  CODE_APPROVE,
-  CODE_CREATE,
-  CODE_DEACTIVATE,
-  CODE_EDIT,
-  CODE_HISTORY,
-  CODE_REACTIVATE,
-  CODE_REJECT,
-  CODE_REQUEST_MODERATION,
-  PUBLISHER_FAILED_ERROR,
-  REACTIVATED_MAIL_BODY,
-  REACTIVATED_MAIL_SUBJECT,
-  REJECTED_MAIL_SUBJECT,
-  REJECTED_MAIL_BODY,
-  STATE_LABEL_CLASSES,
-  TELEGRAM_APPROVED_MESSAGE,
-  TELEGRAM_MODERATION_MESSAGE,
-  TELEGRAM_REJECT_MESSAGE
+    ACTION_BUTTONS,
+    APPROVED_MAIL_SUBJECT,
+    APPROVED_MAIL_BODY,
+    CODE_ANALYTICS,
+    CODE_APPROVE,
+    CODE_CREATE,
+    CODE_DEACTIVATE,
+    CODE_EDIT,
+    CODE_HISTORY,
+    CODE_REACTIVATE,
+    CODE_REJECT,
+    CODE_REQUEST_MODERATION,
+    PUBLISHER_FAILED_ERROR,
+    REACTIVATED_MAIL_BODY,
+    REACTIVATED_MAIL_SUBJECT,
+    REJECTED_MAIL_SUBJECT,
+    REJECTED_MAIL_BODY,
+    STATE_LABEL_CLASSES,
+    TELEGRAM_APPROVED_MESSAGE,
+    TELEGRAM_MODERATION_MESSAGE,
+    TELEGRAM_REJECT_MESSAGE
 )
 from .forms import JobOfferForm, JobOfferCommentForm
 from .joboffer_actions import get_valid_actions
@@ -48,9 +49,7 @@ from .utils import get_visualization_data, get_visualizations_graph, send_mail_t
 
 
 class JobOfferObjectMixin(SingleObjectMixin):
-    """
-    Adds permission checking to the matching joboffer
-    """
+    """Add permission checking to the matching joboffer."""
 
     action_code: str
 
@@ -253,16 +252,16 @@ class JobOfferRejectView(
 
         subject = REJECTED_MAIL_SUBJECT
         body = REJECTED_MAIL_BODY.format(
-          reason=offer_comment.get_comment_type_display(),
-          text=offer_comment.text,
-          title=offer.title
+            reason=offer_comment.get_comment_type_display(),
+            text=offer_comment.text,
+            title=offer.title
         )
 
         send_mail_to_publishers(offer, subject, body)
 
         moderators_message = TELEGRAM_REJECT_MESSAGE.format(
-          offer_url=offer.get_full_url(),
-          username=user.username
+            offer_url=offer.get_full_url(),
+            username=user.username
         )
 
         send_notification_to_moderators(moderators_message)
@@ -300,14 +299,14 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
         user = self.request.user
 
         send_mail_to_publishers(
-          offer,
-          APPROVED_MAIL_SUBJECT,
-          APPROVED_MAIL_BODY.format(title=offer.title)
+            offer,
+            APPROVED_MAIL_SUBJECT,
+            APPROVED_MAIL_BODY.format(title=offer.title)
         )
 
         moderators_message = TELEGRAM_APPROVED_MESSAGE.format(
-          offer_url=offer.get_full_url(),
-          username=user.username
+            offer_url=offer.get_full_url(),
+            username=user.username
         )
 
         send_notification_to_moderators(moderators_message)
@@ -316,9 +315,9 @@ class JobOfferApproveView(LoginRequiredMixin, TransitionView):
 
         for publisher_failed in publishers_failed:
             messages.add_message(
-              self.request,
-              messages.ERROR,
-              PUBLISHER_FAILED_ERROR.format(publisher=publisher_failed)
+                self.request,
+                messages.ERROR,
+                PUBLISHER_FAILED_ERROR.format(publisher=publisher_failed)
             )
 
 
@@ -332,9 +331,9 @@ class JobOfferReactivateView(LoginRequiredMixin, TransitionView):
         offer.save()
 
         send_mail_to_publishers(
-          offer,
-          REACTIVATED_MAIL_SUBJECT,
-          REACTIVATED_MAIL_BODY.format(title=offer.title)
+            offer,
+            REACTIVATED_MAIL_SUBJECT,
+            REACTIVATED_MAIL_BODY.format(title=offer.title)
         )
 
 
@@ -360,9 +359,7 @@ class JobOfferRequestModerationView(LoginRequiredMixin, TransitionView):
         offer.state = OfferState.MODERATION
         offer.save()
 
-        moderators_message = TELEGRAM_MODERATION_MESSAGE.format(
-          offer_url=offer.get_full_url()
-        )
+        moderators_message = TELEGRAM_MODERATION_MESSAGE.format(offer_url=offer.get_full_url())
 
         send_notification_to_moderators(moderators_message)
 
@@ -421,7 +418,8 @@ class JobOfferListView(ListView, FilterableList):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        if self.request.GET.get('active') == 'false':
+        user_requested_active = self.request.GET.get('active') == 'true'
+        if user_requested_active:
             context['active'] = True
         else:
             context['active'] = False
@@ -430,6 +428,15 @@ class JobOfferListView(ListView, FilterableList):
             context['search'] = self.request.GET.get('search')
 
         context['user'] = self.request.user
+
+        # if only shown active job offers, get the tags considering only those offers (otherwise
+        # just use all the tags as already calculated by the taggit module)
+        if user_requested_active:
+            active_jobffers_ids = {
+                jo.id for jo in JobOffer.objects.filter(state=OfferState.ACTIVE)}
+            context["usefultags"] = Tag.objects.filter(joboffer__in=active_jobffers_ids)
+        else:
+            context["usefultags"] = context["tags"]
 
         user_company = UserCompanyProfile.objects.for_user(user=self.request.user)
         if user_company:
@@ -520,8 +527,12 @@ class DownloadAnalyticsAsCsv(JobOfferObjectMixin, View):
         writer = csv.writer(response)
 
         writer.writerow([
-          _('Fecha'), _('Hora'), _('ID. Oferta'), _('Titulo de la Oferta'), _('Código de Evento'),
-          _('Evento')
+            _('Fecha'),
+            _('Hora'),
+            _('ID. Oferta'),
+            _('Titulo de la Oferta'),
+            _('Código de Evento'),
+            _('Evento')
         ])
 
         writer.writerows(data)

@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic import ListView
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from community.views import OwnedObject, FilterableList
 from .models import NewsArticle
 from .forms import NewsArticleForm
@@ -37,7 +37,7 @@ class NewsArticleCreate(CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(NewsArticleCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class NewsArticleDelete(DeleteView, OwnedObject):
@@ -52,7 +52,7 @@ class NewsArticleUpdate(UpdateView, OwnedObject):
     form_class = NewsArticleForm
 
     def get_context_data(self, **kwargs):
-        context = super(NewsArticleUpdate, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['page_title'] = _('Editar noticia')
         return context
 

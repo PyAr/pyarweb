@@ -902,6 +902,34 @@ def test_joboffer_list_view_render_the_joboffer_that_contains_the_given_tag(clie
 
 
 @pytest.mark.django_db
+def test_joboffer_list_view_taglist_all_offers(publisher_client):
+    """Verify which tags are shown on a mix of active/expired offers when showing all of them."""
+    client = publisher_client
+    JobOfferFactory.create(
+        state=OfferState.ACTIVE, title="First Joboffer", tags=["tag1", "tag2"])
+    JobOfferFactory.create(
+        state=OfferState.EXPIRED, title="Second Joboffer", tags=["tag2", "tag3"])
+
+    response = client.get(reverse(LIST_URL), {'active': 'false'})
+
+    assert sorted(t.slug for t in response.context_data['usefultags']) == ["tag1", "tag2", "tag3"]
+
+
+@pytest.mark.django_db
+def test_joboffer_list_view_taglist_only_active_offers(publisher_client):
+    """Verify which tags are shown on a mix of active/expired offers when showing active only."""
+    client = publisher_client
+    JobOfferFactory.create(
+        state=OfferState.ACTIVE, title="First Joboffer", tags=["tag1", "tag2"])
+    JobOfferFactory.create(
+        state=OfferState.EXPIRED, title="Second Joboffer", tags=["tag2", "tag3"])
+
+    response = client.get(reverse(LIST_URL), {'active': 'true'})
+
+    assert sorted(t.slug for t in response.context_data['usefultags']) == ["tag1", "tag2"]
+
+
+@pytest.mark.django_db
 def test_joboffer_list_view_count(client, joboffers_list):
     """
     Test that accessing the joboffer's list page only gives one view

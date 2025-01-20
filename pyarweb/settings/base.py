@@ -53,7 +53,6 @@ INSTALLED_APPS = (
     'community',
     'news',
     'pycompanies',
-    'jobs',
     'events',
     'joboffers',
     # 3rd party apps
@@ -98,7 +97,7 @@ WSGI_APPLICATION = 'pyarweb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME', os.environ.get("POSTGRES_DB", "pyarweb")),
         'USER': os.environ.get('DB_USER', os.environ.get("POSTGRES_USER", "postgres")),
         'PASSWORD': os.environ.get('DB_PASS', os.environ.get("POSTGRES_PASSWORD", "")),
@@ -191,7 +190,6 @@ DBBACKUP_BACKUP_DIRECTORY = os.path.join(BASE_DIR, '_backups')
 #
 CAPTCHA_LENGTH = 6
 CAPTCHA_FLITE_PATH = "/usr/bin/flite"
-CAPTCHA_IMAGE_TEMPLATE = "account/custom_captcha.html"
 
 ALLOWED_HTML_TAGS_INPUT = [
     'a',
@@ -245,7 +243,7 @@ TAGGIT_CASE_INSENSITIVE = True
 
 GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')
 
-ACCOUNT_FORMS = {'signup': 'pyarweb.forms.SingupFormWithCaptcha'}
+ACCOUNT_FORMS = {'signup': 'pyarweb.forms.SignupFormWithCaptcha'}
 
 DJANGO_EASY_AUDIT_WATCH_AUTH_EVENTS = False
 DJANGO_EASY_AUDIT_WATCH_REQUEST_EVENTS = False
@@ -278,15 +276,22 @@ TWITTER_ACCESS_SECRET = os.environ.get('TWITTER_ACCESS_SECRET')
 TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
 
+# Mastodon constants
+MASTODON_AUTH_TOKEN = os.environ.get('MASTODON_AUTH_TOKEN')
+MASTODON_API_BASE_URL = os.environ.get('MASTODON_API_BASE_URL')
+
 # Discourse constants
-DISCOURSE_HOST = os.environ.get('DISCOURSE_HOST')
+DISCOURSE_BASE_URL = os.environ.get('DISCOURSE_BASE_URL')
 DISCOURSE_API_KEY = os.environ.get('DISCOURSE_API_KEY')
 DISCOURSE_USERNAME = os.environ.get('DISCOURSE_USERNAME')
 DISCOURSE_CATEGORY = os.environ.get('DISCOURSE_CATEGORY')
 
 SOCIAL_NETWORKS_PUBLISHERS = [
-  'joboffers.publishers.discourse.DiscoursePublisher',
-  'joboffers.publishers.facebook.FacebookPublisher',
-  'joboffers.publishers.telegram.TelegramPublisher',
-  'joboffers.publishers.twitter.TwitterPublisher'
+    'joboffers.publishers.discourse.DiscoursePublisher',
+    'joboffers.publishers.facebook.FacebookPublisher',
+    'joboffers.publishers.telegram.TelegramPublisher',
+    'joboffers.publishers.twitter.TwitterPublisher',
+    'joboffers.publishers.mastodon.MastodonPublisher',
 ]
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

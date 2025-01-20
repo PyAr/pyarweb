@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import csv
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Div
 from django import forms
 from django.http import HttpResponse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 
 from .models import Event, EventParticipation
@@ -29,7 +28,7 @@ class CrispyFormMixin(forms.ModelForm):
         return self.Meta.fields
 
 
-class EventMixin(object):
+class EventMixin:
     """Mixin for common attrs."""
 
     model = Event
@@ -38,7 +37,7 @@ class EventMixin(object):
         return reverse_lazy('events:events_list_all')
 
 
-class EventParticipationMixin(object):
+class EventParticipationMixin:
     """Mixin for common attrs."""
 
     model = EventParticipation
@@ -51,13 +50,13 @@ class EventParticipationMixin(object):
         return reverse_lazy('events:detail', kwargs={'pk': self.kwargs['pk']})
 
 
-class ReadOnlyFieldsMixin(object):
+class ReadOnlyFieldsMixin:
     """Adds the posibility to declare fields as read-only (until we update to Django 1.9 or so"""
 
     readonly_fields = ()
 
     def __init__(self, *args, **kwargs):
-        super(ReadOnlyFieldsMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in (field for name, field in self.fields.items() if
                       name in self.readonly_fields):
             field.widget.attrs['disabled'] = 'true'
@@ -66,10 +65,10 @@ class ReadOnlyFieldsMixin(object):
     def clean(self):
         for f in self.readonly_fields:
             self.cleaned_data.pop(f, None)
-        return super(ReadOnlyFieldsMixin, self).clean()
+        return super().clean()
 
 
-class CSVResponseMixin(object):
+class CSVResponseMixin:
     """Return a csv file based on a list of lists."""
     csv_filename = 'csvfile.csv'
 
@@ -84,7 +83,7 @@ class CSVResponseMixin(object):
 
     def render_to_csv(self):
         response = HttpResponse(content_type='text/csv')
-        cd = 'attachment; filename="{0}"'.format(self.get_csv_filename())
+        cd = f'attachment; filename="{self.get_csv_filename()}"'
         response['Content-Disposition'] = cd
 
         writer = csv.writer(response)

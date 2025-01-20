@@ -1,19 +1,26 @@
-from braces.views import LoginRequiredMixin
-from community.views import validate_obj_owner, OwnedObject
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
+from django.core.mail import send_mail
 from django.http import Http404, HttpResponseRedirect
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import (CreateView,
-                                       UpdateView,
-                                       DeleteView)
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from django.views import View
+from django.views.generic import DetailView, ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from .forms import EventForm, AnonymousEventParticipationForm, AuthenticatedEventParticipationForm
+from community.views import OwnedObject, validate_obj_owner
+
+from .forms import (
+    AnonymousEventParticipationForm,
+    AuthenticatedEventParticipationForm,
+    EventForm,
+)
+from .mixins import CSVResponseMixin, EventMixin, EventParticipationMixin
 from .models import Event, EventParticipation
-from .mixins import EventMixin, EventParticipationMixin, CSVResponseMixin
 
 
 class EventsFeed(Feed):
@@ -47,7 +54,7 @@ class EventList(ListView):
     context_object_name = "eventos_pasados"
 
     def get_context_data(self, **kwargs):
-        context = super(EventList, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['eventos_proximos'] = Event.objects.filter(
             end_at__gte=timezone.now()).order_by('start_at')
 
@@ -79,7 +86,7 @@ class EventDetail(EventMixin, DetailView):
         return details
 
     def get_context_data(self, **kwargs):
-        context = super(EventDetail, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context.update(self.user_participation_details())
         return context
 
@@ -89,7 +96,7 @@ class EventCreate(LoginRequiredMixin, EventMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(EventCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class EventUpdate(LoginRequiredMixin, EventMixin, OwnedObject, UpdateView):
@@ -208,7 +215,7 @@ class EventParticipationDetail(LoginRequiredMixin, SuccessMessageMixin, EventPar
 
 
 class EventParticipationList(LoginRequiredMixin, ListView):
-    http_method_names = [u'get']
+    http_method_names = ['get']
     context_object_name = 'participants'
 
     def __init__(self, *args, **kwargs):
@@ -217,7 +224,7 @@ class EventParticipationList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """Overwrite get_context_data to add the related Event's ID to the template context."""
-        context = super(EventParticipationList, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['event'] = self.event
         return context
 
@@ -239,7 +246,7 @@ class EventParticipationDelete(LoginRequiredMixin, EventParticipationMixin, Dele
     def get_object(self, *args, **kwargs):
         """A User can delete its participation to an Event. The Event owner can also do that."""
 
-        inscription = super(EventParticipationDelete, self).get_object(*args, **kwargs)
+        inscription = super().get_object(*args, **kwargs)
         if self.request.user not in [inscription.user, inscription.event.owner]:
             raise Http404()
         return inscription
@@ -249,7 +256,7 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
     def get_csv_filename(self):
         event = self.event.name.lower().replace(' ', '_')
         timestamp = timezone.now().isoformat().replace(':', '').replace('-', '').split('.')[0]
-        return '{0}-{1}.csv'.format(event, timestamp)
+        return f'{event}-{timestamp}.csv'
 
     def get_rows(self):
         columns = ('Nombre', 'Correo electrónico', 'Género', 'Nivel', 'Usuario PyAr',
@@ -268,3 +275,35 @@ class EventParticipationDownload(CSVResponseMixin, EventParticipationList):
         if self.event.has_sponsors:
             row += (obj.cv, obj.share_with_sponsors)
         return row
+
+
+class ReportEventView(LoginRequiredMixin, View):
+    def post(self, request, event_id):
+        event = get_object_or_404(Event, pk=event_id)
+        try:
+            message = (
+                f"El evento '{event.name}' ha sido reportado por el usuario "
+                f"{request.user.username}. \n\n"
+                f"Detalles del evento:\n"
+                f"Nombre: {event.name}\n"
+                f"Descripción: {event.description}\n"
+                f"Lugar: {event.place}\n"
+                f"Fecha y hora: {event.start_at}\n\n"
+                f"Ver más detalles: {request.build_absolute_uri(event.get_absolute_url())}"
+            )
+            # Send email to admin
+            send_mail(
+                subject=f"Reporte de evento: {event.name}",
+                message=message,
+                from_email="noreply@python.org.ar",
+                recipient_list=["admin@python.org.ar"],
+                fail_silently=False,
+            )
+
+            txt = "El evento ha sido reportado correctamente. Gracias por tu colaboración."
+            messages.success(request, txt)
+            return redirect(reverse_lazy("events:events_list_all"))
+        except Exception:
+            txt = "Ocurrió un error al reportar el evento. Por favor, intentá nuevamente."
+            messages.error(request, txt)
+            return redirect(reverse_lazy("events:events_list_all"))
