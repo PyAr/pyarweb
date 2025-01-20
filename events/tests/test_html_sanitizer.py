@@ -167,8 +167,8 @@ class SanitizeHTMLTests(TestCase):
     def test_dynamic_allowed_tags(self):
         """Ensure that sanitizer uses dynamically overridden settings."""
         input_html = (
-            "<p>Paragraph with"
-            '<a href="https://example.com" title="Example">link</a>'
+            "<p>Paragraph with "
+            '<a href="https://example.com" title="Example">link</a> '
             "and <b>bold</b>.</p>"
         )
         # With settings overridden, 'a' allows 'href' only, 'b' is disallowed
