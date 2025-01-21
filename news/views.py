@@ -37,7 +37,7 @@ class NewsArticleCreate(CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(NewsArticleCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class NewsArticleDelete(DeleteView, OwnedObject):
@@ -52,7 +52,7 @@ class NewsArticleUpdate(UpdateView, OwnedObject):
     form_class = NewsArticleForm
 
     def get_context_data(self, **kwargs):
-        context = super(NewsArticleUpdate, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['page_title'] = _('Editar noticia')
         return context
 

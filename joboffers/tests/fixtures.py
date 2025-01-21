@@ -35,7 +35,7 @@ def create_admin_client(client, admin_user):
     return client
 
 
-class DummyTelegram(object):
+class DummyTelegram:
     """
     Convenience wrapper of requests mock to simulate telegram responses and tests messages sent
     """

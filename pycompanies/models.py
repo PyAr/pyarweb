@@ -20,7 +20,7 @@ class Company(TimeStampedModel):
         return reverse('companies:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return u'%s' % self.name
+        return '%s' % self.name
 
 
 class UserCompanyProfileManager(models.Manager):
