@@ -71,7 +71,6 @@ INSTALLED_APPS = (
     'email_obfuscator',
     'dbbackup',
     'captcha',
-    'sanitizer',
     'easyaudit',
 )
 
@@ -224,6 +223,10 @@ ALLOWED_HTML_TAGS_INPUT = [
     'ul',
     'ol',
     'div',
+    'strong',
+    'em',
+    'span',
+    'i',
 ]
 ALLOWED_HTML_ATTRIBUTES_INPUT = [
     'href',
@@ -232,13 +235,20 @@ ALLOWED_HTML_ATTRIBUTES_INPUT = [
     'width',
     'class',
     'face',
+    'title',
 ]
 ALLOWED_HTML_STYLES_INPUT = [
     'text-align',
     'margin-left',
     'background-color',
     'font-size',
+    'font-weight',
+    'color',
 ]
+ALLOWED_URL_SCHEMES = {
+    'href': ['http', 'https', 'mailto', 'tel'],
+    'src': ['http', 'https', 'data'],
+}
 TAGGIT_CASE_INSENSITIVE = True
 
 GOOGLE_TRACKING_ID = os.environ.get('GOOGLE_TRACKING_ID', '')

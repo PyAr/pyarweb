@@ -1,7 +1,6 @@
-from braces.views import LoginRequiredMixin
-
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
 from django.shortcuts import redirect, render
