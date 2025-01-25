@@ -1,6 +1,6 @@
 name: Tests
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
       # Label used to access the service container
       postgres2:
         # Docker Hub image
-        image: postgres:9.4
+        image: postgres:11.5
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: somepassword
@@ -26,32 +26,52 @@ jobs:
           --health-retries 5
     strategy:
       matrix:
-        python-version: [3.6, 3.7]
+        python-version: [3.9]
     env:
-      DJANGO: 1.8 
+      DJANGO: 3.0
       SECRET_KEY: supersecret
-      DB_PORT: 5432 
+      DB_PORT: 5432
       POSTGRES_HOST: localhost
       POSTGRES_PASSWORD: somepassword
       POSTGRES_USER: postgres
       POSTGRES_DB: testing_db
       DJANGO_SETTINGS_MODULE: pyarweb.settings.development
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install system libraries
         run: |
           sudo apt-get install -y libpq-dev libxml2-dev libxslt1-dev
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/dev_requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r dev_requirements.txt
-      - name: Lint with flake8
+
+      - name: Check Code Style
+        uses: pre-commit/action@v3.0.1
+
+      - name: Check for Django migrations
         run: |
-          flake8
+          python manage.py makemigrations --dry-run --check
+
+      - name: Run migrations
+        run: |
+          python manage.py migrate
+
       - name: Run tests
         run: |
-          python3 manage.py test -v2 --noinput
+          pytest -v

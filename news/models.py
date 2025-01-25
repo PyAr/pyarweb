@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from taggit_autosuggest.managers import TaggableManager
 from model_utils.models import TimeStampedModel
 
@@ -21,7 +21,7 @@ class NewsArticle(TimeStampedModel):
         return reverse('news_view', args=(self.id,))
 
     def __unicode__(self):
-        return u'{0}'.format(self.title)
+        return f'{self.title}'
 
     class Meta:
         ordering = ('-created',)

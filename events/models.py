@@ -1,21 +1,23 @@
-from django.db.models.signals import post_save
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
-from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
-from email_confirm_la.models import EmailConfirmation
 
 from autoslug import AutoSlugField
-
-from jobs.models import JOB_SENIORITIES
 
 
 GENDER_OPTIONS = (
     ('female', _('femenino')),
     ('male', _('masculino')),
     ('Otro', _('otro')),
+)
+
+JOB_SENIORITIES = (
+    ('Trainee', 'Trainee'),
+    ('Junior', 'Junior'),
+    ('Semi Senior', 'Semi Senior'),
+    ('Senior', 'Senior'),
+    ('Guido', 'Soy Guido Van Rossum'),
 )
 
 
@@ -59,7 +61,7 @@ class EventParticipation(models.Model):
         max_length=100,
         blank=True,
         default='',
-        choices=JOB_SENIORITIES + (('guido', _('Soy Guido Van Rossum')),),
+        choices=JOB_SENIORITIES,
         verbose_name=_('experiencia')
     )
 
@@ -80,9 +82,6 @@ class EventParticipation(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    email_confirmations = GenericRelation('email_confirm_la.EmailConfirmation',
-                                          content_type_field='content_type',
-                                          object_id_field='object_id')
 
     class Meta:
         unique_together = ("event", "email")
@@ -93,30 +92,8 @@ class EventParticipation(models.Model):
             result += " a %s" % self.event.name
         return result
 
-    def verify_email(self):
-        """Start the email-verification process with this instance's email attribute."""
-
-        EmailConfirmation.objects.verify_email_for_object(
-            email=self.email,
-            content_object=self,
-            email_field_name='email'
-        )
-
     @property
     def is_verified(self):
-        """An EventParticipation in confirmed once the user's email is verified.
-        Registered users' email is verified by default.
-
-        """
+        """An EventParticipation in confirmed if the user is registered."""
         is_a_pyar_user = self.user is not None
-        email_was_verified = not self.email_confirmations.exists()
-        return is_a_pyar_user or email_was_verified
-
-
-@receiver(post_save, sender=EventParticipation)
-def post_anonymous_participation_creation(sender, instance, created, **kwargs):
-    """After an EventParticipation is created, if it's anonymous (not a PyAr user), start the
-       email-verification process.
-    """
-    if created and instance.user is None:
-        instance.verify_email()
+        return is_a_pyar_user

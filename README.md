@@ -20,6 +20,13 @@ instrucciones generales en [esta página de la wiki](https://github.com/PyAr/pya
 
 podés ver las instrucciones en [esta página de la wiki](https://github.com/PyAr/pyarweb/wiki/Instalacion-con-Docker)
 
+## Lint & Format
+
+Para correr el linter y el formateador de código, podés correr:
+
+```bash
+make format
+```
 
 ## Más info
 

@@ -6,7 +6,7 @@ volumes:
 services:
   postgres:
       restart: always
-      image: postgres:9.4.4
+      image: postgres:11.5
       ports:
         - "5432:5432"
       volumes:
@@ -15,7 +15,7 @@ services:
         - POSTGRES_PASSWORD=secret
 
   web:
-      image: pyar/pyarweb:dev
+      image: pyarweb
       command: python3 manage.py runserver 0.0.0.0:8000
       volumes:
         - .:/code
@@ -31,3 +31,10 @@ services:
         - DB_PASS=secret
         - DB_SERVICE=postgres
         - DJANGO_SETTINGS_MODULE=pyarweb.settings.development
+        # These environment variables must be defined in a .env file or
+        # from the shell before starting the containers
+        - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+        - TELEGRAM_MODERATORS_CHAT_ID=${TELEGRAM_MODERATORS_CHAT_ID}
+        - TELEGRAM_PUBLIC_CHAT_ID=${TELEGRAM_PUBLIC_CHAT_ID}
+        - FACEBOOK_PAGE_ACCESS_TOKEN=${FACEBOOK_PAGE_ACCESS_TOKEN}
+        - FACEBOOK_PAGE_ID=${FACEBOOK_PAGE_ID}

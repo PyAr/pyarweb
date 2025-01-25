@@ -1,0 +1,53 @@
+{% extends "base_site.html" %}
+{% load devtags i18n static %}
+{% block title %}Ofertas laborales con Python{% endblock %}
+
+{% block left-column %}
+
+<!-- Job Offers List -->
+<section>
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2>{% trans 'Ofertas laborales con Python' %}
+                <span class="section-button-group pull-right">
+                    <a href="{% url 'joboffers:add' %}" class="btn btn-info">{% trans 'Publicar oferta laboral' %}</a>
+                </span>
+            </h2>
+        </div>
+        {% if object_list %}
+            {% for object in page_obj %}
+                <div class="{% if object.company.rank != 0 %} sponsored-jobs bg-info {% endif %} mp-10">
+                    <h4>
+                        <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>  <span class="job-date">{{ object.modified_at|date:"SHORT_DATE_FORMAT" }}, {{ object.location }}</span>
+                    </h4>
+                    <p>{{ object.short_description}}</p>
+                    <div class="text-muted">
+                    {% include "joboffers/_tags.html" %}
+                      <p><a href="{{ object.get_absolute_url }}">{% trans 'Leer más...' %}</a></p>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% include 'joboffers/_paginator.html' with page_obj=page_obj %}
+
+        {% else %}
+            <div class="col-md-12">
+                <p>{% trans 'La búsqueda no produjo resultados.' %}</p>
+            </div>
+        {% endif %}
+        <div class="pull-right">
+            <a href="{% url 'joboffers:feed' %}" class="badge">
+                <i class="fa fa-rss"></i> RSS
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block right-column %}
+  {% if user.is_authenticated %}
+    {% include "companies/_user_actions.html" %}
+  {% endif %}
+
+  {% include "_tags_filtering_form.html" %}
+{% endblock %}

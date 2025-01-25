@@ -1,5 +1,9 @@
 -r requirements.txt
-factory-boy==2.8.1
-ipython==5.3.0
-ipdb==0.10.2
-flake8==3.5.0
+pytest==6.2.5
+pytest-django==4.4.0
+factory-boy==3.2.1
+requests-mock==1.9.3
+ipython==8.10.0
+ipdb==0.13.9
+flake8==4.0.1
+pre-commit==4.0.1

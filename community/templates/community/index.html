@@ -33,7 +33,7 @@
 
             <article class="col-sm-4">
                 <div class="img proyectos_comunidad"></div>
-                <h3 class="text-center"><a href="{% url 'jobs_list_all' %}">Bolsa de Trabajo</a></h3>
+                <h3 class="text-center"><a href="{% url 'joboffers:list' %}">Bolsa de Trabajo</a></h3>
                 <p class="text-center">Ofrece o busca empleos relacionados con Python.</p>
             </article>
 
@@ -70,19 +70,19 @@
                 <div class="panel-body">
                     {% for article in recent %}
                     <article class="list-group-item">
-                        <time 
-                            class="published" 
-                            datetime="{{ article.created.isoformat }}" 
-                            itemprop="datePublished" 
+                        <time
+                            class="published"
+                            datetime="{{ article.created.isoformat }}"
+                            itemprop="datePublished"
                             title="{{ "Fecha de publicación" }}"
                         >
                             {{ article.created|date:"d/m/Y" }}
-                        </time> 
-                        <small class="text-muted"> 
+                        </time>
+                        <small class="text-muted">
                             - en {{ article.category }}
                         </small>
                         <h4 class="list-group-item-heading">
-                            <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                            <a href="{{ article.get_absolute_url }}#{{ article.title | slugify }}">{{ article.title }}</a>
                         </h4>
                         <p class="list-group-item-text">
                             {{ article.description|html2text|truncatewords:30 }}

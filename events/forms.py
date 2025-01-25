@@ -3,9 +3,8 @@ from crispy_forms.layout import Field
 from django import forms
 from django.conf import settings
 from django_summernote.widgets import SummernoteInplaceWidget
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
-from bootstrap3_datetime.widgets import DateTimePicker
 from sanitizer.forms import SanitizedCharField
 
 from .models import Event, EventParticipation
@@ -28,26 +27,26 @@ class EventForm(CrispyFormMixin):
         allowed_styles=settings.ALLOWED_HTML_STYLES_INPUT,
         strip=False, widget=SummernoteInplaceWidget())
 
-    start_at = forms.DateTimeField(
+    start_at = forms.SplitDateTimeField(
         required=True,
-        input_formats=['%d/%m/%Y %H:%M:%S'],
         label=_('Comienza'),
-        widget=DateTimePicker(
-            options={
-                "format": "DD/MM/YYYY HH:ss:mm"
-            }
-        )
+        widget=forms.SplitDateTimeWidget(
+            date_format="DD/MM/YYYY",
+            time_format="HH:mm",
+            date_attrs={'type': 'date'},
+            time_attrs={'type': 'time'},
+        ),
     )
 
-    end_at = forms.DateTimeField(
+    end_at = forms.SplitDateTimeField(
         required=True,
-        input_formats=['%d/%m/%Y %H:%M:%S'],
         label=_('Finaliza'),
-        widget=DateTimePicker(
-            options={
-                "format": "DD/MM/YYYY HH:ss:mm"
-            }
-        )
+        widget=forms.SplitDateTimeWidget(
+            date_format="DD/MM/YYYY",
+            time_format="HH:mm",
+            date_attrs={'type': 'date'},
+            time_attrs={'type': 'time'},
+        ),
     )
 
     def get_crispy_fields(self):
@@ -74,7 +73,7 @@ class EventForm(CrispyFormMixin):
         }
 
     def clean(self):
-        cleaned_data = super(EventForm, self).clean()
+        cleaned_data = super().clean()
         start_at = cleaned_data.get('start_at')
         end_at = cleaned_data.get('end_at')
         if start_at is not None and end_at is not None:
@@ -85,7 +84,7 @@ class EventForm(CrispyFormMixin):
         return cleaned_data
 
     def save(self, *args, **kwargs):
-        super(EventForm, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.instance.save()
 
 
@@ -114,7 +113,7 @@ class AnonymousEventParticipationForm(CrispyFormMixin):
         )
         help_texts = {
             'interest': _('¿Qué temas de Python te interesaría ver en una charla?'),
-            'gender':  _('Queremos reducir la brecha de género. Este dato nos ayuda.'),
+            'gender': _('Queremos reducir la brecha de género. Este dato nos ayuda.'),
             'cv': 'Dejanos un link a tu CV, perfil de LinkedIn o algo similar'
         }
 

@@ -10,6 +10,7 @@ help:
 	@echo "bootstrap --build containers, run django migrations, load fixtures and create the a superuser"
 
 start:
+	docker build -t pyarweb .
 	docker-compose up
 
 stop:
@@ -22,10 +23,13 @@ clean: stop
 	docker-compose rm --force -v
 
 only_test:
-	docker-compose run --rm web python3 ./manage.py test  -v2 --noinput
+	docker-compose run --rm web /usr/local/bin/pytest -v
 
 pep8:
 	docker-compose run --rm web flake8
+
+format:
+	pre-commit run -a
 
 test: pep8 only_test
 

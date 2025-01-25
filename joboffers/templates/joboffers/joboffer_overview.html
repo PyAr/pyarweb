@@ -1,0 +1,71 @@
+{% load i18n static %}
+<dl>
+  <dt>Estado</dt>
+  <dd>
+    <h4 class="mt-0">
+      <label class="label {{label_class}}">
+        {{ obj.get_state_display }}
+      </label>
+    </h4>
+  </dd>
+  <dt>Última Modificación</dt>
+  <dd>
+    {{ obj.modified_at|date:"SHORT_DATETIME_FORMAT" }}
+  </dd>
+  {% if obj.location %}
+  <dt>Lugar de trabajo</dt>
+  <dd>{{ obj.location|title }}</dd>
+  {% endif %}
+
+  {% if obj.company %}
+    <dt>Empresa</dt>
+    <dd>
+      <a href="{{ obj.company.get_absolute_url }}">{{ obj.company.name }}</a>
+    </dd>
+  {% endif %}
+  <dt>Permite trabajar remoto</dt>
+  <dd>{% if obj.allows_remote_work %}Sí{% else %}No{% endif %}</dd>
+
+  <dt>Experiencia Requerida</dt>
+  <dd>{{ obj.get_experience_display }}</dd>
+
+  <dt>Modalidad de Trabajo</dt>
+  <dd>{{ obj.get_remoteness_display }}</dd>
+
+  <dt>Tipo de Contratación</dt>
+  <dd>{{ obj.get_hiring_type_display }}</dd>
+
+  <dt>Rango Salarial</dt>
+  <dd>{{ obj.salary }}</dd>
+
+  <!-- Agregar informacion de contacto que se despliegue con un botón y que no se muestre si esta inactiva la oferta -->
+
+</dl>
+
+<a class="btn btn-info w-100" onclick="trackContactInfo()" role="button" data-toggle="collapse" href="#contact-info" aria-expanded="false" aria-controls="collapse">
+  {% translate 'Ver Información de Contacto' %}
+</a>
+<div class="collapse" id="contact-info">
+  <ul class="list-unstyled contact-info">
+    {% if obj.contact_mail %}
+    <li>
+      <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+      <a href="mailto:{{ object.contact_mail }}" target="_blank" rel="noopener noreferrer">{{ object.contact_mail }}</a>
+    </li>
+    {% endif %}
+    {% if obj.contact_url %}
+    <li>
+      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+      <a href="{{ object.contact_url }}" target="_blank" rel="noopener noreferrer">{{ object.contact_url }}</a>
+    </li>
+    {% endif %}
+    {% if obj.contact_phone %}
+    <li>
+      <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+      <a href="tel:{{ object.contact_phone }}" target="_blank" rel="noopener noreferrer">{{ object.contact_phone }}</a>
+    </li>
+    {% endif %}
+  </ul>
+
+</div>
+<script src="{% static 'js/joboffer_track.js' %}"></script>

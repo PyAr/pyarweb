@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib import admin
-from .models import NewsArticle
 from django_summernote.widgets import SummernoteWidget
+
+from .models import NewsArticle
 
 
 class NewsAdminForm(forms.ModelForm):
@@ -11,8 +12,6 @@ class NewsAdminForm(forms.ModelForm):
         widgets = {'body': SummernoteWidget()}
 
 
+@admin.register(NewsArticle)
 class NewsAdmin(admin.ModelAdmin):
     form = NewsAdminForm
-
-
-admin.site.register(NewsArticle, NewsAdmin)

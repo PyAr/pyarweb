@@ -1,8 +1,10 @@
 import os
 import sys
 
-
 from pyarweb.settings.base import *  # NOQA
+
+DEBUG = False
+TEMPLATE_DEBUG = False
 
 CACHES = {
     'default': {
@@ -13,11 +15,7 @@ CACHES = {
 
 ALLOWED_HOSTS = ['*']
 
-STATIC_ROOT = '/code/static2/'
-STATIC_URL = '/static/'
-
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[PyAr]"
-EMAIL_CONFIRM_LA_DOMAIN = "python.org.ar"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
@@ -28,15 +26,15 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
 EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '10'))
 EMAIL_FROM = os.environ.get('EMAIL_FROM', 'do_not_reply@python.org.ar')
 
-# Disqus
-DISQUS_API_KEY = os.environ.get("DISQUS_API_KEY", 'not_configured')
-DISQUS_WEBSITE_SHORTNAME = 'PyAr'
-
 PYAR_WIKI_URL = 'https://wiki.python.org.ar/'
+
 
 SENDFILE_BACKEND = "sendfile.backends.nginx"
 SENDFILE_ROOT = '/home/www-pyar/pyarweb/pyarweb/media/waliki_attachments/'
 SENDFILE_URL = '/private'
+
+DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+STATICFILES_STORAGE = "storages.backends.azure_storage.AzureStorage"
 
 # Raven
 # True if we are running ./manage.py test
@@ -52,3 +50,6 @@ if not TEST_RUNNING:
             'dsn': os.environ.get("SENTRY_DSN", "NOT_CONFIGURED"),
             'release': raven.fetch_git_sha(BASE_DIR),  # NOQA
     }
+
+# Prefix for telegram messages
+TELEGRAM_MESSAGE_PREFIX = ''
