@@ -1,5 +1,3 @@
-import bleach
-
 from django.test import TestCase, Client
 from django.urls import reverse
 
@@ -89,7 +87,7 @@ class EventsViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Event.objects.filter(name='PyDay San Rafael').count(), 1)
         event = Event.objects.filter(name='PyDay San Rafael').get()
-        self.assertEqual(event.description, bleach.clean('an <script>evil()</script> example'))
+        self.assertEqual(event.description, ('an  example'))
 
     def test_events_view_delete(self):
         event = EventFactory(owner=self.user)
